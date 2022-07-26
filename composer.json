@@ -1,0 +1,26 @@
+{
+  "name": "be/app-shopfai",
+  "type": "library",
+  "description": "店熵系统",
+  "keywords": [
+    "ShopFai",
+    "店熵系统"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "liu12",
+      "email": "i@liu12.com",
+      "homepage": "http://www.liu12.com/"
+    }
+  ],
+  "require": {
+    "be/be": "~2.5",
+    "geoip2/geoip2": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Be\\App\\ShopFai\\": "src/"
+    }
+  }
+}
