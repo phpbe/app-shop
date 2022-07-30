@@ -1,0 +1,38 @@
+.conversion-rates {
+
+}
+
+.conversion-rate-item {
+    background-color: #fafafa;
+    position: relative;
+}
+
+.conversion-rate {
+    position: absolute;
+    z-index: 1;
+    top: 2rem;
+    width: 80px;
+}
+
+.conversion-rate-top {
+    height: 15px;
+    border-top: transparent 15px solid;
+    border-left: var(--main-color) 40px solid;
+    border-right: var(--main-color) 40px solid;
+    border-bottom: none;
+}
+
+.conversion-rate-body {
+    padding: .5rem;
+    background-color: var(--main-color);
+    color: #fff;
+    text-align: center;
+    font-size: 14px;
+}
+.conversion-rate-bottom {
+    height: 15px;
+    border-top: var(--main-color) 15px solid;
+    border-left: transparent 40px solid;
+    border-right: transparent 40px solid;
+    border-bottom: none;
+}
