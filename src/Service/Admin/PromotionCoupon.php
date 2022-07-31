@@ -70,7 +70,7 @@ class PromotionCoupon
                     ->getObjects();
                 foreach ($categories as &$category) {
                     if (!$category->image_small) {
-                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image.jpg';
+                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image-s.jpg';
                     }
                 }
                 unset($category);

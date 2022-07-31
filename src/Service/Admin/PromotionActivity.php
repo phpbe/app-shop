@@ -2,11 +2,8 @@
 
 namespace Be\App\ShopFai\Service\Admin;
 
-use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemCustom;
-use Be\AdminPlugin\Table\Item\TableItemImage;
 use Be\App\ServiceException;
-use Be\App\ShopFai\Admin\ShopFaiAdmin;
 use Be\Be;
 use Be\Db\Tuple;
 use Be\Util\Crypt\Random;
@@ -71,7 +68,7 @@ class PromotionActivity
                     ->getObjects();
                 foreach ($categories as &$category) {
                     if (!$category->image_small) {
-                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image.jpg';
+                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image-s.jpg';
                     }
                 }
                 unset($category);

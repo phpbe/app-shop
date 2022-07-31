@@ -5,7 +5,6 @@ namespace Be\App\ShopFai\Controller\Admin;
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Table\Item\TableItemCustom;
 use Be\AdminPlugin\Table\Item\TableItemLink;
-use Be\App\ControllerException;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
 use Be\AdminPlugin\Table\Item\TableItemSwitch;
