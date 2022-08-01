@@ -324,11 +324,13 @@ class Product extends Auth
                 ],
             ],
 
-
             'fieldEdit' => [
                 'events' => [
                     'before' => function ($tuple) {
                         $tuple->update_time = date('Y-m-d H:i:s');
+                    },
+                    'success' => function () {
+                        Be::getService('App.System.Task')->trigger('ShopFai.ProductSyncEsAndCache');
                     },
                 ],
             ],

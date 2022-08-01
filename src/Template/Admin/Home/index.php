@@ -9,21 +9,12 @@
 <be-page-title>
     <?php
     $now = date('Y-m-d H:i:s');
-    $storeNow = \Be\Util\Time\Timezone::convert('Y-m-d H:i', $this->store->timezone, $now);
+    $storeNow = \Be\Util\Time\Timezone::convert('Y-m-d H:i', $this->configStore->timezone, $now);
     ?>
-    店铺时间：<?php echo $storeNow; ?>（时区：<?php echo $this->store->timezone; ?>）
+    店铺时间：<?php echo $storeNow; ?>（时区：<?php echo $this->configStore->timezone; ?>）
 </be-page-title>
 
-
 <be-page-content>
-    <?php
-    $js = [];
-    $css = [];
-    $formData = [];
-    $vueData = [];
-    $vueMethods = [];
-    $vueHooks = [];
-    ?>
     <div id="app" v-cloak>
         <div class="be-row">
             <div class="be-col-24 be-col-md-18">
@@ -194,13 +185,6 @@
                 rate3: "0.00%",
 
                 t: false
-                <?php
-                if ($vueData) {
-                    foreach ($vueData as $k => $v) {
-                        echo ',' . $k . ':' . json_encode($v);
-                    }
-                }
-                ?>
             },
             methods: {
                 loadUniqueVisitorChartData: function () {
@@ -305,13 +289,6 @@
                     newMax = newMax + (mod  - newMax % mod);
                     return newMax;
                 }
-                <?php
-                if ($vueMethods) {
-                    foreach ($vueMethods as $k => $v) {
-                        echo ',' . $k . ':' . $v;
-                    }
-                }
-                ?>
             },
             created: function () {
                 <?php
@@ -370,40 +347,7 @@
                     ]
                 });
                 this.loadUniqueVisitorChartData();
-                <?php
-                if (isset($vueHooks['mounted'])) {
-                    echo $vueHooks['mounted'];
-                }
-                ?>
             },
-            updated: function () {
-                <?php
-                if (isset($vueHooks['updated'])) {
-                    echo $vueHooks['updated'];
-                }
-                ?>
-            }
-            <?php
-            if (isset($vueHooks['beforeCreate'])) {
-                echo ',beforeCreate: function () {' . $vueHooks['beforeCreate'] . '}';
-            }
-
-            if (isset($vueHooks['beforeMount'])) {
-                echo ',beforeMount: function () {' . $vueHooks['beforeMount'] . '}';
-            }
-
-            if (isset($vueHooks['beforeUpdate'])) {
-                echo ',beforeUpdate: function () {' . $vueHooks['beforeUpdate'] . '}';
-            }
-
-            if (isset($vueHooks['beforeDestroy'])) {
-                echo ',beforeDestroy: function () {' . $vueHooks['beforeDestroy'] . '}';
-            }
-
-            if (isset($vueHooks['destroyed'])) {
-                echo ',destroyed: function () {' . $vueHooks['destroyed'] . '}';
-            }
-            ?>
         });
     </script>
 </be-page-content>

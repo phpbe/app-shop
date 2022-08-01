@@ -25,6 +25,7 @@ class Home extends Auth
         $response = Be::getResponse();
 
         $configStore = Be::getConfig('App.ShopFai.Store');
+        $response->set('configStore', $configStore);
 
         if ($configStore->setUp === 7) {
             $serviceStatisticSales = Be::getService('App.ShopFai.Admin.StatisticSales');
@@ -47,8 +48,6 @@ class Home extends Auth
             $configTheme = Be::getConfig('App.System.Theme');
             $themeProperty = Be::getProperty('Theme.' . $configTheme->default);
             $response->set('themeProperty', $themeProperty);
-
-            $response->set('configStore', $configStore);
 
             $response->display('App.ShopFai.Admin.Home.setUp');
         }

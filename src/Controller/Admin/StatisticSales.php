@@ -17,7 +17,7 @@ class StatisticSales extends Auth
     /**
      * 销售统计
      *
-     * @BeMenu("销售统计", icon="el-icon-discount", ordering="6.1")
+     * @BeMenu("销售统计", icon="el-icon-money", ordering="6.1")
      * @BePermission("销售统计", ordering="6.1")
      */
     public function dashboard()

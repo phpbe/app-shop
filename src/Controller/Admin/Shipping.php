@@ -17,7 +17,7 @@ class Shipping extends Auth
     /**
      * 物流运费
      *
-     * @BeMenu("物流运费", icon="el-icon-discount", ordering="7.1")
+     * @BeMenu("物流运费", icon="el-icon-truck", ordering="7.1")
      * @BePermission("物流运费", ordering="7.1")
      */
     public function index()

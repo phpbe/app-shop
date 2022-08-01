@@ -1,8 +1,10 @@
 
+
+
 <be-page-content>
     <div id="app" v-cloak>
 
-        <div class="be-mt-200 be-p-150 be-bc-fff">
+        <div class="be-p-150 be-bc-fff">
             <div class="be-fs-150 be-pb-50 be-bb-eee">
                 三步快速上手您的店铺
             </div>
@@ -81,7 +83,7 @@
                     </el-tab-pane>
                     <el-tab-pane class="be-pl-200">
                         <?php
-                        if (($this->configStore->setUp & 2) === 0) {
+                        if (($this->configStore->setUp & 4) === 0) {
                             ?>
                             <span slot="label" class="be-fs-125 be-px-200"><i class="el-icon-truck"></i> 设定收款</span>
                             <div class="be-fs-200">

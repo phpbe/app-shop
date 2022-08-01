@@ -14,8 +14,8 @@ use Be\Be;
 /**
  * 满减活动
  *
- * @BeMenuGroup("营销", icon="el-icon-discount", ordering="5")
- * @BePermissionGroup("营销",  ordering="5")
+ * @BeMenuGroup("营销")
+ * @BePermissionGroup("营销")
  */
 class PromotionActivity extends Auth
 {
@@ -23,7 +23,7 @@ class PromotionActivity extends Auth
     /**
      * 满减活动
      *
-     * @BeMenu("满减活动", icon="el-icon-discount", ordering="5.2")
+     * @BeMenu("满减活动", icon="el-icon-coin", ordering="5.2")
      * @BePermission("满减活动", ordering="5.2")
      */
     public function activities()

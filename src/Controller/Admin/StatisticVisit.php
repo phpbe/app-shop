@@ -8,8 +8,8 @@ use Be\Be;
 /**
  * 访问统计
  *
- * @BeMenuGroup("分析", icon="el-icon-s-marketing", ordering="6")
- * @BePermissionGroup("分析",  ordering="6")
+ * @BeMenuGroup("分析")
+ * @BePermissionGroup("分析")
  */
 class StatisticVisit extends Auth
 {
@@ -17,7 +17,7 @@ class StatisticVisit extends Auth
     /**
      * 访问统计
      *
-     * @BeMenu("访问统计", icon="el-icon-discount", ordering="6.2")
+     * @BeMenu("访问统计", icon="el-icon-thumb", ordering="6.2")
      * @BePermission("访问统计", ordering="6.2")
      */
     public function dashboard()

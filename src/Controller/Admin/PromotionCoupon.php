@@ -8,7 +8,6 @@ use Be\AdminPlugin\Table\Item\TableItemLink;
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemSelection;
 use Be\AdminPlugin\Table\Item\TableItemSwitch;
-use Be\App\ShopFaiAdmin\ShopFaiAdmin;
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
 
@@ -24,7 +23,7 @@ class PromotionCoupon extends Auth
     /**
      * 优惠券
      *
-     * @BeMenu("优惠券", icon="el-icon-discount", ordering="5.1")
+     * @BeMenu("优惠券", icon="el-icon-price-tag", ordering="5.1")
      * @BePermission("优惠券", ordering="5.1")
      */
     public function coupons()
