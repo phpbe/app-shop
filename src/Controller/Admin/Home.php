@@ -7,8 +7,7 @@ use Be\Be;
 
 
 /**
- * @BeMenuGroup("店熵", icon="el-icon-document-copy", ordering="1")
- * @BePermissionGroup("店熵", icon="el-icon-document-copy", ordering="1")
+ * 首页
  */
 class Home extends Auth
 {
@@ -16,8 +15,8 @@ class Home extends Auth
     /**
      * 首页
      *
-     * @BeMenu("首页", icon="el-icon-s-home", ordering="1.1")
-     * @BePermission("首页", ordering="1.1")
+     * @BeMenu("首页", icon="el-icon-s-home", ordering="1")
+     * @BePermission("*")
      */
     public function index()
     {
@@ -26,6 +25,8 @@ class Home extends Auth
 
         $configStore = Be::getConfig('App.ShopFai.Store');
         $response->set('configStore', $configStore);
+
+        $response->set('title', '首页');
 
         if ($configStore->setUp === 7) {
             $serviceStatisticSales = Be::getService('App.ShopFai.Admin.StatisticSales');

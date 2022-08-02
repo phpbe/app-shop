@@ -122,7 +122,7 @@ class Payment extends Auth
                         $postData = Be::getRequest()->json();
                         $field = $postData['postData']['field'];
                         if ($field === 'is_enable') {
-                            $value = $postData['row']['is_enable'];
+                            $value = (int)$postData['row']['is_enable'];
                             if ($value === 1) {
                                 Be::getService('App.ShopFai.Admin.Store')->setUp(4);
                             }
