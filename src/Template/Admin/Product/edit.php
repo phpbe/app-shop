@@ -286,557 +286,537 @@
     ?>
 
     <div id="app" v-cloak>
-        <div class="be-p-150">
-            <el-form ref="formRef" :model="formData" class="be-mb-400">
-                <?php
-                $formData['id'] = ($this->product ? $this->product->id : '');
-                ?>
+        <el-form ref="formRef" :model="formData" class="be-mb-400">
+            <?php
+            $formData['id'] = ($this->product ? $this->product->id : '');
+            ?>
 
-                <div class="be-row">
-                    <div class="be-col-24 be-col-md-18">
-                         <div class="be-p-150 be-bc-fff">
-                            <div class="be-fs-110">基本信息</div>
+            <div class="be-row">
+                <div class="be-col-24 be-col-md-18">
+                     <div class="be-p-150 be-bc-fff">
+                        <div class="be-fs-110">基本信息</div>
 
-                            <div class="be-mt-200"><span class="be-c-red">*</span> 商品名称：</div>
-                            <el-form-item class="be-mt-50" prop="name" :rules="[{required: true, message: '请输入商品名称', trigger: 'change' }]">
-                                <el-input
-                                        type="text"
-                                        placeholder="请输入商品名称"
-                                        v-model = "formData.name"
-                                        size="medium"
-                                        maxlength="200"
-                                        show-word-limit
-                                        @change="nameChange">
-                                </el-input>
-                            </el-form-item>
-                            <?php $formData['name'] = ($this->product ? $this->product->name : ''); ?>
+                        <div class="be-mt-200"><span class="be-c-red">*</span> 商品名称：</div>
+                        <el-form-item class="be-mt-50" prop="name" :rules="[{required: true, message: '请输入商品名称', trigger: 'change' }]">
+                            <el-input
+                                    type="text"
+                                    placeholder="请输入商品名称"
+                                    v-model = "formData.name"
+                                    size="medium"
+                                    maxlength="200"
+                                    show-word-limit
+                                    @change="nameChange">
+                            </el-input>
+                        </el-form-item>
+                        <?php $formData['name'] = ($this->product ? $this->product->name : ''); ?>
 
-                            <div class="be-mt-100">商品摘要：</div>
-                            <el-form-item class="be-mt-50" prop="summary">
-                                <el-input
-                                        type="textarea"
-                                        :autosize="{minRows:2,maxRows:6}"
-                                        placeholder="请输入商品摘要"
-                                        v-model="formData.summary"
-                                        size="medium"
-                                        maxlength="600"
-                                        show-word-limit
-                                        @change="seoUpdate">
-                                </el-input>
-                            </el-form-item>
-                            <?php $formData['summary'] = ($this->product ? $this->product->summary : ''); ?>
+                        <div class="be-mt-100">商品摘要：</div>
+                        <el-form-item class="be-mt-50" prop="summary">
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{minRows:2,maxRows:6}"
+                                    placeholder="请输入商品摘要"
+                                    v-model="formData.summary"
+                                    size="medium"
+                                    maxlength="600"
+                                    show-word-limit
+                                    @change="seoUpdate">
+                            </el-input>
+                        </el-form-item>
+                        <?php $formData['summary'] = ($this->product ? $this->product->summary : ''); ?>
 
-                            <div class="be-mt-100">商品描述：</div>
-                            <?php
+                        <div class="be-mt-100">商品描述：</div>
+                        <?php
 
-                            $fileCallback = base64_encode('parent.window.befile.selectedFiles = files;');
-                            $imageCallback = base64_encode('parent.window.beimage.selectedFiles = files;');
+                        $fileCallback = base64_encode('parent.window.befile.selectedFiles = files;');
+                        $imageCallback = base64_encode('parent.window.beimage.selectedFiles = files;');
 
-                            $driver = new \Be\AdminPlugin\Form\Item\FormItemTinymce([
-                                'name' => 'description',
-                                'ui' => [
-                                    'form-item' => [
-                                        'class' => 'be-mt-50'
-                                    ],
-                                    '@change' => 'seoUpdate',
+                        $driver = new \Be\AdminPlugin\Form\Item\FormItemTinymce([
+                            'name' => 'description',
+                            'ui' => [
+                                'form-item' => [
+                                    'class' => 'be-mt-50'
                                 ],
-                                'layout' => 'simple',
-                            ]);
-                            echo $driver->getHtml();
+                                '@change' => 'seoUpdate',
+                            ],
+                            'layout' => 'simple',
+                        ]);
+                        echo $driver->getHtml();
 
-                            $formData['description'] = ($this->product ? $this->product->description : '');
+                        $formData['description'] = ($this->product ? $this->product->description : '');
 
-                            $uiItems->append($driver);
-                            ?>
-
-                        </div>
+                        $uiItems->add($driver);
+                        ?>
 
                     </div>
 
-
-                    <div class="be-col-24 be-col-md-6 be-pl-150">
-                         <div class="be-p-150 be-bc-fff">
-
-                            <div class="be-fs-110">基本属性</div>
-
-
-                            <?php
-                            if ($this->product && $this->product->is_enable === -1) {
-                                $formData['is_enable'] = -1;
-                            } else {
-                                ?>
-                                <div class="be-row be-mt-200">
-                                    <div class="be-col">上架商品：</div>
-                                    <div class="be-col-auto">
-                                        <el-form-item prop="is_enable">
-                                            <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
-                                        </el-form-item>
-                                    </div>
-                                </div>
-                                <?php
-                                $formData['is_enable'] = ($this->product ? $this->product->is_enable : 0);
-                            }
-                            ?>
-
-                            <div class="be-mt-150">
-                                SPU：
-                                <el-tooltip effect="dark" content="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU" placement="top">
-                                    <i class="el-icon-fa fa-question-circle-o"></i>
-                                </el-tooltip>
-                            </div>
-                            <el-form-item class="be-mt-50" prop="spu">
-                                <el-input
-                                        type="text"
-                                        placeholder="请输入SPU"
-                                        v-model="formData.spu"
-                                        maxlength="60"
-                                        size="medium"
-                                        show-word-limit>
-                                </el-input>
-                            </el-form-item>
-                            <?php $formData['spu'] = ($this->product ? $this->product->spu : ''); ?>
-
-                            <div class="be-mt-150">
-                                站外销量：
-                                <el-tooltip effect="dark" content="商品销量 = 本店铺实际销量 + 站外销量" placement="top">
-                                    <i class="el-icon-fa fa-question-circle-o"></i>
-                                </el-tooltip>
-                            </div>
-                            <el-form-item class="be-mt-50" prop="sales_volume_base">
-                                <el-input-number
-                                        :precision="0"
-                                        :step="1"
-                                        :max="999999"
-                                        maxlength="6"
-                                        placeholder="请输入店铺外销量"
-                                        v-model.number="formData.sales_volume_base"
-                                        size="medium">
-                                </el-input-number>
-                            </el-form-item>
-                            <?php $formData['sales_volume_base'] = ($this->product ? $this->product->sales_volume_base : 0); ?>
-
-
-                            <div class="be-mt-150">
-                                分类：
-                            </div>
-                            <el-form-item class="be-mt-50" prop="category_ids">
-                                <el-select
-                                        v-model="formData.category_ids"
-                                        multiple
-                                        placeholder="请选择分类"
-                                        size="medium">
-                                    <?php
-                                    foreach ($this->categoryKeyValues as $key => $val) {
-                                        echo '<el-option value="'. $key .'" key="'. $key .'" label="' .$val . '"></el-option>';
-                                    }
-                                    ?>
-                                </el-select>
-                            </el-form-item>
-                            <?php
-                            $formData['category_ids'] = ($this->product ? $this->product->categoryIds : []);
-                            ?>
-
-                            <div class="be-mt-150">
-                                标签：
-                            </div>
-                            <div v-if="formData.tags">
-                                  <el-tag
-                                        v-for="tag in formData.tags"
-                                        :key="tag"
-                                        closable
-                                        @close="removeTag(tag)"
-                                        class="be-mr-50 be-mt-50"
-                                        size="medium">
-                                    {{tag}}
-                                </el-tag>
-                            </div>
-                            <el-form-item class="be-mt-50" v-if="formData.tags.length <= 60">
-                                <el-input
-                                        type="text"
-                                        placeholder="添加标签（回车确认输入）"
-                                        v-model="formItems.tags.currentTag"
-                                        maxlength="60"
-                                        size="medium"
-                                        show-word-limit
-                                        @change="addTag">
-                                </el-input>
-                            </el-form-item>
-                            <?php
-                            $formData['tags'] = ($this->product ? $this->product->tags : []);
-                            $uiItems->setVueData('formItems', [
-                                'tags' => ['currentTag' => '']
-                            ]);
-                            ?>
-
-                            <div class="be-mt-150">
-                                品牌：
-                            </div>
-                            <el-form-item class="be-mt-50" prop="brand">
-                                <el-input
-                                        type="text"
-                                        placeholder="请输入品牌"
-                                        v-model="formData.brand"
-                                        maxlength="60"
-                                        size="medium"
-                                        show-word-limit>
-                                </el-input>
-                            </el-form-item>
-                            <?php
-                            $formData['brand'] = ($this->product ? $this->product->brand : '');
-                            ?>
-
-                        </div>
-
-                        <div class="be-p-150 be-bc-fff be-mt-150">
-
-                            <div class="be-row">
-                                <div class="be-col">
-                                    <div class="be-fs-110">
-                                        SEO（搜索引擎优化）
-                                    </div>
-                                </div>
-                                <div class="be-col-auto">
-                                    <el-link type="primary" @click="drawerSeo=true">编辑</el-link>
-                                </div>
-                            </div>
-
-                            <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configProduct->urlPrefix; ?>/{{formData.url}}<?php echo $this->configProduct->urlSuffix; ?></div>
-                            <div class="be-mt-100">{{formData.seo_title}}</div>
-                            <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
-
-                        </div>
-                    </div>
                 </div>
 
-                <div class="be-p-150 be-bc-fff be-mt-150">
-                    <div class="be-fs-110">
-                        主图 <span class="be-c-999 be-fs-90">请使用尺寸一样的商品图</span>
+
+                <div class="be-col-24 be-col-md-6 be-pl-150">
+                     <div class="be-p-150 be-bc-fff">
+
+                        <div class="be-fs-110">基本属性</div>
+
+
+                        <?php
+                        if ($this->product && $this->product->is_enable === -1) {
+                            $formData['is_enable'] = -1;
+                        } else {
+                            ?>
+                            <div class="be-row be-mt-200">
+                                <div class="be-col">上架商品：</div>
+                                <div class="be-col-auto">
+                                    <el-form-item prop="is_enable">
+                                        <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                    </el-form-item>
+                                </div>
+                            </div>
+                            <?php
+                            $formData['is_enable'] = ($this->product ? $this->product->is_enable : 0);
+                        }
+                        ?>
+
+                        <div class="be-mt-150">
+                            SPU：
+                            <el-tooltip effect="dark" content="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU" placement="top">
+                                <i class="el-icon-fa fa-question-circle-o"></i>
+                            </el-tooltip>
+                        </div>
+                        <el-form-item class="be-mt-50" prop="spu">
+                            <el-input
+                                    type="text"
+                                    placeholder="请输入SPU"
+                                    v-model="formData.spu"
+                                    maxlength="60"
+                                    size="medium"
+                                    show-word-limit>
+                            </el-input>
+                        </el-form-item>
+                        <?php $formData['spu'] = ($this->product ? $this->product->spu : ''); ?>
+
+                        <div class="be-mt-150">
+                            站外销量：
+                            <el-tooltip effect="dark" content="商品销量 = 本店铺实际销量 + 站外销量" placement="top">
+                                <i class="el-icon-fa fa-question-circle-o"></i>
+                            </el-tooltip>
+                        </div>
+                        <el-form-item class="be-mt-50" prop="sales_volume_base">
+                            <el-input-number
+                                    :precision="0"
+                                    :step="1"
+                                    :max="999999"
+                                    maxlength="6"
+                                    placeholder="请输入店铺外销量"
+                                    v-model.number="formData.sales_volume_base"
+                                    size="medium">
+                            </el-input-number>
+                        </el-form-item>
+                        <?php $formData['sales_volume_base'] = ($this->product ? $this->product->sales_volume_base : 0); ?>
+
+
+                        <div class="be-mt-150">
+                            分类：
+                        </div>
+                        <el-form-item class="be-mt-50" prop="category_ids">
+                            <el-select
+                                    v-model="formData.category_ids"
+                                    multiple
+                                    placeholder="请选择分类"
+                                    size="medium">
+                                <?php
+                                foreach ($this->categoryKeyValues as $key => $val) {
+                                    echo '<el-option value="'. $key .'" key="'. $key .'" label="' .$val . '"></el-option>';
+                                }
+                                ?>
+                            </el-select>
+                        </el-form-item>
+                        <?php
+                        $formData['category_ids'] = ($this->product ? $this->product->categoryIds : []);
+                        ?>
+
+                        <div class="be-mt-150">
+                            标签：
+                        </div>
+                        <div v-if="formData.tags">
+                              <el-tag
+                                    v-for="tag in formData.tags"
+                                    :key="tag"
+                                    closable
+                                    @close="removeTag(tag)"
+                                    class="be-mr-50 be-mt-50"
+                                    size="medium">
+                                {{tag}}
+                            </el-tag>
+                        </div>
+                        <el-form-item class="be-mt-50" v-if="formData.tags.length <= 60">
+                            <el-input
+                                    type="text"
+                                    placeholder="添加标签（回车确认输入）"
+                                    v-model="formItems.tags.currentTag"
+                                    maxlength="60"
+                                    size="medium"
+                                    show-word-limit
+                                    @change="addTag">
+                            </el-input>
+                        </el-form-item>
+                        <?php
+                        $formData['tags'] = ($this->product ? $this->product->tags : []);
+                        $uiItems->setVueData('formItems', [
+                            'tags' => ['currentTag' => '']
+                        ]);
+                        ?>
+
+                        <div class="be-mt-150">
+                            品牌：
+                        </div>
+                        <el-form-item class="be-mt-50" prop="brand">
+                            <el-input
+                                    type="text"
+                                    placeholder="请输入品牌"
+                                    v-model="formData.brand"
+                                    maxlength="60"
+                                    size="medium"
+                                    show-word-limit>
+                            </el-input>
+                        </el-form-item>
+                        <?php
+                        $formData['brand'] = ($this->product ? $this->product->brand : '');
+                        ?>
+
                     </div>
 
-                    <div class="be-mt-150">
-                        <draggable v-model="formData.images" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
-                            <transition-group>
-                                <div v-for="image in formData.images" :key="image.ordering" class="image">
-                                    <img :src="image.large" :alt="image.alt">
-                                    <div class="image-move"></div>
-                                    <div class="image-actions">
-                                        <span class="image-action" @click="imagePreview(image)"><i class="el-icon-zoom-in"></i></span>
-                                        <span class="image-action" @click="imageRemove(image)"><i class="el-icon-delete"></i></span>
-                                    </div>
-                                </div>
+                    <div class="be-p-150 be-bc-fff be-mt-150">
 
-                                <div class="image-selector" @click="imageSelect" key="99999">
-                                    <i class="el-icon-plus"></i>
+                        <div class="be-row">
+                            <div class="be-col">
+                                <div class="be-fs-110">
+                                    SEO（搜索引擎优化）
                                 </div>
-                            </transition-group>
-                        </draggable>
+                            </div>
+                            <div class="be-col-auto">
+                                <el-link type="primary" @click="drawerSeo=true">编辑</el-link>
+                            </div>
+                        </div>
+
+                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configProduct->urlPrefix; ?>/{{formData.url}}<?php echo $this->configProduct->urlSuffix; ?></div>
+                        <div class="be-mt-100">{{formData.seo_title}}</div>
+                        <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
+
                     </div>
+                </div>
+            </div>
 
-                    <el-dialog :visible.sync="imageSelectorVisible" class="dialog-image-selector" title="选择主图" :width="600" :close-on-click-modal="false">
-                        <iframe :src="imageSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="imageSelectedCancel">取 消</el-button>
-                            <el-button type="primary" @click="imageSelectedConfirm">确 定</el-button>
-                        </div>
-                    </el-dialog>
+            <div class="be-p-150 be-bc-fff be-mt-150">
+                <div class="be-fs-110">
+                    主图 <span class="be-c-999 be-fs-90">请使用尺寸一样的商品图</span>
+                </div>
+
+                <div class="be-mt-150">
+                    <draggable v-model="formData.images" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
+                        <transition-group>
+                            <div v-for="image in formData.images" :key="image.ordering" class="image">
+                                <img :src="image.large" :alt="image.alt">
+                                <div class="image-move"></div>
+                                <div class="image-actions">
+                                    <span class="image-action" @click="imagePreview(image)"><i class="el-icon-zoom-in"></i></span>
+                                    <span class="image-action" @click="imageRemove(image)"><i class="el-icon-delete"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="image-selector" @click="imageSelect" key="99999">
+                                <i class="el-icon-plus"></i>
+                            </div>
+                        </transition-group>
+                    </draggable>
+                </div>
+
+                <el-dialog :visible.sync="imageSelectorVisible" class="dialog-image-selector" title="选择主图" :width="600" :close-on-click-modal="false">
+                    <iframe :src="imageSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="imageSelectedCancel">取 消</el-button>
+                        <el-button type="primary" @click="imageSelectedConfirm">确 定</el-button>
+                    </div>
+                </el-dialog>
 
 
-                    <el-dialog :visible.sync="imagePreviewVisible" center="true">
-                        <div class="be-ta-center">
-                            <img style="max-width: 100%;max-height: 400px;" :src="imagePreviewUrl" alt="">
-                        </div>
-                    </el-dialog>
+                <el-dialog :visible.sync="imagePreviewVisible" center="true">
+                    <div class="be-ta-center">
+                        <img style="max-width: 100%;max-height: 400px;" :src="imagePreviewUrl" alt="">
+                    </div>
+                </el-dialog>
 
-                    <el-dialog :visible.sync="imageAltVisible" center="true">
-                    </el-dialog>
+                <el-dialog :visible.sync="imageAltVisible" center="true">
+                </el-dialog>
 
+            </div>
+            <?php
+            $formData['images'] = ($this->product ? $this->product->images : []);
+            ?>
+
+
+            <div class="be-p-150 be-bc-fff be-mt-150">
+                <div class="be-fs-110">
+                    关联其它商品 <span class="be-c-999 be-fs-90">您可以将多个类似的商品关联起来</span>
+                </div>
+
+                <div class="be-mt-150">
+                    <el-checkbox v-model.number="formData.related" :true-label="1" :false-label="0">开启商品关联</el-checkbox>
                 </div>
                 <?php
-                $formData['images'] = ($this->product ? $this->product->images : []);
+                $formData['related'] = $this->product && $this->product->relate_id !== '' ? 1 : 0;
+
+                $relate = null;
+                if ($this->product && $this->product->relate_id !== '' && $this->product->relate) {
+                    $relate = $this->product->relate;
+                } else {
+                    $relate = new \stdClass();
+                    $relate->id = '';
+                }
+
+                if (!isset($relate->name)) {
+                    $relate->name = '';
+                }
+
+                if (!isset($relate->icon_type)) {
+                    $relate->icon_type = 'text';
+                }
+
+                if (!isset($relate->details) || !is_array($relate->details) || count($relate->details) === 0) {
+                    $relate->details = [[
+                        'id' => '',
+                        'product_id' => $this->product ? $this->product->id : '',
+                        'product_name' => $this->product ? $this->product->name : '当前商品',
+                        'value' => '',
+                        'icon_image' => '',
+                        'icon_color' => '',
+                        'self' => 1,
+                    ]];
+                } else {
+                    if ($this->product) {
+                        foreach ($relate->details as &$detail) {
+                            $detail->self = $detail->product_id === $this->product->id ? 1 : 0;
+                        }
+                        unset($detail);
+                    }
+                }
+
+                $formData['relate'] = $relate;
                 ?>
 
+                <template v-if="formData.related === 1">
 
-                <div class="be-p-150 be-bc-fff be-mt-150">
-                    <div class="be-fs-110">
-                        关联其它商品 <span class="be-c-999 be-fs-90">您可以将多个类似的商品关联起来</span>
+                    <div class="be-mt-100 be-row">
+                        <div class="be-col-auto be-lh-250">关联属性的名称：<span class="be-c-red">*</span></div>
+                        <div class="be-col be-pl-100">
+                            <el-form-item prop="relate.name" :rules="[{required: true, message: '请输入商品关联属性的名称', trigger: 'change' }]">
+                                <el-input
+                                        type="text"
+                                        placeholder="请输入关联属性的名称（如：Color）"
+                                        v-model = "formData.relate.name"
+                                        size="medium"
+                                        maxlength="200" style="min-width: 300px;">
+                                </el-input>
+                            </el-form-item>
+                        </div>
+                        <div class="be-col-auto be-pl-200 be-lh-250">
+                            图标类型：
+                        </div>
+                        <div class="be-col be-pl-100 be-lh-250">
+                            <el-radio v-model="formData.relate.icon_type" label="text">文本</el-radio>
+                            <el-radio v-model="formData.relate.icon_type" label="image">图片</el-radio>
+                            <el-radio v-model="formData.relate.icon_type" label="color">色块</el-radio>
+                        </div>
                     </div>
 
-                    <div class="be-mt-150">
-                        <el-checkbox v-model.number="formData.related" :true-label="1" :false-label="0">开启商品关联</el-checkbox>
-                    </div>
-                    <?php
-                    $formData['related'] = $this->product && $this->product->relate_id !== '' ? 1 : 0;
+                    <div class="be-mt-100">
 
-                    $relate = null;
-                    if ($this->product && $this->product->relate_id !== '' && $this->product->relate) {
-                        $relate = $this->product->relate;
-                    } else {
-                        $relate = new \stdClass();
-                        $relate->id = '';
-                    }
-
-                    if (!isset($relate->name)) {
-                        $relate->name = '';
-                    }
-
-                    if (!isset($relate->icon_type)) {
-                        $relate->icon_type = 'text';
-                    }
-
-                    if (!isset($relate->details) || !is_array($relate->details) || count($relate->details) === 0) {
-                        $relate->details = [[
-                            'id' => '',
-                            'product_id' => $this->product ? $this->product->id : '',
-                            'product_name' => $this->product ? $this->product->name : '当前商品',
-                            'value' => '',
-                            'icon_image' => '',
-                            'icon_color' => '',
-                            'self' => 1,
-                        ]];
-                    } else {
-                        if ($this->product) {
-                            foreach ($relate->details as &$detail) {
-                                $detail->self = $detail->product_id === $this->product->id ? 1 : 0;
-                            }
-                            unset($detail);
-                        }
-                    }
-
-                    $formData['relate'] = $relate;
-                    ?>
-
-                    <template v-if="formData.related === 1">
-
-                        <div class="be-mt-100 be-row">
-                            <div class="be-col-auto be-lh-250">关联属性的名称：<span class="be-c-red">*</span></div>
-                            <div class="be-col be-pl-100">
-                                <el-form-item prop="relate.name" :rules="[{required: true, message: '请输入商品关联属性的名称', trigger: 'change' }]">
-                                    <el-input
-                                            type="text"
-                                            placeholder="请输入关联属性的名称（如：Color）"
-                                            v-model = "formData.relate.name"
-                                            size="medium"
-                                            maxlength="200" style="min-width: 300px;">
-                                    </el-input>
-                                </el-form-item>
+                        <div class="be-row relate-details-header">
+                            <div class="be-col-auto">
+                                <div class="relate-detail-col-drag-icon"></div>
                             </div>
-                            <div class="be-col-auto be-pl-200 be-lh-250">
-                                图标类型：
+                            <div class="be-col-auto">
+                                <div class="relate-detail-col-op be-fw-bold">
+                                    操作
+                                </div>
                             </div>
-                            <div class="be-col be-pl-100 be-lh-250">
-                                <el-radio v-model="formData.relate.icon_type" label="text">文本</el-radio>
-                                <el-radio v-model="formData.relate.icon_type" label="image">图片</el-radio>
-                                <el-radio v-model="formData.relate.icon_type" label="color">色块</el-radio>
+                            <div class="be-col">
+                                <div class="relate-detail-col-product be-fw-bold">
+                                    商品
+                                </div>
+                            </div>
+                            <div class="be-col">
+                                <div class="relate-detail-col-value be-fw-bold">
+                                    关联属性的值
+                                </div>
+                            </div>
+                            <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
+                                <div class="relate-detail-col-icon-image be-fw-bold">
+                                    图标：图片
+                                </div>
+                            </div>
+                            <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
+                                <div class="relate-detail-col-icon-color be-fw-bold">
+                                    图标：图片
+                                </div>
                             </div>
                         </div>
 
-                        <div class="be-mt-100">
-
-                            <div class="be-row relate-details-header">
-                                <div class="be-col-auto">
-                                    <div class="relate-detail-col-drag-icon"></div>
-                                </div>
-                                <div class="be-col-auto">
-                                    <div class="relate-detail-col-op be-fw-bold">
-                                        操作
-                                    </div>
-                                </div>
-                                <div class="be-col">
-                                    <div class="relate-detail-col-product be-fw-bold">
-                                        商品
-                                    </div>
-                                </div>
-                                <div class="be-col">
-                                    <div class="relate-detail-col-value be-fw-bold">
-                                        关联属性的值
-                                    </div>
-                                </div>
-                                <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
-                                    <div class="relate-detail-col-icon-image be-fw-bold">
-                                        图标：图片
-                                    </div>
-                                </div>
-                                <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
-                                    <div class="relate-detail-col-icon-color be-fw-bold">
-                                        图标：图片
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="relate-details">
-                                <draggable
-                                        v-model="formData.relate.details"
-                                        ghost-class="relate-detail-ghost"
-                                        chosen-class="relate-detail-chosen"
-                                        drag-class="relate-detail-drag"
-                                        handle=".relate-detail-drag-icon"
-                                        force-fallback="true"
-                                        animation="100">
-                                    <transition-group>
-                                        <div class="be-row relate-detail" v-for="relateDetail, relateDetailIndex in formData.relate.details" :key="relateDetail.id">
-                                            <div class="be-col-auto">
-                                                <div class="relate-detail-col-drag-icon">
-                                                    <div class="relate-detail-drag-icon">
-                                                        <i class="el-icon-rank"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="be-col-auto">
-                                                <div class="relate-detail-col-op">
-                                                    <el-button type="text" icon="el-icon-delete" @click="relateDelete(relateDetail)" :disabled="relateDetail.self===1"></el-button>
-                                                </div>
-                                            </div>
-
-                                            <div class="be-col">
-                                                <div class="relate-detail-col-product be-lh-250">
-                                                    {{relateDetail.product_name}}<el-tag v-if="relateDetail.self === 1" size="mini" class="be-ml-100">当前商品</el-tag>
-                                                </div>
-                                            </div>
-                                            <div class="be-col">
-                                                <div class="relate-detail-col-value">
-                                                    <el-form-item :prop="'relate.details['+relateDetailIndex+'].value'" :rules="[{required: true, message: '请输入关联属性的值', trigger: 'change' }]">
-                                                        <el-input
-                                                                type="text"
-                                                                placeholder="请输入关联属性的值"
-                                                                v-model = "relateDetail.value"
-                                                                size="medium"
-                                                                maxlength="200" style="min-width: 300px;">
-                                                        </el-input>
-                                                    </el-form-item>
-                                                </div>
-                                            </div>
-                                            <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
-                                                <div class="relate-detail-col-icon-image">
-
-                                                    <div class="relate-icon-image">
-                                                        <div v-if="relateDetail.icon_image" class="relate-icon-image-img">
-                                                            <el-image :src="relateDetail.icon_image" fit="contain" @click="relateIconImageSelect(relateDetail)"></el-image>
-                                                            <div class="relate-icon-image-img-action">
-                                                                <i class="el-icon-delete" @click="relateIconImageDelete(relateDetail)"></i>
-                                                            </div>
-                                                        </div>
-                                                        <i v-else class="el-icon-plus relate-icon-image-icon" @click="relateIconImageSelect(relateDetail)"></i>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                            <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
-                                                <div class="relate-detail-col-icon-color">
-                                                    <el-color-picker v-model="relateDetail.icon_color"></el-color-picker>
+                        <div class="relate-details">
+                            <draggable
+                                    v-model="formData.relate.details"
+                                    ghost-class="relate-detail-ghost"
+                                    chosen-class="relate-detail-chosen"
+                                    drag-class="relate-detail-drag"
+                                    handle=".relate-detail-drag-icon"
+                                    force-fallback="true"
+                                    animation="100">
+                                <transition-group>
+                                    <div class="be-row relate-detail" v-for="relateDetail, relateDetailIndex in formData.relate.details" :key="relateDetail.id">
+                                        <div class="be-col-auto">
+                                            <div class="relate-detail-col-drag-icon">
+                                                <div class="relate-detail-drag-icon">
+                                                    <i class="el-icon-rank"></i>
                                                 </div>
                                             </div>
                                         </div>
-                                    </transition-group>
-                                </draggable>
-                            </div>
+                                        <div class="be-col-auto">
+                                            <div class="relate-detail-col-op">
+                                                <el-button type="text" icon="el-icon-delete" @click="relateDelete(relateDetail)" :disabled="relateDetail.self===1"></el-button>
+                                            </div>
+                                        </div>
 
-                            <div class="be-mt-50">
-                                <el-button size="medium" icon="el-icon-plus" @click="relateAdd()">添加商品</el-button>
-                            </div>
+                                        <div class="be-col">
+                                            <div class="relate-detail-col-product be-lh-250">
+                                                {{relateDetail.product_name}}<el-tag v-if="relateDetail.self === 1" size="mini" class="be-ml-100">当前商品</el-tag>
+                                            </div>
+                                        </div>
+                                        <div class="be-col">
+                                            <div class="relate-detail-col-value">
+                                                <el-form-item :prop="'relate.details['+relateDetailIndex+'].value'" :rules="[{required: true, message: '请输入关联属性的值', trigger: 'change' }]">
+                                                    <el-input
+                                                            type="text"
+                                                            placeholder="请输入关联属性的值"
+                                                            v-model = "relateDetail.value"
+                                                            size="medium"
+                                                            maxlength="200" style="min-width: 300px;">
+                                                    </el-input>
+                                                </el-form-item>
+                                            </div>
+                                        </div>
+                                        <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
+                                            <div class="relate-detail-col-icon-image">
+
+                                                <div class="relate-icon-image">
+                                                    <div v-if="relateDetail.icon_image" class="relate-icon-image-img">
+                                                        <el-image :src="relateDetail.icon_image" fit="contain" @click="relateIconImageSelect(relateDetail)"></el-image>
+                                                        <div class="relate-icon-image-img-action">
+                                                            <i class="el-icon-delete" @click="relateIconImageDelete(relateDetail)"></i>
+                                                        </div>
+                                                    </div>
+                                                    <i v-else class="el-icon-plus relate-icon-image-icon" @click="relateIconImageSelect(relateDetail)"></i>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
+                                            <div class="relate-detail-col-icon-color">
+                                                <el-color-picker v-model="relateDetail.icon_color"></el-color-picker>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </transition-group>
+                            </draggable>
                         </div>
 
-                    </template>
+                        <div class="be-mt-50">
+                            <el-button size="medium" icon="el-icon-plus" @click="relateAdd()">添加商品</el-button>
+                        </div>
+                    </div>
 
+                </template>
+
+            </div>
+
+
+
+            <div class="be-p-150 be-bc-fff be-mt-150">
+                <div class="be-fs-110">
+                    款式设置 <span class="be-c-999 be-fs-90">您可以设置该商品多种款式的细节</span>
                 </div>
 
+                <div class="be-mt-150">
+                    <el-radio v-model.number="formData.style" :label="1" @change="toggleStyle(1)">单一款式</el-radio>
+                    <el-radio v-model.number="formData.style" :label="2" @change="toggleStyle(2)">多款式</el-radio>
+                </div>
+                <?php
+                $formData['style'] = ($this->product ? $this->product->style : 1);
+                ?>
 
-
-                <div class="be-p-150 be-bc-fff be-mt-150">
-                    <div class="be-fs-110">
-                        款式设置 <span class="be-c-999 be-fs-90">您可以设置该商品多种款式的细节</span>
-                    </div>
-
-                    <div class="be-mt-150">
-                        <el-radio v-model.number="formData.style" :label="1" @change="toggleStyle(1)">单一款式</el-radio>
-                        <el-radio v-model.number="formData.style" :label="2" @change="toggleStyle(2)">多款式</el-radio>
-                    </div>
+                <div class="be-mt-150">
+                    <el-checkbox v-model.number="formData.stock_tracking" :true-label="1" :false-label="0">开启库存追踪</el-checkbox>
                     <?php
-                    $formData['style'] = ($this->product ? $this->product->style : 1);
+                    $formData['stock_tracking'] = ($this->product ? $this->product->stock_tracking : 0);
                     ?>
 
-                    <div class="be-mt-150">
-                        <el-checkbox v-model.number="formData.stock_tracking" :true-label="1" :false-label="0">开启库存追踪</el-checkbox>
-                        <?php
-                        $formData['stock_tracking'] = ($this->product ? $this->product->stock_tracking : 0);
-                        ?>
+                    <el-select v-model.number="formData.stock_out_action" v-if="formData.stock_tracking === 1" class="be-ml-200" size="medium">
+                        <el-option label="库存为0时不允许购买" :value="0"></el-option>
+                        <el-option label="库存为0时允许购买" :value="1"></el-option>
+                        <el-option label="库存为0时自动下架" :value="-1"></el-option>
+                    </el-select>
+                    <?php
+                    $formData['stock_out_action'] = ($this->product ? $this->product->stock_out_action : 1);
+                    ?>
+                </div>
+            </div>
 
-                        <el-select v-model.number="formData.stock_out_action" v-if="formData.stock_tracking === 1" class="be-ml-200" size="medium">
-                            <el-option label="库存为0时不允许购买" :value="0"></el-option>
-                            <el-option label="库存为0时允许购买" :value="1"></el-option>
-                            <el-option label="库存为0时自动下架" :value="-1"></el-option>
-                        </el-select>
-                        <?php
-                        $formData['stock_out_action'] = ($this->product ? $this->product->stock_out_action : 1);
-                        ?>
-                    </div>
+            <div class="be-p-150 be-bc-fff be-mt-150">
+                <div class="be-fs-110">
+                    {{formData.style === 1 ? "单一款式" : "多款式"}}
                 </div>
 
-                <div class="be-p-150 be-bc-fff be-mt-150">
-                    <div class="be-fs-110">
-                        {{formData.style === 1 ? "单一款式" : "多款式"}}
-                    </div>
-
-                    <div class="be-mt-100" v-if="formData.style === 2">
-                        <div class="be-row be-mt-100" v-for="style, styleIndex in formData.styles">
-                            <div class="be-col-auto">
-                                <el-input
-                                        type="text"
-                                        placeholder="款式名称"
-                                        v-model="style.name"
+                <div class="be-mt-100" v-if="formData.style === 2">
+                    <div class="be-row be-mt-100" v-for="style, styleIndex in formData.styles">
+                        <div class="be-col-auto">
+                            <el-input
+                                    type="text"
+                                    placeholder="款式名称"
+                                    v-model="style.name"
+                                    size="medium"
+                                    maxlength="60"
+                                    @change="styleNameChange">
+                            </el-input>
+                        </div>
+                        <div class="be-col">
+                            <div class="be-px-100">
+                                <el-select
+                                        style="width:100%;"
+                                        v-model="style.values"
+                                        multiple
+                                        filterable
+                                        allow-create
+                                        default-first-option
+                                        remote
+                                        :remote-method="styleValueRemote"
                                         size="medium"
-                                        maxlength="60"
-                                        @change="styleNameChange">
-                                </el-input>
-                            </div>
-                            <div class="be-col">
-                                <div class="be-px-100">
-                                    <el-select
-                                            style="width:100%;"
-                                            v-model="style.values"
-                                            multiple
-                                            filterable
-                                            allow-create
-                                            default-first-option
-                                            remote
-                                            :remote-method="styleValueRemote"
-                                            size="medium"
-                                            placeholder="款式值（按回车确认）"
-                                            @change="((val)=>{styleValueChange(val, styleIndex)}) ">
-                                    </el-select>
+                                        placeholder="款式值（按回车确认）"
+                                        @change="((val)=>{styleValueChange(val, styleIndex)}) ">
+                                </el-select>
 
-                                </div>
-                            </div>
-                            <div class="be-col-auto">
-                                <el-button :disabled="styleIndex === 0" type="text" icon="el-icon-delete" @click="removeStyle(style)"></el-button>
                             </div>
                         </div>
-
-                        <div class="be-mt-100">
-                            <el-button size="medium" icon="el-icon-plus" @click="addStyle()">添加商品款式</el-button>
+                        <div class="be-col-auto">
+                            <el-button :disabled="styleIndex === 0" type="text" icon="el-icon-delete" @click="removeStyle(style)"></el-button>
                         </div>
                     </div>
-                    <?php
-                    if ($this->product) {
-                        if ($this->product->style === 1) {
-                            $formData['styles'] = [
-                                [
-                                    'id' => '',
-                                    'name' => '',
-                                    'values' => []
-                                ]
-                            ];
-                        } elseif ($this->product->style === 2) {
-                            $styles = [];
-                            foreach ($this->product->styles as $style) {
-                                $styles[] = [
-                                    'id' => $style->id,
-                                    'name' => $style->name,
-                                    'values' => json_decode($style->values, true),
-                                ];
-                            }
-                            $formData['styles'] = $styles;
-                        }
-                    } else {
+
+                    <div class="be-mt-100">
+                        <el-button size="medium" icon="el-icon-plus" @click="addStyle()">添加商品款式</el-button>
+                    </div>
+                </div>
+                <?php
+                if ($this->product) {
+                    if ($this->product->style === 1) {
                         $formData['styles'] = [
                             [
                                 'id' => '',
@@ -844,261 +824,279 @@
                                 'values' => []
                             ]
                         ];
+                    } elseif ($this->product->style === 2) {
+                        $styles = [];
+                        foreach ($this->product->styles as $style) {
+                            $styles[] = [
+                                'id' => $style->id,
+                                'name' => $style->name,
+                                'values' => json_decode($style->values, true),
+                            ];
+                        }
+                        $formData['styles'] = $styles;
                     }
-                    ?>
-
-                    <el-table
-                            class="be-mt-150"
-                            ref = "itemTableRef"
-                            :data="formData.items">
-
-                        <template slot="empty">
-                            <el-empty description="暂无数据"></el-empty>
-                        </template>
-
-                        <el-table-column
-                                type="selection"
-                                align="center"
-                                fixed
-                                width="60">
-                        </el-table-column>
-
-                        <el-table-column
-                                label="操作"
-                                align="center"
-                                fixed
-                                width="80">
-                            <template slot-scope="scope">
-                                <el-button
-                                        type="text"
-                                        icon="el-icon-delete"
-                                        @click="itemDelete(scope.row)"></el-button>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column
-                                v-if="formData.style === 2"
-                                label="图片"
-                                align="center"
-                                width="80">
-                            <template slot-scope="scope">
-                                <div class="item-image">
-                                    <div v-if="scope.row.image" class="item-image-img">
-                                        <el-image :src="scope.row.image" fit="contain" @click="itemImageSelect(scope.row)" ></el-image>
-                                        <div class="item-image-img-action">
-                                            <i class="el-icon-delete" @click="itemImageDelete(scope.row)"></i>
-                                        </div>
-                                    </div>
-                                    <i v-else class="el-icon-plus item-image-icon" @click="itemImageSelect(scope.row)"></i>
-                                </div>
-                            </template>
-                        </el-table-column>
-
-
-                        <el-table-column
-                                v-if="formData.style === 2"
-                                v-for="(item, index) in itemTableColumnStyles"
-                                :label="item.label"
-                                :prop="item.name"
-                                :key="index"
-                                :filters="item.filters"
-                                :filter-method="itemFilter"
-                                align="center"
-                                min-width="90">
-                        </el-table-column>
-
-
-                        <el-table-column
-                                prop="price"
-                                align="center"
-                                width="150">
-                            <template slot="header" slot-scope="scope">
-                                售价（<?php echo $this->configStore->currencySymbol; ?>）
-                            </template>
-                            <template slot-scope="scope">
-                                <el-input-number
-                                        style="max-width:100px;"
-                                        :precision="2"
-                                        :step="0.01"
-                                        :max="999999999"
-                                        :controls="false"
-                                        v-model="formData.items[scope.$index].price"
-                                        size="medium">
-                                </el-input-number>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column
-                                prop="original_price"
-                                align="center"
-                                width="150">
-                            <template slot="header" slot-scope="scope">
-                                原价（<?php echo $this->configStore->currencySymbol; ?>）
-                                <el-tooltip effect="dark" content="原价为0或小于等于售价时，网店将隐藏原价展示" placement="top">
-                                    <i class="el-icon-fa fa-question-circle-o"></i>
-                                </el-tooltip>
-                            </template>
-                            <template slot-scope="scope">
-                                <el-input-number
-                                        style="max-width:100px;"
-                                        :precision="2"
-                                        :step="0.01"
-                                        :max="999999999"
-                                        :controls="false"
-                                        v-model="formData.items[scope.$index].original_price"
-                                        size="medium">
-                                </el-input-number>
-                            </template>
-                        </el-table-column>
-
-
-                        <el-table-column
-                                prop="original_price"
-                                label="重量"
-                                align="center"
-                                width="180">
-                            <template slot-scope="scope">
-                                <div class="be-row">
-                                    <div class="be-col">
-                                        <el-input-number
-                                                style="max-width:100px;"
-                                                :precision="2"
-                                                :step="0.01"
-                                                :max="999999999"
-                                                :controls="false"
-                                                v-model="formData.items[scope.$index].weight"
-                                                size="medium">
-                                        </el-input-number>
-                                    </div>
-                                    <div class="be-col-auto">
-                                        <el-select v-model="formData.items[scope.$index].weight_unit" size="medium" style="width:60px;">
-                                            <el-option label="kg" value="kg"></el-option>
-                                            <el-option label="g" value="g"></el-option>
-                                            <el-option label="lb" value="lb"></el-option>
-                                            <el-option label="oz" value="oz"></el-option>
-                                        </el-select>
-                                    </div>
-                                </div>
-                            </template>
-                        </el-table-column>
-
-
-                        <el-table-column
-                                v-if="formData.stock_tracking === 1"
-                                prop="stock"
-                                label="库存"
-                                align="center"
-                                width="120">
-                            <template slot-scope="scope">
-                                <el-input-number
-                                        style="width:100px;"
-                                        :precision="0"
-                                        :step="1"
-                                        :max="999999999"
-                                        :controls="false"
-                                        v-model="formData.items[scope.$index].stock"
-                                        size="medium">
-                                </el-input-number>
-                            </template>
-                        </el-table-column>
-
-
-                        <el-table-column
-                                prop="sku"
-                                label="SKU"
-                                align="center"
-                                width="240">
-                            <template slot-scope="scope">
-                                <el-input
-                                        type="text"
-                                        v-model="formData.items[scope.$index].sku"
-                                        size="medium"
-                                        maxlength="60">
-                                </el-input>
-                            </template>
-                        </el-table-column>
-
-                        <el-table-column
-                                prop="barcode"
-                                label="条形码"
-                                align="center"
-                                width="240">
-                            <template slot-scope="scope">
-                                <el-input
-                                        type="text"
-                                        v-model="formData.items[scope.$index].barcode"
-                                        size="medium"
-                                        maxlength="60">
-                                </el-input>
-                            </template>
-                        </el-table-column>
-
-                    </el-table>
-
-                    <?php
-                    $defaultStyle1Items = [
+                } else {
+                    $formData['styles'] = [
                         [
                             'id' => '',
-                            'image' => '',
-                            'sku' => '',
-                            'barcode' => '',
-                            'style' => '',
-                            'style_json' => [],
-                            'price' => '0',
-                            'original_price' => '0',
-                            'weight' => '0',
-                            'weight_unit' => 'g',
-                            'stock' => 0,
+                            'name' => '',
+                            'values' => []
                         ]
                     ];
+                }
+                ?>
 
-                    $style1Items = [];
-                    $style2Items = [];
-                    if ($this->product) {
-                        if ($this->product->style === 1) {
-                            $formData['items'] = $this->product->items;
-                            $style1Items = $this->product->items;
-                        } elseif ($this->product->style === 2) {
-                            $items = $this->product->items;
-                            foreach ($items as &$Item) {
-                                $styleJson = null;
-                                if ($Item->style_json) {
-                                    $styleJson = json_decode($Item->style_json, true);
-                                }
+                <el-table
+                        class="be-mt-150"
+                        ref = "itemTableRef"
+                        :data="formData.items">
 
-                                if (is_array($styleJson)) {$Item->style_json = $styleJson;
-                                    foreach ($styleJson as $style) {
-                                        $styleField = 'style_field_' . $style['name'];
-                                        $Item ->$styleField = $style['value'];
-                                    }
-                                } else {
-                                    $Item->style_json = [];
-                                }
+                    <template slot="empty">
+                        <el-empty description="暂无数据"></el-empty>
+                    </template>
+
+                    <el-table-column
+                            type="selection"
+                            align="center"
+                            fixed
+                            width="60">
+                    </el-table-column>
+
+                    <el-table-column
+                            label="操作"
+                            align="center"
+                            fixed
+                            width="80">
+                        <template slot-scope="scope">
+                            <el-button
+                                    type="text"
+                                    icon="el-icon-delete"
+                                    @click="itemDelete(scope.row)"></el-button>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                            v-if="formData.style === 2"
+                            label="图片"
+                            align="center"
+                            width="80">
+                        <template slot-scope="scope">
+                            <div class="item-image">
+                                <div v-if="scope.row.image" class="item-image-img">
+                                    <el-image :src="scope.row.image" fit="contain" @click="itemImageSelect(scope.row)" ></el-image>
+                                    <div class="item-image-img-action">
+                                        <i class="el-icon-delete" @click="itemImageDelete(scope.row)"></i>
+                                    </div>
+                                </div>
+                                <i v-else class="el-icon-plus item-image-icon" @click="itemImageSelect(scope.row)"></i>
+                            </div>
+                        </template>
+                    </el-table-column>
+
+
+                    <el-table-column
+                            v-if="formData.style === 2"
+                            v-for="(item, index) in itemTableColumnStyles"
+                            :label="item.label"
+                            :prop="item.name"
+                            :key="index"
+                            :filters="item.filters"
+                            :filter-method="itemFilter"
+                            align="center"
+                            min-width="90">
+                    </el-table-column>
+
+
+                    <el-table-column
+                            prop="price"
+                            align="center"
+                            width="150">
+                        <template slot="header" slot-scope="scope">
+                            售价（<?php echo $this->configStore->currencySymbol; ?>）
+                        </template>
+                        <template slot-scope="scope">
+                            <el-input-number
+                                    style="max-width:100px;"
+                                    :precision="2"
+                                    :step="0.01"
+                                    :max="999999999"
+                                    :controls="false"
+                                    v-model="formData.items[scope.$index].price"
+                                    size="medium">
+                            </el-input-number>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                            prop="original_price"
+                            align="center"
+                            width="150">
+                        <template slot="header" slot-scope="scope">
+                            原价（<?php echo $this->configStore->currencySymbol; ?>）
+                            <el-tooltip effect="dark" content="原价为0或小于等于售价时，网店将隐藏原价展示" placement="top">
+                                <i class="el-icon-fa fa-question-circle-o"></i>
+                            </el-tooltip>
+                        </template>
+                        <template slot-scope="scope">
+                            <el-input-number
+                                    style="max-width:100px;"
+                                    :precision="2"
+                                    :step="0.01"
+                                    :max="999999999"
+                                    :controls="false"
+                                    v-model="formData.items[scope.$index].original_price"
+                                    size="medium">
+                            </el-input-number>
+                        </template>
+                    </el-table-column>
+
+
+                    <el-table-column
+                            prop="original_price"
+                            label="重量"
+                            align="center"
+                            width="180">
+                        <template slot-scope="scope">
+                            <div class="be-row">
+                                <div class="be-col">
+                                    <el-input-number
+                                            style="max-width:100px;"
+                                            :precision="2"
+                                            :step="0.01"
+                                            :max="999999999"
+                                            :controls="false"
+                                            v-model="formData.items[scope.$index].weight"
+                                            size="medium">
+                                    </el-input-number>
+                                </div>
+                                <div class="be-col-auto">
+                                    <el-select v-model="formData.items[scope.$index].weight_unit" size="medium" style="width:60px;">
+                                        <el-option label="kg" value="kg"></el-option>
+                                        <el-option label="g" value="g"></el-option>
+                                        <el-option label="lb" value="lb"></el-option>
+                                        <el-option label="oz" value="oz"></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
+                        </template>
+                    </el-table-column>
+
+
+                    <el-table-column
+                            v-if="formData.stock_tracking === 1"
+                            prop="stock"
+                            label="库存"
+                            align="center"
+                            width="120">
+                        <template slot-scope="scope">
+                            <el-input-number
+                                    style="width:100px;"
+                                    :precision="0"
+                                    :step="1"
+                                    :max="999999999"
+                                    :controls="false"
+                                    v-model="formData.items[scope.$index].stock"
+                                    size="medium">
+                            </el-input-number>
+                        </template>
+                    </el-table-column>
+
+
+                    <el-table-column
+                            prop="sku"
+                            label="SKU"
+                            align="center"
+                            width="240">
+                        <template slot-scope="scope">
+                            <el-input
+                                    type="text"
+                                    v-model="formData.items[scope.$index].sku"
+                                    size="medium"
+                                    maxlength="60">
+                            </el-input>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column
+                            prop="barcode"
+                            label="条形码"
+                            align="center"
+                            width="240">
+                        <template slot-scope="scope">
+                            <el-input
+                                    type="text"
+                                    v-model="formData.items[scope.$index].barcode"
+                                    size="medium"
+                                    maxlength="60">
+                            </el-input>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+
+                <?php
+                $defaultStyle1Items = [
+                    [
+                        'id' => '',
+                        'image' => '',
+                        'sku' => '',
+                        'barcode' => '',
+                        'style' => '',
+                        'style_json' => [],
+                        'price' => '0',
+                        'original_price' => '0',
+                        'weight' => '0',
+                        'weight_unit' => 'g',
+                        'stock' => 0,
+                    ]
+                ];
+
+                $style1Items = [];
+                $style2Items = [];
+                if ($this->product) {
+                    if ($this->product->style === 1) {
+                        $formData['items'] = $this->product->items;
+                        $style1Items = $this->product->items;
+                    } elseif ($this->product->style === 2) {
+                        $items = $this->product->items;
+                        foreach ($items as &$Item) {
+                            $styleJson = null;
+                            if ($Item->style_json) {
+                                $styleJson = json_decode($Item->style_json, true);
                             }
-                            unset($Item);
-                            $formData['items'] = $items;
-                            $style2Items = $items;
 
-                            $style1Items = $defaultStyle1Items;
+                            if (is_array($styleJson)) {$Item->style_json = $styleJson;
+                                foreach ($styleJson as $style) {
+                                    $styleField = 'style_field_' . $style['name'];
+                                    $Item ->$styleField = $style['value'];
+                                }
+                            } else {
+                                $Item->style_json = [];
+                            }
                         }
-                    } else {
-                        $formData['items'] = $defaultStyle1Items;
+                        unset($Item);
+                        $formData['items'] = $items;
+                        $style2Items = $items;
+
                         $style1Items = $defaultStyle1Items;
                     }
-                    ?>
-                    <el-dialog :visible.sync="itemImageSelectVisible" title="选择图片" center="true">
-                        <div v-if="formData.images.length > 0" class="item-image-select-images">
-                            <el-image v-for="image in formData.images" :src="image.large" fit="contain" @click="itemImageSelected(image.large)" ></el-image>
-                        </div>
-                        <div v-else>
-                            <el-empty description="请先在主图中上传相关图片"></el-empty>
-                        </div>
-                    </el-dialog>
+                } else {
+                    $formData['items'] = $defaultStyle1Items;
+                    $style1Items = $defaultStyle1Items;
+                }
+                ?>
+                <el-dialog :visible.sync="itemImageSelectVisible" title="选择图片" center="true">
+                    <div v-if="formData.images.length > 0" class="item-image-select-images">
+                        <el-image v-for="image in formData.images" :src="image.large" fit="contain" @click="itemImageSelected(image.large)" ></el-image>
+                    </div>
+                    <div v-else>
+                        <el-empty description="请先在主图中上传相关图片"></el-empty>
+                    </div>
+                </el-dialog>
 
-                </div>
+            </div>
 
-            </el-form>
-        </div>
+        </el-form>
 
         <el-drawer
                 :visible.sync="drawerSeo"

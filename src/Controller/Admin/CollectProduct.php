@@ -362,7 +362,7 @@ class CollectProduct extends Auth
         $categoryKeyValues = Be::getService('App.ShopFai.Admin.Category')->getCategoryKeyValues();
         $response->set('categoryKeyValues', $categoryKeyValues);
 
-        $response->display(null, 'ShopFaiAdminBlank');
+        $response->display(null, 'Blank');
     }
 
     /**

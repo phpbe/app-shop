@@ -340,7 +340,7 @@ class Product
             if ($data['collect_product_id'] !== '') {
                 $tupleProduct->collect_product_id = $data['collect_product_id'];
             }
-            if ($data['relate']['id'] !== '') {
+            if (isset($data['relate']['id']) && $data['relate']['id'] !== '') {
                 $tupleProduct->relate_id = $data['relate']['id'];
             }
             $tupleProduct->is_enable = $data['is_enable'];
