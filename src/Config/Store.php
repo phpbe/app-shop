@@ -10,7 +10,7 @@ class Store
     /**
      * @BeConfigItem("名称", driver="FormItemInput")
      */
-    public string $name = 'products';
+    public string $name = '店铺名称';
 
     /**
      * @BeConfigItem("币种", driver="FormItemInput")

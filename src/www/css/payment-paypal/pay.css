@@ -1,0 +1,8 @@
+
+.payment-paypal-pay-icon svg {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    vertical-align: middle;
+    fill: currentColor;
+}

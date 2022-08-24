@@ -1,0 +1,28 @@
+
+.payment-select-icon svg {
+    display: inline-block;
+    width: 5rem;
+    height: 5rem;
+    vertical-align: middle;
+    fill: currentColor;
+}
+
+.payment {
+    padding: 1rem;
+    margin: 1rem;
+    border: #eee 3px solid;
+    cursor: pointer;
+}
+
+.payment a {
+    display: block;
+    height: 3rem;
+    line-height: 3rem;
+    vertical-align: middle;
+}
+
+.payment img {
+    max-width: 120px;
+    max-height: 3rem;
+    vertical-align: middle;
+}

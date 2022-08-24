@@ -1,0 +1,49 @@
+
+.order-detail-progress {
+    height: 1.2rem;
+    overflow: hidden;
+    background-color: #eee;
+    border-radius: 0.25rem;
+    display: flex;
+}
+
+.order-detail-progress .order-detail-progress-bar {
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #198754;
+    font-size: .75rem;
+    line-height: 1rem;
+    padding: .1rem 0;
+    overflow: hidden;
+}
+
+.order-detail-information {
+    background-color: #fcfcfc;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.order-detail-information table {
+    width: 100%;
+    margin: 10px 5px;
+}
+
+.order-detail-information th {
+    line-height: 20px;
+    padding: 10px 10px;
+    font-size: 14px;
+    color: #999;
+    vertical-align: top;
+    text-align: right;
+}
+
+.order-detail-information td {
+    line-height: 20px;
+    max-width: 80%;
+    padding: 10px 15px 10px 0;
+    font-size: 14px;
+    vertical-align: top;
+    text-align: left;
+}
+
