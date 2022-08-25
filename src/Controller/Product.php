@@ -23,6 +23,12 @@ class Product extends Base
 
         $response->set('product', $product);
 
+        $response->set('title', $product->seo_title);
+        $response->set('metaKeywords', $product->seo_keywords);
+        $response->set('metaDescription', $product->seo_description);
+
+        $response->set('pageTitle', $product->name);
+
         $response->display();
     }
 
@@ -105,9 +111,9 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $keywords = $request->get('q');
+        $keywords = $request->get('keywords');
         $keywords = urldecode($keywords);
-        $response->set('q', $keywords);
+        $response->set('keywords', $keywords);
 
         $orderBy = $request->get('orderBy', 'common');
         $orderByDir = $request->get('orderByDir', 'desc');
@@ -136,6 +142,12 @@ class Product extends Base
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
+
+        $configPage = Be::getConfig('App.ShopFai.Page.Product.latest');
+        $response->set('title', $configPage->title);
+        $response->set('metaKeywords', $configPage->seoKeywords);
+        $response->set('metaDescription', $configPage->seoDescription);
+
         $page = $request->get('page', 1);
         $result = Be::getService('App.ShopFai.Product')->search('', [
             'orderBy' => 'create_time',
@@ -160,6 +172,12 @@ class Product extends Base
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
+
+        $configPage = Be::getConfig('App.ShopFai.Page.Product.hottest');
+        $response->set('title', $configPage->title);
+        $response->set('metaKeywords', $configPage->seoKeywords);
+        $response->set('metaDescription', $configPage->seoDescription);
+
         $page = $request->get('page', 1);
         $result = Be::getService('App.ShopFai.Product')->search('', [
             'orderBy' => 'hits',
@@ -184,6 +202,12 @@ class Product extends Base
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
+
+        $configPage = Be::getConfig('App.ShopFai.Page.Product.topSales');
+        $response->set('title', $configPage->title);
+        $response->set('metaKeywords', $configPage->seoKeywords);
+        $response->set('metaDescription', $configPage->seoDescription);
+
         $page = $request->get('page', 1);
         $result = Be::getService('App.ShopFai.Product')->search('', [
             'orderBy' => 'sales_volume',
@@ -209,7 +233,12 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $rows = Be::getService('App.ShopFai.Product')->getTopSearch(100);
+        $configPage = Be::getConfig('App.ShopFai.Page.Product.topSearch');
+        $response->set('title', $configPage->title);
+        $response->set('metaKeywords', $configPage->seoKeywords);
+        $response->set('metaDescription', $configPage->seoDescription);
+
+        $rows = Be::getService('App.ShopFai.Product')->getTopSearchProducts(120);
         $result = [
             'total' => count($rows),
             'pageSize' => 100,
@@ -235,7 +264,12 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $rows = Be::getService('App.ShopFai.Product')->getGuessYouLikeProducts(100);
+        $configPage = Be::getConfig('App.ShopFai.Page.Product.guessYouLike');
+        $response->set('title', $configPage->title);
+        $response->set('metaKeywords', $configPage->seoKeywords);
+        $response->set('metaDescription', $configPage->seoDescription);
+
+        $rows = Be::getService('App.ShopFai.Product')->getGuessYouLikeProducts(120);
         $result = [
             'total' => count($rows),
             'pageSize' => 100,

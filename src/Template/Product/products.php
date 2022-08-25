@@ -1,54 +1,274 @@
 <be-head>
+    <?php
+    echo '<style type="text/css">';
 
+    echo '.shopfai-products {';
+    echo 'display: flex;';
+    echo 'flex-wrap: wrap;';
+    echo 'overflow: hidden;';
+    echo '}';
+
+    echo '.shopfai-product {';
+    echo 'flex: 0 1 auto;';
+    echo 'overflow: hidden;';
+    echo '}';
+
+
+    // 手机端小于 320px 时, 100% 宽度
+    echo '@media (max-width: 320px) {';
+    echo '.shopfai-product {';
+    echo 'width: 100% !important;';
+    echo '}';
+    echo '}';
+
+    // 手机端
+    if (isset($this->_page->spacingMobile) && $this->_page->spacingMobile !== '') {
+        echo '@media (max-width: 768px) {';
+
+        echo '.shopfai-products {';
+        echo 'margin-left: calc(-' . $this->_page->spacingMobile . ' / 2);';
+        echo 'margin-right: calc(-' . $this->_page->spacingMobile . ' / 2);';
+        echo 'margin-bottom: -' . $this->_page->spacingMobile . ';';
+        echo '}';
+
+        echo '.shopfai-product {';
+        echo 'width: 50%;';
+        echo 'padding-left: calc(' . $this->_page->spacingMobile . ' / 2);';
+        echo 'padding-right: calc(' . $this->_page->spacingMobile . ' / 2);';
+        echo 'margin-bottom: ' . $this->_page->spacingMobile . ';';
+        echo '}';
+
+        echo '}';
+    }
+
+
+    // 平析端
+    if (isset($this->_page->spacingTablet) && $this->_page->spacingTablet !== '') {
+        echo '@media (min-width: 768px) {';
+
+        echo '.shopfai-products {';
+        echo 'margin-left: calc(-' . $this->_page->spacingTablet . ' / 2);';
+        echo 'margin-right: calc(-' . $this->_page->spacingTablet . ' / 2);';
+        echo 'margin-bottom: -' . $this->_page->spacingTablet . ';';
+        echo '}';
+
+        echo '.shopfai-product {';
+        $cols = min($this->_page->cols, 3);
+        echo 'width: ' . (100 / $cols) . '%;';
+        echo 'padding-left: calc(' . $this->_page->spacingTablet . ' / 2);';
+        echo 'padding-right: calc(' . $this->_page->spacingTablet . ' / 2);';
+        echo 'margin-bottom: ' . $this->_page->spacingTablet . ';';
+        echo '}';
+
+        echo '}';
+    }
+
+
+    // 电脑端
+    if (isset($this->_page->spacingDesktop) && $this->_page->spacingDesktop !== '') {
+        echo '@media (min-width: 992px) {';
+
+        echo '.shopfai-products {';
+        echo 'margin-left: calc(-' . $this->_page->spacingDesktop . ' / 2);';
+        echo 'margin-right: calc(-' . $this->_page->spacingDesktop . ' / 2);';
+        echo 'margin-bottom: -' . $this->_page->spacingDesktop . ';';
+        echo '}';
+
+        echo '.shopfai-product {';
+        $cols = $this->_page->cols;
+        echo 'width: ' . (100 / $cols) . '%;';
+        echo 'padding-left: calc(' . $this->_page->spacingDesktop . ' / 2);';
+        echo 'padding-right: calc(' . $this->_page->spacingDesktop . ' / 2);';
+        echo 'margin-bottom: ' . $this->_page->spacingDesktop . ';';
+        echo '}';
+
+        echo '}';
+    }
+
+    echo  '.shopfai-product-image {';
+    echo  '}';
+
+    echo  '.shopfai-product-image-1 {';
+    echo  'width: 100%;';
+    echo  '}';
+
+    if ($this->_page->hoverEffect != 'none') {
+        if ($this->_page->hoverEffect == 'scale' || $this->_page->hoverEffect == 'rotateScale') {
+            echo '.shopfai-product-image a .shopfai-product-image-img {';
+            echo 'transition: all 0.7s ease;';
+            echo '}';
+        }
+
+        switch ($this->_page->hoverEffect) {
+            case 'scale':
+                echo '.shopfai-product-image a:hover .shopfai-product-image-img {';
+                echo 'transform: scale(1.1);';
+                echo '}';
+                break;
+            case 'rotateScale':
+                echo '.shopfai-product-image a:hover .shopfai-product-image-img {';
+                echo 'transform: rotate(3deg) scale(1.1);';
+                echo '}';
+                break;
+            case 'toggleImage':
+                echo  '.shopfai-product-image a {';
+                echo  'display:block;';
+                echo  'position:relative;';
+                echo  '}';
+
+                echo  '.shopfai-product-image a .shopfai-product-image-1 {';
+                echo  '}';
+
+                echo  '.shopfai-product-image a .shopfai-product-image-2 {';
+                echo  'position:absolute;';
+                echo  'top:0;';
+                echo  'left:0;';
+                echo  'right:0;';
+                echo  'bottom:0;';
+                echo  'width:100%;';
+                echo  'height:100%;';
+                echo  'opacity:0;';
+                echo  'cursor:pointer;';
+                echo  'transition: all 0.7s ease;';
+                echo  '}';
+
+                echo  '.shopfai-product-image a:hover .shopfai-product-image-1 {';
+                echo  '}';
+
+                echo  '.shopfai-product-image a:hover .shopfai-product-image-2 {';
+                echo  'opacity:1;';
+                echo  '}';
+                break;
+        }
+    }
+    echo '</style>';
+    ?>
 </be-head>
 
 
 <be-page-content>
     <?php
     $isMobile = \Be\Be::getRequest()->isMobile();
+    $nnImage = \Be\Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+
+    echo '<div class="shopfai-products">';
     $i = 0;
-    foreach ($this->result['rows'] as $article) {
-        ?>
-        <div class="be-row<?php echo $i === 0 ? '': ' be-mt-300';?>">
-            <div class="be-col-auto">
-                <div class="article-image">
-                    <a class="be-d-inline-block" href="<?php echo beUrl('Cms.Article.detail', ['id'=> $article->id]); ?>" title="<?php echo $article->title; ?>"<?php echo $isMobile ? '' : ' target="_blank"';?>>
-                        <img src="<?php
-                        if ($article->image === '') {
-                            echo \Be\Be::getProperty('App.Cms')->getWwwUrl() . '/article/images/no-image-m.jpg';
-                        } else {
-                            echo $article->image;
-                        }
-                        ?>" alt="<?php echo $article->title; ?>">
-                    </a>
-                </div>
-            </div>
+    foreach ($this->result['rows'] as $product) {
+        $defaultImage = null;
+        $hoverImage = null;
+        foreach ($product->images as $image) {
+            if ($this->_page->hoverEffect == 'toggleImage') {
+                if ($image->is_main) {
+                    $defaultImage = $image;
+                } else {
+                    $hoverImage = $image;
+                }
 
-            <div class="be-col">
-                <div class="be-pl-100">
-                    <a class="be-fs-150 be-fw-bold be-lh-200" href="<?php echo beUrl('Cms.Article.detail', ['id'=> $article->id]); ?>" title="<?php echo $article->title; ?>"<?php echo $isMobile ? '' : ' target="_blank"';?>>
-                        <?php echo $article->title; ?>
-                    </a>
-                    <div class="be-mt-100 be-lh-150 be-c-666">
-                        <?php echo $article->summary; ?>
-                    </div>
-                    <div class="be-mt-100 be-c-999">
-                        <span><?php echo date('Y年n月j日', strtotime($article->publish_time)); ?></span>
-                        <?php
-                        if ($article->author !== '') {
-                            echo '<span class="be-ml-100">作者：' . $article->author . '</span>';
-                        }
-                        ?>
-                    </div>
-                </div>
-            </div>
+                if ($defaultImage && $hoverImage) {
+                    break;
+                }
+            } else {
+                if ($image->is_main) {
+                    $defaultImage = $image;
+                    break;
+                }
+            }
+        }
 
-        </div>
-        <?php
+        if (!$defaultImage && count($product->images) > 0) {
+            $defaultImage = $product->images[0];
+        }
 
-        $i++;
+        if (!$defaultImage) {
+            $defaultImage = (object)[
+                'id' => '',
+                'product_id' => $product->id,
+                'small' => $nnImage,
+                'medium' => $nnImage,
+                'large' => $nnImage,
+                'original' => $nnImage,
+                'is_main' => 1,
+                'ordering' => 0,
+            ];
+        }
+
+        echo '<div class="shopfai-product">';
+
+        echo '<div class="shopfai-product-image">';
+        echo '<a href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+        if (!$isMobile) {
+            echo ' target="_blank"';
+        }
+        echo '>';
+        if ($defaultImage) {
+            echo '<img src="' . $defaultImage->medium . '" class="shopfai-product-image-1" />';
+            if ($this->_page->hoverEffect == 'toggleImage' && $hoverImage) {
+                echo '<img src="' . $hoverImage->medium . '" class="shopfai-product-image-2" />';
+            }
+        }
+
+        echo '</a>';
+        echo '</div>';
+
+        echo '<div class="be-mt-50">';
+        $averageRating = round($product->rating_avg);
+        for ($i = 1; $i <= 5; $i++) {
+            if ($i <= $averageRating) {
+                echo '<i class="icon-star-fill icon-star-fill-150"></i>';
+            } else {
+                echo '<i class="icon-star icon-star-150"></i>';
+            }
+        }
+        echo '</div>';
+
+        echo '<div class="be-mt-50">';
+        echo '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+        if (!$isMobile) {
+            echo ' target="_blank"';
+        }
+        echo '>';
+        echo $product->name;
+        echo '</a>';
+        echo '</div>';
+
+        echo '<div class="be-mt-50">';
+        if ($product->original_price_from > 0 && $product->original_price_from != $product->price_from) {
+            echo '<span class="be-td-line-through be-mr-50 be-c-999">$';
+            if ($product->original_price_from === $product->original_price_to) {
+                echo $product->original_price_from;
+            } else {
+                echo $product->original_price_from . '~' . $product->original_price_to;;
+            }
+            echo '</span>';
+        }
+
+        echo '<span class="be-fw-bold">$';
+        if ($product->price_from === $product->price_to) {
+            echo $product->price_from;
+        } else {
+            echo $product->price_from . '~' . $product->price_to;;
+        }
+        echo '</span>';
+
+        echo '</div>';
+
+        $buttonClass = 'be-btn';
+        if (isset($this->_page->buttonClass) && $this->_page->buttonClass !== '') {
+            $buttonClass = $this->_page->buttonClass;
+        }
+
+        echo '<div class="be-mt-50">';
+        if (count($product->items) > 1) {
+            echo '<input type="button" class="' . $buttonClass . '" value="Quick Buy" onclick="quickBuy(\'' . $product->id . '\')">';
+        } else {
+            $productItem = $product->items[0];
+            echo '<input type="button" class="' . $buttonClass . '" value="Add to Cart" onclick="addToCart(\'' . $product->id . '\', \'' . $productItem->id . '\')">';
+        }
+        echo '</div>';
+
+        echo '</div>';
     }
-
+    echo '</div>';
 
     $total = $this->result['total'];
     $pageSize = $this->result['pageSize'];
@@ -61,16 +281,16 @@
         $paginationUrl .= strpos($paginationUrl, '?') === false ? '?' : '&';
 
         $html = '<nav class="be-mt-300">';
-        $html .= '<ul class="be-pagination" style="justify-content: center;">';
-        $html .= '<li>';
+        echo '<ul class="be-pagination" style="justify-content: center;">';
+        echo '<li>';
         if ($page > 1) {
             $url = $paginationUrl;
             $url .= http_build_query(['page' => ($page - 1)]);
-            $html .= '<a href="' . $url . '">上一页</a>';
+            echo '<a href="' . $url . '">上一页</a>';
         } else {
-            $html .= '<span>上一页</span>';
+            echo '<span>上一页</span>';
         }
-        $html .= '</li>';
+        echo '</li>';
 
         $from = null;
         $to = null;
@@ -90,38 +310,38 @@
         }
 
         if ($from > 1) {
-            $html .= '<li><span>...</span></li>';
+            echo '<li><span>...</span></li>';
         }
 
         for ($i = $from; $i <= $to; $i++) {
             if ($i == $page) {
-                $html .= '<li class="active">';
-                $html .= '<span>' . $i . '</span>';
-                $html .= '</li>';
+                echo '<li class="active">';
+                echo '<span>' . $i . '</span>';
+                echo '</li>';
             } else {
                 $url = $paginationUrl;
                 $url .= http_build_query(['page' => $i]);
-                $html .= '<li>';
-                $html .= '<a href="' . $url . '">' . $i . '</a>';
-                $html .= '</li>';
+                echo '<li>';
+                echo '<a href="' . $url . '">' . $i . '</a>';
+                echo '</li>';
             }
         }
 
         if ($to < $pages) {
-            $html .= '<li><span>...</span></li>';
+            echo '<li><span>...</span></li>';
         }
 
-        $html .= '<li>';
+        echo '<li>';
         if ($page < $pages) {
             $url = $paginationUrl;
             $url .= http_build_query(['page' => ($page + 1)]);
-            $html .= '<a href="' . $url . '">下一页</a>';
+            echo '<a href="' . $url . '">下一页</a>';
         } else {
-            $html .= '<span>下一页</span>';
+            echo '<span>下一页</span>';
         }
-        $html .= '</li>';
-        $html .= '</ul>';
-        $html .= '</nav>';
+        echo '</li>';
+        echo '</ul>';
+        echo '</nav>';
 
         echo $html;
     }

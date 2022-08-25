@@ -10,9 +10,6 @@ class index
 
     public array $middleSections = [
         [
-            'name' => 'be-page-content',
-        ],
-        [
             'name' => 'App.ShopFai.Latest',
         ],
         [
