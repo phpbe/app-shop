@@ -40,6 +40,7 @@ class Cart extends Base
 
         $response->set('hideHeaderCart', 1);
 
+        $response->set('title', 'Shopping Cart');
         $response->display();
     }
 
@@ -79,7 +80,8 @@ class Cart extends Base
         $response->set('totalAmount', $totalAmount);
 
         $response->set('hideHeaderCart', 1);
-        
+
+        $response->set('title', 'Checkout');
         $response->display();
     }
 

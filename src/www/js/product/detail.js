@@ -273,7 +273,7 @@ $(document).ready(function () {
         if (quantity < 0) quantity = 1;
 
         $.ajax({
-            url: "<?php echo beUrl('ShopFai.Cart.add'); ?>",
+            url: addToCartUrl,
             data: {
                 "product_id": product.id,
                 "product_item_id": productItemId,
@@ -306,4 +306,8 @@ function changeQuantity(n) {
     quantity = parseInt(quantity);
     if (quantity < 1) quantity = 1;
     $e.val(quantity);
+}
+
+function addToCart() {
+
 }

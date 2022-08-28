@@ -2,8 +2,8 @@
     <?php
     $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
     ?>
-    <script src="<?php echo $wwwUrl; ?>/js/cart/checkout.js?v=20220528"></script>
-    <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/cart/checkout.css?v=2022042603"/>
+    <script src="<?php echo $wwwUrl; ?>/js/cart/checkout.js"></script>
+    <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/cart/checkout.css"/>
 </be-head>
 
 
@@ -82,7 +82,7 @@
                     }
                     ?>
 
-                    <div class="be-fs-125 be-lh-150 be-mt-200">Shipping Address</div>
+                    <div class="be-fs-125 be-lh-150 <?php echo $my->isGuest() ? 'be-mt-200' : '';?>">Shipping Address</div>
 
                     <div class="be-row">
                         <div class="be-col-24 be-col-md-12 be-mt-100 be-pr-200">

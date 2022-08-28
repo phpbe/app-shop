@@ -69,30 +69,6 @@ class Config
     public string $paddingDesktop = '2rem';
 
     /**
-     * @BeConfigItem("外边距（手机端）",
-     *     driver = "FormItemInput",
-     *     description = "上右下左（CSS margin 语法）"
-     * )
-     */
-    public string $marginMobile = '1.5rem 0';
-
-    /**
-     * @BeConfigItem("外边距（平板端）",
-     *     driver = "FormItemInput",
-     *     description = "上右下左（CSS margin 语法）"
-     * )
-     */
-    public string $marginTablet = '1.75rem 0';
-
-    /**
-     * @BeConfigItem("外边距（电脑端）",
-     *     driver = "FormItemInput",
-     *     description = "上右下左（CSS margin 语法）"
-     * )
-     */
-    public string $marginDesktop = '2rem 0';
-
-    /**
      * @BeConfigItem("间距（手机端）",
      *     driver = "FormItemInput"
      * )

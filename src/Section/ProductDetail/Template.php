@@ -69,6 +69,8 @@ class Template extends Section
         }
         echo 'let productItemId = "' . $productItemId . '";';
 
+        echo 'let addToCartUrl = "' . beUrl('ShopFai.Cart.Add') . '";';
+
         if ($this->config->showDescription === 1) {
             $this->descriptionJs();
         }
@@ -83,18 +85,15 @@ class Template extends Section
 
         echo $this->getCssBackgroundColor('product-detail');
         echo $this->getCssPadding('product-detail');
-        echo $this->getCssMargin('product-detail');
 
         if ($this->config->showDescription === 1) {
             echo $this->getCssBackgroundColor('product-detail-description');
             echo $this->getCssPadding('product-detail-description');
-            echo $this->getCssMargin('product-detail-description');
         }
 
         if ($this->config->showReviews === 1) {
             echo $this->getCssBackgroundColor('product-detail-reviews');
             echo $this->getCssPadding('product-detail-reviews');
-            echo $this->getCssMargin('product-detail-reviews');
         }
 
         if (Be::getRequest()->isMobile()) {
@@ -352,7 +351,7 @@ class Template extends Section
 
     private function description()
     {
-        echo '<div class="product-detail-description">';
+        echo '<div class="product-detail-description be-mt-200">';
         echo '<div class="be-container">';
         echo '<h4 class="be-h4 be-lh-200 be-mb-100">Description</h4>';
         echo '<div>';
@@ -465,7 +464,7 @@ class Template extends Section
             'pageSize' => $reviewPageSize,
         ], ['images' => true]);
 
-        echo '<div class="product-detail-reviews">';
+        echo '<div class="product-detail-reviews be-mt-200">';
         echo '<div class="be-container">';
 
         echo '<h4 class="be-h4 be-lh-200">' . $this->config->reviewTitle . '</h4>';

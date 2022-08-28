@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Product;
+namespace Be\App\ShopFai\Config\Page\Cart;
 
-class detail
+class checkout
 {
 
     public int $west = 0;
@@ -11,8 +11,12 @@ class detail
 
     public array $centerSections = [
         [
-            'name' => 'App.ShopFai.ProductDetail',
+            'name' => 'be-page-title',
+        ],
+        [
+            'name' => 'be-page-content',
         ],
     ];
+
 
 }

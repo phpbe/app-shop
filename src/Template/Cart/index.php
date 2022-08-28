@@ -6,11 +6,11 @@
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/cart/index.css"/>
 
     <script>
-        var cartIndex_products = <?php echo json_encode($this->products); ?>;
-        var cartIndex_productTotalQuantity = <?php echo $this->productTotalQuantity; ?>;
-        var cartIndex_productTotalAmount = "<?php echo $this->productTotalAmount; ?>";
-        var cartIndex_discountAmount = "<?php echo $this->discountAmount; ?>";
-        var cartIndex_totalAmount = "<?php echo $this->totalAmount; ?>";
+        const cartIndex_products = <?php echo json_encode($this->products); ?>;
+        const cartIndex_productTotalQuantity = <?php echo $this->productTotalQuantity; ?>;
+        const cartIndex_productTotalAmount = "<?php echo $this->productTotalAmount; ?>";
+        const cartIndex_discountAmount = "<?php echo $this->discountAmount; ?>";
+        const cartIndex_totalAmount = "<?php echo $this->totalAmount; ?>";
     </script>
 </be-head>
 
@@ -25,7 +25,7 @@
         ?>
         <form action="<?php echo beUrl('ShopFai.Cart.checkout'); ?>" method="post">
         <div class="be-row">
-            <div class="be-col-24 be-col-lg-16 be-mt-200">
+            <div class="be-col-24 be-col-lg-16">
                 <div class="cart-index-products">
                     <table style="width: 100%">
                         <thead>
@@ -88,7 +88,7 @@
                     </table>
                 </div>
             </div>
-            <div class="be-col-24 be-col-lg-7 be-mt-200">
+            <div class="be-col-24 be-col-lg-7">
 
                 <div class="be-row">
                     <div class="be-col-0 be-col-lg-2">
