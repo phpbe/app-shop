@@ -10,6 +10,7 @@ class UserProductReview extends Auth
     /**
      * 我的评论
      *
+     * @BeMenu("用户 - 评论")
      * @BeRoute("/my-reviews")
      */
     public function reviews()

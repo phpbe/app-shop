@@ -10,7 +10,8 @@ class UserCenter extends Auth
     /**
      * 用户中心
      *
-     * @BeRoute("/dashbaord");
+     * @BeMenu("用户 - 控制台")
+     * @BeRoute("/dashbaord")
      */
     public function dashboard()
     {
@@ -23,17 +24,15 @@ class UserCenter extends Auth
     /**
      * 账号设置
      *
-     * @BeRoute("/setting");
+     * @BeMenu("用户 - 账号设置")
+     * @BeRoute("/setting")
      */
     public function setting()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
-
-        $profile = Be::getService('App.ShopFai.User')->getUser($userId);
+        $profile = Be::getService('App.ShopFai.User')->getUser();
         $response->set('profile', $profile);
 
         $response->display();
@@ -42,18 +41,15 @@ class UserCenter extends Auth
     /**
      * 修改资料
      *
-     * @BeRoute("/update-profile");
+     * @BeRoute("/update-profile")
      */
     public function updateProfile()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
-
         try {
-            Be::getService('App.ShopFai.User')->updateProfile($userId, $request->post());
+            Be::getService('App.ShopFai.User')->updateProfile($request->post());
             $response->set('success', true);
             $response->set('message', 'Update your profile success!');
             $response->json();
@@ -67,20 +63,17 @@ class UserCenter extends Auth
     /**
      * 修改邮箱
      *
-     * @BeRoute("/change-email");
+     * @BeRoute("/change-email")
      */
     public function changeEmail()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
-
         try {
             $password = $request->post('password');
             $email = $request->post('email');
-            Be::getService('App.ShopFai.User')->changeEmail($userId, $password, $email);
+            Be::getService('App.ShopFai.User')->changeEmail($password, $email);
             $response->set('success', true);
             $response->set('message', 'Change your email success!');
             $response->json();
@@ -94,20 +87,17 @@ class UserCenter extends Auth
     /**
      * 修改密码
      *
-     * @BeRoute("/change-password");
+     * @BeRoute("/change-password")
      */
     public function changePassword()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
-
         try {
             $password = $request->post('password');
             $newPassword = $request->post('new_password');
-            Be::getService('App.ShopFai.User')->changePassword($userId, $password, $newPassword);
+            Be::getService('App.ShopFai.User')->changePassword($password, $newPassword);
             $response->set('success', true);
             $response->set('message', 'Change your password success!');
             $response->json();

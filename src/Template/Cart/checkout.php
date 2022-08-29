@@ -9,6 +9,7 @@
 
 <be-page-content>
     <?php
+    $configStore = \Be\Be::getConfig('App.ShopFai.Store');
     $defaultAddress = false;
     $billingAddress = false;
     $my = \Be\Be::getUser();
@@ -176,7 +177,7 @@
                     </div>
 
                     <div class="be-mt-150 be-pr-200">
-                        <input type="submit" class="be-btn be-btn-lg be-lh-200 be-mt-50" id="cart-checkout-submit" value="Place Your Order">
+                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-lh-200 be-mt-50" id="cart-checkout-submit" value="Place Your Order">
                         <a href="<?php echo beUrl('ShopFai.Cart.index'); ?>" class="be-d-inline-block be-lh-300 be-va-middle be-ml-100 be-mt-50">Return to cart</a>
                     </div>
 
@@ -213,7 +214,7 @@
                                     </div>
                                 </td>
 
-                                <td class="be-ta-right">$<?php echo $product->amount; ?></td>
+                                <td class="be-ta-right"><?php echo $configStore->currencySymbol . $product->amount; ?></td>
                             </tr>
                             <tr><td class="be-pt-100" colspan="3"></td></tr>
                             <?php
@@ -232,7 +233,7 @@
                             </div>
                         </div>
                         <div class="be-flex-0">
-                            <input type="button" class="be-btn be-btn-outline be-btn-lg be-lh-200" id="cart-promotion_coupon_code-apply" value="Apply">
+                            <input type="button" class="be-btn be-btn-lg be-lh-200" id="cart-promotion_coupon_code-apply" value="Apply">
                         </div>
                     </div>
                 </div>
@@ -244,7 +245,7 @@
                             Subtotal
                         </div>
                         <div class="be-col be-ta-right">
-                            $<?php echo $this->totalAmount; ?>
+                            <?php echo $configStore->currencySymbol; ?><?php echo $this->totalAmount; ?>
                         </div>
                     </div>
                     <div class="be-row be-mt-100">
@@ -252,7 +253,7 @@
                             Discount
                         </div>
                         <div class="be-col be-ta-right">
-                            $<span id="cart-checkout-discount-amount"><?php echo $this->discountAmount; ?></span>
+                            <?php echo $configStore->currencySymbol; ?><span id="cart-checkout-discount-amount"><?php echo $this->discountAmount; ?></span>
                         </div>
                     </div>
                     <div class="be-row be-mt-100">
@@ -260,7 +261,7 @@
                             Shipping
                         </div>
                         <div class="be-col be-ta-right">
-                            $<span id="cart-checkout-shipping-fee"><?php echo '0.00'; ?></span>
+                            <?php echo $configStore->currencySymbol; ?><span id="cart-checkout-shipping-fee"><?php echo '0.00'; ?></span>
                         </div>
                     </div>
                 </div>
@@ -271,7 +272,7 @@
                             Total
                         </div>
                         <div class="be-col be-ta-right be-fs-150">
-                            $<span id="cart-checkout-total-amount"><?php echo $this->totalAmount; ?></span>
+                            <?php echo $configStore->currencySymbol; ?><span id="cart-checkout-total-amount"><?php echo $this->totalAmount; ?></span>
                         </div>
                     </div>
                 </div>

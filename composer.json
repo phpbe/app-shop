@@ -20,6 +20,9 @@
     "geoip2/geoip2": "*"
   },
   "autoload": {
+    "classmap": [
+      "be/User/User.php"
+    ],
     "psr-4": {
       "Be\\App\\ShopFai\\": "src/"
     }

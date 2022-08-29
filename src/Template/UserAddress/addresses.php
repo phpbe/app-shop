@@ -1,12 +1,10 @@
 <be-head>
-
     <?php
     $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
     <script src="<?php echo $wwwUrl; ?>/js/user-center/be-tab.js"></script>
 
-    <script src="<?php echo $wwwUrl; ?>/js/user-address/addresses.js"></script>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-address/addresses.css" />
 
     <script>
@@ -14,6 +12,7 @@
         const userAddress_deleteShippingAddressUrl = "<?php echo beUrl('ShopFai.UserAddress.deleteShippingAddress'); ?>";
         const userAddress_deleteBillingAddressUrl = "<?php echo beUrl('ShopFai.UserAddress.deleteBillingAddress'); ?>";
     </script>
+    <script src="<?php echo $wwwUrl; ?>/js/user-address/addresses.js"></script>
 </be-head>
 
 
@@ -74,7 +73,7 @@
 
         <?php if (count($this->shippingAddresses) < 10) { ?>
             <div class="be-mt-150">
-                <a href="<?php echo beUrl('ShopFai.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-lg be-w-100">
+                <a href="<?php echo beUrl('ShopFai.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-main be-btn-lg be-w-100">
                     <i class="user-address-add"></i> Add a new address
                 </a>
             </div>
@@ -110,7 +109,7 @@
         } else {
             ?>
             <div class="be-mt-150">
-                <a href="<?php echo beUrl('ShopFai.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-lg be-w-100">
+                <a href="<?php echo beUrl('ShopFai.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-main be-btn-lg be-w-100">
                     <i class="user-address-add"></i> Add a new address
                 </a>
             </div>
@@ -119,7 +118,7 @@
         ?>
 
         <div class="be-mt-150 be-row">
-            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>
+            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
         </div>
 
     </div>
@@ -162,7 +161,7 @@
 
                                         <div class="be-p-absolute be-t-0 be-r-0 be-pt-50 be-pr-50">
                                             <div class="be-dropdown">
-                                                <button class="be-btn be-btn-outline be-btn-sm be-dropdown-toggle" type="button" onclick="$(this).parent().toggleClass('be-dropdown-open')"  onblur="var _this = this; setTimeout(function() {$(_this).parent().removeClass('be-dropdown-open');}, 300)">Action</button>
+                                                <button class="be-btn be-btn-sm be-dropdown-toggle" type="button" onclick="$(this).parent().toggleClass('be-dropdown-open')"  onblur="var _this = this; setTimeout(function() {$(_this).parent().removeClass('be-dropdown-open');}, 300)">Action</button>
                                                 <ul>
                                                     <li>
                                                         <a href="<?php echo beUrl('ShopFai.UserAddress.editShippingAddress', ['id' => $shippingAddress->id]); ?>">
@@ -202,7 +201,7 @@
 
                     <?php if (count($this->shippingAddresses) < 10) { ?>
                     <div class="be-mt-150">
-                        <a href="<?php echo beUrl('ShopFai.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-lg">
+                        <a href="<?php echo beUrl('ShopFai.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-main be-btn-lg">
                             <i class="user-address-add"></i> Add a new address
                         </a>
                     </div>
@@ -228,7 +227,7 @@
 
                                     <div class="be-p-absolute be-t-0 be-r-0 be-pt-50 be-pr-50">
                                         <div class="be-dropdown">
-                                            <button class="be-btn be-btn-outline be-btn-sm be-dropdown-toggle" type="button" onclick="$(this).parent().toggleClass('be-dropdown-open')"  onblur="var _this = this; setTimeout(function() {$(_this).parent().removeClass('be-dropdown-open');}, 300)">Action</button>
+                                            <button class="be-btn be-btn-sm be-dropdown-toggle" type="button" onclick="$(this).parent().toggleClass('be-dropdown-open')"  onblur="var _this = this; setTimeout(function() {$(_this).parent().removeClass('be-dropdown-open');}, 300)">Action</button>
                                             <ul>
                                                 <li>
                                                     <a href="<?php echo beUrl('ShopFai.UserAddress.editBillingAddress'); ?>">
@@ -253,7 +252,7 @@
                     } else {
                         ?>
                         <div class="be-mt-150">
-                            <a href="<?php echo beUrl('ShopFai.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-lg">
+                            <a href="<?php echo beUrl('ShopFai.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-main be-btn-lg">
                                 <i class="user-address-add"></i> Add a new address
                             </a>
                         </div>

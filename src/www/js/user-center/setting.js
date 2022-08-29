@@ -22,7 +22,7 @@ $(function () {
 
         submitHandler: function (form) {
             $.ajax({
-                url: beUrl  + "/?route=ShopFai.UserCenter.updateProfile",
+                url: userCenter_updateProfileUrl,
                 data : $(form).serialize(),
                 method: "POST",
                 success: function (json) {
@@ -58,7 +58,7 @@ $(function () {
 
         submitHandler: function (form) {
             $.ajax({
-                url: beUrl  + "/?route=ShopFai.UserCenter.changeEmail",
+                url: userCenter_changeEmailUrl,
                 data : $(form).serialize(),
                 method: "POST",
                 success: function (json) {
@@ -101,7 +101,7 @@ $(function () {
 
         submitHandler: function (form) {
             $.ajax({
-                url: beUrl  + "/?route=ShopFai.UserCenter.changePassword",
+                url: userCenter_changePasswordlUrl,
                 data : $(form).serialize(),
                 method: "POST",
                 success: function (json) {

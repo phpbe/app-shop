@@ -5,7 +5,7 @@ function deleteFavorite(productId) {
     }
 
     $.ajax({
-        url: beUrl  + "/?route=ShopFai.UserFavorite.deleteFavorite",
+        url: userFavorite_deleteFavoriteUrl,
         data: {productId: productId},
         method: "POST",
         success: function (json) {

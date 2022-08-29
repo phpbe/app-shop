@@ -78,7 +78,7 @@ class User
                 $tupleUserToken->update_time = $now;
                 $tupleUserToken->update();
 
-                $tokenUserId = '-' . $tupleUserToken;
+                $tokenUserId = '-' . $tupleUserToken->id;
             } else {
                 // token 无效时，创建一个新的 token
                 $token = null;
@@ -393,7 +393,7 @@ class User
                 $tupleUserToken->update_time = $now;
                 $tupleUserToken->update();
 
-                $tokenUserId = '-' . $tupleUserToken;
+                $tokenUserId = '-' . $tupleUserToken->id;
             } else {
                 // token 无效时，创建一个新的 token
                 $token = null;
@@ -458,17 +458,17 @@ class User
     /**
      * 获取用户资料
      *
-     * @param string $userId
      * @return object
      * @throws ServiceException
      */
-    public function getUser(string $userId): object
+    public function getUser(): object
     {
+        $my = Be::getUser();
         $tupleUser = Be::getTuple('shopfai_user');
         try {
-            $tupleUser->load($userId);
+            $tupleUser->load($my->id);
         } catch (\Throwable $t) {
-            throw new ServiceException('User (#' . $userId . ') does not exist!');
+            throw new ServiceException('User (#' . $my->id . ') does not exist!');
         }
 
         return $tupleUser->toObject();
@@ -477,18 +477,17 @@ class User
     /**
      * 修改密码
      *
-     * @param string $userId
      * @param array $profile 用户信息
-     * @return bool
      * @throws \Throwable
      */
-    public function updateProfile(string $userId, array $profile): bool
+    public function updateProfile(array $profile)
     {
+        $my = Be::getUser();
         $tupleUser = Be::getTuple('shopfai_user');
         try {
-            $tupleUser->load($userId);
+            $tupleUser->load($my->id);
         } catch (\Throwable $t) {
-            throw new ServiceException('User (#' . $userId . ') does not exist!');
+            throw new ServiceException('User (#' . $my->id . ') does not exist!');
         }
 
         if (!isset($profile['first_name'])) {
@@ -503,19 +502,16 @@ class User
 
         $tupleUser->update_time = date('Y-m-d H:i:s');
         $tupleUser->update();
-        return true;
     }
 
     /**
      * 修改密码
      *
-     * @param string $userId
      * @param string $password 密码
      * @param string $email 邮箱
-     * @return bool
      * @throws \Throwable
      */
-    public function changeEmail(string $userId, string $password, string $email): bool
+    public function changeEmail(string $password, string $email)
     {
         if (!$password) {
             throw new ServiceException('Please entry password!');
@@ -529,11 +525,12 @@ class User
             throw new ServiceException('The email address you entered is incorrect!');
         }
 
+        $my = Be::getUser();
         $tupleUser = Be::getTuple('shopfai_user');
         try {
-            $tupleUser->load($userId);
+            $tupleUser->load($my->id);
         } catch (\Throwable $t) {
-            throw new ServiceException('User (#' . $userId . ') does not exist!');
+            throw new ServiceException('User (#' . $my->id . ') does not exist!');
         }
 
         if ($tupleUser->password !== $this->encryptPassword($password, $tupleUser->salt)) {
@@ -541,7 +538,7 @@ class User
         }
 
         $sql = 'SELECT COUNT(*) FROM shopfai_user WHERE id!=? AND email=?';
-        if (Be::getDb()->getValue($sql, [$userId, $email]) > 0) {
+        if (Be::getDb()->getValue($sql, [$my->id, $email]) > 0) {
             throw new ServiceException('Sorry, this email address has already been used!');
         }
 
@@ -549,19 +546,16 @@ class User
 
         $tupleUser->update_time = date('Y-m-d H:i:s');
         $tupleUser->update();
-        return true;
     }
 
     /**
      * 修改密码
      *
-     * @param string $userId
      * @param string $password
      * @param string $newPassword
-     * @return bool
      * @throws \Throwable
      */
-    public function changePassword(string $userId, string $password, string $newPassword): bool
+    public function changePassword(string $password, string $newPassword)
     {
         if (!$password) {
             throw new ServiceException('Please entry password!');
@@ -571,11 +565,12 @@ class User
             throw new ServiceException('Please entry new password!');
         }
 
+        $my = Be::getUser();
         $tupleUser = Be::getTuple('shopfai_user');
         try {
-            $tupleUser->load($userId);
+            $tupleUser->load($my->id);
         } catch (\Throwable $t) {
-            throw new ServiceException('User (#' . $userId . ') does not exist!');
+            throw new ServiceException('User (#' . $my->id . ') does not exist!');
         }
 
         if ($tupleUser->password !== $this->encryptPassword($password, $tupleUser->salt)) {
@@ -586,7 +581,6 @@ class User
         $tupleUser->password = $this->encryptPassword($newPassword, $tupleUser->salt);
         $tupleUser->update_time = date('Y-m-d H:i:s');
         $tupleUser->update();
-        return true;
     }
 
 

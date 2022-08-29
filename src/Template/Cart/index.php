@@ -15,8 +15,8 @@
 </be-head>
 
 <be-page-content>
-
     <?php
+    $configStore = \Be\Be::getConfig('App.ShopFai.Store');
     if (count($this->products) == 0) {
         ?>
         <div class="be-py-400 be-my-400 be-ta-center be-c-999">Your shopping cart is empty.</div>
@@ -62,7 +62,7 @@
                                     </td>
 
                                     <td class="be-ta-center">
-                                        $<?php echo $product->price; ?>
+                                        <?php echo $configStore->currencySymbol . $product->price; ?>
                                     </td>
 
                                     <td>
@@ -74,7 +74,7 @@
                                     </td>
 
                                     <td class="be-ta-center">
-                                        $<span class="cart-index-product-amount"><?php echo $product->amount; ?></span>
+                                        <?php echo $configStore->currencySymbol; ?><span class="cart-index-product-amount"><?php echo $product->amount; ?></span>
                                     </td>
 
                                     <td>
@@ -102,7 +102,7 @@
                                 Subtotal
                             </div>
                             <div class="be-col be-ta-right">
-                                $<span id="cart-index-product-total-amount"><?php echo $this->productTotalAmount; ?></span>
+                                <?php echo $configStore->currencySymbol; ?><span id="cart-index-product-total-amount"><?php echo $this->productTotalAmount; ?></span>
                             </div>
                         </div>
                         <div class="be-row be-mt-100">
@@ -110,7 +110,7 @@
                                 Discount
                             </div>
                             <div class="be-col be-ta-right">
-                                $<span id="cart-index-discount-amount"><?php echo $this->discountAmount; ?></span>
+                                <?php echo $configStore->currencySymbol; ?><span id="cart-index-discount-amount"><?php echo $this->discountAmount; ?></span>
                             </div>
                         </div>
 
@@ -120,13 +120,13 @@
                                     Total
                                 </div>
                                 <div class="be-col be-ta-right be-fs-150">
-                                    $<span id="cart-index-total-amount"><?php echo $this->totalAmount; ?></span>
+                                    <?php echo $configStore->currencySymbol; ?><span id="cart-index-total-amount"><?php echo $this->totalAmount; ?></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="be-mt-200 be-ta-right">
-                            <input type="submit" class="be-btn be-btn-lg" value="Check out now" />
+                            <input type="submit" class="be-btn be-btn-main be-btn-lg" value="Check out now" />
                         </div>
                     </div>
                 </div>

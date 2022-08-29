@@ -6,7 +6,7 @@
 </be-head>
 
 
-<be-middle>
+<be-page-content>
     <div class="be-d-none be-d-lg-block">
         <h4 class="be-h4">My Reviews</h4>
 
@@ -134,4 +134,4 @@
         }
         ?>
     </div>
-</be-middle>
+</be-page-content>

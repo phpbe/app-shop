@@ -1,53 +1,4 @@
 
-.be-west {
-    flex: 0 0 235px;
-    padding: 8px 0 20px 0;
-    background-color: #f8f8f8;
-}
-
-.be-center {
-    flex: 1 1 auto;
-    padding-left: 20px;
-    padding-top: 5px;
-}
-
-@media (max-width: 991px) {
-    .be-west {
-        display: none;
-    }
-
-    .be-center {
-        padding-left: 0;
-    }
-}
-
-
-.be-west .user-center-nav-title {
-    height: 50px;
-    line-height: 50px;
-    text-indent: 20px;
-    font-size: 20px;
-}
-
-.be-west .user-center-nav-items li {
-    height: 40px;
-    line-height: 40px;
-}
-
-.be-west .user-center-nav-items li a {
-    color: #888;
-    font-size: 14px;
-    transition: all 0.3s;
-    display: block;
-    margin: 0 15px;
-    text-indent: 9px;
-}
-
-.be-west .user-center-nav-items li a:hover,
-.be-west .user-center-nav-items li.active a {
-    background-color: #efefef;
-}
-
 .user-center-back {
     display: inline-block;
     width: 1.5rem;
@@ -72,43 +23,43 @@
 
 
 /** -------------------------------------------------------------------------------------------------------------------- 表格 */
-.be-center .be-table {
+.be-page-content .be-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.be-center .be-table thead th {
+.be-page-content .be-table thead th {
     height: 40px;
-    padding: 0 10px;
+    padding: 0 .5rem;
     background-color: #f8f8f8;
     border: 1px solid #eee;
     color: #666;
 }
 
-.be-center .be-table tbody td {
-    padding: 10px;
+.be-page-content .be-table tbody td {
+    padding: .5rem;
     border: 1px solid #eee;
 }
 
-.be-center .be-table .be-table-image {
+.be-page-content .be-table .be-table-image {
     width: 100px;
 }
 
-.be-center .be-table .be-table-image a {
+.be-page-content .be-table .be-table-image a {
     display: block;
 }
 
-.be-center .be-table .be-table-image a img {
+.be-page-content .be-table .be-table-image a img {
     width: 100%;
 }
 
-.be-center .be-table tbody td.be-table-no-record {
+.be-page-content .be-table tbody td.be-table-no-record {
     padding: 60px 0 !important;
     text-align: center !important;
     color: #999 !important;
 }
 
-.be-center .be-table .be-table-delete {
+.be-page-content .be-table .be-table-delete {
     display: inline-block;
     width: 1rem;
     height: 1rem;
@@ -121,22 +72,22 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath d='M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
 }
 
-.be-center .be-table .be-table-delete:hover {
+.be-page-content .be-table .be-table-delete:hover {
     background-color: #eee;
 }
 
 
 /** -------------------------------------------------------------------------------------------------------------------- 下拉菜单 */
-.be-center .be-dropdown {;
+.be-page-content .be-dropdown {;
     position: relative;
     display: inline-block;
 }
 
-.be-center .be-dropdown .be-dropdown-toggle {
+.be-page-content .be-dropdown .be-dropdown-toggle {
 
 }
 
-.be-center .be-dropdown .be-dropdown-toggle:after {
+.be-page-content .be-dropdown .be-dropdown-toggle:after {
     display: inline-block;
     margin-left: .35em;
     vertical-align: middle;
@@ -147,7 +98,7 @@
     border-bottom: 0;
 }
 
-.be-center .be-dropdown ul {
+.be-page-content .be-dropdown ul {
     position: absolute;
     top: 2.5rem;
     display: none;
@@ -159,11 +110,11 @@
     z-index: 10;
 }
 
-.be-center .be-dropdown-open ul {
+.be-page-content .be-dropdown-open ul {
     display: block;
 }
 
-.be-center .be-dropdown ul li a {
+.be-page-content .be-dropdown ul li a {
     display: block;
     padding: .25rem 1rem;
     white-space: nowrap;
@@ -172,12 +123,12 @@
     font-weight: normal;
 }
 
-.be-center .be-dropdown ul li a:not(.be-dropdown-active):hover {
+.be-page-content .be-dropdown ul li a:not(.be-dropdown-active):hover {
     text-decoration: none;
     background-color: #eee;
 }
 
-.be-center .be-dropdown ul li a.be-dropdown-active {
+.be-page-content .be-dropdown ul li a.be-dropdown-active {
     color: #fff;
     /* 取 Theme mainColor */
     background-color: #999;
@@ -186,16 +137,16 @@
 
 
 /** -------------------------------------------------------------------------------------------------------------------- Tab 表格 */
-.be-center .be-tab {
+.be-page-content .be-tab {
 
 }
 
-.be-center .be-tab-nav {
+.be-page-content .be-tab-nav {
     display: flex;
     border-bottom: #ddd 1px solid;
 }
 
-.be-center .be-tab-nav a {
+.be-page-content .be-tab-nav a {
     display: block;
     border: 1px solid transparent;
     padding: .5rem 1rem;
@@ -204,22 +155,22 @@
     text-decoration: none;
 }
 
-.be-center.be-tab-nav a:hover {
+.be-page-content.be-tab-nav a:hover {
     text-decoration: none;
 }
 
-.be-center .be-tab-nav-active {
+.be-page-content .be-tab-nav-active {
     border-color: #ddd !important;
     border-bottom-color: #fff !important;
     border-top-left-radius: .25rem;
     border-top-right-radius: .25rem;
 }
 
-.be-center .be-tab-pane {
+.be-page-content .be-tab-pane {
     display: none;
 }
 
-.be-center .be-tab-pane-active {
+.be-page-content .be-tab-pane-active {
     display: block;
 }
 

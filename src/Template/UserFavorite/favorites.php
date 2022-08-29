@@ -3,20 +3,15 @@
     $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
+
+    <script>
+        const userFavorite_deleteFavoriteUrl = "<?php echo beUrl('ShopFai.UserFavorite.deleteFavorite'); ?>";
+    </script>
     <script src="<?php echo $wwwUrl; ?>/js/user-favorite/favorites.js"></script>
-    <?php
-    $my = \Be\Be::getUser();
-    if (substr($my->id, 0, 1) === '-') {
-        echo '<style type="text/css">';
-        echo '.be-west { display: none !important; }';
-        echo '.be-center { padding-left: 0 !important; }';
-        echo '</style>';
-    }
-    ?>
 </be-head>
 
 
-<be-middle>
+<be-page-content>
 
     <div class="be-d-block be-d-lg-none">
         <h4 class="be-h4">
@@ -119,4 +114,4 @@
 
     </div>
 
-</be-middle>
+</be-page-content>

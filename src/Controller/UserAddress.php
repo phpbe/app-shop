@@ -10,6 +10,7 @@ class UserAddress extends Auth
     /**
      * 收货地址
      *
+     * @BeMenu("用户 - 收货地址")
      * @BeRoute("/addresses")
      */
     public function addresses()

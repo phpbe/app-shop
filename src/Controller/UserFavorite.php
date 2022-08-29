@@ -10,6 +10,7 @@ class UserFavorite extends Base
     /**
      * 我的收藏
      *
+     * @BeMenu("用户 - 收藏夹")
      * @BeRoute("/favorites")
      */
     public function favorites()
@@ -17,10 +18,14 @@ class UserFavorite extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
+        $my = \Be\Be::getUser();
+        if ($my->isGuest()) {
+            $page = Be::getConfig('App.ShopFai.Page.UserFavorite.favorites');
+            $page->west = 0;
+            $response->set('_page', $page);
+        }
 
-        $products = Be::getService('App.ShopFai.UserFavorite')->getProducts($userId);
+        $products = Be::getService('App.ShopFai.UserFavorite')->getProducts();
         $response->set('products', $products);
         $response->display();
     }
@@ -33,11 +38,9 @@ class UserFavorite extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
         try {
             $productId = $request->post('product_id');
-            Be::getService('App.ShopFai.User')->addFavorite($userId, $productId);
+            Be::getService('App.ShopFai.User')->addFavorite($productId);
             $response->set('success', true);
             $response->set('message', '收藏商品成功！');
             $response->json();
@@ -56,12 +59,9 @@ class UserFavorite extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $my = Be::getUser();
-        $userId = $my->id;
-
         try {
             $productId = $request->post('product_id');
-            Be::getService('App.ShopFai.User')->deleteFavorite($userId, $productId);
+            Be::getService('App.ShopFai.User')->deleteFavorite($productId);
             $response->set('success', true);
             $response->set('message', '删除收藏商品成功！');
             $response->json();

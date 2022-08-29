@@ -65,6 +65,9 @@ class User extends Base
             }
 
             $user = Be::getService('App.ShopFai.User')->login($email, $password, $request->getIp(), $my->token);
+            if ($user->avatar === '') {
+                $user->avatar = Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/user/avatar/default.png';
+            }
 
             $response->cookie('shopfai_user_token', $user->token, time() + 180*86400, '/', $request->getDomain(), false, true);
             $response->cookie('shopfai_user_token_auth', 1, time() + 180*86400, '/', $request->getDomain(), false, true);
@@ -85,7 +88,7 @@ class User extends Base
     /**
      * 退出
      *
-     * @BeRoute("/login-check");
+     * @BeRoute("/logout");
      */
     public function logout()
     {
@@ -151,4 +154,5 @@ class User extends Base
         $response = Be::getResponse();
         $response->display('App.ShopFai.User.login');
     }
+
 }

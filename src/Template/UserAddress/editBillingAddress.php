@@ -3,7 +3,7 @@
     $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
-    <script src="<?php echo $wwwUrl; ?>/js/user-address/edit-billing-address.js"></script>
+
     <script>
         const userAddress_editBillingAddressSaveUrl = "<?php echo beUrl('ShopFai.UserAddress.editBillingAddressSave'); ?>";
         const userAddress_addressesUrl = "<?php echo beUrl('ShopFai.UserAddress.addresses'); ?>";
@@ -11,6 +11,7 @@
 
         var stateId = "<?php echo $this->address ? $this->address->state_id : ''; ?>";
     </script>
+    <script src="<?php echo $wwwUrl; ?>/js/user-address/edit-billing-address.js"></script>
 </be-head>
 
 
@@ -107,11 +108,11 @@
 
         <div class="be-row">
             <div class="be-col-24 be-col-md-11 be-col-lg-6 be-mt-150">
-                <input type="submit" class="be-btn be-btn-lg be-w-100" value="Save">
+                <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
             </div>
             <div class="be-col-0 be-col-md-2 be-col-lg-1"></div>
             <div class="be-col-24 be-col-md-11 be-col-lg-6 be-mt-150">
-                <a href="<?php echo beURL('ShopFai.UserAddress.addresses') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>
+                <a href="<?php echo beURL('ShopFai.UserAddress.addresses') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
             </div>
         </div>
 

@@ -13,13 +13,7 @@
     ?>
     <div class="be-d-flex">
         <div class="be-flex-0">
-            <img src="<?php
-            if ($my->avatar) {
-                echo $my->avatar;
-            } else {
-                echo \Be\Be::getConfig('App.ShopFai.Url')->cdn . '/image/user/avatar/default.png';
-            }
-            ?>" alt="<?php echo $my->first_name . ' ' . $my->last_name; ?>">
+            <img src="<?php echo $my->avatar; ?>" alt="<?php echo $my->first_name . ' ' . $my->last_name; ?>">
         </div>
 
         <div class="be-flex-1 be-pl-100">

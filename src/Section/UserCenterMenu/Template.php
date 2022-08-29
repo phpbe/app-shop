@@ -25,17 +25,15 @@ class Template extends Section
         echo '}';
 
         echo '.user-center-menu li {';
-        echo 'height: 40px;';
-        echo 'line-height: 40px;';
+        echo 'height: 2.5rem;';
+        echo 'line-height: 2.5rem;';
         echo '}';
 
         echo '.user-center-menu li a {';
         echo 'color: #888;';
-        echo 'font-size: 14px;';
         echo 'transition: all 0.3s;';
         echo 'display: block;';
-        echo 'margin: 0 15px;';
-        echo 'ext-indent: 9px;';
+        echo 'text-indent: .5rem;';
         echo '}';
 
         echo '.user-center-menu li a:hover,';
@@ -92,15 +90,17 @@ class Template extends Section
             echo '</li>';
         }
 
+        echo '<li>';
+        echo '<a href="' . beUrl('ShopFai.User.logout') . '">Sign Out</a>';
+        echo '</li>';
+
         echo '<ul>';
 
         echo $this->pageTemplate->tag1('be-section-content', true);
 
         echo '</div>';
-        
-        
-
 
     }
+
 }
 

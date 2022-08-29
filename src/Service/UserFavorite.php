@@ -10,11 +10,11 @@ class UserFavorite
     /**
      * 获取用户收藏列表
      *
-     * @param $userId
      * @return array
      */
-    public function getProducts($userId)
+    public function getProducts(): array
     {
+        $my = Be::getUser();
         $products = [];
 
         $redis = Be::getRedis();
@@ -22,10 +22,10 @@ class UserFavorite
         $productIds = null;
         $config = Be::getConfig('App.ShopFai.User');
         if ($config->favoriteDrive === 'redis') {
-            $productIds = $redis->sMembers('ShopFai:User:Favorite:' . $userId);
+            $productIds = $redis->sMembers('ShopFai:User:Favorite:' . $my->id);
         } else {
             $sql = 'SELECT product_id FROM shopfai_user_favorite WHERE user_id = ? AND is_enable = 1 AND is_delete = 0';
-            $productIds = Be::getDb()->getValues($sql, [$userId]);
+            $productIds = Be::getDb()->getValues($sql, [$my->id]);
         }
 
         foreach ($productIds as $productId) {
@@ -70,25 +70,24 @@ class UserFavorite
     /**
      * 添加收藏
      *
-     * @param int $userId
-     * @param int $productId
-     * @return bool
+     * @param string $productId
      */
-    public function addFavorite($userId, $productId)
+    public function addFavorite(string$productId)
     {
+        $my = Be::getUser();
         $config = Be::getConfig('App.ShopFai.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            $redis->sAdd('ShopFai:User:Favorite:' . $userId, $productId);
+            $redis->sAdd('ShopFai:User:Favorite:' . $my->id, $productId);
         } else {
             $tupleUserFavorite = Be::getTuple('shopfai_user_favorite');
             try {
                 $tupleUserFavorite->load([
-                    'user_id' => $userId,
+                    'user_id' => $my->id,
                     'product_id' => $productId,
                 ]);
             } catch (\Throwable $t) {
-                $tupleUserFavorite->user_id = $userId;
+                $tupleUserFavorite->user_id = $my->id;
                 $tupleUserFavorite->product_id = $productId;
                 $tupleUserFavorite->is_enable = 1;
                 $tupleUserFavorite->is_delete = 0;
@@ -97,47 +96,44 @@ class UserFavorite
                 $tupleUserFavorite->insert();
             }
         }
-
-        return true;
     }
 
     /**
      * 用户是否收藏指定商品
      *
-     * @param int $userId
-     * @param int $productId
+     * @param string $productId
      * @return bool
      */
-    public function isFavorite($userId, $productId)
+    public function isFavorite(string $productId): bool
     {
+        $my = Be::getUser();
         $config = Be::getConfig('App.ShopFai.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            return $redis->sIsMember('ShopFai:User:Favorite:' . $userId, $productId);
+            return $redis->sIsMember('ShopFai:User:Favorite:' . $my->id, $productId);
         } else {
             $sql = 'SELECT COUNT(*) FROM shopfai_user_favorite WHERE user_id = ? AND product_id = ? AND is_enable = 1 AND is_delete = 0';
-            return Be::getDb()->getValue($sql, [$userId, $productId]) > 0;
+            return Be::getDb()->getValue($sql, [$my->id, $productId]) > 0;
         }
     }
 
     /**
      * 删除用户收藏
      *
-     * @param int $userId
-     * @param int $productId
-     * @return bool
+     * @param string $productId
      */
-    public function deleteFavorite($userId, $productId)
+    public function deleteFavorite(string $productId)
     {
+        $my = Be::getUser();
         $config = Be::getConfig('App.ShopFai.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            return $redis->sRem('ShopFai:User:Favorite:' . $userId, $productId);
+            $redis->sRem('ShopFai:User:Favorite:' . $my->id, $productId);
         } else {
             $tupleUserFavorite = Be::getTuple('shopfai_user_favorite');
             try {
                 $tupleUserFavorite->loadBy([
-                    'user_id' => $userId,
+                    'user_id' => $my->id,
                     'product_id' => $productId,
                 ]);
 
@@ -147,8 +143,6 @@ class UserFavorite
             } catch (\Throwable $t) {
             }
         }
-
-        return true;
     }
 
 

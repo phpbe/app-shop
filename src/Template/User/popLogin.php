@@ -27,7 +27,7 @@
 
                 <div class="be-mt-150 be-ta-right"><a href="<?php echo beUrl('ShopFai.User.forgotPassword'); ?>">Forgot Password?</a></div>
 
-                <button type="submit" class="be-btn be-btn-lg be-mt-150">Login</button>
+                <button type="submit" class="be-btn be-btn-main be-btn-lg be-mt-150">Login</button>
                 <a href="<?php echo beUrl('ShopFai.User.register'); ?>" class="be-btn be-btn-outline be-btn-lg be-mt-150">Create Account</a>
             </form>
         </div>

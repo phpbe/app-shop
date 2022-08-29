@@ -3,6 +3,12 @@
     $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
+
+    <script>
+        const userCenter_updateProfileUrl = "<?php echo beUrl('ShopFai.UserCenter.updateProfile'); ?>";
+        const userCenter_changeEmailUrl = "<?php echo beUrl('ShopFai.UserCenter.changeEmail'); ?>";
+        const userCenter_changePasswordlUrl = "<?php echo beUrl('ShopFai.UserCenter.changePassword'); ?>";
+    </script>
     <script src="<?php echo $wwwUrl; ?>/js/user-center/setting.js"></script>
 </be-head>
 
@@ -44,7 +50,7 @@
 
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-col-md-12 be-col-lg-6">
-                        <input type="submit" class="be-btn be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
             </form>
@@ -68,7 +74,7 @@
                 </div>
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-col-md-12 be-col-lg-6">
-                        <input type="submit" class="be-btn be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
             </form>
@@ -96,14 +102,14 @@
 
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-col-md-12 be-col-lg-6">
-                        <input type="submit" class="be-btn be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
 
                 <div class="be-d-block be-d-lg-none">
                     <div class="be-mt-150 be-row">
                         <div class="be-col-24 be-col-md-12 be-col-lg-6">
-                            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>
+                            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
                         </div>
                     </div>
                 </div>

@@ -9,6 +9,7 @@ class Order extends Auth
     /**
      * 我的订单
      *
+     * @BeMenu("用户 - 订单列表")
      * @BeRoute("/orders")
      */
     public function orders()

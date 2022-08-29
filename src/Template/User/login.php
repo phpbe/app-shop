@@ -32,12 +32,12 @@
 
                 <div class="be-row">
                     <div class="be-col-24 be-col-md-11">
-                        <button type="submit" class="be-btn be-btn-lg be-mt-150 be-w-100">Login</button>
+                        <button type="submit" class="be-btn be-btn-main be-btn-lg be-mt-150 be-w-100">Login</button>
                     </div>
                     <div class="be-col-0 be-col-md-2">
                     </div>
                     <div class="be-col-24 be-col-md-11">
-                        <a href="<?php echo beUrl('ShopFai.User.register'); ?>" class="be-btn be-btn-outline be-btn-lg be-mt-150 be-w-100">Create Account</a>
+                        <a href="<?php echo beUrl('ShopFai.User.register'); ?>" class="be-btn be-btn-lg be-mt-150 be-w-100">Create Account</a>
                     </div>
                 </div>
 
