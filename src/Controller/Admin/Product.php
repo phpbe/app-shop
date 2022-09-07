@@ -21,7 +21,7 @@ class Product extends Auth
 {
 
     /**
-     * 订单管理
+     * 商品管理
      *
      * @BeMenu("商品管理", icon="el-icon-goods", ordering="3.1")
      * @BePermission("商品管理", ordering="3.1")

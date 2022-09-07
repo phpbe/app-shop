@@ -62,10 +62,10 @@ class Template extends Section
             echo '});';
         }
 
-        echo 'let product = ' . json_encode($this->pageTemplate->product) . ';';
+        echo 'let product = ' . json_encode($this->pagr->product) . ';';
         $productItemId = '';
-        if ($this->pageTemplate->product->style === 1) {
-            $productItemId = $this->pageTemplate->product->items[0]->id;
+        if ($this->pagr->product->style === 1) {
+            $productItemId = $this->pagr->product->items[0]->id;
         }
         echo 'let productItemId = "' . $productItemId . '";';
 
@@ -120,8 +120,8 @@ class Template extends Section
                     <div class="be-mt-100 swiper-container" id="product-detail-slider">
                         <div class="swiper-wrapper">
                             <?php
-                            foreach ($this->pageTemplate->product->images as $image) {
-                                echo '<div class="swiper-slide"><img src="' . $image->large . '" alt="' . $this->pageTemplate->product->name . '"></div>';
+                            foreach ($this->pagr->product->images as $image) {
+                                echo '<div class="swiper-slide"><img src="' . $image->large . '" alt="' . $this->pagr->product->name . '"></div>';
                             }
                             ?>
                         </div>
@@ -147,35 +147,35 @@ class Template extends Section
                         <div class="zoom-images">
                             <?php
                             $defaultImage = null;
-                            foreach ($this->pageTemplate->product->images as $image) {
+                            foreach ($this->pagr->product->images as $image) {
                                 if ($image->is_main) {
                                     $defaultImage = $image;
                                     break;
                                 }
                             }
 
-                            if (!$defaultImage && count($this->pageTemplate->product->images) > 0) {
-                                $defaultImage = $this->pageTemplate->product->images[0];
+                            if (!$defaultImage && count($this->pagr->product->images) > 0) {
+                                $defaultImage = $this->pagr->product->images[0];
                             }
                             ?>
                             <div class="zoom be-fc">
                                 <a href="<?php echo $defaultImage->large; ?>" class="jqzoom" rel='gal1'>
                                     <img src="<?php echo $defaultImage->medium; ?>"
-                                         alt="<?php echo $this->pageTemplate->product->name; ?>"
+                                         alt="<?php echo $this->pagr->product->name; ?>"
                                          style="max-width: 100%">
                                 </a>
                             </div>
 
                             <div class="be-row thumbs">
                                 <?php
-                                foreach ($this->pageTemplate->product->images as $image) {
+                                foreach ($this->pagr->product->images as $image) {
                                     ?>
                                     <div class="be-col-4 be-mt-50 be-pr-50">
                                         <a class="<?php echo $image->is_main ? 'zoomThumbActive' : ''; ?>"
                                            href='javascript:void(0);'
                                            rel="{gallery: 'gal1', smallimage: '<?php echo $image->medium; ?>',largeimage: '<?php echo $image->large; ?>'}">
                                             <img src="<?php echo $image->small; ?>"
-                                                 alt="<?php echo $this->pageTemplate->product->name; ?>">
+                                                 alt="<?php echo $this->pagr->product->name; ?>">
                                         </a>
                                     </div>
                                     <?php
@@ -212,7 +212,7 @@ class Template extends Section
 
     private function summaryRight()
     {
-        $product = $this->pageTemplate->product;
+        $product = $this->pagr->product;
         $configStore = Be::getConfig('App.ShopFai.Store');
 
         echo '<form action="' . beUrl('ShopFai.Cart.checkout', ['from' => 'buy_now']) . '" method="post">';
@@ -355,7 +355,7 @@ class Template extends Section
         echo '<div class="be-container">';
         echo '<h4 class="be-h4 be-lh-200 be-mb-100">Description</h4>';
         echo '<div>';
-        echo $this->pageTemplate->product->description;
+        echo $this->pagr->product->description;
         echo '</div>';
         echo '</div>';
         echo '</div>';
@@ -455,11 +455,11 @@ class Template extends Section
 
     private function reviews()
     {
-        $reviewAverageRating = $this->pageTemplate->product->rating_avg;
-        $reviewCount = $this->pageTemplate->product->rating_count;
+        $reviewAverageRating = $this->pagr->product->rating_avg;
+        $reviewCount = $this->pagr->product->rating_count;
         $reviewPageSize = $this->config->reviewPageSize;
         $reviewPage = \Be\Be::getRequest()->get('reviewPage', 1);
-        $reviews = \Be\Be::getService('App.ShopFai.ProductReview')->getReviews($this->pageTemplate->product->id, [
+        $reviews = \Be\Be::getService('App.ShopFai.ProductReview')->getReviews($this->pagr->product->id, [
             'page' => $reviewPage,
             'pageSize' => $reviewPageSize,
         ], ['images' => true]);
@@ -484,7 +484,7 @@ class Template extends Section
         echo $reviewCount . ' review(s)';
         echo '</div>';
         echo '<div class="be-col-24 be-col-sm-8 be-ta-right be-mt-100">';
-        echo '<a href="' . beUrl('ShopFai.Product.review', ['id' => $this->pageTemplate->product->id]) . '" class="be-btn be-btn-round">Write a review</a>';
+        echo '<a href="' . beUrl('ShopFai.Product.review', ['id' => $this->pagr->product->id]) . '" class="be-btn be-btn-round">Write a review</a>';
         echo '</div>';
         echo '</div>';
 
@@ -551,7 +551,7 @@ class Template extends Section
                 echo '<ul class="be-pagination" style="justify-content: center;">';
                 echo '<li>';
                 if ($page > 1) {
-                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->pageTemplate->product->id,]);
+                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->pagr->product->id,]);
                     $url .= strpos($url, '?') === false ? '?' : '&';
                     $url .= http_build_query(['reviewPage' => ($page - 1)]);
                     echo '<a href="' . $url . '">Previous</a>';
@@ -587,7 +587,7 @@ class Template extends Section
                         echo '<span>' . $i . '</span>';
                         echo '</li>';
                     } else {
-                        $url = beUrl('ShopFai.Product.detail', ['id' => $this->pageTemplate->product->id,]);
+                        $url = beUrl('ShopFai.Product.detail', ['id' => $this->pagr->product->id,]);
                         $url .= strpos($url, '?') === false ? '?' : '&';
                         $url .= http_build_query(['reviewPage' => $i]);
                         echo '<li>';
@@ -602,7 +602,7 @@ class Template extends Section
 
                 echo '<li>';
                 if ($page < $pages) {
-                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->pageTemplate->product->id,]);
+                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->pagr->product->id,]);
                     $url .= strpos($url, '?') === false ? '?' : '&';
                     $url .= http_build_query(['reviewPage' => ($page + 1)]);
                     echo '<a href="' . $url . '">Next</a>';
