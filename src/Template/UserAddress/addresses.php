@@ -143,7 +143,7 @@
                             $i = 0;
                             foreach ($this->shippingAddresses as $shippingAddress) {
                                 ?>
-                                <div class="be-col-24 be-col-xxl-12">
+                                <div class="be-col-24 be-xxl-col-12">
 
                                     <div class="be-p-relative be-p-100 be-mt-150" style="border: #eee 1px solid; margin-right: 1rem;">
                                         <div>
@@ -215,7 +215,7 @@
                     {
                         ?>
                         <div class="be-row">
-                            <div class="be-col-24 be-col-xxl-12">
+                            <div class="be-col-24 be-xxl-col-12">
                                 <div class="be-p-relative be-p-100 be-mt-150" style="border: #eee 1px solid; margin-right: 1rem;">
                                     <div>
                                         <?php echo $this->billingAddress->first_name . ' ' . $this->billingAddress->last_name; ?>

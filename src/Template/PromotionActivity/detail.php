@@ -8,10 +8,10 @@
     <?php
     if ($this->promotionActivity->poster) {
         ?>
-        <div class="be-d-none be-d-md-block be-ta-center">
+        <div class="be-d-none be-md-d-block be-ta-center">
             <img src="<?php echo $this->promotionActivity->poster_desktop; ?>" alt="<?php echo $this->promotionActivity->name; ?>">
         </div>
-        <div class="be-d-block be-d-md-none be-ta-center">
+        <div class="be-d-block be-md-d-none be-ta-center">
             <img src="<?php echo $this->promotionActivity->poster_mobile; ?>" alt="<?php echo $this->promotionActivity->name; ?>">
         </div>
         <?php

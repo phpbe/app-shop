@@ -11,9 +11,9 @@
 
 <be-page-content>
     <div class="be-row">
-        <div class="be-col-0 be-col-md-2 be-col-lg-4 be-col-xl-6">
+        <div class="be-col-0 be-md-col-2 be-lg-col-4 be-xl-col-6">
         </div>
-        <div class="be-col-24 be-col-md-20 be-col-lg-16 be-col-xl-10">
+        <div class="be-col-24 be-md-col-20 be-lg-col-16 be-xl-col-10">
 
             <h4 class="be-h4">Login</h4>
 
@@ -31,12 +31,12 @@
                 <div class="be-mt-150 be-ta-right"><a href="<?php echo beUrl('ShopFai.User.forgotPassword'); ?>">Forgot Password?</a></div>
 
                 <div class="be-row">
-                    <div class="be-col-24 be-col-md-11">
+                    <div class="be-col-24 be-md-col-11">
                         <button type="submit" class="be-btn be-btn-main be-btn-lg be-mt-150 be-w-100">Login</button>
                     </div>
-                    <div class="be-col-0 be-col-md-2">
+                    <div class="be-col-0 be-md-col-2">
                     </div>
-                    <div class="be-col-24 be-col-md-11">
+                    <div class="be-col-24 be-md-col-11">
                         <a href="<?php echo beUrl('ShopFai.User.register'); ?>" class="be-btn be-btn-lg be-mt-150 be-w-100">Create Account</a>
                     </div>
                 </div>

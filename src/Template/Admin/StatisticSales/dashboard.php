@@ -62,7 +62,7 @@
         </div>
 
         <div class="be-row be-mt-100">
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pr-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">销售额</div>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pl-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">订单量</div>
@@ -87,7 +87,7 @@
         </div>
 
         <div class="be-row be-mt-200">
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pr-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">平均客单价</div>
@@ -98,7 +98,7 @@
                     </div>
                 </div>
             </div>
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pl-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">&nbsp;</div>

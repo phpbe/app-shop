@@ -44,7 +44,7 @@
 
     <form id="cart-checkout-form">
         <div class="be-row">
-            <div class="be-col-24 be-col-md-14">
+            <div class="be-col-24 be-md-col-14">
 
                 <div style="border-right: #eee 1px solid;">
                     <input type="hidden" name="from" value="<?php echo $this->from; ?>" />
@@ -52,10 +52,10 @@
                     if ($my->isGuest()) {
                         ?>
                         <div class="be-row be-pr-200">
-                            <div class="be-col-24 be-col-lg-12">
+                            <div class="be-col-24 be-lg-col-12">
                                 <div class="be-fs-125 be-lh-150">Customer Information</div>
                             </div>
-                            <div class="be-col-24 be-col-lg-12">
+                            <div class="be-col-24 be-lg-col-12">
                                 <div class="be-mt-50 be-ta-right">Already have an account? <a href="<?php echo beUrl('ShopFai.User.login'); ?>">Login</a></div>
                             </div>
                         </div>
@@ -86,13 +86,13 @@
                     <div class="be-fs-125 be-lh-150 <?php echo $my->isGuest() ? 'be-mt-200' : '';?>">Shipping Address</div>
 
                     <div class="be-row">
-                        <div class="be-col-24 be-col-md-12 be-mt-100 be-pr-200">
+                        <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                             <div class="be-floating">
                                 <input type="text" name="first_name" id="first_name" class="be-input" placeholder="First Name" value="<?php echo $defaultAddress && isset($defaultAddress->first_name) ? $defaultAddress->first_name : ''; ?>">
                                 <label class="be-floating-label" for="first_name">First Name <span class="be-c-red">*</span></label>
                             </div>
                         </div>
-                        <div class="be-col-24 be-col-md-12 be-mt-100 be-pr-200">
+                        <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                             <div class="be-floating">
                                 <input type="text" name="last_name" id="last_name" class="be-input"  placeholder="Last Name" value="<?php echo $defaultAddress && isset($defaultAddress->last_name) ? $defaultAddress->last_name : ''; ?>">
                                 <label class="be-floating-label" for="last_name">Last Name <span class="be-c-red">*</span></label>
@@ -122,7 +122,7 @@
                     </div>
 
                     <div class="be-row">
-                        <div class="be-col-24 be-col-md-12 be-mt-100 be-pr-200">
+                        <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                             <div class="be-floating">
                                 <select name="country_id" id="cart-checkout-country-id" class="be-select" onchange="updateState();">
                                     <?php
@@ -141,7 +141,7 @@
                             </div>
                         </div>
 
-                        <div class="be-col-24 be-col-md-12 be-mt-100 be-pr-200">
+                        <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                             <div class="be-floating">
                                 <select name="state_id" id="cart-checkout-state-id" class="be-select" onchange="updateShippingPlans();">
                                     <option value="">Select</option>
@@ -186,7 +186,7 @@
 
             </div>
 
-            <div class="be-col-0 be-col-md-10 be-pl-200">
+            <div class="be-col-0 be-md-col-10 be-pl-200">
 
                 <div class="cart-checkout-products">
                     <table>

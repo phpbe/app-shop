@@ -1,10 +1,10 @@
 {
   "name": "be/app-shopfai",
   "type": "library",
-  "description": "店熵系统",
+  "description": "店熵商城",
   "keywords": [
     "ShopFai",
-    "店熵系统"
+    "店熵商城"
   ],
   "license": "MIT",
   "authors": [

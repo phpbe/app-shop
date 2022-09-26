@@ -61,7 +61,7 @@
         </div>
 
         <div class="be-row be-mt-100">
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pr-100">
                     <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">访问量</div>
@@ -72,7 +72,7 @@
                     </div>
                 </div>
             </div>
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pl-100">
                     <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">访客</div>
@@ -86,7 +86,7 @@
         </div>
 
         <div class="be-row be-mt-200">
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pr-100">
                     <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">来路分析</div>
@@ -126,7 +126,7 @@
                     </div>
                 </div>
             </div>
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pl-100">
                     <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">国家</div>
@@ -140,7 +140,7 @@
         </div>
 
         <div class="be-row be-mt-200">
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pr-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">浏览器</div>
@@ -151,7 +151,7 @@
                     </div>
                 </div>
             </div>
-            <div class="be-col-24 be-col-md-12">
+            <div class="be-col-24 be-md-col-12">
                 <div class="be-pl-100">
                      <div class="be-p-150 be-bc-fff">
                         <div class="be-fs-110">操作系统</div>

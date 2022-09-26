@@ -131,7 +131,7 @@
             ?>
 
             <div class="be-row">
-                <div class="be-col-24 be-col-xxl-16">
+                <div class="be-col-24 be-xxl-col-16">
                      <div class="be-p-150 be-bc-fff">
 
                         <div class="be-row">
@@ -631,7 +631,7 @@
                     ?>
 
                 </div>
-                <div class="be-col-0 be-col-xxl-8 be-pl-150">
+                <div class="be-col-0 be-xxl-col-8 be-pl-150">
 
                      <div class="be-p-150 be-bc-fff">
 

@@ -116,7 +116,7 @@ class Template extends Section
         if (Be::getRequest()->isMobile()) {
             ?>
             <div class="be-row">
-                <div class="be-col-24 be-col-lg">
+                <div class="be-col-24 be-lg-col">
                     <div class="be-mt-100 swiper-container" id="product-detail-slider">
                         <div class="swiper-wrapper">
                             <?php
@@ -132,7 +132,7 @@ class Template extends Section
                 <div class="be-col-24 be-col-auto-lg">
                     <div class="be-pl-100 be-mt-100"></div>
                 </div>
-                <div class="be-col-24 be-col-lg">
+                <div class="be-col-24 be-lg-col">
                     <?php
                     $this->summaryRight();
                     ?>
@@ -189,7 +189,7 @@ class Template extends Section
                 <div class="be-col-24 be-col-auto-lg">
                     <div class="be-pl-100 be-mt-100"></div>
                 </div>
-                <div class="be-col-24 be-col-lg">
+                <div class="be-col-24 be-lg-col">
                     <?php
                     $this->summaryRight();
                     ?>
@@ -330,10 +330,10 @@ class Template extends Section
         echo '</div>';
 
         echo '<div class="be-row be-mt-200">';
-        echo '<div class="be-col-12 be-col-lg-6 be-pr-100">';
+        echo '<div class="be-col-12 be-lg-col-6 be-pr-100">';
         echo '<input type="button" class="be-btn be-btn-main be-btn-lg be-btn-round be-w-100 buy-now" id="product-detail-buy-now" value="Buy Now">';
         echo '</div>';
-        echo '<div class="be-col-12 be-col-lg-6 be-pl-100">';
+        echo '<div class="be-col-12 be-lg-col-6 be-pl-100">';
         echo '<input type="button" class="be-btn be-btn-lg be-btn-round be-w-100 add-to-cart" id="product-detail-add-to-cart" value="Add to Cart">';
         echo '</div>';
         echo '</div>';

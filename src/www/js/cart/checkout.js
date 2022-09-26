@@ -145,10 +145,10 @@ function updateState(selectStateId = '') {
                 let $stateId = $("#cart-checkout-state-id");
                 if (json.stateKeyValues.length === 0) {
                     $stateId.closest(".be-col-24").hide();
-                    $countryId.closest(".be-col-24").removeClass("be-col-md-12");
+                    $countryId.closest(".be-col-24").removeClass("be-md-col-12");
                 } else {
                     $stateId.closest(".be-col-24").show();
-                    $countryId.closest(".be-col-24").addClass("be-col-md-12");
+                    $countryId.closest(".be-col-24").addClass("be-md-col-12");
 
                     for (var x in json.stateKeyValues) {
                         eState.add(new Option(json.stateKeyValues[x], x));

@@ -28,14 +28,14 @@
     <form id="user-address-edit-billing-address-form">
 
         <div class="be-row">
-            <div class="be-col-24 be-col-md-11 be-mt-150">
+            <div class="be-col-24 be-md-col-11 be-mt-150">
                 <div class="be-floating">
                     <input type="text" name="first_name" class="be-input" placeholder="First Name" value="<?php echo $this->address ? $this->address->first_name : ''; ?>">
                     <label class="be-floating-label">First Name <span class="be-c-red">*</span></label>
                 </div>
             </div>
-            <div class="be-col-0 be-col-md-2"></div>
-            <div class="be-col-24 be-col-md-11 be-mt-150">
+            <div class="be-col-0 be-md-col-2"></div>
+            <div class="be-col-24 be-md-col-11 be-mt-150">
                 <div class="be-floating">
                     <input type="text" name="last_name" class="be-input"  placeholder="Last Name" value="<?php echo $this->address ? $this->address->last_name : ''; ?>">
                     <label class="be-floating-label">Last Name <span class="be-c-red">*</span></label>
@@ -107,11 +107,11 @@
         </div>
 
         <div class="be-row">
-            <div class="be-col-24 be-col-md-11 be-col-lg-6 be-mt-150">
+            <div class="be-col-24 be-md-col-11 be-lg-col-6 be-mt-150">
                 <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
             </div>
-            <div class="be-col-0 be-col-md-2 be-col-lg-1"></div>
-            <div class="be-col-24 be-col-md-11 be-col-lg-6 be-mt-150">
+            <div class="be-col-0 be-md-col-2 be-lg-col-1"></div>
+            <div class="be-col-24 be-md-col-11 be-lg-col-6 be-mt-150">
                 <a href="<?php echo beURL('ShopFai.UserAddress.addresses') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
             </div>
         </div>

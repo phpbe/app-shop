@@ -25,7 +25,7 @@
         ?>
         <form action="<?php echo beUrl('ShopFai.Cart.checkout'); ?>" method="post">
         <div class="be-row">
-            <div class="be-col-24 be-col-lg-16">
+            <div class="be-col-24 be-lg-col-16">
                 <div class="cart-index-products">
                     <table style="width: 100%">
                         <thead>
@@ -88,12 +88,12 @@
                     </table>
                 </div>
             </div>
-            <div class="be-col-24 be-col-lg-7">
+            <div class="be-col-24 be-lg-col-7">
 
                 <div class="be-row">
-                    <div class="be-col-0 be-col-lg-2">
+                    <div class="be-col-0 be-lg-col-2">
                     </div>
-                    <div class="be-col-24 be-col-lg-22">
+                    <div class="be-col-24 be-lg-col-22">
 
                         <div class="be-fs-125 be-pb-100 be-mb-200" style="border-bottom: #ddd 1px solid;">Order Summary</div>
 

@@ -11,9 +11,9 @@
 
 <be-page-content>
     <div class="be-row">
-        <div class="be-col-0 be-col-md-2 be-col-lg-4 be-col-xl-6">
+        <div class="be-col-0 be-md-col-2 be-lg-col-4 be-xl-col-6">
         </div>
-        <div class="be-col-24 be-col-md-20 be-col-lg-16 be-col-xl-12">
+        <div class="be-col-24 be-md-col-20 be-lg-col-16 be-xl-col-12">
 
             <h4 class="be-h4">Create Account</h4>
 
@@ -45,7 +45,7 @@
                 </div>
 
                 <div class="be-mt-150 be-row">
-                    <div class="be-col-24 be-col-md-12">
+                    <div class="be-col-24 be-md-col-12">
                         <button type="submit" class="be-btn be-btn-main be-btn-lg be-w-100">Create</button>
                     </div>
                 </div>
