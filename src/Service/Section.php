@@ -134,7 +134,7 @@ class Section
         }
 
         if ($section->config->title !== '') {
-            $html .= $section->pagr->tag0('be-section-title', true);
+            $html .= $section->page->tag0('be-section-title', true);
 
             $html .= '<div class="' . $class . '-title">';
             $html .= '<h3 class="be-h3">' . $section->config->title . '</h3>';
@@ -148,12 +148,12 @@ class Section
             }
             $html .= '</div>';
 
-            $html .= $section->pagr->tag1('be-section-title', true);
+            $html .= $section->page->tag1('be-section-title', true);
         }
 
         $nnImage = Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
 
-        $html .= $section->pagr->tag0('be-section-content', true);
+        $html .= $section->page->tag0('be-section-content', true);
         $html .= '<div class="' . $class . '-products">';
         foreach ($products as $product) {
             $defaultImage = null;
@@ -257,8 +257,8 @@ class Section
             $buttonClass = 'be-btn';
             if (isset($section->config->buttonClass) && $section->config->buttonClass !== '') {
                 $buttonClass = $section->config->buttonClass;
-            } elseif (isset($section->pagr->pageConfig->buttonClass) && $section->pagr->pageConfig->buttonClass !== '') {
-                $buttonClass = $section->pagr->pageConfig->buttonClass;
+            } elseif (isset($section->page->pageConfig->buttonClass) && $section->page->pageConfig->buttonClass !== '') {
+                $buttonClass = $section->page->pageConfig->buttonClass;
             }
 
             $html .= '<div class="be-mt-50">';
@@ -274,7 +274,7 @@ class Section
         }
         $html .= '</div>';
 
-        $html .= $section->pagr->tag1('be-section-content', true);
+        $html .= $section->page->tag1('be-section-content', true);
 
         if ($section->position === 'middle' && $section->config->width === 'default') {
             $html .= '</div>';

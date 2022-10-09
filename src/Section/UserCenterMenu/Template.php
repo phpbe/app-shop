@@ -46,12 +46,12 @@ class Template extends Section
         echo '<div class="user-center-menu">';
 
         if ($this->config->title !== '') {
-            echo $this->pagr->tag0('be-section-title', true);
+            echo $this->page->tag0('be-section-title', true);
             echo $this->config->title;
-            echo $this->pagr->tag1('be-section-title', true);
+            echo $this->page->tag1('be-section-title', true);
         }
 
-        echo $this->pagr->tag0('be-section-content', true);
+        echo $this->page->tag0('be-section-content', true);
 
         $route = Be::getRequest()->getRoute();
 
@@ -96,7 +96,7 @@ class Template extends Section
 
         echo '<ul>';
 
-        echo $this->pagr->tag1('be-section-content', true);
+        echo $this->page->tag1('be-section-content', true);
 
         echo '</div>';
 

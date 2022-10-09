@@ -17,7 +17,7 @@ class UserCenter
 
     public array $centerSections = [
         [
-            'name' => 'be-page-content',
+            'name' => 'Theme.System.PageContent',
         ],
     ];
 

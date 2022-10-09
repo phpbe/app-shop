@@ -14,7 +14,7 @@ class popLogin
 
     public array $middleSections = [
         [
-            'name' => 'be-page-content',
+            'name' => 'Theme.System.PageContent',
         ],
     ];
 }
