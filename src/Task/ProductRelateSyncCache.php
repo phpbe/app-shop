@@ -36,7 +36,7 @@ class ProductRelateSyncCache extends TaskInterval
         $service = Be::getService('App.ShopFai.Admin.TaskProductRelate');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_relate WHERE is_enable != -1 AND update_time >= ? AND update_time < ?';
+        $sql = 'SELECT * FROM shopfai_product_relate WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
         $relates = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];

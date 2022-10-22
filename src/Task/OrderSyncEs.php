@@ -39,7 +39,7 @@ class OrderSyncEs extends TaskInterval
         $service = Be::getService('App.ShopFai.Admin.TaskOrder');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_order WHERE update_time>=? AND update_time<?';
+        $sql = 'SELECT * FROM shopfai_order WHERE update_time >= ? AND update_time <= ?';
         $orders = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];

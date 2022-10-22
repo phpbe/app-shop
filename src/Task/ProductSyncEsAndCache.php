@@ -39,7 +39,7 @@ class ProductSyncEsAndCache extends TaskInterval
         $service = Be::getService('App.ShopFai.Admin.TaskProduct');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product WHERE is_enable != -1 AND update_time >= ? AND update_time < ?';
+        $sql = 'SELECT * FROM shopfai_product WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
         $products = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];

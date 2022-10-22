@@ -35,7 +35,7 @@ class CategorySyncCache extends TaskInterval
 
         $service = Be::getService('App.ShopFai.Admin.TaskCategory');
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_category WHERE update_time >= ? AND update_time < ?';
+        $sql = 'SELECT * FROM shopfai_category WHERE update_time >= ? AND update_time <= ?';
         $categories = $db->getObjects($sql, [$d1, $d2]);
 
         if (count($categories) === 0) return;
