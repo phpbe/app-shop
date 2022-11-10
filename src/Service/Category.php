@@ -7,7 +7,32 @@ use Be\Be;
 
 class Category
 {
+    
+    /**
+     * 获取分类列表
+     *
+     * @return array
+     * @throws \Be\Db\DbException
+     * @throws \Be\Runtime\RuntimeException
+     */
+    public function getCategories()
+    {
+        $cache = Be::getCache();
 
+        $key = 'ShopFai:Categories';
+        $categories = $cache->get($key);
+
+        if (!$categories) {
+            $table =  Be::getTable('shopfai_category');
+            $table->where('is_delete', 0);
+            $table->where('is_enable', 1);
+            $table->orderBy('ordering', 'ASC');
+            $categories = $table->getObjects();
+            $cache->set($key, $categories, 600);
+        }
+
+        return $categories;
+    }
 
     /**
      * 从REDIS 获取分类数据
