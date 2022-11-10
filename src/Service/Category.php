@@ -7,15 +7,14 @@ use Be\Be;
 
 class Category
 {
-    
+
     /**
      * 获取分类列表
      *
+     * @param int $n 数量
      * @return array
-     * @throws \Be\Db\DbException
-     * @throws \Be\Runtime\RuntimeException
      */
-    public function getCategories()
+    public function getCategories(int $n = 0): array
     {
         $cache = Be::getCache();
 
@@ -29,6 +28,10 @@ class Category
             $table->orderBy('ordering', 'ASC');
             $categories = $table->getObjects();
             $cache->set($key, $categories, 600);
+        }
+
+        if ($n > 0 && $n < count($categories)) {
+            ;$categories = array_slice($categories, 0, $n);
         }
 
         return $categories;
