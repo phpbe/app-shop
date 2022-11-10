@@ -977,7 +977,7 @@
                 posterDesktopSelect: function () {
                     <?php
                     $callback = base64_encode('parent.posterDesktopSelected(files);');
-                    $selectorUrl = beAdminUrl('ShopFai.Storage.pop', ['filterImage' => 1, 'callback' => $callback]);
+                    $selectorUrl = beAdminUrl('System.Storage.pop', ['filterImage' => 1, 'callback' => $callback]);
                     ?>
                     let selectorUrl = "<?php echo $selectorUrl; ?>";
                     be.openDialog("选择海服电脑端图像", selectorUrl);
@@ -999,7 +999,7 @@
                 posterMobileSelect: function () {
                     <?php
                     $callback = base64_encode('parent.posterMobileSelected(files);');
-                    $selectorUrl = beAdminUrl('ShopFai.Storage.pop', ['filterImage' => 1, 'callback' => $callback]);
+                    $selectorUrl = beAdminUrl('System.Storage.pop', ['filterImage' => 1, 'callback' => $callback]);
                     ?>
                     let selectorUrl = "<?php echo $selectorUrl; ?>";
                     be.openDialog("选择海服移动端图像", selectorUrl);

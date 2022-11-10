@@ -1404,7 +1404,7 @@
                     this.imageSelectorVisible = true;
                     <?php
                     $imageCallback = base64_encode('parent.imageSelected(files);');
-                    $imageSelectorUrl = beAdminUrl('ShopFai.Storage.pop', ['filterImage' => 1, 'callback' => $imageCallback]);
+                    $imageSelectorUrl = beAdminUrl('System.Storage.pop', ['filterImage' => 1, 'callback' => $imageCallback]);
                     ?>
                     let imageSelectorUrl = "<?php echo $imageSelectorUrl; ?>";
                     imageSelectorUrl += imageSelectorUrl.indexOf("?") === -1 ? "?" : "&"
@@ -1455,7 +1455,7 @@
 
                     <?php
                     $imageCallback = base64_encode('parent.relateIconImageSelected(files);');
-                    $imageSelectorUrl = beAdminUrl('ShopFai.Storage.pop', ['filterImage' => 1, 'callback' => $imageCallback]);
+                    $imageSelectorUrl = beAdminUrl('System.Storage.pop', ['filterImage' => 1, 'callback' => $imageCallback]);
                     ?>
                     be.openDrawer("请选择图片", "<?php echo $imageSelectorUrl; ?>", {width: "80%"});
                 },
