@@ -10,13 +10,11 @@ class Category extends Base
 
     /**
      *
+     * @BeMenu("分类", picker="return \Be\Be::getService('App.ShopFai.Admin.Category')->getCategoryMenuPicker()")
      * @BeRoute("\Be\Be::getService('App.ShopFai.Category')->getCategoryUrl($params)")
      */
     public function products()
     {
-        $my = Be::getUser();
-        $userId = $my->id;
-
         $request = Be::getRequest();
         $response = Be::getResponse();
 
