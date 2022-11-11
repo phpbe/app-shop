@@ -39,7 +39,7 @@ class Category extends Base
 
         $page = $request->get('page', 1);
 
-        $result = Be::getService('App.ShopFai.Product')->filter([
+        $result = Be::getService('App.ShopFai.Product')->search('', [
             'categoryId' => $categoryId,
             'orderBy' => $orderBy,
             'orderByDir' => $orderByDir,
