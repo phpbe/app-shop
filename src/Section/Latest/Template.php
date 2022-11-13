@@ -23,7 +23,7 @@ class Template extends Section
         }
 
         $moreLink = beUrl('ShopFai.Product.latest');
-        echo Be::getService('App.ShopFai.Section')->makeProductSection($this, 'latest', $products, $moreLink);
+        echo Be::getService('App.ShopFai.Section')->makeProductsSection($this, 'latest', $products, $moreLink);
     }
 
 }

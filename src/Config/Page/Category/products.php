@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Product;
+namespace Be\App\ShopFai\Config\Page\Category;
 
-class guessYouLike
+class products
 {
 
     public int $west = 0;
@@ -12,32 +12,11 @@ class guessYouLike
     public array $centerSections = [
         [
             'name' => 'Theme.System.PageTitle',
-        ], [
-            'name' => 'Theme.System.PageContent',
+        ],
+        [
+            'name' => 'App.ShopFai.CategoryProducts',
         ],
     ];
-
-    /**
-     * @BeConfigItem("标题",
-     *     description = "为空时不显示",
-     *     driver = "FormItemInput"
-     * )
-     */
-    public $title = 'Guess You like';
-
-    /**
-     * @BeConfigItem("SEO描述",
-     *     driver = "FormItemInput"
-     * )
-     */
-    public $seoDescription = '';
-
-    /**
-     * @BeConfigItem("SEO描述关键词",
-     *     driver = "FormItemInput"
-     * )
-     */
-    public $seoKeywords = '';
 
     /**
      * @BeConfigItem("展示多少列?",

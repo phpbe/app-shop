@@ -29,8 +29,9 @@ class Category extends Base
         $response->set('category', $category);
 
         $response->set('title', $category->seo_title);
-        $response->set('meta_keywords', $category->seo_keywords);
-        $response->set('meta_description', $category->seo_description);
+        $response->set('metaDescription', $category->seo_description);
+        $response->set('metaKeywords', $category->seo_keywords);
+        $response->set('pageTitle', $category->name);
 
         $orderBy = $request->get('order_by', 'common');
         $orderByDir = $request->get('order_by_dir', 'desc');
