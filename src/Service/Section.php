@@ -589,16 +589,15 @@ class Section
             $html .= '</ul>';
             $html .= '</nav>';
 
-            $html .= $section->page->tag1('be-section-content', true);
-
-            if ($section->position === 'middle' && $section->config->width === 'default') {
-                $html .= '</div>';
-            }
-
-            $html .= '</div>';
-
-            $html .= $html;
         }
+
+        $html .= $section->page->tag1('be-section-content', true);
+
+        if ($section->position === 'middle' && $section->config->width === 'default') {
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
 
         return $html;
     }
