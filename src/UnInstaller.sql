@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS `shop_category`;
 DROP TABLE IF EXISTS `shop_collect_product`;
+DROP TABLE IF EXISTS `shop_order`;
 DROP TABLE IF EXISTS `shop_order_billing_address`;
 DROP TABLE IF EXISTS `shop_order_cancel`;
 DROP TABLE IF EXISTS `shop_order_contact`;
@@ -40,6 +41,7 @@ DROP TABLE IF EXISTS `shop_shipping`;
 DROP TABLE IF EXISTS `shop_shipping_plan`;
 DROP TABLE IF EXISTS `shop_shipping_region`;
 DROP TABLE IF EXISTS `shop_shipping_region_state`;
+DROP TABLE IF EXISTS `shop_user`;
 DROP TABLE IF EXISTS `shop_user_billing_address`;
 DROP TABLE IF EXISTS `shop_user_favorite`;
 DROP TABLE IF EXISTS `shop_user_shipping_address`;
