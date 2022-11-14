@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -22,7 +22,7 @@ class Cart
         $cartProducts = [];
 
         $cache = Be::getCache();
-        $key = 'ShopFai:Cart:' . $my->id;
+        $key = 'Shop:Cart:' . $my->id;
         $data = $cache->get($key);
         if ($data) {
             $carts = explode(',', $data);
@@ -174,7 +174,7 @@ class Cart
      */
     public function loadProductDetails(object $cartProduct): object
     {
-        $serviceProduct = Be::getService('App.ShopFai.Product');
+        $serviceProduct = Be::getService('App.Shop.Product');
         try {
             $product = $serviceProduct->getProduct($cartProduct->product_id);
         } catch (\Throwable $t) {
@@ -230,7 +230,7 @@ class Cart
 
             'category_ids' => $product->category_ids,
 
-            'url' => beUrl('ShopFai.Product.detail', ['id' => $product->id]),
+            'url' => beUrl('Shop.Product.detail', ['id' => $product->id]),
         ];
     }
 
@@ -248,7 +248,7 @@ class Cart
 
         $newCarts = [];
         $newQuantity = null;
-        $key = 'ShopFai:Cart:' . $my->id;
+        $key = 'Shop:Cart:' . $my->id;
         $data = $cache->get($key);
         if ($data) {
             $carts = explode(',', $data);
@@ -299,7 +299,7 @@ class Cart
 
         $newCarts = [];
         $exist = false;
-        $key = 'ShopFai:Cart:' . $my->id;
+        $key = 'Shop:Cart:' . $my->id;
         $data = $cache->get($key);
         if ($data) {
             $carts = explode(',', $data);
@@ -339,7 +339,7 @@ class Cart
         $cache = Be::getCache();
 
         $newCarts = [];
-        $key = 'ShopFai:Cart:' . $my->id;
+        $key = 'Shop:Cart:' . $my->id;
         $data = $cache->get($key);
         if ($data) {
             $carts = explode(',', $data);
@@ -392,7 +392,7 @@ class Cart
             $email = $cart['email'];
         } else {
             $user_id = $my->id;
-            $tupleUser = Be::getTuple('shopfai_user');
+            $tupleUser = Be::getTuple('shop_user');
             try {
                 $tupleUser->load($my->id);
             } catch (\Throwable $t) {
@@ -486,12 +486,12 @@ class Cart
             throw new ServiceException('Please select your payment method!');
         }
 
-        $storePayment = Be::getService('App.ShopFai.Payment')->getStorePayment($cart['payment_id'], $cart['payment_item_id']);
+        $storePayment = Be::getService('App.Shop.Payment')->getStorePayment($cart['payment_id'], $cart['payment_item_id']);
         $cart['is_cod'] = $storePayment->name === 'cod' ? 1 : 0;
 
         $cart['country_name'] = '';
         $cart['country_code'] = '';
-        $tupleRegionCountry = Be::getTuple('shopfai_region_country');
+        $tupleRegionCountry = Be::getTuple('shop_region_country');
         try {
             $tupleRegionCountry->load($cart['country_id']);
             $cart['country_name'] = $tupleRegionCountry->name;
@@ -502,7 +502,7 @@ class Cart
 
         $cart['state_name'] = '';
         if ($cart['state_id'] !== '') {
-            $tupleRegionState = Be::getTuple('shopfai_region_state');
+            $tupleRegionState = Be::getTuple('shop_region_state');
             try {
                 $tupleRegionState->load($cart['state_id']);
                 $cart['state_name'] = $tupleRegionState->name;
@@ -521,7 +521,7 @@ class Cart
         }
 
         $discountAmount = '0.00';
-        $discount = Be::getService('App.ShopFai.Promotion')->getDiscount($cart);
+        $discount = Be::getService('App.Shop.Promotion')->getDiscount($cart);
         if ($discount !== false) {
             $discountAmount = $discount['amount'];
         }
@@ -529,21 +529,21 @@ class Cart
         $totalAmount = bcsub($productTotalAmount, $discountAmount, 2);
 
         // 计算运费
-        $serviceShipping = Be::getService('App.ShopFai.Shipping');
+        $serviceShipping = Be::getService('App.Shop.Shipping');
         $shippingFee = $serviceShipping->getShippingFee($cart);
         $totalAmount = bcadd($totalAmount, $shippingFee, 2);
 
-        $serviceOrder = Be::getService('App.ShopFai.Order');
+        $serviceOrder = Be::getService('App.Shop.Order');
         $orderConfig = $serviceOrder->getConfig();
 
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         $db->startTransaction();
         try {
             $orderSn = null;
             $orderSnExist = null;
             do {
                 $orderSn = $orderConfig->sn_prefix . date('ymdHis') . rand(1000, 9999);
-                $sql = 'SELECT COUNT(*) FROM shopfai_order WHERE order_sn = ?';
+                $sql = 'SELECT COUNT(*) FROM shop_order WHERE order_sn = ?';
                 $orderSnExist = $db->getValue($sql, [$orderSn]);
             } while ($orderSnExist);
 
@@ -572,7 +572,7 @@ class Cart
             $tupleOrder->update_time = $now;
             $tupleOrder->insert();
 
-            $tupleOrderShippingAddress = Be::getTuple('shopfai_order_shipping_address');
+            $tupleOrderShippingAddress = Be::getTuple('shop_order_shipping_address');
             $tupleOrderShippingAddress->order_id = $tupleOrder->id;
             $tupleOrderShippingAddress->first_name = $cart['first_name'];
             $tupleOrderShippingAddress->last_name = $cart['last_name'];
@@ -588,7 +588,7 @@ class Cart
             $tupleOrderShippingAddress->mobile = $cart['mobile'];
             $tupleOrderShippingAddress->insert();
 
-            $tupleOrderBillingAddress = Be::getTuple('shopfai_order_billing_address');
+            $tupleOrderBillingAddress = Be::getTuple('shop_order_billing_address');
             $tupleOrderBillingAddress->order_id = $tupleOrder->id;
             $tupleOrderBillingAddress->first_name = $cart['first_name'];
             $tupleOrderBillingAddress->last_name = $cart['first_name'];
@@ -605,7 +605,7 @@ class Cart
             $tupleOrderBillingAddress->insert();
 
             foreach ($cart['products'] as $product) {
-                $tupleOrderProduct = Be::getTuple('shopfai_order_product');
+                $tupleOrderProduct = Be::getTuple('shop_order_product');
                 $tupleOrderProduct->order_id = $tupleOrder->id;
                 $tupleOrderProduct->user_id = $my->id;
                 $tupleOrderProduct->product_id = $product->product_id;
@@ -624,13 +624,13 @@ class Cart
             }
 
             if ($discount !== false) {
-                $tupleOrderPromotion = Be::getTuple('shopfai_order_promotion');
+                $tupleOrderPromotion = Be::getTuple('shop_order_promotion');
                 $tupleOrderPromotion->order_id = $tupleOrder->id;
                 $tupleOrderPromotion->promotion_type = $discount['promotion_type'];
                 $tupleOrderPromotion->promotion_id = $discount['promotion_id'];
                 $tupleOrderPromotion->discount_amount = $discount['amount'];
 
-                $servicePromotion = Be::getService('App.ShopFai.' . \Be\Util\Str\CaseConverter::underline2CamelUcFirst($discount['promotion_type']));
+                $servicePromotion = Be::getService('App.Shop.' . \Be\Util\Str\CaseConverter::underline2CamelUcFirst($discount['promotion_type']));
                 $promotionDetails = $servicePromotion->getDetails($discount['promotion_id']);
                 $tupleOrderPromotion->promotion_details = json_encode($promotionDetails);
 
@@ -643,7 +643,7 @@ class Cart
             if ($cart['from'] === 'cart') {
 
                 $newRedisCarts = [];
-                $key = 'ShopFai:Cart:' . $my->id;
+                $key = 'Shop:Cart:' . $my->id;
                 $cacheData = $cache->get($key);
                 if ($cacheData) {
                     $cacheCarts = explode(',', $cacheData);

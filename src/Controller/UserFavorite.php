@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -20,12 +20,12 @@ class UserFavorite extends Base
 
         $my = \Be\Be::getUser();
         if ($my->isGuest()) {
-            $page = Be::getConfig('App.ShopFai.Page.UserFavorite.favorites');
+            $page = Be::getConfig('App.Shop.Page.UserFavorite.favorites');
             $page->west = 0;
             $response->set('_page', $page);
         }
 
-        $products = Be::getService('App.ShopFai.UserFavorite')->getProducts();
+        $products = Be::getService('App.Shop.UserFavorite')->getProducts();
         $response->set('products', $products);
         $response->display();
     }
@@ -40,7 +40,7 @@ class UserFavorite extends Base
 
         try {
             $productId = $request->post('product_id');
-            Be::getService('App.ShopFai.User')->addFavorite($productId);
+            Be::getService('App.Shop.User')->addFavorite($productId);
             $response->set('success', true);
             $response->set('message', '收藏商品成功！');
             $response->json();
@@ -61,7 +61,7 @@ class UserFavorite extends Base
 
         try {
             $productId = $request->post('product_id');
-            Be::getService('App.ShopFai.User')->deleteFavorite($productId);
+            Be::getService('App.Shop.User')->deleteFavorite($productId);
             $response->set('success', true);
             $response->set('message', '删除收藏商品成功！');
             $response->json();

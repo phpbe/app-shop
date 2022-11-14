@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Detail\Item\DetailItemImage;
@@ -33,7 +33,7 @@ class Category extends Auth
         Be::getAdminPlugin('Curd')->setting([
 
             'label' => '商品分类',
-            'table' => 'shopfai_category',
+            'table' => 'shop_category',
 
             'grid' => [
                 'title' => '商品分类',
@@ -67,7 +67,7 @@ class Category extends Auth
                     'items' => [
                         [
                             'label' => '新建分类分类',
-                            'url' => beAdminUrl('ShopFai.Category.create'),
+                            'url' => beAdminUrl('Shop.Category.create'),
                             'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-plus',
@@ -109,7 +109,7 @@ class Category extends Auth
                         ],
                         [
                             'label' => '批量删除',
-                            'url' => beAdminUrl('ShopFai.Category.delete'),
+                            'url' => beAdminUrl('Shop.Category.delete'),
                             'target' => 'ajax',
                             'confirm' => '确认要删除吗？',
                             'ui' => [
@@ -139,7 +139,7 @@ class Category extends Auth
                             ],
                             'value' => function($row) {
                                 if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
                                 return $row['image_small'];
                             },
@@ -161,11 +161,11 @@ class Category extends Auth
                             'width' => '120',
                             'driver' => TableItemLink::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT COUNT(*) FROM shopfai_product_category WHERE category_id = ?';
+                                $sql = 'SELECT COUNT(*) FROM shop_product_category WHERE category_id = ?';
                                 $count = Be::getDb()->getValue($sql, [$row['id']]);
                                 return $count;
                             },
-                            'url' => beAdminUrl('ShopFai.Category.goProducts'),
+                            'url' => beAdminUrl('Shop.Category.goProducts'),
                             'target' => 'self',
                         ],
                         [
@@ -199,7 +199,7 @@ class Category extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '编辑',
-                                'url' => beAdminUrl('ShopFai.Category.edit'),
+                                'url' => beAdminUrl('Shop.Category.edit'),
                                 'target' => 'self',
                                 'ui' => [
                                     ':underline' => 'false',
@@ -210,7 +210,7 @@ class Category extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '删除',
-                                'url' => beAdminUrl('ShopFai.Category.delete'),
+                                'url' => beAdminUrl('Shop.Category.delete'),
                                 'confirm' => '确认要删除么？',
                                 'target' => 'ajax',
                                 'ui' => [
@@ -240,7 +240,7 @@ class Category extends Auth
                             'driver' => DetailItemImage::class,
                             'value' => function($row) {
                                 if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
                                 return $row['image_small'];
                             },
@@ -308,7 +308,7 @@ class Category extends Auth
                         $tuple->update_time = date('Y-m-d H:i:s');
                     },
                     'success' => function () {
-                        Be::getService('App.System.Task')->trigger('ShopFai.CategorySyncCache');
+                        Be::getService('App.System.Task')->trigger('Shop.CategorySyncCache');
                     },
                 ],
             ],
@@ -328,7 +328,7 @@ class Category extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.Category')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.Category')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '新建分类成功！');
                 $response->json();
@@ -338,7 +338,7 @@ class Category extends Auth
                 $response->json();
             }
         } else {
-            $configCategory = Be::getConfig('App.ShopFai.Category');
+            $configCategory = Be::getConfig('App.Shop.Category');
             $response->set('configCategory', $configCategory);
 
             $response->set('category', false);
@@ -346,7 +346,7 @@ class Category extends Auth
             $response->set('title', '新建分类');
 
             //$response->display();
-            $response->display('App.ShopFai.Admin.Category.edit');
+            $response->display('App.Shop.Admin.Category.edit');
         }
     }
 
@@ -362,7 +362,7 @@ class Category extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.Category')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.Category')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑分类成功！');
                 $response->json();
@@ -376,15 +376,15 @@ class Category extends Auth
             if ($postData) {
                 $postData = json_decode($postData, true);
                 if (isset($postData['row']['id']) && $postData['row']['id']) {
-                    $response->redirect(beAdminUrl('ShopFai.Category.edit', ['id' => $postData['row']['id']]));
+                    $response->redirect(beAdminUrl('Shop.Category.edit', ['id' => $postData['row']['id']]));
                 }
             }
         } else {
-            $configCategory = Be::getConfig('App.ShopFai.Category');
+            $configCategory = Be::getConfig('App.Shop.Category');
             $response->set('configCategory', $configCategory);
 
             $categoryId = $request->get('id', '');
-            $category = Be::getService('App.ShopFai.Admin.Category')->getCategory($categoryId);
+            $category = Be::getService('App.Shop.Admin.Category')->getCategory($categoryId);
             $response->set('category', $category);
 
             $response->set('title', '编辑分类');
@@ -416,7 +416,7 @@ class Category extends Auth
             }
 
             if (count($productIds) > 0) {
-                Be::getService('App.ShopFai.Admin.Category')->delete($productIds);
+                Be::getService('App.Shop.Admin.Category')->delete($productIds);
             }
 
             $response->set('success', true);
@@ -443,7 +443,7 @@ class Category extends Auth
         if ($postData) {
             $postData = json_decode($postData, true);
             if (isset($postData['row']['id']) && $postData['row']['id']) {
-                $response->redirect(beAdminUrl('ShopFai.Category.products', ['id' => $postData['row']['id']]));
+                $response->redirect(beAdminUrl('Shop.Category.products', ['id' => $postData['row']['id']]));
             }
         }
     }
@@ -459,14 +459,14 @@ class Category extends Auth
         $response = Be::getResponse();
 
         $categoryId = $request->get('id', '');
-        $category = Be::getService('App.ShopFai.Admin.Category')->getCategory($categoryId);
+        $category = Be::getService('App.Shop.Admin.Category')->getCategory($categoryId);
 
         $filter = [
             ['is_delete', '=', '0'],
         ];
 
         $db = Be::getDb();
-        $productIds = $db->getValues('SELECT product_id FROM shopfai_product_category WHERE category_id=?', [$categoryId]);
+        $productIds = $db->getValues('SELECT product_id FROM shop_product_category WHERE category_id=?', [$categoryId]);
         if ($productIds) {
             $filter[] = [
                 'id', 'IN', $productIds
@@ -479,7 +479,7 @@ class Category extends Auth
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '商品分类 ' . $category->name . ' 下的商品',
-            'table' => 'shopfai_product',
+            'table' => 'shop_product',
             'grid' => [
                 'title' => '商品分类 ' . $category->name . ' 下的商品管理',
 
@@ -489,7 +489,7 @@ class Category extends Auth
                     'items' => [
                         [
                             'label' => '返回',
-                            'url' => beAdminUrl('ShopFai.Category.categories'),
+                            'url' => beAdminUrl('Shop.Category.categories'),
                             'target' => 'self',
                             'ui' => [
                                 'icon' => 'el-icon-back'
@@ -497,7 +497,7 @@ class Category extends Auth
                         ],
                         [
                             'label' => '添加商品',
-                            'url' => beAdminUrl('ShopFai.Category.addProduct', ['id' => $categoryId]),
+                            'url' => beAdminUrl('Shop.Category.addProduct', ['id' => $categoryId]),
                             'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'drawer' => [
                                 'width' => '60%',
@@ -542,12 +542,12 @@ class Category extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shopfai_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
                                 }
                             },
                             'ui' => [
@@ -568,7 +568,7 @@ class Category extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '从此分类中移除',
-                                'url' => beAdminUrl('ShopFai.Category.deleteProduct', ['id' => $categoryId]),
+                                'url' => beAdminUrl('Shop.Category.deleteProduct', ['id' => $categoryId]),
                                 'confirm' => '确认要从此分类中移除么？',
                                 'target' => 'ajax',
                                 'ui' => [
@@ -596,14 +596,14 @@ class Category extends Auth
         $response = Be::getResponse();
 
         $categoryId = $request->get('id', '');
-        $category = Be::getService('App.ShopFai.Admin.Category')->getCategory($categoryId);
+        $category = Be::getService('App.Shop.Admin.Category')->getCategory($categoryId);
 
         $filter = [
             ['is_delete', '=', '0'],
         ];
 
         $db = Be::getDb();
-        $productIds = $db->getValues('SELECT product_id FROM shopfai_product_category WHERE category_id=?', [$categoryId]);
+        $productIds = $db->getValues('SELECT product_id FROM shop_product_category WHERE category_id=?', [$categoryId]);
         if ($productIds) {
             $filter[] = [
                 'id', 'NOT IN', $productIds
@@ -612,7 +612,7 @@ class Category extends Auth
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '向商品分类 ' . $category->name . ' 添加商品',
-            'table' => 'shopfai_product',
+            'table' => 'shop_product',
             'grid' => [
                 'title' => '向商品分类 ' . $category->name . ' 添加商品',
                 'theme' => 'Blank',
@@ -643,7 +643,7 @@ class Category extends Auth
                     'items' => [
                         [
                             'label' => '添加到商品分类 ' . $category->name . ' 中',
-                            'url' => beAdminUrl('ShopFai.Category.addProductSave', ['id' => $categoryId]),
+                            'url' => beAdminUrl('Shop.Category.addProductSave', ['id' => $categoryId]),
                             'target' => 'ajax',
                             'ui' => [
                                 'icon' => 'el-icon-plus',
@@ -666,12 +666,12 @@ class Category extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shopfai_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
                                 }
                             },
                             'ui' => [
@@ -712,7 +712,7 @@ class Category extends Auth
                 $productIds[] = $selectedRow['id'];
             }
 
-            Be::getService('App.ShopFai.Admin.Category')->addProduct($categoryId, $productIds);
+            Be::getService('App.Shop.Admin.Category')->addProduct($categoryId, $productIds);
             $response->set('success', true);
             $response->set('message', '编辑分类成功！');
             $response->set('callback', 'parent.closeDrawerAndReload();');
@@ -751,7 +751,7 @@ class Category extends Auth
                 throw new ControllerException('请选择商品！');
             }
 
-            Be::getService('App.ShopFai.Admin.Category')->deleteProduct($categoryId, $productIds);
+            Be::getService('App.Shop.Admin.Category')->deleteProduct($categoryId, $productIds);
             $response->set('success', true);
             $response->set('message', '编辑分类成功！');
             $response->json();
@@ -778,7 +778,7 @@ class Category extends Auth
             $multiple = $request->get('multiple', '0');
             $multiple = $multiple ? 1 : 0;
 
-            $pickerSetting = Be::getService('App.ShopFai.Admin.Category')->getCategoryPicker($multiple);
+            $pickerSetting = Be::getService('App.Shop.Admin.Category')->getCategoryPicker($multiple);
             if ($request->isAjax()) {
                 Be::getAdminPlugin('Curd')
                     ->setting($pickerSetting)
@@ -833,7 +833,7 @@ class Category extends Auth
 
                 $theme = $pickerSetting['grid']['theme'] ?? 'Blank';
 
-                $response->display('App.ShopFai.Admin.Picker.picker', $theme);
+                $response->display('App.Shop.Admin.Picker.picker', $theme);
             }
 
         } catch (\Throwable $t) {

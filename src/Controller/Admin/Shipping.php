@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -27,11 +27,11 @@ class Shipping extends Auth
 
         $response->set('title', '物流运费');
 
-        $service = Be::getService('App.ShopFai.Admin.Shipping');
+        $service = Be::getService('App.Shop.Admin.Shipping');
         $shippingList = $service->getShippingList();
         $response->set('shippingList', $shippingList);
 
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $response->set('configStore', $configStore);
 
         $response->display();
@@ -47,7 +47,7 @@ class Shipping extends Auth
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
-        $serviceShipping = Be::getService('App.ShopFai.Admin.Shipping');
+        $serviceShipping = Be::getService('App.Shop.Admin.Shipping');
 
         if ($request->isAjax()) {
             try {
@@ -68,10 +68,10 @@ class Shipping extends Auth
             $regionTree = $serviceShipping->getRegionTree();
             $response->set('regionTree', $regionTree);
 
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
-            $response->display('App.ShopFai.Admin.Shipping.edit');
+            $response->display('App.Shop.Admin.Shipping.edit');
         }
     }
 
@@ -84,7 +84,7 @@ class Shipping extends Auth
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
-        $serviceShipping = Be::getService('App.ShopFai.Admin.Shipping');
+        $serviceShipping = Be::getService('App.Shop.Admin.Shipping');
 
         if ($request->isAjax()) {
             try {
@@ -107,10 +107,10 @@ class Shipping extends Auth
             $regionTree = $serviceShipping->getRegionTree($shippingId);
             $response->set('regionTree', $regionTree);
 
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
-            $response->display('App.ShopFai.Admin.Shipping.edit');
+            $response->display('App.Shop.Admin.Shipping.edit');
         }
     }
 
@@ -123,7 +123,7 @@ class Shipping extends Auth
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
-        $serviceShipping = Be::getService('App.ShopFai.Admin.Shipping');
+        $serviceShipping = Be::getService('App.Shop.Admin.Shipping');
         try {
             $shippingId = $request->get('id', '');
             $serviceShipping->delete($shippingId);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\App\ControllerException;
 use Be\App\ServiceException;
@@ -25,7 +25,7 @@ class Api
         $db = Be::getDb();
         $db->startTransaction();
         try {
-            $serviceCollectProductApi = Be::getService('App.ShopFai.Admin.CollectProductApi');
+            $serviceCollectProductApi = Be::getService('App.Shop.Admin.CollectProductApi');
             $collectProductApiConfig = $serviceCollectProductApi->getConfig();
 
             if ($collectProductApiConfig->enable === 0) {
@@ -41,7 +41,7 @@ class Api
 
             $data = [];
 
-            $tupleCollectProduct = Be::getTuple('shopfai_collect_product');
+            $tupleCollectProduct = Be::getTuple('shop_collect_product');
 
             $collectProductExist = false;
             if ($uniqueKey !== '') {
@@ -59,7 +59,7 @@ class Api
                 }
 
                 if ($collectProductExist) {
-                    $tupleProduct = Be::getTuple('shopfai_product');
+                    $tupleProduct = Be::getTuple('shop_product');
                     try {
                         $tupleProduct->load($tupleCollectProduct->product_id);
 
@@ -239,7 +239,7 @@ class Api
             if ($relateName && $relateValue) {
                 $relateId = '';
                 if ($relateKey) {
-                    $existRelateId = Be::getTable('shopfai_collect_product')
+                    $existRelateId = Be::getTable('shop_collect_product')
                         ->where('relate_key', $relateKey)
                         ->where('relate_id', '!=', '')
                         ->getValue('relate_id');
@@ -271,14 +271,14 @@ class Api
                         ]]
                     ];
                 } else {
-                    $tProductRelate = Be::getTuple('shopfai_product_relate');
+                    $tProductRelate = Be::getTuple('shop_product_relate');
                     try {
                         $tProductRelate->load($relateId);
                     } catch (\Throwable $t) {
                         throw new ServiceException('商品关联唯一值（relate_key=' . $relateKey . '）对应的历史商品关联（#' . $relateId . '）不存在！');
                     }
 
-                    $details = Be::getTable('shopfai_product_relate_detail')
+                    $details = Be::getTable('shop_product_relate_detail')
                         ->where('relate_id', $relateId)
                         ->getArrays();
 
@@ -320,14 +320,14 @@ class Api
                 $categories = explode('|', $categories);
                 $categoryIds = [];
 
-                $serviceCategory = Be::getService('App.ShopFaiAdmin.Category');
+                $serviceCategory = Be::getService('App.ShopAdmin.Category');
                 foreach ($categories as $categoryName) {
                     $categoryName = trim($categoryName);
                     if (!$categoryName || strlen($categoryName) > 120) {
                         continue;
                     }
 
-                    $tupleCategory = Be::getTuple('shopfai_category');
+                    $tupleCategory = Be::getTuple('shop_category');
                     try {
                         $tupleCategory->loadBy([
                             'name' => $categoryName,
@@ -368,7 +368,7 @@ class Api
 
             $data['is_enable'] = -1; // 采集的商品标记
 
-            $tProduct = Be::getService('App.ShopFai.Admin.Product')->edit($data);
+            $tProduct = Be::getService('App.Shop.Admin.Product')->edit($data);
 
             if (!$collectProductExist || $tProduct->relate_id !== '') {
                 $tupleCollectProduct->product_id = $tProduct->id;

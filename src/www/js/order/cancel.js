@@ -15,7 +15,7 @@ $(function () {
 
         submitHandler: function (form) {
             $.ajax({
-                url: beUrl  + "/?route=ShopFai.Order.cancelSave",
+                url: beUrl  + "/?route=Shop.Order.cancelSave",
                 data: $("#order-cancel-form").serialize(),
                 method: "POST",
                 success: function (json) {

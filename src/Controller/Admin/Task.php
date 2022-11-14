@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -17,7 +17,7 @@ class Task extends Auth
      */
     public function dashboard()
     {
-        Be::getAdminPlugin('Task')->setting(['appName' => 'ShopFai'])->execute();
+        Be::getAdminPlugin('Task')->setting(['appName' => 'Shop'])->execute();
     }
 
 }

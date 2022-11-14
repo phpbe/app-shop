@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\Be;
 
@@ -8,7 +8,7 @@ use Be\Be;
  * 统计
  * Class Statistic
  *
- * @package Be\App\ShopFai\Service
+ * @package Be\App\Shop\Service
  */
 class Statistic
 {
@@ -23,7 +23,7 @@ class Statistic
         $request = Be::getRequest();
 
         $productId = '';
-        if ($request->getRoute() === 'ShopFai.Product.detail') {
+        if ($request->getRoute() === 'Shop.Product.detail') {
             $productId = $request->get('id', '');
         }
 
@@ -47,7 +47,7 @@ class Statistic
         ];
 
         $redis = Be::getRedis();
-        $redis->lPush('ShopFai:Statistic:Visit', json_encode($data));
+        $redis->lPush('Shop:Statistic:Visit', json_encode($data));
     }
 
     /**
@@ -69,7 +69,7 @@ class Statistic
         ];
 
         $redis = Be::getRedis();
-        $redis->lPush('ShopFai:Statistic:cart', json_encode($data));
+        $redis->lPush('Shop:Statistic:cart', json_encode($data));
     }
 
     public function detectUserAgentBrowser($userAgent, $withVersion = false)

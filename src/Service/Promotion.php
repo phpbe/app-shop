@@ -1,13 +1,13 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\Be;
 
 /**
  * Class Promotion
  *
- * @package Be\App\ShopFai\Service
+ * @package Be\App\Shop\Service
  */
 class Promotion
 {
@@ -23,7 +23,7 @@ class Promotion
         $templates = [];
         $availablePromotionTypes = $this->getAvailablePromotionTypes();
         foreach ($availablePromotionTypes as $type) {
-            $service = Be::getService('App.ShopFai.Promotion' . $type);
+            $service = Be::getService('App.Shop.Promotion' . $type);
             $template = $service->getProductTemplate($productId);
             if ($template !== '') {
                 $templates[] = $template;
@@ -60,7 +60,7 @@ class Promotion
     {
         $availablePromotions = $this->getCartAvailablePromotionTypes($cart);
         foreach ($availablePromotions as $type) {
-            $service = Be::getService('App.ShopFai.Promotion' . $type);
+            $service = Be::getService('App.Shop.Promotion' . $type);
             $discount = $service->getDiscount($cart);
             if ($discount !== false) {
                 return $discount;

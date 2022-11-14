@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -25,7 +25,7 @@ class StatisticSales extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $response->set('configStore', $configStore);
 
         $response->display();

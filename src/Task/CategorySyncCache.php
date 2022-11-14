@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\TaskInterval;
@@ -33,9 +33,9 @@ class CategorySyncCache extends TaskInterval
         $d1 = date('Y-m-d H:i:s', $t1 - 60);
         $d2 = date('Y-m-d H:i:s', $t2);
 
-        $service = Be::getService('App.ShopFai.Admin.TaskCategory');
+        $service = Be::getService('App.Shop.Admin.TaskCategory');
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_category WHERE update_time >= ? AND update_time <= ?';
+        $sql = 'SELECT * FROM shop_category WHERE update_time >= ? AND update_time <= ?';
         $categories = $db->getObjects($sql, [$d1, $d2]);
 
         if (count($categories) === 0) return;

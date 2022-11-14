@@ -211,7 +211,7 @@
                 loadGridData: function () {
                     this.loading = true;
                     var _this = this;
-                    _this.$http.post("<?php echo beAdminUrl('ShopFai.Product.relate'); ?>", {
+                    _this.$http.post("<?php echo beAdminUrl('Shop.Product.relate'); ?>", {
                         formData: _this.formData,
                         page: _this.page,
                         pageSize: _this.pageSize
@@ -247,7 +247,7 @@
                 },
                 reloadGridData: function () {
                     var _this = this;
-                    _this.$http.post("<?php echo beAdminUrl('ShopFai.Product.relate'); ?>", {
+                    _this.$http.post("<?php echo beAdminUrl('Shop.Product.relate'); ?>", {
                         formData: _this.formData,
                         page: _this.page,
                         pageSize: _this.pageSize

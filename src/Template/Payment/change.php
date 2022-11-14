@@ -1,12 +1,12 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/payment/pay.css"/>
     <script src="<?php echo $wwwUrl; ?>/js/payment/change.js"></script>
 
     <?php
-    $configTheme = \Be\Be::getConfig('Theme.ShopFai.Theme');
+    $configTheme = \Be\Be::getConfig('Theme.Shop.Theme');
     ?>
     <style>
         .payment:hover {
@@ -14,7 +14,7 @@
         }
     </style>
     <script>
-        const payment_confirmUrl = "<?php echo beUrl('ShopFai.Payment.confirm'); ?>";
+        const payment_confirmUrl = "<?php echo beUrl('Shop.Payment.confirm'); ?>";
         const orderId = "<?php echo $this->order->id; ?>";
     </script>
 </be-head>

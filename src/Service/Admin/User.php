@@ -1,11 +1,11 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemImage;
 use Be\App\ServiceException;
-use Be\App\ShopFai\Admin\ShopFaiAdmin;
+use Be\App\Shop\Admin\ShopAdmin;
 use Be\Be;
 use Be\Db\Tuple;
 
@@ -21,7 +21,7 @@ class User
     public function getUserPicker(int $multiple = 0): array
     {
         return [
-            'table' => 'shopfai_user',
+            'table' => 'shop_user',
             'grid' => [
                 'title' => $multiple === 1 ? '选择用户' : '选择一个用户',
 

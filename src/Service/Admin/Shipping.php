@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -8,7 +8,7 @@ use Be\Be;
 /**
  * Class Shipping
  *
- * @package Be\App\ShopFai\Admin\Service
+ * @package Be\App\Shop\Admin\Service
  */
 class Shipping
 {
@@ -31,7 +31,7 @@ class Shipping
             $shippingId = $data['id'];
         }
 
-        $tupleShipping = Be::getTuple('shopfai_shipping');
+        $tupleShipping = Be::getTuple('shop_shipping');
         if (!$isNew) {
             try {
                 $tupleShipping->load($shippingId);
@@ -70,7 +70,7 @@ class Shipping
                     throw new ServiceException('国家（' . $region['country_code'] . '）下的州/省数据缺失！');
                 }
 
-                $sql = 'SELECT `name` FROM `shopfai_region_state` WHERE country_code=\'' . $region['country_code'] . '\'';
+                $sql = 'SELECT `name` FROM `shop_region_state` WHERE country_code=\'' . $region['country_code'] . '\'';
                 $availableStateNames = $db->getValues($sql);
 
                 foreach ($region['states'] as &$state) {
@@ -93,14 +93,14 @@ class Shipping
         }
         unset($region);
 
-        $sql = 'SELECT code FROM `shopfai_region_country` WHERE code IN(\'' . implode('\',\'', $countryCodes) . '\')';
+        $sql = 'SELECT code FROM `shop_region_country` WHERE code IN(\'' . implode('\',\'', $countryCodes) . '\')';
         $availableCountryCodes = $db->getValues($sql);
         if (count($availableCountryCodes) != count($countryCodes)) {
             throw new ServiceException('配送区域（' . implode('、', array_diff($countryCodes, $availableCountryCodes)) . '）非法！');
         }
 
         $params = [];
-        $sql = 'SELECT country_code FROM `shopfai_shipping_region` WHERE country_code IN (\'' . implode('\',\'', $countryCodes) . '\')';
+        $sql = 'SELECT country_code FROM `shop_shipping_region` WHERE country_code IN (\'' . implode('\',\'', $countryCodes) . '\')';
         if (!$isNew) {
             $sql .= ' AND shipping_id!=?';
             $params[] = $shippingId;
@@ -266,7 +266,7 @@ class Shipping
 
             if ($isNew) {
                 foreach ($regions as $region) {
-                    $tupleShippingRegion = Be::getTuple('shopfai_shipping_region');
+                    $tupleShippingRegion = Be::getTuple('shop_shipping_region');
                     $tupleShippingRegion->shipping_id = $tupleShipping->id;
                     $tupleShippingRegion->country_id = $region['country_id'];
                     $tupleShippingRegion->country_code = $region['country_code'];
@@ -277,7 +277,7 @@ class Shipping
 
                     if ($region['assign_state'] === '1') {
                         foreach ($region['states'] as $state) {
-                            $tupleShippingRegionState = Be::getTuple('shopfai_shipping_region_state');
+                            $tupleShippingRegionState = Be::getTuple('shop_shipping_region_state');
                             $tupleShippingRegionState->shipping_id = $tupleShipping->id;
                             $tupleShippingRegionState->shipping_region_id = $tupleShippingRegion->id;
                             $tupleShippingRegionState->state_id = $state['state_id'];
@@ -297,21 +297,21 @@ class Shipping
                 }
 
                 if (count($keepIds) > 0) {
-                    Be::getTable('shopfai_shipping_region')
+                    Be::getTable('shop_shipping_region')
                         ->where('shipping_id', $tupleShipping->id)
                         ->where('id', 'NOT IN', $keepIds)
                         ->delete();
 
-                    Be::getTable('shopfai_shipping_region_state')
+                    Be::getTable('shop_shipping_region_state')
                         ->where('shipping_id', $tupleShipping->id)
                         ->where('shipping_region_id', 'NOT IN', $keepIds)
                         ->delete();
                 } else {
-                    Be::getTable('shopfai_shipping_region')
+                    Be::getTable('shop_shipping_region')
                         ->where('shipping_id', $tupleShipping->id)
                         ->delete();
 
-                    Be::getTable('shopfai_shipping_region_state')
+                    Be::getTable('shop_shipping_region_state')
                         ->where('shipping_id', $tupleShipping->id)
                         ->delete();
                 }
@@ -322,7 +322,7 @@ class Shipping
                         $isNewRegion = false;
                     }
 
-                    $tupleShippingRegion = Be::getTuple('shopfai_shipping_region');
+                    $tupleShippingRegion = Be::getTuple('shop_shipping_region');
 
                     if (!$isNewRegion) {
                         try {
@@ -353,7 +353,7 @@ class Shipping
 
                             // 新增的区域
                             foreach ($region['states'] as $state) {
-                                $tupleShippingRegionState = Be::getTuple('shopfai_shipping_region_state');
+                                $tupleShippingRegionState = Be::getTuple('shop_shipping_region_state');
                                 $tupleShippingRegionState->shipping_id = $tupleShipping->id;
                                 $tupleShippingRegionState->shipping_region_id = $tupleShippingRegion->id;
                                 $tupleShippingRegionState->state_id = $state['state_id'];
@@ -373,13 +373,13 @@ class Shipping
                             }
 
                             if (count($keepIds) > 0) {
-                                Be::getTable('shopfai_shipping_region_state')
+                                Be::getTable('shop_shipping_region_state')
                                     ->where('shipping_id', $tupleShipping->id)
                                     ->where('shipping_region_id', $tupleShippingRegion->id)
                                     ->where('id', 'NOT IN', $keepIds)
                                     ->delete();
                             } else {
-                                Be::getTable('shopfai_shipping_region_state')
+                                Be::getTable('shop_shipping_region_state')
                                     ->where('shipping_id', $tupleShipping->id)
                                     ->where('shipping_region_id', $tupleShippingRegion->id)
                                     ->delete();
@@ -391,7 +391,7 @@ class Shipping
                                     $isNewRegionState = false;
                                 }
 
-                                $tupleShippingRegionState = Be::getTuple('shopfai_shipping_region_state');
+                                $tupleShippingRegionState = Be::getTuple('shop_shipping_region_state');
 
                                 if (!$isNewRegionState) {
                                     try {
@@ -426,7 +426,7 @@ class Shipping
 
             if ($isNew) {
                 foreach ($plans as $plan) {
-                    $tupleShippingPlan = Be::getTuple('shopfai_shipping_plan');
+                    $tupleShippingPlan = Be::getTuple('shop_shipping_plan');
                     $tupleShippingPlan->shipping_id = $tupleShipping->id;
                     $tupleShippingPlan->name = $plan['name'];
                     $tupleShippingPlan->description = $plan['description'];
@@ -461,12 +461,12 @@ class Shipping
                 }
 
                 if (count($keepIds) > 0) {
-                    Be::getTable('shopfai_shipping_plan')
+                    Be::getTable('shop_shipping_plan')
                         ->where('shipping_id', $tupleShipping->id)
                         ->where('id', 'NOT IN', $keepIds)
                         ->delete();
                 } else {
-                    Be::getTable('shopfai_shipping_plan')
+                    Be::getTable('shop_shipping_plan')
                         ->where('shipping_id', $tupleShipping->id)
                         ->delete();
                 }
@@ -477,7 +477,7 @@ class Shipping
                         $isNewPlan = false;
                     }
 
-                    $tupleShippingPlan = Be::getTuple('shopfai_shipping_plan');
+                    $tupleShippingPlan = Be::getTuple('shop_shipping_plan');
 
                     if (!$isNewPlan) {
                         try {
@@ -525,7 +525,7 @@ class Shipping
                 }
             }
 
-            Be::getService('App.ShopFai.Admin.Store')->setUp(2);
+            Be::getService('App.Shop.Admin.Store')->setUp(2);
 
             $db->commit();
 
@@ -547,18 +547,18 @@ class Shipping
     public function getShippingList()
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM `shopfai_shipping` ORDER BY `create_time` ASC';
+        $sql = 'SELECT * FROM `shop_shipping` ORDER BY `create_time` ASC';
         $shippingList = $db->getObjects($sql);
         foreach ($shippingList as $shipping) {
 
-            $sql = 'SELECT country_code FROM `shopfai_shipping_region` WHERE shipping_id=?';
+            $sql = 'SELECT country_code FROM `shop_shipping_region` WHERE shipping_id=?';
             $countryCodes = $db->getValues($sql, [$shipping->id]);
             $count = count($countryCodes);
             if ($count > 3) {
                 $countryCodes = array_slice($countryCodes, 0, 3);
             }
 
-            $sql = 'SELECT `name_cn` FROM `shopfai_region_country` WHERE code IN(\'' . implode('\',\'', $countryCodes) . '\')';
+            $sql = 'SELECT `name_cn` FROM `shop_region_country` WHERE code IN(\'' . implode('\',\'', $countryCodes) . '\')';
             $countryNames = $db->getValues($sql);
 
             $regionDescription = null;
@@ -570,7 +570,7 @@ class Shipping
             $shipping->region_description = $regionDescription;
 
 
-            $sql = 'SELECT * FROM `shopfai_shipping_plan` WHERE shipping_id=?';
+            $sql = 'SELECT * FROM `shop_shipping_plan` WHERE shipping_id=?';
             $plans = $db->getObjects($sql, [$shipping->id]);
             $shipping->plans = $plans;
         }
@@ -587,18 +587,18 @@ class Shipping
     public function getShipping($shippingId)
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM `shopfai_shipping` WHERE id=?';
+        $sql = 'SELECT * FROM `shop_shipping` WHERE id=?';
         $shipping = $db->getObject($sql, [$shippingId]);
 
         if (!$shipping) {
             throw new ServiceException('运费方案（# ' . $shippingId . '）不存在！');
         }
 
-        $sql = 'SELECT * FROM `shopfai_shipping_region` WHERE shipping_id=?';
+        $sql = 'SELECT * FROM `shop_shipping_region` WHERE shipping_id=?';
         $regions = $db->getObjects($sql, [$shipping->id]);
         foreach ($regions as $region) {
 
-            $sql = 'SELECT * FROM `shopfai_region_country` WHERE code=?';
+            $sql = 'SELECT * FROM `shop_region_country` WHERE code=?';
             $country = $db->getObject($sql, [$region->country_code]);
             $region->country = $country;
 
@@ -612,7 +612,7 @@ class Shipping
                     $region->state_description = '全部';
                 }
             } elseif ($region->assign_state === '1') {
-                $sql = 'SELECT * FROM `shopfai_shipping_region_state` WHERE shipping_id =? AND shipping_region_id =?';
+                $sql = 'SELECT * FROM `shop_shipping_region_state` WHERE shipping_id =? AND shipping_region_id =?';
                 $states = $db->getObjects($sql, [$shippingId, $region->id]);
                 $region->states = $states;
 
@@ -622,7 +622,7 @@ class Shipping
         }
         $shipping->regions = $regions;
 
-        $sql = 'SELECT * FROM `shopfai_shipping_plan` WHERE shipping_id=?';
+        $sql = 'SELECT * FROM `shop_shipping_plan` WHERE shipping_id=?';
         $plans = $db->getObjects($sql, [$shipping->id]);
         $shipping->plans = $plans;
 
@@ -640,7 +640,7 @@ class Shipping
     {
         $db = Be::getDb();
         $params = [];
-        $sql = 'SELECT country_code FROM `shopfai_shipping_region` WHERE 1';
+        $sql = 'SELECT country_code FROM `shop_shipping_region` WHERE 1';
         if ($shippingId !== null) {
             $sql .= ' AND shipping_id!=?';
             $params[] = $shippingId;
@@ -648,10 +648,10 @@ class Shipping
         $existCountryCodes = $db->getValues($sql, $params);
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM `shopfai_region_continent` ORDER BY `ordering` ASC';
+        $sql = 'SELECT * FROM `shop_region_continent` ORDER BY `ordering` ASC';
         $continents = $db->getObjects($sql);
         foreach ($continents as $continent) {
-            $sql = 'SELECT * FROM `shopfai_region_country` WHERE continent_code = \'' . $continent->code . '\' ORDER BY `name` ASC';
+            $sql = 'SELECT * FROM `shop_region_country` WHERE continent_code = \'' . $continent->code . '\' ORDER BY `name` ASC';
             $countries = $db->getObjects($sql);
             foreach ($countries as $country) {
                 if (in_array($country->code, $existCountryCodes)) {
@@ -674,7 +674,7 @@ class Shipping
     {
         $db = Be::getDb();
 
-        $sql = 'SELECT * FROM `shopfai_shipping` WHERE id=?';
+        $sql = 'SELECT * FROM `shop_shipping` WHERE id=?';
         $shipping = $db->getObject($sql, [$shippingId]);
 
         if (!$shipping) {
@@ -683,16 +683,16 @@ class Shipping
 
         $db->startTransaction();
         try {
-            $sql = 'DELETE FROM `shopfai_shipping` WHERE id=?';
+            $sql = 'DELETE FROM `shop_shipping` WHERE id=?';
             $db->query($sql, [$shippingId]);
 
-            $sql = 'DELETE FROM `shopfai_shipping_region` WHERE shipping_id=?';
+            $sql = 'DELETE FROM `shop_shipping_region` WHERE shipping_id=?';
             $db->query($sql, [$shippingId]);
 
-            $sql = 'DELETE FROM `shopfai_shipping_region_state` WHERE shipping_id=?';
+            $sql = 'DELETE FROM `shop_shipping_region_state` WHERE shipping_id=?';
             $db->query($sql, [$shippingId]);
 
-            $sql = 'DELETE FROM `shopfai_shipping_plan` WHERE shipping_id=?';
+            $sql = 'DELETE FROM `shop_shipping_plan` WHERE shipping_id=?';
             $db->query($sql, [$shippingId]);
 
             $db->commit();

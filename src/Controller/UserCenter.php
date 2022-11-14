@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -32,7 +32,7 @@ class UserCenter extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $profile = Be::getService('App.ShopFai.User')->getUser();
+        $profile = Be::getService('App.Shop.User')->getUser();
         $response->set('profile', $profile);
 
         $response->display();
@@ -49,7 +49,7 @@ class UserCenter extends Auth
         $response = Be::getResponse();
 
         try {
-            Be::getService('App.ShopFai.User')->updateProfile($request->post());
+            Be::getService('App.Shop.User')->updateProfile($request->post());
             $response->set('success', true);
             $response->set('message', 'Update your profile success!');
             $response->json();
@@ -73,7 +73,7 @@ class UserCenter extends Auth
         try {
             $password = $request->post('password');
             $email = $request->post('email');
-            Be::getService('App.ShopFai.User')->changeEmail($password, $email);
+            Be::getService('App.Shop.User')->changeEmail($password, $email);
             $response->set('success', true);
             $response->set('message', 'Change your email success!');
             $response->json();
@@ -97,7 +97,7 @@ class UserCenter extends Auth
         try {
             $password = $request->post('password');
             $newPassword = $request->post('new_password');
-            Be::getService('App.ShopFai.User')->changePassword($password, $newPassword);
+            Be::getService('App.Shop.User')->changePassword($password, $newPassword);
             $response->set('success', true);
             $response->set('message', 'Change your password success!');
             $response->json();

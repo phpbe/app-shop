@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Form\Item\FormItemTinymce;
 use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
@@ -34,7 +34,7 @@ class ProductReview extends Auth
         Be::getAdminPlugin('Curd')->setting([
 
             'label' => '商品评论',
-            'table' => 'shopfai_product_review',
+            'table' => 'shop_product_review',
 
             'grid' => [
                 'title' => '商品评论',

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\TopSearch;
+namespace Be\App\Shop\Section\TopSearch;
 
 /**
  * @BeConfig("热搜商品", icon="el-icon-search")

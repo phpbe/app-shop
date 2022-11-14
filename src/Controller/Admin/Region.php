@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\ControllerException;
 use Be\App\System\Controller\Admin\Auth;
@@ -21,7 +21,7 @@ class Region extends Auth
     {
         $response = Be::getResponse();
         try {
-            $keyValues = Be::getService('App.ShopFai.Admin.Region')->getCountryKeyValues();
+            $keyValues = Be::getService('App.Shop.Admin.Region')->getCountryKeyValues();
             $response->set('success', true);
             $response->set('countryKeyValues', $keyValues);
             $response->json();
@@ -46,7 +46,7 @@ class Region extends Auth
             if (!$countryCode) {
                 throw new ControllerException('参数（country_code）缺失');
             }
-            $states = Be::getService('App.ShopFai.Admin.Region')->getStates($countryCode);
+            $states = Be::getService('App.Shop.Admin.Region')->getStates($countryCode);
             $response->set('success', true);
             $response->set('states', $states);
             $response->json();

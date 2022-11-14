@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\AdminPlugin\Form\Item;
+namespace Be\App\Shop\AdminPlugin\Form\Item;
 
 use Be\AdminPlugin\AdminPluginException;
 use Be\AdminPlugin\Form\Item\FormItem;

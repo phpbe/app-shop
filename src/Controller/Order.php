@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -28,9 +28,9 @@ class Order extends Auth
         $option['keywords'] = $keywords;
         $response->set('keywords', $keywords);
 
-        Be::getService('App.ShopFai.Order')->paymentExpire();
+        Be::getService('App.Shop.Order')->paymentExpire();
 
-        $total = Be::getService('App.ShopFai.Order')->getCount($option);
+        $total = Be::getService('App.Shop.Order')->getCount($option);
         $response->set('total', $total);
 
         $pageSize = $request->get('page_size', 12);
@@ -48,10 +48,10 @@ class Order extends Auth
         $option['pageSize'] = $pageSize;
         $option['page'] = $page;
 
-        $orders = Be::getService('App.ShopFai.Order')->getOrders($option);
+        $orders = Be::getService('App.Shop.Order')->getOrders($option);
         $response->set('orders', $orders);
 
-        $statusKeyValues = Be::getService('App.ShopFai.Order')->getStatusKeyValues();
+        $statusKeyValues = Be::getService('App.Shop.Order')->getStatusKeyValues();
         $response->set('statusKeyValues', $statusKeyValues);
 
         $response->display();
@@ -69,7 +69,7 @@ class Order extends Auth
 
         $orderId = $request->get('order_id');
 
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId, ['products' => 1, 'shipping_address' => 1, 'billing_address' => 1]);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId, ['products' => 1, 'shipping_address' => 1, 'billing_address' => 1]);
         $response->set('order', $order);
 
         $response->display();
@@ -88,7 +88,7 @@ class Order extends Auth
 
         $orderId = $request->get('order_id');
 
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId, ['products' => 1]);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId, ['products' => 1]);
         $response->set('order', $order);
 
         $response->display();
@@ -106,10 +106,10 @@ class Order extends Auth
 
         $orderId = $request->get('order_id');
 
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
         $response->set('order', $order);
 
-        $contacts = Be::getService('App.ShopFai.Order')->getContacts($orderId);
+        $contacts = Be::getService('App.Shop.Order')->getContacts($orderId);
         $response->set('contacts', $contacts);
 
         $response->display();
@@ -130,7 +130,7 @@ class Order extends Auth
             $content = trim($content);
 
             $image = $request->files('image');
-            Be::getService('App.ShopFai.Order')->contact($orderId, $content, $image);
+            Be::getService('App.Shop.Order')->contact($orderId, $content, $image);
 
             $response->set('success', true);
             $response->set('message', 'Submit success!');
@@ -154,7 +154,7 @@ class Order extends Auth
 
         $orderId = $request->get('order_id');
 
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
 
         if ($order->status != 'pending') {
             $response->error('Order status exception!');
@@ -183,10 +183,10 @@ class Order extends Auth
                 return;
             }
 
-            Be::getService('App.ShopFai.Order')->cancel($orderId, $reason);
+            Be::getService('App.Shop.Order')->cancel($orderId, $reason);
             $response->set('success', true);
             $response->set('message', 'Cancel order success!');
-            $response->set('redirectUrl', beUrl('ShopFai.Order.orders'));
+            $response->set('redirectUrl', beUrl('Shop.Order.orders'));
             $response->json();
         } catch (\Throwable $t) {
             $response->set('success', false);

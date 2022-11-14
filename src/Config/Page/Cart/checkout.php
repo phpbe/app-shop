@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Cart;
+namespace Be\App\Shop\Config\Page\Cart;
 
 class checkout
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\App\ControllerException;
 use Be\Be;
 
 /**
  * Class Shipping
- * @package Be\App\ShopFai\Controller
+ * @package Be\App\Shop\Controller
  */
 class Shipping extends Base
 {
@@ -21,7 +21,7 @@ class Shipping extends Base
     {
         $response = Be::getResponse();
         try {
-            $keyValues = Be::getService('App.ShopFai.Region')->getCountryKeyValues();
+            $keyValues = Be::getService('App.Shop.Region')->getCountryKeyValues();
             $response->set('success', true);
             $response->set('message', 'Get country key values data success!');
             $response->set('countryKeyValues', $keyValues);
@@ -47,7 +47,7 @@ class Shipping extends Base
             if (!$countryId) {
                 throw new ControllerException('Parameter(country_id) missed!');
             }
-            $keyValues = Be::getService('App.ShopFai.Shipping')->getStateIdNameKeyValues($countryId);
+            $keyValues = Be::getService('App.Shop.Shipping')->getStateIdNameKeyValues($countryId);
             $response->set('success', true);
             $response->set('message', 'Get state key values data success!');
             $response->set('stateKeyValues', $keyValues);
@@ -69,7 +69,7 @@ class Shipping extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
         try {
-            $shippingPlans = Be::getService('App.ShopFai.Shipping')->getShippingPlans($request->post());
+            $shippingPlans = Be::getService('App.Shop.Shipping')->getShippingPlans($request->post());
 
             $response->set('success', true);
             $response->set('message', 'Get shipping plans data success!');

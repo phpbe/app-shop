@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Order;
+namespace Be\App\Shop\Config\Page\Order;
 
-use Be\App\ShopFai\Config\Page\UserCenter;
+use Be\App\Shop\Config\Page\UserCenter;
 
 class orders extends UserCenter
 {

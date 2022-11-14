@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -21,7 +21,7 @@ class TaskOrder
     {
         if (count($orders) === 0) return;
 
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
 
         $db = Be::getDb();
 
@@ -44,7 +44,7 @@ class TaskOrder
                 ];
             } else {
 
-                $sql = 'SELECT * FROM shopfai_order_product WHERE order_id = ?';
+                $sql = 'SELECT * FROM shop_order_product WHERE order_id = ?';
                 $products = $db->getObjects($sql, [$order->id]);
 
                 $formattedProducts = [];

@@ -14,7 +14,7 @@
                     <?php echo $this->config->token; ?>
                 </div>
                 <div class="be-col-auto">
-                    <el-link type="primary" icon="el-icon-refresh" :underline="false" href="<?php echo beAdminUrl('ShopFai.CollectProductApi.resetToken'); ?>">重新生成</el-link>
+                    <el-link type="primary" icon="el-icon-refresh" :underline="false" href="<?php echo beAdminUrl('Shop.CollectProductApi.resetToken'); ?>">重新生成</el-link>
                 </div>
             </div>
 
@@ -23,7 +23,7 @@
                 <div class="be-col-auto">接口网址：</div>
                 <div class="be-col-auto be-px-100">
                     <el-tag>
-                        <?php echo beUrl('ShopFai.Api.CollectProduct', ['token' => $this->config->token]); ?>
+                        <?php echo beUrl('Shop.Api.CollectProduct', ['token' => $this->config->token]); ?>
                     </el-tag>
                 </div>
 
@@ -185,7 +185,7 @@
             methods: {
                 toggleEnable() {
                     let _this = this;
-                    _this.$http.get("<?php echo beAdminUrl('ShopFai.CollectProductApi.toggleEnable'); ?>", {
+                    _this.$http.get("<?php echo beAdminUrl('Shop.CollectProductApi.toggleEnable'); ?>", {
                         formData: _this.formData
                     }).then(function (response) {
                         if (response.status === 200) {
@@ -207,7 +207,7 @@
                 copyUrl: function () {
                     let _this = this;
                     let input = document.createElement('input');
-                    input.value = "<?php echo beUrl('ShopFai.Api.CollectProduct', ['token' => $this->config->token]); ?>";
+                    input.value = "<?php echo beUrl('Shop.Api.CollectProduct', ['token' => $this->config->token]); ?>";
                     document.body.appendChild(input);
                     input.select();
                     try {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -16,7 +16,7 @@ class PaymentCod extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
         $orderId = $request->get('order_id');
-        $response->redirect(beUrl('ShopFai.Order.detail', ['order_id' => $orderId]));
+        $response->redirect(beUrl('Shop.Order.detail', ['order_id' => $orderId]));
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\UserCenterMenu;
+namespace Be\App\Shop\Section\UserCenterMenu;
 
 use Be\Be;
 use Be\Theme\Section;
@@ -91,7 +91,7 @@ class Template extends Section
         }
 
         echo '<li>';
-        echo '<a href="' . beUrl('ShopFai.User.logout') . '">Sign Out</a>';
+        echo '<a href="' . beUrl('Shop.User.logout') . '">Sign Out</a>';
         echo '</li>';
 
         echo '<ul>';

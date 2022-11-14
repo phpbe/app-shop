@@ -1,9 +1,9 @@
 {
-  "name": "be/app-shopfai",
+  "name": "be/app-shop",
   "type": "library",
   "description": "店熵商城",
   "keywords": [
-    "ShopFai",
+    "Shop",
     "店熵商城"
   ],
   "license": "MIT",
@@ -23,7 +23,7 @@
       "be/User/User.php"
     ],
     "psr-4": {
-      "Be\\App\\ShopFai\\": "src/"
+      "Be\\App\\Shop\\": "src/"
     }
   }
 }

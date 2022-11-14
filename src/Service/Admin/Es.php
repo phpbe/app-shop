@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -10,7 +10,7 @@ class Es
 
     public function getIndexes()
     {
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
 
         $indexes = [];
@@ -82,7 +82,7 @@ class Es
         $number_of_shards = $options['number_of_shards'] ?? 2;
         $number_of_replicas = $options['number_of_replicas'] ?? 1;
 
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
 
         $configField = 'index' . ucfirst($indexName);
@@ -482,7 +482,7 @@ class Es
      */
     public function deleteIndex(string $indexName)
     {
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
 
         $configField = 'index' . ucfirst($indexName);

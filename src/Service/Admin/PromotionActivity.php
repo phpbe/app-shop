@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\AdminPlugin\Table\Item\TableItemCustom;
 use Be\App\ServiceException;
@@ -24,7 +24,7 @@ class PromotionActivity
     {
         $db = Be::getDb();
 
-        $sql = 'SELECT * FROM shopfai_promotion_activity WHERE id=?';
+        $sql = 'SELECT * FROM shop_promotion_activity WHERE id=?';
         $promotionActivity = $db->getObject($sql, [$promotionActivityId]);
 
         $promotionActivity->poster = (int)$promotionActivity->poster;
@@ -36,21 +36,21 @@ class PromotionActivity
         $promotionActivity->scope_products = [];
         $promotionActivity->scope_categories = [];
         if ($promotionActivity->scope_product === 'assign') {
-            $productIds = Be::getTable('shopfai_promotion_activity_scope_product')
+            $productIds = Be::getTable('shop_promotion_activity_scope_product')
                 ->where('promotion_activity_id', $promotionActivityId)
                 ->getValues('product_id');
             if (count($productIds) > 0) {
-                $products = Be::getTable('shopfai_product')
+                $products = Be::getTable('shop_product')
                     ->where('id', 'IN', $productIds)
                     ->getObjects();
                 if (count($products) > 0) {
                     foreach ($products as &$product) {
-                        $sql = 'SELECT small FROM shopfai_product_image WHERE product_id = ? AND is_main = 1';
+                        $sql = 'SELECT small FROM shop_product_image WHERE product_id = ? AND is_main = 1';
                         $image = $db->getValue($sql, [$product->id]);
                         if ($image) {
                             $product->image = $image;
                         } else {
-                            $product->image = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/product/no-image.jpg';
+                            $product->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/product/no-image.jpg';
                         }
                     }
                     unset($product);
@@ -59,16 +59,16 @@ class PromotionActivity
                 }
             }
         } elseif ($promotionActivity->scope_product === 'category') {
-            $categoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+            $categoryIds = Be::getTable('shop_promotion_activity_scope_category')
                 ->where('promotion_activity_id', $promotionActivityId)
                 ->getValues('category_id');
             if (count($categoryIds) > 0) {
-                $categories = Be::getTable('shopfai_category')
+                $categories = Be::getTable('shop_category')
                     ->where('id', 'IN', $categoryIds)
                     ->getObjects();
                 foreach ($categories as &$category) {
                     if (!$category->image_small) {
-                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image-s.jpg';
+                        $category->image_small = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image-s.jpg';
                     }
                 }
                 unset($category);
@@ -77,7 +77,7 @@ class PromotionActivity
             }
         }
 
-        $promotionActivity->discounts = Be::getTable('shopfai_promotion_activity_discount')
+        $promotionActivity->discounts = Be::getTable('shop_promotion_activity_discount')
             ->where('promotion_activity_id', $promotionActivityId)
             ->orderBy('ordering', 'ASC')
             ->getObjects();
@@ -103,7 +103,7 @@ class PromotionActivity
             $promotionActivityId = $data['id'];
         }
 
-        $tuplePromotionActivity = Be::getTuple('shopfai_promotion_activity');
+        $tuplePromotionActivity = Be::getTuple('shop_promotion_activity');
         if (!$isNew) {
             try {
                 $tuplePromotionActivity->load($promotionActivityId);
@@ -270,11 +270,11 @@ class PromotionActivity
         $urlExist = null;
         do {
             if ($isNew) {
-                $urlExist = Be::getTable('shopfai_promotion_activity')
+                $urlExist = Be::getTable('shop_promotion_activity')
                         ->where('url', $urlUnique)
                         ->getValue('COUNT(*)') > 0;
             } else {
-                $urlExist = Be::getTable('shopfai_promotion_activity')
+                $urlExist = Be::getTable('shop_promotion_activity')
                         ->where('url', $urlUnique)
                         ->where('id', '!=', $promotionActivityId)
                         ->getValue('COUNT(*)') > 0;
@@ -314,7 +314,7 @@ class PromotionActivity
             $data['discount_text'] = '';
         }
 
-        $serviceStore = Be::getService('App.ShopFai.Admin.Store');
+        $serviceStore = Be::getService('App.Shop.Admin.Store');
 
         $db->startTransaction();
         try {
@@ -353,7 +353,7 @@ class PromotionActivity
                 $tuplePromotionActivity->update();
 
                 if (count($changeDetails) > 1) {
-                    $tuplePromotionActivityChange = Be::getTuple('shopfai_promotion_activity_change');
+                    $tuplePromotionActivityChange = Be::getTuple('shop_promotion_activity_change');
                     $tuplePromotionActivityChange->promotion_activity_id = $tuplePromotionActivity->id;
                     $tuplePromotionActivityChange->details = json_encode($changeDetails);
                     $tuplePromotionActivityChange->create_time = $now;
@@ -364,7 +364,7 @@ class PromotionActivity
             if ($isNew) {
                 $ordering = 0;
                 foreach ($data['discounts'] as $discount) {
-                    $tuplePromotionActivityDiscount = Be::getTuple('shopfai_promotion_activity_discount');
+                    $tuplePromotionActivityDiscount = Be::getTuple('shop_promotion_activity_discount');
                     $tuplePromotionActivityDiscount->promotion_activity_id = $tuplePromotionActivity->id;
                     $tuplePromotionActivityDiscount->min_amount = $discount['min_amount'];
                     $tuplePromotionActivityDiscount->min_quantity = $discount['min_quantity'];
@@ -382,19 +382,19 @@ class PromotionActivity
                 }
 
                 if (count($keepIds) > 0) {
-                    Be::getTable('shopfai_promotion_activity_discount')
+                    Be::getTable('shop_promotion_activity_discount')
                         ->where('promotion_activity_id', $tuplePromotionActivity->id)
                         ->where('id', 'NOT IN', $keepIds)
                         ->delete();
                 } else {
-                    Be::getTable('shopfai_promotion_activity_discount')
+                    Be::getTable('shop_promotion_activity_discount')
                         ->where('promotion_activity_id', $tuplePromotionActivity->id)
                         ->delete();
                 }
 
                 $ordering = 0;
                 foreach ($data['discounts'] as $discount) {
-                    $tuplePromotionActivityDiscount = Be::getTuple('shopfai_promotion_activity_discount');
+                    $tuplePromotionActivityDiscount = Be::getTuple('shop_promotion_activity_discount');
                     if (isset($discount['id']) && $discount['id'] !== '') {
                         try {
                             $tuplePromotionActivityDiscount->loadBy([
@@ -419,7 +419,7 @@ class PromotionActivity
             if ($data['scope_product'] === 'assign') {
                 if ($isNew) {
                     foreach ($data['scope_products'] as $product) {
-                        $tuplePromotionActivityScopeProduct = Be::getTuple('shopfai_promotion_activity_scope_product');
+                        $tuplePromotionActivityScopeProduct = Be::getTuple('shop_promotion_activity_scope_product');
                         $tuplePromotionActivityScopeProduct->promotion_activity_id = $tuplePromotionActivity->id;
                         $tuplePromotionActivityScopeProduct->product_id = $product['id'];
                         $tuplePromotionActivityScopeProduct->insert();
@@ -430,7 +430,7 @@ class PromotionActivity
                         $productIds[] = $product['id'];
                     }
 
-                    $existProductIds = Be::getTable('shopfai_promotion_activity_scope_product')
+                    $existProductIds = Be::getTable('shop_promotion_activity_scope_product')
                         ->where('promotion_activity_id', $tuplePromotionActivity->id)
                         ->getValues('product_id');
 
@@ -438,7 +438,7 @@ class PromotionActivity
                     if (count($existProductIds) > 0) {
                         $removeProductIds = array_diff($existProductIds, $productIds);
                         if (count($removeProductIds) > 0) {
-                            Be::getTable('shopfai_promotion_activity_scope_product')
+                            Be::getTable('shop_promotion_activity_scope_product')
                                 ->where('promotion_activity_id', $tuplePromotionActivity->id)
                                 ->where('product_id', 'IN', $removeProductIds)
                                 ->delete();
@@ -454,7 +454,7 @@ class PromotionActivity
                     }
                     if (count($newProductIds) > 0) {
                         foreach ($newProductIds as $newProductId) {
-                            $tuplePromotionActivityScopeProduct = Be::getTuple('shopfai_promotion_activity_scope_product');
+                            $tuplePromotionActivityScopeProduct = Be::getTuple('shop_promotion_activity_scope_product');
                             $tuplePromotionActivityScopeProduct->promotion_activity_id = $tuplePromotionActivity->id;
                             $tuplePromotionActivityScopeProduct->product_id = $newProductId;
                             $tuplePromotionActivityScopeProduct->insert();
@@ -464,7 +464,7 @@ class PromotionActivity
             } elseif ($data['scope_product'] === 'category') {
                 if ($isNew) {
                     foreach ($data['scope_categories'] as $category) {
-                        $tuplePromotionActivityScopeCategory = Be::getTuple('shopfai_promotion_activity_scope_category');
+                        $tuplePromotionActivityScopeCategory = Be::getTuple('shop_promotion_activity_scope_category');
                         $tuplePromotionActivityScopeCategory->promotion_activity_id = $tuplePromotionActivity->id;
                         $tuplePromotionActivityScopeCategory->category_id = $category['id'];
                         $tuplePromotionActivityScopeCategory->insert();
@@ -475,7 +475,7 @@ class PromotionActivity
                         $categoryIds[] = $category['id'];
                     }
 
-                    $existCategoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+                    $existCategoryIds = Be::getTable('shop_promotion_activity_scope_category')
                         ->where('promotion_activity_id', $tuplePromotionActivity->id)
                         ->getValues('category_id');
 
@@ -483,7 +483,7 @@ class PromotionActivity
                     if (count($existCategoryIds) > 0) {
                         $removeCategoryIds = array_diff($existCategoryIds, $categoryIds);
                         if (count($removeCategoryIds) > 0) {
-                            Be::getTable('shopfai_promotion_activity_scope_category')
+                            Be::getTable('shop_promotion_activity_scope_category')
                                 ->where('promotion_activity_id', $tuplePromotionActivity->id)
                                 ->where('category_id', 'IN', $removeCategoryIds)
                                 ->delete();
@@ -499,7 +499,7 @@ class PromotionActivity
                     }
                     if (count($newCategoryIds) > 0) {
                         foreach ($newCategoryIds as $newCategoryId) {
-                            $tuplePromotionActivityScopeCategory = Be::getTuple('shopfai_promotion_activity_scope_category');
+                            $tuplePromotionActivityScopeCategory = Be::getTuple('shop_promotion_activity_scope_category');
                             $tuplePromotionActivityScopeCategory->promotion_activity_id = $tuplePromotionActivity->id;
                             $tuplePromotionActivityScopeCategory->category_id = $newCategoryId;
                             $tuplePromotionActivityScopeCategory->insert();
@@ -539,7 +539,7 @@ class PromotionActivity
             $now = date('Y-m-d H:i:s');
             foreach ($promotionActivityIds as $promotionActivityId) {
 
-                $tuplePromotionActivity = Be::getTuple('shopfai_promotion_activity');
+                $tuplePromotionActivity = Be::getTuple('shop_promotion_activity');
                 try {
                     $tuplePromotionActivity->load($promotionActivityId);
                 } catch (\Throwable $t) {
@@ -572,7 +572,7 @@ class PromotionActivity
         $exist = null;
         do {
             $code = Random::create($len, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789');
-            $exist = Be::getTable('shopfai_promotion_activity')
+            $exist = Be::getTable('shop_promotion_activity')
                     ->where('code', $code)
                     ->getValue('COUNT(*)') > 0;
         } while ($exist);
@@ -593,7 +593,7 @@ class PromotionActivity
         $conditionKeyValues = ['min_amount' => '需消费指定金额', 'min_quantity' => '需购买指定数量'];
         $scopeProductKeyValues = ['all' => '所有商品', 'assign' => '指定商品', 'category' => '指定分类'];
 
-        $changes = Be::getTable('shopfai_promotion_activity_change')
+        $changes = Be::getTable('shop_promotion_activity_change')
             ->where('promotion_activity_id', $promotionActivityId)
             ->orderBy('create_time', 'DESC')
             ->limit(30)
@@ -678,7 +678,7 @@ class PromotionActivity
      */
     public function getStatisticsSummary(string $promotionActivityId): array
     {
-        $orderIds = Be::getTable('shopfai_order_promotion')
+        $orderIds = Be::getTable('shop_order_promotion')
             ->where('promotion_type', 'promotion_activity')
             ->where('promotion_id', $promotionActivityId)
             ->getValues('order_id');
@@ -686,7 +686,7 @@ class PromotionActivity
         $orderCount = count($orderIds);
 
         if ($orderCount > 0) {
-            $discountAmount = Be::getTable('shopfai_order_promotion')
+            $discountAmount = Be::getTable('shop_order_promotion')
                 ->where('promotion_type', 'promotion_activity')
                 ->where('promotion_id', $promotionActivityId)
                 ->sum('discount_amount');
@@ -694,7 +694,7 @@ class PromotionActivity
                 $discountAmount = 0;
             }
 
-            $orderAmount = Be::getTable('shopfai_order')
+            $orderAmount = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->sum('amount');
             if ($orderAmount === null) {
@@ -721,18 +721,18 @@ class PromotionActivity
      */
     public function getStatistics(string $promotionActivityId): array
     {
-        $orderIds = Be::getTable('shopfai_order_promotion')
+        $orderIds = Be::getTable('shop_order_promotion')
             ->where('promotion_type', 'promotion_activity')
             ->where('promotion_id', $promotionActivityId)
             ->getValues('order_id');
 
         if (count($orderIds) > 0) {
-            $paidOrderCount = Be::getTable('shopfai_order')
+            $paidOrderCount = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '1')
                 ->count();
 
-            $paidOrderTotalAmount = Be::getTable('shopfai_order')
+            $paidOrderTotalAmount = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '1')
                 ->sum('amount');
@@ -746,12 +746,12 @@ class PromotionActivity
                 $paidOrderAvgAmount = 0;
             }
 
-            $paidOrderIds = Be::getTable('shopfai_order')
+            $paidOrderIds = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '1')
                 ->getValues('id');
 
-            $paidOrderDiscountAmount = Be::getTable('shopfai_order_promotion')
+            $paidOrderDiscountAmount = Be::getTable('shop_order_promotion')
                 ->where('promotion_type', 'promotion_activity')
                 ->where('promotion_id', $promotionActivityId)
                 ->where('order_id', 'IN', $paidOrderIds)
@@ -761,12 +761,12 @@ class PromotionActivity
                 $paidOrderDiscountAmount = 0;
             }
 
-            $unpaidOrderCount = Be::getTable('shopfai_order')
+            $unpaidOrderCount = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '0')
                 ->count();
 
-            $unpaidOrderTotalAmount = Be::getTable('shopfai_order')
+            $unpaidOrderTotalAmount = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '0')
                 ->sum('amount');
@@ -774,7 +774,7 @@ class PromotionActivity
                 $unpaidOrderTotalAmount = 0;
             }
 
-            $paidOrders = Be::getTable('shopfai_order')
+            $paidOrders = Be::getTable('shop_order')
                 ->where('id', 'IN', $orderIds)
                 ->where('paid', '1')
                 ->limit(100)
@@ -814,13 +814,13 @@ class PromotionActivity
      */
     public function getPromotionActivityMenuPicker(): array
     {
-        $serviceStore = Be::getService('App.ShopFai.Store');
+        $serviceStore = Be::getService('App.Shop.Store');
         $now = $serviceStore->systemTime2StoreTime(date('Y-m-d H:i:s'));
 
         return [
             'name' => 'id',
             'value' => '满减活动：{name}',
-            'table' => 'shopfai_promotion_activity',
+            'table' => 'shop_promotion_activity',
             'grid' => [
                 'title' => '选择一个满减活动',
 
@@ -855,9 +855,9 @@ class PromotionActivity
                             'align' => 'left',
                             'driver' => TableItemCustom::class,
                             'value' => function ($row) {
-                                $configStore = Be::getConfig('App.ShopFai.Store');
+                                $configStore = Be::getConfig('App.Shop.Store');
 
-                                $discounts = Be::getTable('shopfai_promotion_activity_discount')
+                                $discounts = Be::getTable('shop_promotion_activity_discount')
                                     ->where('promotion_activity_id', $row['id'])
                                     ->orderBy('ordering', 'ASC')
                                     ->getObjects();

@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -14,10 +14,10 @@ class AllOrderSyncEs extends Task
 
     public function execute()
     {
-        $service = Be::getService('App.ShopFai.Admin.TaskOrder');
+        $service = Be::getService('App.Shop.Admin.TaskOrder');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_order';
+        $sql = 'SELECT * FROM shop_order';
         $orders = $db->getYieldObjects($sql);
 
         $batch = [];

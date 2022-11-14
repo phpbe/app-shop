@@ -60,7 +60,7 @@
                     </div>
                     <div class="be-col">
                         <div class="be-px-50">
-                            <a class="be-d-block" href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>">
+                            <a class="be-d-block" href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>">
                                 <?php echo $product->name; ?>
                             </a>
 

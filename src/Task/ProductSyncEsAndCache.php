@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -36,10 +36,10 @@ class ProductSyncEsAndCache extends TaskInterval
         $d1 = date('Y-m-d H:i:s', $t1 - 60);
         $d2 = date('Y-m-d H:i:s', $t2);
 
-        $service = Be::getService('App.ShopFai.Admin.TaskProduct');
+        $service = Be::getService('App.Shop.Admin.TaskProduct');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
+        $sql = 'SELECT * FROM shop_product WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
         $products = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];

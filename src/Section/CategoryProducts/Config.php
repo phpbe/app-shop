@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\CategoryProducts;
+namespace Be\App\Shop\Section\CategoryProducts;
 
 /**
  * @BeConfig("某分类下的商品列表", icon="el-icon-present")

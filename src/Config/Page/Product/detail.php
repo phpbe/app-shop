@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Product;
+namespace Be\App\Shop\Config\Page\Product;
 
 class detail
 {
@@ -11,7 +11,7 @@ class detail
 
     public array $centerSections = [
         [
-            'name' => 'App.ShopFai.ProductDetail',
+            'name' => 'App.Shop.ProductDetail',
         ],
     ];
 

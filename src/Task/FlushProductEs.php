@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -14,7 +14,7 @@ class FlushProductEs extends Task
 
     public function execute()
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $query = [
             'index' => $config->indexProduct,

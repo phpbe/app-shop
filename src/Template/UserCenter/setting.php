@@ -1,13 +1,13 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
 
     <script>
-        const userCenter_updateProfileUrl = "<?php echo beUrl('ShopFai.UserCenter.updateProfile'); ?>";
-        const userCenter_changeEmailUrl = "<?php echo beUrl('ShopFai.UserCenter.changeEmail'); ?>";
-        const userCenter_changePasswordlUrl = "<?php echo beUrl('ShopFai.UserCenter.changePassword'); ?>";
+        const userCenter_updateProfileUrl = "<?php echo beUrl('Shop.UserCenter.updateProfile'); ?>";
+        const userCenter_changeEmailUrl = "<?php echo beUrl('Shop.UserCenter.changeEmail'); ?>";
+        const userCenter_changePasswordlUrl = "<?php echo beUrl('Shop.UserCenter.changePassword'); ?>";
     </script>
     <script src="<?php echo $wwwUrl; ?>/js/user-center/setting.js"></script>
 </be-head>
@@ -17,7 +17,7 @@
 <be-page-content>
     <div class="be-d-block be-d-lg-none">
         <h4 class="be-h4">
-            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
+            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
             Account Settings
         </h4>
     </div>
@@ -109,7 +109,7 @@
                 <div class="be-d-block be-d-lg-none">
                     <div class="be-mt-150 be-row">
                         <div class="be-col-24 be-md-col-12 be-lg-col-6">
-                            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
+                            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
                         </div>
                     </div>
                 </div>

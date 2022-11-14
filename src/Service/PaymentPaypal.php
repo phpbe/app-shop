@@ -1,9 +1,9 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
-use Be\App\ShopFai\ShopFai;
+use Be\App\Shop\Shop;
 use Be\Be;
 use Be\Util\Net\Curl;
 
@@ -40,7 +40,7 @@ class PaymentPaypal extends PaymentBase
     {
         if ($this->account === null) {
             $db = Be::getDb();
-            $sql = 'SELECT * FROM shopfai_payment_paypal WHERE is_enable = 1';
+            $sql = 'SELECT * FROM shop_payment_paypal WHERE is_enable = 1';
             $account = $db->getObject($sql);
 
             if (!$account) {
@@ -75,10 +75,10 @@ class PaymentPaypal extends PaymentBase
             'user_action' => 'PAY_NOW',
         ];
 
-        $configPaymentPaypal = Be::getConfig('App.ShopFai.PaymentPaypal');
+        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
         if (!$configPaymentPaypal->pop) {
-            $postData['application_context']['return_url'] = beUrl('ShopFai.PaymentPaypal.approve', ['order_id' => $order->id]);
-            $postData['application_context']['cancel_url'] = beUrl('ShopFai.PaymentPaypal.cancel', ['order_id' => $order->id]);
+            $postData['application_context']['return_url'] = beUrl('Shop.PaymentPaypal.approve', ['order_id' => $order->id]);
+            $postData['application_context']['cancel_url'] = beUrl('Shop.PaymentPaypal.cancel', ['order_id' => $order->id]);
         }
 
         $items = [];
@@ -179,7 +179,7 @@ class PaymentPaypal extends PaymentBase
 
         if ($response) {
             $account = $this->getAccount();
-            $tuple = Be::getTuple('shopfai_payment_paypal_order');
+            $tuple = Be::getTuple('shop_payment_paypal_order');
             $tuple->payment_paypal_id = $account->id;
             $tuple->order_id = $order->id;
             $tuple->order_sn = $order->order_sn;
@@ -198,7 +198,7 @@ class PaymentPaypal extends PaymentBase
      */
     public function approve(object $order, string $paypalOrderId, string $paypalPayerId = '')
     {
-        $tuplePaypalOrder = Be::getTuple('shopfai_payment_paypal_order');
+        $tuplePaypalOrder = Be::getTuple('shop_payment_paypal_order');
         try {
             $tuplePaypalOrder->loadBy([
                 'order_id' => $order->id,
@@ -320,7 +320,7 @@ class PaymentPaypal extends PaymentBase
         if ($this->accessToken === null) {
             $account = $this->getAccount();
 
-            $tuple = Be::getTuple('shopfai_payment_paypal_token');
+            $tuple = Be::getTuple('shop_payment_paypal_token');
             try {
                 $tuple->loadBy('payment_paypal_id', $account->id);
             } catch (\Throwable $t) {

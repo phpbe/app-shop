@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\Hottest;
+namespace Be\App\Shop\Section\Hottest;
 
 /**
  * @BeConfig("热门商品", icon="el-icon-thumb")

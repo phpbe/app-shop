@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/js/cart/checkout.js"></script>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/cart/checkout.css"/>
@@ -9,16 +9,16 @@
 
 <be-page-content>
     <?php
-    $configStore = \Be\Be::getConfig('App.ShopFai.Store');
+    $configStore = \Be\Be::getConfig('App.Shop.Store');
     $defaultAddress = false;
     $billingAddress = false;
     $my = \Be\Be::getUser();
     if (!$my->isGuest()) {
-        $defaultAddress = \Be\Be::getService('App.ShopFai.UserShippingAddress')->getDefaultAddress($my->id);
-        $billingAddress = \Be\Be::getService('App.ShopFai.UserBillingAddress')->getAddress($my->id);
+        $defaultAddress = \Be\Be::getService('App.Shop.UserShippingAddress')->getDefaultAddress($my->id);
+        $billingAddress = \Be\Be::getService('App.Shop.UserBillingAddress')->getAddress($my->id);
     }
 
-    $countryKeyValues = \Be\Be::getService('App.ShopFai.Shipping')->getCountryIdNameKeyValues();
+    $countryKeyValues = \Be\Be::getService('App.Shop.Shipping')->getCountryIdNameKeyValues();
     ?>
     <script>
         const cartCheckout_products = <?php echo json_encode($this->products); ?>;
@@ -26,12 +26,12 @@
 
         const cartCheckout_defaultStateId = "<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>";
 
-        const cartCheckout_saveUrl = "<?php echo beUrl('ShopFai.Cart.checkoutSave'); ?>";
-        const cartCheckout_shippingGetStateKeyValuesUrl = "<?php echo beUrl('ShopFai.Shipping.getStateKeyValues'); ?>";
-        const cartCheckout_shippingGetShippingPlansUrl = "<?php echo beUrl('ShopFai.Shipping.getShippingPlans'); ?>";
-        const cartCheckout_getStorePaymentsUrl = "<?php echo beUrl('ShopFai.Payment.getStorePaymentsByShippingPlanId'); ?>";
-        const cartCheckout_promotionCouponCheck = "<?php echo beUrl('ShopFai.PromotionCoupon.check'); ?>";
-        const cartCheckout_promotionGetDiscountAmount = "<?php echo beUrl('ShopFai.Promotion.getDiscountAmount'); ?>";
+        const cartCheckout_saveUrl = "<?php echo beUrl('Shop.Cart.checkoutSave'); ?>";
+        const cartCheckout_shippingGetStateKeyValuesUrl = "<?php echo beUrl('Shop.Shipping.getStateKeyValues'); ?>";
+        const cartCheckout_shippingGetShippingPlansUrl = "<?php echo beUrl('Shop.Shipping.getShippingPlans'); ?>";
+        const cartCheckout_getStorePaymentsUrl = "<?php echo beUrl('Shop.Payment.getStorePaymentsByShippingPlanId'); ?>";
+        const cartCheckout_promotionCouponCheck = "<?php echo beUrl('Shop.PromotionCoupon.check'); ?>";
+        const cartCheckout_promotionGetDiscountAmount = "<?php echo beUrl('Shop.Promotion.getDiscountAmount'); ?>";
 
         var cartCheckout_shippingPlans = [];
         var cartCheckout_shippingPlanId = "";
@@ -56,7 +56,7 @@
                                 <div class="be-fs-125 be-lh-150">Customer Information</div>
                             </div>
                             <div class="be-col-24 be-lg-col-12">
-                                <div class="be-mt-50 be-ta-right">Already have an account? <a href="<?php echo beUrl('ShopFai.User.login'); ?>">Login</a></div>
+                                <div class="be-mt-50 be-ta-right">Already have an account? <a href="<?php echo beUrl('Shop.User.login'); ?>">Login</a></div>
                             </div>
                         </div>
 
@@ -178,7 +178,7 @@
 
                     <div class="be-mt-150 be-pr-200">
                         <input type="submit" class="be-btn be-btn-main be-btn-lg be-lh-200 be-mt-50" id="cart-checkout-submit" value="Place Your Order">
-                        <a href="<?php echo beUrl('ShopFai.Cart.index'); ?>" class="be-d-inline-block be-lh-300 be-va-middle be-ml-100 be-mt-50">Return to cart</a>
+                        <a href="<?php echo beUrl('Shop.Cart.index'); ?>" class="be-d-inline-block be-lh-300 be-va-middle be-ml-100 be-mt-50">Return to cart</a>
                     </div>
 
                 </div>

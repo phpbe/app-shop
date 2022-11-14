@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemImage;
@@ -20,7 +20,7 @@ class Category
      */
     public function getCategories()
     {
-        $sql = 'SELECT * FROM shopfai_category WHERE is_delete = 0 ORDER BY ordering ASC';
+        $sql = 'SELECT * FROM shop_category WHERE is_delete = 0 ORDER BY ordering ASC';
         $categories = Be::getDb()->getObjects($sql);
         return $categories;
     }
@@ -36,7 +36,7 @@ class Category
      */
     public function getCategory($categoryId)
     {
-        $sql = 'SELECT * FROM shopfai_category WHERE id=?';
+        $sql = 'SELECT * FROM shop_category WHERE id=?';
         $category = Be::getDb()->getObject($sql, [$categoryId]);
 
         $category->url_custom = (int)$category->url_custom;
@@ -58,7 +58,7 @@ class Category
      */
     public function getCategoryKeyValues()
     {
-        $sql = 'SELECT id, `name` FROM shopfai_category WHERE is_delete = 0 ORDER BY ordering ASC';
+        $sql = 'SELECT id, `name` FROM shop_category WHERE is_delete = 0 ORDER BY ordering ASC';
         return Be::getDb()->getKeyValues($sql);
     }
 
@@ -80,7 +80,7 @@ class Category
             $categoryId = $data['id'];
         }
 
-        $tupleCategory = Be::getTuple('shopfai_category',);
+        $tupleCategory = Be::getTuple('shop_category',);
         if (!$isNew) {
             try {
                 $tupleCategory->load($categoryId);
@@ -119,11 +119,11 @@ class Category
         $urlExist = null;
         do {
             if ($isNew) {
-                $urlExist = Be::getTable('shopfai_category',)
+                $urlExist = Be::getTable('shop_category',)
                         ->where('url', $urlUnique)
                         ->getValue('COUNT(*)') > 0;
             } else {
-                $urlExist = Be::getTable('shopfai_category',)
+                $urlExist = Be::getTable('shop_category',)
                         ->where('url', $urlUnique)
                         ->where('id', '!=', $categoryId)
                         ->getValue('COUNT(*)') > 0;
@@ -207,18 +207,18 @@ class Category
                 $tupleCategory->update();
             }
 
-            $productIds = Be::getTable('shopfai_product_category')
+            $productIds = Be::getTable('shop_product_category')
                 ->where('category_id', '=', $tupleCategory->id)
                 ->getValues('product_id');
             if (count($productIds) > 0) {
-                Be::getTable('shopfai_product')
+                Be::getTable('shop_product')
                     ->where('id', 'IN', $productIds)
                     ->update(['update_time' =>  $now]);
             }
 
             $db->commit();
 
-            Be::getService('App.System.Task')->trigger('ShopFai.CategorySyncCache');
+            Be::getService('App.System.Task')->trigger('Shop.CategorySyncCache');
 
         } catch (\Throwable $t) {
             $db->rollback();
@@ -249,7 +249,7 @@ class Category
             $now = date('Y-m-d H:i:s');
             foreach ($categoryIds as $categoryId) {
 
-                $tupleCategory = Be::getTuple('shopfai_category',);
+                $tupleCategory = Be::getTuple('shop_category',);
                 try {
                     $tupleCategory->loadBy([
                         'id' => $categoryId,
@@ -259,15 +259,15 @@ class Category
                     throw new ServiceException('分类（# ' . $categoryId . '）不存在！');
                 }
 
-                $productIds = Be::getTable('shopfai_product_category')
+                $productIds = Be::getTable('shop_product_category')
                     ->where('category_id', '=', $categoryId)
                     ->getValues('product_id');
                 if (count($productIds) > 0) {
-                    Be::getTable('shopfai_product')
+                    Be::getTable('shop_product')
                         ->where('id', 'IN', $productIds)
                         ->update(['update_time' =>  $now]);
 
-                    Be::getTable('shopfai_product_category')
+                    Be::getTable('shop_product_category')
                         ->where('category_id', '=', $categoryId)
                         ->delete();
                 }
@@ -297,7 +297,7 @@ class Category
     public function addProduct(string $categoryId, array $productIds)
     {
         try {
-            Be::getTuple('shopfai_category',)
+            Be::getTuple('shop_category',)
                 ->loadBy([
                     'id' => $categoryId,
                     'is_delete' => 0
@@ -306,7 +306,7 @@ class Category
             throw new ServiceException('分类（# ' . $categoryId . '）不存在！');
         }
 
-        $existProductIds = Be::getTable('shopfai_product_category')
+        $existProductIds = Be::getTable('shop_product_category')
             ->where('category_id', $categoryId)
             ->getValues('product_id');
         if (count($existProductIds) > 0) {
@@ -315,7 +315,7 @@ class Category
 
         if (count($productIds) > 0) {
 
-            $existProductIds = Be::getTable('shopfai_product')
+            $existProductIds = Be::getTable('shop_product')
                 ->where('id', 'IN', $productIds)
                 ->getValues('id');
 
@@ -332,19 +332,19 @@ class Category
             $db->startTransaction();
             try {
                 foreach ($productIds as $productId) {
-                    $tupleProductCategory = Be::getTuple('shopfai_product_category');
+                    $tupleProductCategory = Be::getTuple('shop_product_category');
                     $tupleProductCategory->product_id = $productId;
                     $tupleProductCategory->category_id = $categoryId;
                     $tupleProductCategory->insert();
                 }
 
-                Be::getTable('shopfai_product')
+                Be::getTable('shop_product')
                     ->where('id', 'IN', $productIds)
                     ->update(['update_time' => date('Y-m-d H:i:s')]);
 
                 $db->commit();
 
-                Be::getService('App.System.Task')->trigger('ShopFai.ProductSyncEsAndCache');
+                Be::getService('App.System.Task')->trigger('Shop.ProductSyncEsAndCache');
 
             } catch (\Throwable $t) {
                 $db->rollback();
@@ -364,7 +364,7 @@ class Category
     public function deleteProduct(string $categoryId, array $productIds)
     {
         try {
-            Be::getTuple('shopfai_category',)
+            Be::getTuple('shop_category',)
                 ->loadBy([
                     'id' => $categoryId,
                     'is_delete' => 0
@@ -376,18 +376,18 @@ class Category
         $db = Be::getDb();
         $db->startTransaction();
         try {
-            Be::getTable('shopfai_product_category')
+            Be::getTable('shop_product_category')
                 ->where('category_id', $categoryId)
                 ->where('product_id', 'IN', $productIds)
                 ->delete();
 
-            Be::getTable('shopfai_product')
+            Be::getTable('shop_product')
                 ->where('id', 'IN', $productIds)
                 ->update(['update_time' => date('Y-m-d H:i:s')]);
 
             $db->commit();
 
-            Be::getService('App.System.Task')->trigger('ShopFai.ProductSyncEsAndCache');
+            Be::getService('App.System.Task')->trigger('Shop.ProductSyncEsAndCache');
 
         } catch (\Throwable $t) {
             $db->rollback();
@@ -406,7 +406,7 @@ class Category
     public function getCategoryPicker(int $multiple = 0): array
     {
         return [
-            'table' => 'shopfai_category',
+            'table' => 'shop_category',
             'grid' => [
                 'title' => $multiple === 1 ? '选择分类' : '选择一个分类',
 
@@ -438,7 +438,7 @@ class Category
                             ],
                             'value' => function($row) {
                                 if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
                                 return $row['image_small'];
                             },
@@ -476,7 +476,7 @@ class Category
         return [
             'name' => 'id',
             'value' => '分类：{name}',
-            'table' => 'shopfai_category',
+            'table' => 'shop_category',
             'grid' => [
                 'title' => '选择一个分类',
 
@@ -508,7 +508,7 @@ class Category
                             ],
                             'value' => function($row) {
                                 if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
                                 return $row['image_small'];
                             },

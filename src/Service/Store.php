@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -16,7 +16,7 @@ class Store
      */
     public function storeTime2SystemTime($storeTime, $format = 'Y-m-d H:i:s'): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $configSystem = Be::getConfig('App.System.System');
         $systemTime = new \DateTime($storeTime, new \DateTimeZone($configStore->timezone));
         $systemTime->setTimezone(new \DateTimeZone($configSystem->timezone));
@@ -30,7 +30,7 @@ class Store
      */
     public function systemTime2StoreTime($systemTime, $format = 'Y-m-d H:i:s'): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $configSystem = Be::getConfig('App.System.System');
         $storeTime = new \DateTime($systemTime, new \DateTimeZone($configSystem->timezone));
         $storeTime->setTimezone(new \DateTimeZone($configStore->timezone));

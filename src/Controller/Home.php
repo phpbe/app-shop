@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 
 use Be\Be;
@@ -13,7 +13,7 @@ class Home extends Base
      * 首页
      *
      * @BeMenu("首页")
-     * @BeRoute("/shopfai/home/")
+     * @BeRoute("/shop/home/")
      */
     public function index()
     {

@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/order/orders.css" />
@@ -11,7 +11,7 @@
 
     <div class="be-d-block be-d-lg-none">
         <h4 class="be-h4">
-            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
+            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
             My Orders
         </h4>
     </div>
@@ -30,7 +30,7 @@
                     if ($this->status != $k) {
                         echo ' be-btn-outline';
                     }
-                    echo ' be-btn-sm" href="' . beUrl('ShopFai.Order.orders', ['status' => $k]) . '">'.$v.'</a> ';
+                    echo ' be-btn-sm" href="' . beUrl('Shop.Order.orders', ['status' => $k]) . '">'.$v.'</a> ';
                 }
                 ?>
             </div>
@@ -44,10 +44,10 @@
             ?>
             <div class="be-fc be-mt-100 be-py-100 be-bb">
                 <div class="be-fl">
-                    No. <span><a href="<?php echo beURL('ShopFai.Order.detail', ['order_id' => $order->id]) ;?>"><?php echo $order->order_sn; ?></a></span>
+                    No. <span><a href="<?php echo beURL('Shop.Order.detail', ['order_id' => $order->id]) ;?>"><?php echo $order->order_sn; ?></a></span>
                 </div>
                 <div class="be-fr">
-                    <a href="<?php echo beURL('ShopFai.Order.detail', ['order_id' => $order->id]) ;?>" class="order-mobile-status">
+                    <a href="<?php echo beURL('Shop.Order.detail', ['order_id' => $order->id]) ;?>" class="order-mobile-status">
                         <?php echo $order->status_name; ?>
                     </a>
                 </div>
@@ -64,7 +64,7 @@
                     </div>
                     <div class="be-col">
                         <div class="be-mx-50">
-                            <a class="be-fw-lighter be-t-ellipsis-2" href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>">
+                            <a class="be-fw-lighter be-t-ellipsis-2" href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>">
                                 <?php echo $product->name; ?>
                             </a>
                         </div>
@@ -100,10 +100,10 @@
                     <div class="be-dropdown">
                         <a class="be-dropdown-toggle" href="javascript:void(0);" onclick="$(this).parent().toggleClass('be-dropdown-open')"  onblur="var _this = this; setTimeout(function() {$(_this).parent().removeClass('be-dropdown-open');}, 300)">Status</a>
                         <ul>
-                            <li><a href="<?php echo beUrl('ShopFai.Order.orders'); ?>">All</a></li>
+                            <li><a href="<?php echo beUrl('Shop.Order.orders'); ?>">All</a></li>
                             <?php
                             foreach ($this->statusKeyValues as $key => $val) {
-                                echo '<li><a href="'.beUrl('ShopFai.Order.orders', ['status' => $key]).'">'.$val.'</a></li>';
+                                echo '<li><a href="'.beUrl('Shop.Order.orders', ['status' => $key]).'">'.$val.'</a></li>';
                             }
                             ?>
                         </ul>
@@ -125,7 +125,7 @@
                     <tr>
                         <td colspan="7" class="be-c-999">
                             <span class="me-4"><?php echo date('M j Y', strtotime($order->create_time)); ?></span>
-                            Order No: <span><a href="<?php echo beURL('ShopFai.Order.detail', ['order_id' => $order->id]) ;?>"><?php echo $order->order_sn; ?></a></span>
+                            Order No: <span><a href="<?php echo beURL('Shop.Order.detail', ['order_id' => $order->id]) ;?>"><?php echo $order->order_sn; ?></a></span>
                         </td>
                     </tr>
                     <?php
@@ -135,12 +135,12 @@
                         ?>
                         <tr>
                             <td class="be-table-image">
-                                <a href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
+                                <a href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
                                     <img src="<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
                                 </a>
                             </td>
                             <td>
-                                <a class="be-d-block be-t-ellipsis-2" href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
+                                <a class="be-d-block be-t-ellipsis-2" href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
                                     <?php echo $product->name; ?>
                                 </a>
                                 <div class="be-c-999">
@@ -162,11 +162,11 @@
                                     switch ($order->status) {
                                         case 'pending':
                                             ?>
-                                            <a class="be-btn be-btn-sm be-w-100" href="<?php echo beURL('ShopFai.Payment.pay', ['order_id' => $order->id]) ;?>" target="_blank">Pay Now</a>
+                                            <a class="be-btn be-btn-sm be-w-100" href="<?php echo beURL('Shop.Payment.pay', ['order_id' => $order->id]) ;?>" target="_blank">Pay Now</a>
                                             <?php
                                             $moreAction[] = [
                                                 'name' => 'Cancel',
-                                                'url' => beURL('ShopFai.Order.cancel', ['order_id' => $order->id]),
+                                                'url' => beURL('Shop.Order.cancel', ['order_id' => $order->id]),
                                                 'target' => '_self'
                                             ];
                                             break;
@@ -178,8 +178,8 @@
                                             View More
                                         </button>
                                         <ul>
-                                            <li><a href="<?php echo beUrl('ShopFai.Order.detail', ['order_id' => $order->id]); ?>">Detail</a></li>
-                                            <li><a href="<?php echo beUrl('ShopFai.Order.contact', ['order_id' => $order->id]); ?>">Contact</a></li>
+                                            <li><a href="<?php echo beUrl('Shop.Order.detail', ['order_id' => $order->id]); ?>">Detail</a></li>
+                                            <li><a href="<?php echo beUrl('Shop.Order.contact', ['order_id' => $order->id]); ?>">Contact</a></li>
                                             <?php
                                             if (count($moreAction) > 0) {
                                                 foreach ($moreAction as $action) {
@@ -189,7 +189,7 @@
                                                 }
                                             }
                                             ?>
-                                            <li><a href="<?php echo beUrl('ShopFai.Order.printOrder', ['order_id' => $order->id]); ?>" target="_blank">Print</a></li>
+                                            <li><a href="<?php echo beUrl('Shop.Order.printOrder', ['order_id' => $order->id]); ?>" target="_blank">Print</a></li>
                                         </ul>
                                     </div>
 
@@ -228,7 +228,7 @@
     <?php
     if ($this->total > 0) {
         $paginationUrl = [
-            'route' => 'ShopFai.Order.orders',
+            'route' => 'Shop.Order.orders',
             'params' => [
                 'status' => $this->status,
                 'keywords' => urlencode($this->keywords),

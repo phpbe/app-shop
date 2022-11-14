@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 
 use Be\Be;
@@ -20,7 +20,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Visit:Report',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
         ]));
     }
 
@@ -36,7 +36,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Visit:UniqueUserReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             // 按user_id 取唯一
             'cardinality' => 'user_token',
@@ -55,7 +55,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getGroup(array_merge($options, [
             'cacheKey' => 'Visit:Top10RefererReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             'group' => 'referer',
             'keyValues' => ['' => '直接输入网址'],
@@ -73,10 +73,10 @@ class StatisticVisit extends Statistic
      */
     public function getTop10CountryReport(array $options = []): array
     {
-        $keyValues = Be::getService('App.ShopFai.Region')->getCountryCodeCnNameKeyValues();
+        $keyValues = Be::getService('App.Shop.Region')->getCountryCodeCnNameKeyValues();
         return $this->_getGroup(array_merge($options, [
             'cacheKey' => 'Visit:Top10CountryReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             'group' => 'country_code',
             'keyValues' => array_merge(['' => '未知'], $keyValues),
@@ -96,7 +96,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getGroup(array_merge($options, [
             'cacheKey' => 'Visit:Top10BrowserReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             'group' => 'browser',
             'top' => 10,
@@ -115,7 +115,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getGroup(array_merge($options, [
             'cacheKey' => 'Visit:Top10OsReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             'group' => 'os',
             'top' => 10,
@@ -134,7 +134,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Visit:Count',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
         ]));
     }
 
@@ -150,7 +150,7 @@ class StatisticVisit extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Visit:UniqueUserCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticVisit,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticVisit,
 
             // 按user_id 取唯一
             'cardinality' => 'user_token',

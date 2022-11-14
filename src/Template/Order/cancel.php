@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
     <script src="<?php echo $wwwUrl; ?>/js/order/order-cancel.js"></script>
@@ -10,11 +10,11 @@
 <be-page-content>
     <div class="be-d-flex">
         <div class="be-west">
-            <be-include>App.ShopFai.UserCenter.west</be-include>
+            <be-include>App.Shop.UserCenter.west</be-include>
         </div>
         <div class="be-center">
             <h4 class="be-h4">
-                <a href="<?php echo beURL('ShopFai.Order.orders') ;?>"><i class="user-center-back"></i></a>
+                <a href="<?php echo beURL('Shop.Order.orders') ;?>"><i class="user-center-back"></i></a>
                 Cancel Order
             </h4>
 
@@ -46,7 +46,7 @@
             <div class="be-d-block be-d-lg-none">
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12 be-lg-col-6">
-                        <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>
+                        <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>
                     </div>
                 </div>
             </div>

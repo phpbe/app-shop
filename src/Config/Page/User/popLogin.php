@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\User;
+namespace Be\App\Shop\Config\Page\User;
 
 class popLogin
 {

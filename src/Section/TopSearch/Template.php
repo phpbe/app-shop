@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\TopSearch;
+namespace Be\App\Shop\Section\TopSearch;
 
 use Be\Be;
 use Be\Theme\Section;
@@ -17,13 +17,13 @@ class Template extends Section
             return;
         }
 
-        $products = Be::getService('App.ShopFai.Product')->getTopSearchProducts($this->config->quantity);
+        $products = Be::getService('App.Shop.Product')->getTopSearchProducts($this->config->quantity);
         if (count($products) === 0) {
-            $products = Be::getService('App.ShopFai.Product')->getSampleProducts($this->config->quantity);
+            $products = Be::getService('App.Shop.Product')->getSampleProducts($this->config->quantity);
         }
 
-        $moreLink = beUrl('ShopFai.Product.topSearch');
-        echo Be::getService('App.ShopFai.Section')->makeProductsSection($this, 'top-search', $products, $moreLink);
+        $moreLink = beUrl('Shop.Product.topSearch');
+        echo Be::getService('App.Shop.Section')->makeProductsSection($this, 'top-search', $products, $moreLink);
     }
 
 }

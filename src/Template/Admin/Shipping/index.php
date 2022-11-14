@@ -108,8 +108,8 @@
     <script>
         <?php
         foreach ($this->shippingList as $shipping) {
-            $shipping->editUrl = beAdminUrl('ShopFai.Shipping.edit', ['id' => $shipping->id]);
-            $shipping->deleteUrl = beAdminUrl('ShopFai.Shipping.delete', ['id' => $shipping->id]);
+            $shipping->editUrl = beAdminUrl('Shop.Shipping.edit', ['id' => $shipping->id]);
+            $shipping->deleteUrl = beAdminUrl('Shop.Shipping.delete', ['id' => $shipping->id]);
         }
         ?>
 
@@ -123,7 +123,7 @@
             },
             methods: {
                 createShipping: function () {
-                    window.location.href = "<?php echo beAdminUrl('ShopFai.Shipping.create'); ?>";
+                    window.location.href = "<?php echo beAdminUrl('Shop.Shipping.create'); ?>";
                 },
                 editShipping: function (shipping) {
                     window.location.href = shipping.editUrl;

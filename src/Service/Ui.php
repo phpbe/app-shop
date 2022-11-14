@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\Be;
 
@@ -15,7 +15,7 @@ class Ui
     public function getProductGlobalCss(): string
     {
         $css = '';
-        $key = 'ShopFai:Product:GlobalCss';
+        $key = 'Shop:Product:GlobalCss';
         if (!Be::hasContext($key)) {
             $css .= '.icon-star, .icon-star-fill {';
             $css .= 'display: inline-block;';

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 
 use Be\Be;
@@ -21,7 +21,7 @@ class StatisticCart extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Cart:Report',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticCart,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticCart,
         ]));
     }
 
@@ -37,7 +37,7 @@ class StatisticCart extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Cart:UniqueUserReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticCart,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticCart,
 
             // 按 user_token 取唯一
             'cardinality' => 'user_token',
@@ -57,7 +57,7 @@ class StatisticCart extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Cart:Count',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticCart,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticCart,
         ]));
     }
 
@@ -73,7 +73,7 @@ class StatisticCart extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Cart:UniqueUserCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexStatisticCart,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexStatisticCart,
 
             // 按 user_token 取唯一
             'cardinality' => 'user_token',

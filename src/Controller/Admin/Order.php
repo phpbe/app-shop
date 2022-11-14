@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Form\Item\FormItemInput;
 use Be\AdminPlugin\Form\Item\FormItemInputNumberInt;
@@ -30,11 +30,11 @@ class Order extends Auth
      */
     public function orders()
     {
-        $statusKeyValues = Be::getService('App.ShopFai.Admin.Order')->getStatusKeyValues();
+        $statusKeyValues = Be::getService('App.Shop.Admin.Order')->getStatusKeyValues();
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '订单',
-            'table' => 'shopfai_order',
+            'table' => 'shop_order',
             'grid' => [
                 'title' => '订单管理',
 
@@ -59,11 +59,11 @@ class Order extends Auth
                             'name' => 'user_name',
                             'label' => '用户',
                             'driver' => FormItemAutoComplete::class,
-                            'remote' => beAdminUrl('ShopFai.User.autoCompleteSuggestions'),
+                            'remote' => beAdminUrl('Shop.User.autoCompleteSuggestions'),
                             'buildSql' => function ($dbName, $formData) {
                                 $db = Be::getDb($dbName);
                                 if (isset($formData['user_name']) && $formData['user_name']) {
-                                    $sql = 'SELECT id FROM shopfai_user WHERE `name` LIKE ' . $db->quoteValue('%' . $formData['user_name'] . '%') . '  AND is_enable = 1 AND is_delete = 0';
+                                    $sql = 'SELECT id FROM shop_user WHERE `name` LIKE ' . $db->quoteValue('%' . $formData['user_name'] . '%') . '  AND is_enable = 1 AND is_delete = 0';
                                     $id = $db->getValue($sql);
                                     if ($id) {
                                         return 'user_id = ' . $id;
@@ -86,7 +86,7 @@ class Order extends Auth
                             'menus' => [
                                 [
                                     'label' => 'CSV',
-                                    'url' => beAdminUrl('ShopFai.Order.orders', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Order.orders', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'csv',
                                     ],
@@ -94,7 +94,7 @@ class Order extends Auth
                                 ],
                                 [
                                     'label' => 'EXCEL',
-                                    'url' => beAdminUrl('ShopFai.Order.orders', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Order.orders', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'excel',
                                     ],
@@ -137,7 +137,7 @@ class Order extends Auth
                             'label' => '用户',
                             'value' => function ($row) {
                                 if ($row['user_id'] > 0) {
-                                    $sql = 'SELECT `name` FROM shopfai_user WHERE id = ?';
+                                    $sql = 'SELECT `name` FROM shop_user WHERE id = ?';
                                     $name = Be::getDb()->getValue($sql, [$row['user_id']]);
                                     if ($name) {
                                         return $name;
@@ -215,7 +215,7 @@ class Order extends Auth
                             'label' => '用户',
                             'value' => function ($row) {
                                 if ($row['user_id'] > 0) {
-                                    $sql = 'SELECT `name` FROM shopfai_user WHERE id = ?';
+                                    $sql = 'SELECT `name` FROM shop_user WHERE id = ?';
                                     $name = Be::getDb()->getValue($sql, [$row['user_id']]);
                                     if ($name) {
                                         return $name;
@@ -298,7 +298,7 @@ class Order extends Auth
                             'label' => '用户',
                             'value' => function ($row) {
                                 if ($row['user_id'] > 0) {
-                                    $sql = 'SELECT `name` FROM shopfai_user WHERE id = ?';
+                                    $sql = 'SELECT `name` FROM shop_user WHERE id = ?';
                                     $name = Be::getDb()->getValue($sql, [$row['user_id']]);
                                     if ($name) {
                                         return $name;

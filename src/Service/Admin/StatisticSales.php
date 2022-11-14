@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 
 use Be\Be;
@@ -20,7 +20,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:Report',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
         ]));
     }
 
@@ -36,7 +36,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:PaidReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             'query' => [
                 'bool' => [
@@ -76,7 +76,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:PaidSumReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
 
             'query' => [
@@ -118,7 +118,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:PaidAvgReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
 
             'query' => [
@@ -160,7 +160,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:UniqueUserReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             // 按 user_token 取唯一
             'cardinality' => 'user_token',
@@ -180,7 +180,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getDateHistogram(array_merge($options, [
             'cacheKey' => 'Sales:PaidUniqueUserReport',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
 
             'query' => [
@@ -223,7 +223,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Sales:Count',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
         ]));
     }
 
@@ -239,7 +239,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Sales:PaidCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             'query' => [
                 'bool' => [
@@ -279,7 +279,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Sales:PaidCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             'query' => [
                 'bool' => [
@@ -324,7 +324,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Sales:UniqueUserCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             // 按 user_token 取唯一
             'cardinality' => 'user_token',
@@ -343,7 +343,7 @@ class StatisticSales extends Statistic
     {
         return $this->_getCount(array_merge($options, [
             'cacheKey' => 'Sales:UniqueUserPaidCount',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             'query' => [
                 'bool' => [
@@ -385,7 +385,7 @@ class StatisticSales extends Statistic
     {
         $sum = $this->_getSum(array_merge($options, [
             'cacheKey' => 'Sales:Sum',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             // amount 求和
             'sum' => 'amount',
@@ -406,7 +406,7 @@ class StatisticSales extends Statistic
     {
         $sum = $this->_getSum(array_merge($options, [
             'cacheKey' => 'Sales:PaidSum',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
 
             'query' => [
@@ -451,7 +451,7 @@ class StatisticSales extends Statistic
     {
         $avg = $this->_getAvg(array_merge($options, [
             'cacheKey' => 'Sales:PaidAvg',
-            'esIndex' => Be::getConfig('App.ShopFai.Es')->indexOrder,
+            'esIndex' => Be::getConfig('App.Shop.Es')->indexOrder,
 
             'query' => [
                 'bool' => [

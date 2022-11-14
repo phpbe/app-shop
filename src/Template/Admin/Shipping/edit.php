@@ -62,7 +62,7 @@
         <div class="be-row">
             <div class="be-col">
                 <div style="padding: 1.25rem 0 0 2rem;">
-                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('ShopFai.Shipping.index'); ?>">返回物流运费列表</el-link>
+                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('Shop.Shipping.index'); ?>">返回物流运费列表</el-link>
                 </div>
             </div>
             <div class="be-col-auto">
@@ -141,7 +141,7 @@
                         :data="formData.regions">
                     <el-table-column label="国家/地区" align="left">
                         <template slot-scope="scope">
-                            <img :src="'<?php echo \Be\Be::getProperty('App.ShopFai')->getWwwUrl(); ?>/images/country-flag/' + scope.row.country.flag" :alt="scope.row.country.name_cn">
+                            <img :src="'<?php echo \Be\Be::getProperty('App.Shop')->getWwwUrl(); ?>/images/country-flag/' + scope.row.country.flag" :alt="scope.row.country.name_cn">
                             <span class="be-pl-100">{{scope.row.country.name_cn}}</span>
                             <span class="be-c-999">（{{scope.row.country.name}}）</span>
                         </template>
@@ -257,7 +257,7 @@
                         >
                             <div slot-scope="{node, data}" class="be-row">
                                 <div v-if="data.flag" class="be-col-auto be-px-50 region-country-flag">
-                                    <img :src="'<?php echo \Be\Be::getProperty('App.ShopFai')->getWwwUrl(); ?>/images/country-flag/' + data.flag" :alt="data.name_cn">
+                                    <img :src="'<?php echo \Be\Be::getProperty('App.Shop')->getWwwUrl(); ?>/images/country-flag/' + data.flag" :alt="data.name_cn">
                                 </div>
                                 <div class="be-col-auto be-pl-50">{{data.name_cn}}</div>
                                 <div class="be-col-auto be-c-999">（{{data.name}}）</div>
@@ -669,7 +669,7 @@
                         if (valid) {
                             _this.loading = true;
                             vueNorth.loading = true;
-                            _this.$http.post("<?php echo beAdminUrl('ShopFai.Shipping.' . ($this->shipping ? 'edit' :'create')); ?>", {
+                            _this.$http.post("<?php echo beAdminUrl('Shop.Shipping.' . ($this->shipping ? 'edit' :'create')); ?>", {
                                 formData: _this.formData
                             }).then(function (response) {
                                 _this.loading = false;
@@ -681,7 +681,7 @@
                                         _this.$message.success(responseData.message);
                                         setTimeout(function () {
                                             window.onbeforeunload = null;
-                                            window.location.href = "<?php echo beAdminUrl('ShopFai.Shipping.index'); ?>";
+                                            window.location.href = "<?php echo beAdminUrl('Shop.Shipping.index'); ?>";
                                         }, 1000);
                                     } else {
                                         if (responseData.message) {
@@ -704,7 +704,7 @@
 
                 cancel: function () {
                     window.onbeforeunload = null;
-                    window.location.href = "<?php echo beAdminUrl('ShopFai.Shipping.index'); ?>";
+                    window.location.href = "<?php echo beAdminUrl('Shop.Shipping.index'); ?>";
                 },
 
                 editRegion: function () {
@@ -774,7 +774,7 @@
                     this.regionStatesChecked = [];
 
                     var _this = this;
-                    this.$http.post("<?php echo beAdminUrl('ShopFai.Region.getStates'); ?>", {
+                    this.$http.post("<?php echo beAdminUrl('Shop.Region.getStates'); ?>", {
                         country_code: row.country_code
                     }).then(function (response) {
                         //console.log(response);

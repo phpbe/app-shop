@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -16,7 +16,7 @@ class UserBillingAddress
     public function getAddress()
     {
         $my = Be::getUser();
-        $tupleUserAddress = Be::getTuple('shopfai_user_billing_address');
+        $tupleUserAddress = Be::getTuple('shop_user_billing_address');
         try {
             $tupleUserAddress->loadBy('user_id', $my->id);
         } catch (\Throwable $t) {
@@ -102,7 +102,7 @@ class UserBillingAddress
 
         $data['country_name'] = '';
         $data['country_code'] = '';
-        $tupleRegionCountry = Be::getTuple('shopfai_region_country');
+        $tupleRegionCountry = Be::getTuple('shop_region_country');
         try {
             $tupleRegionCountry->load($data['country_id']);
             $data['country_name'] = $tupleRegionCountry->name;
@@ -113,7 +113,7 @@ class UserBillingAddress
 
         $data['state_name'] = '';
         if ($data['state_id'] !== '') {
-            $tupleRegionState = Be::getTuple('shopfai_region_state');
+            $tupleRegionState = Be::getTuple('shop_region_state');
             try {
                 $tupleRegionState->load($data['state_id']);
                 $data['state_name'] = $tupleRegionState->name;
@@ -128,7 +128,7 @@ class UserBillingAddress
         try {
 
             $now = date('Y-m-d H:i:s');
-            $tupleUserAddress = Be::getTuple('shopfai_user_billing_address');
+            $tupleUserAddress = Be::getTuple('shop_user_billing_address');
 
             try {
                 $tupleUserAddress->loadBy([
@@ -179,7 +179,7 @@ class UserBillingAddress
     public function delete(): bool
     {
         $my = Be::getUser();
-        $tupleUserAddress = Be::getTuple('shopfai_user_billing_address');
+        $tupleUserAddress = Be::getTuple('shop_user_billing_address');
 
         $exist = true;
         try {

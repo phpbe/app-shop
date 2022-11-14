@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -27,21 +27,21 @@ class StaticsVisit extends Task
         $redis = Be::getRedis();
         $es = Be::getEs();
 
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
 
-        $path = Be::getRuntime()->getRootPath() . '/data/App/ShopFai/GeoLite2-Country.mmdb';
+        $path = Be::getRuntime()->getRootPath() . '/data/App/Shop/GeoLite2-Country.mmdb';
         if (!file_exists($path)) {
-            $path = Be::getProperty('App.ShopFai')->getPath() . '/GeoLite2-Country.mmdb';
+            $path = Be::getProperty('App.Shop')->getPath() . '/GeoLite2-Country.mmdb';
         }
         $reader = new Reader($path);
 
         $t0 = time();
 
-        $serviceStatistic = Be::getService('App.ShopFai.Statistic');
+        $serviceStatistic = Be::getService('App.Shop.Statistic');
 
         $batch = [];
         while (true) {
-            $visit = $redis->rPop('ShopFai:Statistic:Visit');
+            $visit = $redis->rPop('Shop:Statistic:Visit');
             if ($visit === false) {
                 break;
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -17,7 +17,7 @@ class ProductReview
     public function getAverageRating(string $productId)
     {
         $db = Be::getDb();
-        $sql = 'SELECT AVG(rating) FROM shopfai_product_review WHERE product_id = ?';
+        $sql = 'SELECT AVG(rating) FROM shop_product_review WHERE product_id = ?';
         return round((float) $db->getValue($sql, [$productId]), 1);
     }
 
@@ -31,7 +31,7 @@ class ProductReview
     public function getCount($productId, $option = [])
     {
         $db = Be::getDb();
-        $sql = 'SELECT COUNT(*) FROM shopfai_product_review WHERE product_id = ' . $productId;
+        $sql = 'SELECT COUNT(*) FROM shop_product_review WHERE product_id = ' . $productId;
         return $db->getValue($sql);
     }
 
@@ -46,7 +46,7 @@ class ProductReview
     public function getReviews(string $productId, array $option = [], array $with = []): array
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_review WHERE product_id = \'' . $productId . '\' ';
+        $sql = 'SELECT * FROM shop_product_review WHERE product_id = \'' . $productId . '\' ';
         $sql .= ' ORDER BY create_time DESC';
 
         $pageSize = 10;
@@ -61,7 +61,7 @@ class ProductReview
 
         $reviews = $db->getObjects($sql);
 
-        $productService = Be::getService('App.ShopFai.Product');
+        $productService = Be::getService('App.Shop.Product');
         foreach ($reviews as &$review) {
 
             if (isset($with['product'])) {
@@ -69,7 +69,7 @@ class ProductReview
             }
 
             if (isset($with['images'])) {
-                $sql = 'SELECT * FROM shopfai_product_review_image WHERE product_review_id = ?';
+                $sql = 'SELECT * FROM shop_product_review_image WHERE product_review_id = ?';
                 $review->images = $db->getObjects($sql, [$review->id]);
             }
         }
@@ -86,13 +86,13 @@ class ProductReview
     public function getReview(string $reviewId): object
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_review WHERE id = ?';
+        $sql = 'SELECT * FROM shop_product_review WHERE id = ?';
         $review =  $db->getObject($sql, [$reviewId]);
 
-        $serviceProduct = Be::getService('App.ShopFai.Product');
+        $serviceProduct = Be::getService('App.Shop.Product');
         $review->product = $serviceProduct->getProduct($review->product_id);
 
-        $sql = 'SELECT * FROM shopfai_product_review_image WHERE product_review_id = ?';
+        $sql = 'SELECT * FROM shop_product_review_image WHERE product_review_id = ?';
         $review->images = $db->getObjects($sql, [$reviewId]);
 
         return $review;
@@ -113,7 +113,7 @@ class ProductReview
     public function post(string $userId, string $productId, int $rating, string $name, string $content, array $imageInfos = [])
     {
         if ($userId > 0) {
-            $tupleUser = Be::getTuple('shopfai_user');
+            $tupleUser = Be::getTuple('shop_user');
             try {
                 $tupleUser->load($userId);
             } catch (\Throwable $t) {
@@ -130,11 +130,11 @@ class ProductReview
         $db->startTransaction();
         try {
 
-            $tupleOrder = Be::getTuple('shopfai_product');
+            $tupleOrder = Be::getTuple('shop_product');
             $tupleOrder->load($productId);
 
             $now = date('Y-m-d H:i:s');
-            $tupleProductReview = Be::getTuple('shopfai_product_review');
+            $tupleProductReview = Be::getTuple('shop_product_review');
             $tupleProductReview->product_id = $productId;
             $tupleProductReview->user_id = $userId;
             $tupleProductReview->name = $name;
@@ -145,13 +145,13 @@ class ProductReview
 
             if (count($imageInfos) > 0) {
 
-                $configProduct = Be::getConfig('ShopFai.Product');
+                $configProduct = Be::getConfig('Shop.Product');
 
                 $i = 0;
                 foreach ($imageInfos as $imageInfo) {
                     $imageData = base64_decode($imageInfo['data']);
 
-                    $tmpPath = Be::getRuntime()->getRootPath() . '/data/tmp/ShopFai/product/review/' . $productId;
+                    $tmpPath = Be::getRuntime()->getRootPath() . '/data/tmp/Shop/product/review/' . $productId;
                     $dir = dirname($tmpPath);
                     if (!is_dir($dir)) {
                         mkdir($dir, 0755, true);
@@ -164,21 +164,21 @@ class ProductReview
                     if ($libImage->isImage()) {
                         unlink($tmpPath);
 
-                        $tupleProductReviewImage = Be::getTuple('shopfai_product_review_image');
+                        $tupleProductReviewImage = Be::getTuple('shop_product_review_image');
                         $tupleProductReviewImage->product_review_id = $tupleProductReview->id;
 
                         $imageName = date('ymdHis') . $i . rand(1000, 9999) . '_l.' . $libImage->getType();
-                        $imagePath = Be::getRuntime()->getUploadPath() . '/ShopFai/product/review/' . $productId . '/' . $imageName;
+                        $imagePath = Be::getRuntime()->getUploadPath() . '/Shop/product/review/' . $productId . '/' . $imageName;
                         $libImage->resize($configProduct->reviewImageLargeWidth, $configProduct->reviewImageLargeHeight);
                         $libImage->save($imagePath);
-                        $imageUrl = '/' . Be::getRuntime()->getUploadDir() . '/ShopFai/product/review/' . $productId . '/' . $imageName;
+                        $imageUrl = '/' . Be::getRuntime()->getUploadDir() . '/Shop/product/review/' . $productId . '/' . $imageName;
                         $tupleProductReviewImage->large = $imageUrl;
 
                         $imageName = date('ymdHis') . $i . rand(1000, 9999) . '_s.' . $libImage->getType();
-                        $imagePath = Be::getRuntime()->getUploadPath() . '/ShopFai/product/review/' . $productId . '/' . $imageName;
+                        $imagePath = Be::getRuntime()->getUploadPath() . '/Shop/product/review/' . $productId . '/' . $imageName;
                         $libImage->resize($configProduct->reviewImageSmallWidth, $configProduct->reviewImageSmallHeight);
                         $libImage->save($imagePath);
-                        $imageUrl = '/' . Be::getRuntime()->getUploadDir() . '/ShopFai/product/review/' . $productId . '/' . $imageName;
+                        $imageUrl = '/' . Be::getRuntime()->getUploadDir() . '/Shop/product/review/' . $productId . '/' . $imageName;
                         $tupleProductReviewImage->small = $imageUrl;
 
                         $tupleProductReviewImage->insert();

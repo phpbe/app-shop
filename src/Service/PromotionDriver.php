@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 
 use Be\App\ServiceException;
@@ -9,7 +9,7 @@ use Be\Be;
 /**
  * Class PromotionDriver
  *
- * @package Be\App\ShopFai\Service
+ * @package Be\App\Shop\Service
  */
 abstract class PromotionDriver
 {

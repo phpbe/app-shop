@@ -1,11 +1,11 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
 
     <script>
-        const userFavorite_deleteFavoriteUrl = "<?php echo beUrl('ShopFai.UserFavorite.deleteFavorite'); ?>";
+        const userFavorite_deleteFavoriteUrl = "<?php echo beUrl('Shop.UserFavorite.deleteFavorite'); ?>";
     </script>
     <script src="<?php echo $wwwUrl; ?>/js/user-favorite/favorites.js"></script>
 </be-head>
@@ -15,7 +15,7 @@
 
     <div class="be-d-block be-d-lg-none">
         <h4 class="be-h4">
-            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
+            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
             Wish List
         </h4>
 
@@ -52,7 +52,7 @@
         if (substr($my->id, 0, 1) !== '-') {
         ?>
         <div class="be-mt-200">
-            <a href="<?php echo beURL('ShopFai.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-w-100">Back</a>
+            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-w-100">Back</a>
         </div>
         <?php
         }

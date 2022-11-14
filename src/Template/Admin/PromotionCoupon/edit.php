@@ -32,7 +32,7 @@
         <div class="be-row">
             <div class="be-col">
                 <div style="padding: 1.25rem 0 0 2rem;">
-                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('ShopFai.PromotionCoupon.coupons'); ?>">返回优惠券列表</el-link>
+                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('Shop.PromotionCoupon.coupons'); ?>">返回优惠券列表</el-link>
                 </div>
             </div>
             <div class="be-col-auto">
@@ -722,7 +722,7 @@
                 generateCode: function () {
                     let _this = this;
                     this.loading = true;
-                    this.$http.get("<?php echo beAdminUrl('ShopFai.PromotionCoupon.generate'); ?>").then(function (response) {
+                    this.$http.get("<?php echo beAdminUrl('Shop.PromotionCoupon.generate'); ?>").then(function (response) {
                         _this.loading = false;
                         if (response.status === 200) {
                             var responseData = response.data;
@@ -758,7 +758,7 @@
 
                     console.log(formData);
 
-                    be.openDrawer("选择商品", "<?php echo beAdminUrl('ShopFai.Product.picker', ['multiple'=>1, 'callback' => 'selectProducts']); ?>", {width: "60%"}, formData);
+                    be.openDrawer("选择商品", "<?php echo beAdminUrl('Shop.Product.picker', ['multiple'=>1, 'callback' => 'selectProducts']); ?>", {width: "60%"}, formData);
                 },
                 selectProducts: function (rows) {
                     for (let row of rows) {
@@ -795,7 +795,7 @@
                         }
                     }
 
-                    be.openDrawer("选择分类", "<?php echo beAdminUrl('ShopFai.Category.picker', ['multiple'=>1, 'callback' => 'selectCategories']); ?>", {width: "60%"}, formData);
+                    be.openDrawer("选择分类", "<?php echo beAdminUrl('Shop.Category.picker', ['multiple'=>1, 'callback' => 'selectCategories']); ?>", {width: "60%"}, formData);
                 },
                 selectCategories: function (rows) {
                     for (let row of rows) {
@@ -832,7 +832,7 @@
                         }
                     }
 
-                    be.openDrawer("选择客户", "<?php echo beAdminUrl('ShopFai.User.picker', ['multiple'=>1, 'callback' => 'selectUsers']); ?>", {width: "60%"}, formData);
+                    be.openDrawer("选择客户", "<?php echo beAdminUrl('Shop.User.picker', ['multiple'=>1, 'callback' => 'selectUsers']); ?>", {width: "60%"}, formData);
                 },
                 selectUsers: function (rows) {
                     for (let row of rows) {
@@ -871,7 +871,7 @@
                                 _this.formData.limit_times = 0;
                             }
 
-                            _this.$http.post("<?php echo beAdminUrl('ShopFai.PromotionCoupon.' . ($this->promotionCoupon ? 'edit' :'create')); ?>", {
+                            _this.$http.post("<?php echo beAdminUrl('Shop.PromotionCoupon.' . ($this->promotionCoupon ? 'edit' :'create')); ?>", {
                                 formData: _this.formData
                             }).then(function (response) {
                                 _this.loading = false;
@@ -883,7 +883,7 @@
                                         _this.$message.success(responseData.message);
                                         setTimeout(function () {
                                             window.onbeforeunload = null;
-                                            window.location.href = "<?php echo beAdminUrl('ShopFai.PromotionCoupon.coupons'); ?>";
+                                            window.location.href = "<?php echo beAdminUrl('Shop.PromotionCoupon.coupons'); ?>";
                                         }, 1000);
                                     } else {
                                         if (responseData.message) {
@@ -905,7 +905,7 @@
                 },
                 cancel: function () {
                     window.onbeforeunload = null;
-                    window.location.href = "<?php echo beAdminUrl('ShopFai.PromotionCoupon.coupons'); ?>";
+                    window.location.href = "<?php echo beAdminUrl('Shop.PromotionCoupon.coupons'); ?>";
                 }
 
                 <?php

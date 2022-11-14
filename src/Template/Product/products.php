@@ -2,13 +2,13 @@
     <?php
     echo '<style type="text/css">';
 
-    echo '.shopfai-products {';
+    echo '.shop-products {';
     echo 'display: flex;';
     echo 'flex-wrap: wrap;';
     echo 'overflow: hidden;';
     echo '}';
 
-    echo '.shopfai-product {';
+    echo '.shop-product {';
     echo 'flex: 0 1 auto;';
     echo 'overflow: hidden;';
     echo '}';
@@ -16,7 +16,7 @@
 
     // 手机端小于 320px 时, 100% 宽度
     echo '@media (max-width: 320px) {';
-    echo '.shopfai-product {';
+    echo '.shop-product {';
     echo 'width: 100% !important;';
     echo '}';
     echo '}';
@@ -25,13 +25,13 @@
     if (isset($this->pageConfig->spacingMobile) && $this->pageConfig->spacingMobile !== '') {
         echo '@media (max-width: 768px) {';
 
-        echo '.shopfai-products {';
+        echo '.shop-products {';
         echo 'margin-left: calc(-' . $this->pageConfig->spacingMobile . ' / 2);';
         echo 'margin-right: calc(-' . $this->pageConfig->spacingMobile . ' / 2);';
         echo 'margin-bottom: -' . $this->pageConfig->spacingMobile . ';';
         echo '}';
 
-        echo '.shopfai-product {';
+        echo '.shop-product {';
         echo 'width: 50%;';
         echo 'padding-left: calc(' . $this->pageConfig->spacingMobile . ' / 2);';
         echo 'padding-right: calc(' . $this->pageConfig->spacingMobile . ' / 2);';
@@ -46,13 +46,13 @@
     if (isset($this->pageConfig->spacingTablet) && $this->pageConfig->spacingTablet !== '') {
         echo '@media (min-width: 768px) {';
 
-        echo '.shopfai-products {';
+        echo '.shop-products {';
         echo 'margin-left: calc(-' . $this->pageConfig->spacingTablet . ' / 2);';
         echo 'margin-right: calc(-' . $this->pageConfig->spacingTablet . ' / 2);';
         echo 'margin-bottom: -' . $this->pageConfig->spacingTablet . ';';
         echo '}';
 
-        echo '.shopfai-product {';
+        echo '.shop-product {';
         $cols = min($this->pageConfig->cols, 3);
         echo 'width: ' . (100 / $cols) . '%;';
         echo 'padding-left: calc(' . $this->pageConfig->spacingTablet . ' / 2);';
@@ -68,13 +68,13 @@
     if (isset($this->pageConfig->spacingDesktop) && $this->pageConfig->spacingDesktop !== '') {
         echo '@media (min-width: 992px) {';
 
-        echo '.shopfai-products {';
+        echo '.shop-products {';
         echo 'margin-left: calc(-' . $this->pageConfig->spacingDesktop . ' / 2);';
         echo 'margin-right: calc(-' . $this->pageConfig->spacingDesktop . ' / 2);';
         echo 'margin-bottom: -' . $this->pageConfig->spacingDesktop . ';';
         echo '}';
 
-        echo '.shopfai-product {';
+        echo '.shop-product {';
         $cols = $this->pageConfig->cols;
         echo 'width: ' . (100 / $cols) . '%;';
         echo 'padding-left: calc(' . $this->pageConfig->spacingDesktop . ' / 2);';
@@ -85,41 +85,41 @@
         echo '}';
     }
 
-    echo  '.shopfai-product-image {';
+    echo  '.shop-product-image {';
     echo  '}';
 
-    echo  '.shopfai-product-image-1 {';
+    echo  '.shop-product-image-1 {';
     echo  'width: 100%;';
     echo  '}';
 
     if ($this->pageConfig->hoverEffect != 'none') {
         if ($this->pageConfig->hoverEffect == 'scale' || $this->pageConfig->hoverEffect == 'rotateScale') {
-            echo '.shopfai-product-image a .shopfai-product-image-img {';
+            echo '.shop-product-image a .shop-product-image-img {';
             echo 'transition: all 0.7s ease;';
             echo '}';
         }
 
         switch ($this->pageConfig->hoverEffect) {
             case 'scale':
-                echo '.shopfai-product-image a:hover .shopfai-product-image-img {';
+                echo '.shop-product-image a:hover .shop-product-image-img {';
                 echo 'transform: scale(1.1);';
                 echo '}';
                 break;
             case 'rotateScale':
-                echo '.shopfai-product-image a:hover .shopfai-product-image-img {';
+                echo '.shop-product-image a:hover .shop-product-image-img {';
                 echo 'transform: rotate(3deg) scale(1.1);';
                 echo '}';
                 break;
             case 'toggleImage':
-                echo  '.shopfai-product-image a {';
+                echo  '.shop-product-image a {';
                 echo  'display:block;';
                 echo  'position:relative;';
                 echo  '}';
 
-                echo  '.shopfai-product-image a .shopfai-product-image-1 {';
+                echo  '.shop-product-image a .shop-product-image-1 {';
                 echo  '}';
 
-                echo  '.shopfai-product-image a .shopfai-product-image-2 {';
+                echo  '.shop-product-image a .shop-product-image-2 {';
                 echo  'position:absolute;';
                 echo  'top:0;';
                 echo  'left:0;';
@@ -132,10 +132,10 @@
                 echo  'transition: all 0.7s ease;';
                 echo  '}';
 
-                echo  '.shopfai-product-image a:hover .shopfai-product-image-1 {';
+                echo  '.shop-product-image a:hover .shop-product-image-1 {';
                 echo  '}';
 
-                echo  '.shopfai-product-image a:hover .shopfai-product-image-2 {';
+                echo  '.shop-product-image a:hover .shop-product-image-2 {';
                 echo  'opacity:1;';
                 echo  '}';
                 break;
@@ -149,9 +149,9 @@
 <be-page-content>
     <?php
     $isMobile = \Be\Be::getRequest()->isMobile();
-    $nnImage = \Be\Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+    $nnImage = \Be\Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
 
-    echo '<div class="shopfai-products">';
+    echo '<div class="shop-products">';
     $i = 0;
     foreach ($this->result['rows'] as $product) {
         $defaultImage = null;
@@ -192,18 +192,18 @@
             ];
         }
 
-        echo '<div class="shopfai-product">';
+        echo '<div class="shop-product">';
 
-        echo '<div class="shopfai-product-image">';
-        echo '<a href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+        echo '<div class="shop-product-image">';
+        echo '<a href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
         if (!$isMobile) {
             echo ' target="_blank"';
         }
         echo '>';
         if ($defaultImage) {
-            echo '<img src="' . $defaultImage->medium . '" class="shopfai-product-image-1" />';
+            echo '<img src="' . $defaultImage->medium . '" class="shop-product-image-1" />';
             if ($this->pageConfig->hoverEffect == 'toggleImage' && $hoverImage) {
-                echo '<img src="' . $hoverImage->medium . '" class="shopfai-product-image-2" />';
+                echo '<img src="' . $hoverImage->medium . '" class="shop-product-image-2" />';
             }
         }
 
@@ -222,7 +222,7 @@
         echo '</div>';
 
         echo '<div class="be-mt-50">';
-        echo '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+        echo '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
         if (!$isMobile) {
             echo ' target="_blank"';
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Admin\StatisticVisit;
+namespace Be\App\Shop\Config\Page\Admin\StatisticVisit;
 
 class dashboard
 {

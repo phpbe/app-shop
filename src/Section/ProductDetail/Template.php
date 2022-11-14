@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\ProductDetail;
+namespace Be\App\Shop\Section\ProductDetail;
 
 use Be\Be;
 use Be\Theme\Section;
@@ -10,11 +10,11 @@ class Template extends Section
 
     public array $positions = ['middle', 'center'];
 
-    public array $routes = ['ShopFai.Product.detail'];
+    public array $routes = ['Shop.Product.detail'];
 
     public function display()
     {
-        $wwwUrl = Be::getProperty('App.ShopFai')->getWwwUrl();
+        $wwwUrl = Be::getProperty('App.Shop')->getWwwUrl();
 
         if (Be::getRequest()->isMobile()) {
             echo '<script src="' . $wwwUrl . '/lib/swiper/swiper-bundle.min.js"></script>';
@@ -69,7 +69,7 @@ class Template extends Section
         }
         echo 'let productItemId = "' . $productItemId . '";';
 
-        echo 'let addToCartUrl = "' . beUrl('ShopFai.Cart.Add') . '";';
+        echo 'let addToCartUrl = "' . beUrl('Shop.Cart.Add') . '";';
 
         if ($this->config->showDescription === 1) {
             $this->descriptionJs();
@@ -213,9 +213,9 @@ class Template extends Section
     private function summaryRight()
     {
         $product = $this->page->product;
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
 
-        echo '<form action="' . beUrl('ShopFai.Cart.checkout', ['from' => 'buy_now']) . '" method="post">';
+        echo '<form action="' . beUrl('Shop.Cart.checkout', ['from' => 'buy_now']) . '" method="post">';
 
         echo '<input type="hidden" name="product_id" value="' . $product->id . '">';
         echo '<input type="hidden" name="product_item_id" value="" id="product-detail-item-id">';
@@ -459,7 +459,7 @@ class Template extends Section
         $reviewCount = $this->page->product->rating_count;
         $reviewPageSize = $this->config->reviewPageSize;
         $reviewPage = \Be\Be::getRequest()->get('reviewPage', 1);
-        $reviews = \Be\Be::getService('App.ShopFai.ProductReview')->getReviews($this->page->product->id, [
+        $reviews = \Be\Be::getService('App.Shop.ProductReview')->getReviews($this->page->product->id, [
             'page' => $reviewPage,
             'pageSize' => $reviewPageSize,
         ], ['images' => true]);
@@ -484,7 +484,7 @@ class Template extends Section
         echo $reviewCount . ' review(s)';
         echo '</div>';
         echo '<div class="be-col-24 be-col-sm-8 be-ta-right be-mt-100">';
-        echo '<a href="' . beUrl('ShopFai.Product.review', ['id' => $this->page->product->id]) . '" class="be-btn be-btn-round">Write a review</a>';
+        echo '<a href="' . beUrl('Shop.Product.review', ['id' => $this->page->product->id]) . '" class="be-btn be-btn-round">Write a review</a>';
         echo '</div>';
         echo '</div>';
 
@@ -551,7 +551,7 @@ class Template extends Section
                 echo '<ul class="be-pagination" style="justify-content: center;">';
                 echo '<li>';
                 if ($page > 1) {
-                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->page->product->id,]);
+                    $url = beUrl('Shop.Product.detail', ['id' => $this->page->product->id,]);
                     $url .= strpos($url, '?') === false ? '?' : '&';
                     $url .= http_build_query(['reviewPage' => ($page - 1)]);
                     echo '<a href="' . $url . '">Previous</a>';
@@ -587,7 +587,7 @@ class Template extends Section
                         echo '<span>' . $i . '</span>';
                         echo '</li>';
                     } else {
-                        $url = beUrl('ShopFai.Product.detail', ['id' => $this->page->product->id,]);
+                        $url = beUrl('Shop.Product.detail', ['id' => $this->page->product->id,]);
                         $url .= strpos($url, '?') === false ? '?' : '&';
                         $url .= http_build_query(['reviewPage' => $i]);
                         echo '<li>';
@@ -602,7 +602,7 @@ class Template extends Section
 
                 echo '<li>';
                 if ($page < $pages) {
-                    $url = beUrl('ShopFai.Product.detail', ['id' => $this->page->product->id,]);
+                    $url = beUrl('Shop.Product.detail', ['id' => $this->page->product->id,]);
                     $url .= strpos($url, '?') === false ? '?' : '&';
                     $url .= http_build_query(['reviewPage' => ($page + 1)]);
                     echo '<a href="' . $url . '">Next</a>';

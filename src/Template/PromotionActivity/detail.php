@@ -28,7 +28,7 @@
     echo '<div class="be-mt-200" id="' . $sectionPrefix . '-' . $sectionType . '-' . $sectionKey . '">';
     $result = $this->products;
     if ($result['total'] > 0) {
-        $paginationUrl = beUrl('ShopFai.PromotionActivity.detail', ['id' => $this->promotionActivity->id]);
+        $paginationUrl = beUrl('Shop.PromotionActivity.detail', ['id' => $this->promotionActivity->id]);
         $sectionData = [
             'spacingMobile' => 20,
             'spacingTablet' => 30,
@@ -36,7 +36,7 @@
             'quantityPerRow' => 4,
             'hoverEffect' => 'toggleImage',
         ];
-        echo \Be\Be::getService('Theme.ShopFai.Product')->makeProducts($sectionPrefix, $sectionType, $sectionKey, $sectionData, $result, $paginationUrl);
+        echo \Be\Be::getService('Theme.Shop.Product')->makeProducts($sectionPrefix, $sectionType, $sectionKey, $sectionData, $result, $paginationUrl);
     } else {
         echo '<div class="be-py-400 be-ta-center">-</div>';
     }

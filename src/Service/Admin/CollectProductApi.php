@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\Be;
 use Be\Config\ConfigHelper;
@@ -19,12 +19,12 @@ class CollectProductApi
      */
     public function getConfig(): object
     {
-        $configCollectProductApi = Be::getConfig('App.ShopFai.CollectProductApi');
+        $configCollectProductApi = Be::getConfig('App.Shop.CollectProductApi');
 
         if ($configCollectProductApi->token === '') {
             $configCollectProductApi->token = Random::simple(32);
 
-            ConfigHelper::update('App.ShopFai.CollectProductApi', $configCollectProductApi);
+            ConfigHelper::update('App.Shop.CollectProductApi', $configCollectProductApi);
 
             if (Be::getRuntime()->isSwooleMode()) {
                 Be::getRuntime()->reload();
@@ -41,11 +41,11 @@ class CollectProductApi
      */
     public function toggleEnable(): int
     {
-        $configCollectProductApi = Be::getConfig('App.ShopFai.CollectProductApi');
+        $configCollectProductApi = Be::getConfig('App.Shop.CollectProductApi');
 
         $configCollectProductApi->enable = 1 - (int)$configCollectProductApi->enable;
 
-        ConfigHelper::update('App.ShopFai.CollectProductApi', $configCollectProductApi);
+        ConfigHelper::update('App.Shop.CollectProductApi', $configCollectProductApi);
 
         if (Be::getRuntime()->isSwooleMode()) {
             Be::getRuntime()->reload();
@@ -61,11 +61,11 @@ class CollectProductApi
      */
     public function resetToken(): string
     {
-        $configCollectProductApi = Be::getConfig('App.ShopFai.CollectProductApi');
+        $configCollectProductApi = Be::getConfig('App.Shop.CollectProductApi');
 
         $configCollectProductApi->token = Random::simple(32);
 
-        ConfigHelper::update('App.ShopFai.CollectProductApi', $configCollectProductApi);
+        ConfigHelper::update('App.Shop.CollectProductApi', $configCollectProductApi);
 
         if (Be::getRuntime()->isSwooleMode()) {
             Be::getRuntime()->reload();

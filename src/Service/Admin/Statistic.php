@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -26,7 +26,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'ShopFai:Statistic:DateHistogram:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'Shop:Statistic:DateHistogram:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -163,7 +163,7 @@ class Statistic
             throw new ServiceException('group 缺失！');
         }
 
-        $cacheKey = 'ShopFai:Statistic:Group:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'Shop:Statistic:Group:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -273,7 +273,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'ShopFai:Statistic:Count:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'Shop:Statistic:Count:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -332,7 +332,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'ShopFai:Statistic:Sum:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'Shop:Statistic:Sum:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -383,7 +383,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'ShopFai:Statistic:Avg:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'Shop:Statistic:Avg:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {

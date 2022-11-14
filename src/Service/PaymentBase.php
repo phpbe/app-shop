@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -23,7 +23,7 @@ abstract class PaymentBase
      */
     public function paid(object $order)
     {
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         try {
             $tupleOrder->load($order->id);
         } catch (\Throwable $t) {
@@ -33,7 +33,7 @@ abstract class PaymentBase
 
         if ($tupleOrder->status === 'expired') {
 
-            $serviceOrder = Be::getService('App.ShopFai.Order');
+            $serviceOrder = Be::getService('App.Shop.Order');
             $orderConfig = $serviceOrder->getConfig();
 
             // 订单超时一倍时间，仍可以正常支付成功
@@ -69,7 +69,7 @@ abstract class PaymentBase
     {
         $account = $this->getAccount();
 
-        $tuple = Be::getTuple('shopfai_payment_log');
+        $tuple = Be::getTuple('shop_payment_log');
         $tuple->payment_type = $account->type ?? '';
         $tuple->payment_id = $account->id;
         $tuple->order_id = $order->id;

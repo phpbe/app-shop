@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Category;
+namespace Be\App\Shop\Config\Page\Category;
 
 class products
 {
@@ -14,7 +14,7 @@ class products
             'name' => 'Theme.System.PageTitle',
         ],
         [
-            'name' => 'App.ShopFai.CategoryProducts',
+            'name' => 'App.Shop.CategoryProducts',
         ],
     ];
 

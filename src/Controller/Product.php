@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -9,7 +9,7 @@ class Product extends Base
 
     /**
      *
-     * @BeRoute("\Be\Be::getService('App.ShopFai.Product')->getProductUrl($params)")
+     * @BeRoute("\Be\Be::getService('App.Shop.Product')->getProductUrl($params)")
      */
     public function detail()
     {
@@ -18,8 +18,8 @@ class Product extends Base
 
         $id = $request->get('id');
 
-        $product = Be::getService('App.ShopFai.Product')->hit($id);
-        $product->promotion_templates = Be::getService('App.ShopFai.Promotion')->getProductTemplates($id);
+        $product = Be::getService('App.Shop.Product')->hit($id);
+        $product->promotion_templates = Be::getService('App.Shop.Promotion')->getProductTemplates($id);
 
         $response->set('product', $product);
 
@@ -42,7 +42,7 @@ class Product extends Base
 
         $id = $request->get('id');
 
-        $product = Be::getService('App.ShopFai.Product')->getProduct($id);
+        $product = Be::getService('App.Shop.Product')->getProduct($id);
         $response->set('product', $product);
 
         $response->display();
@@ -91,7 +91,7 @@ class Product extends Base
                 }
             }
 
-            Be::getService('App.ShopFai.ProductReview')->post($userId, $productId, $rating, $name, $content, $imageInfos);
+            Be::getService('App.Shop.ProductReview')->post($userId, $productId, $rating, $name, $content, $imageInfos);
 
             $response->set('success', true);
             $response->set('message', 'Submit success!');
@@ -122,7 +122,7 @@ class Product extends Base
 
         $page = $request->get('page', 1);
 
-        $result = Be::getService('App.ShopFai.Product')->search($keywords, [
+        $result = Be::getService('App.Shop.Product')->search($keywords, [
             'orderByDir' => $orderByDir,
             'page' => $page,
             'orderBy' => $orderBy,
@@ -143,23 +143,23 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.ShopFai.Page.Product.latest');
+        $configPage = Be::getConfig('App.Shop.Page.Product.latest');
         $response->set('title', $configPage->title);
         $response->set('metaKeywords', $configPage->seoKeywords);
         $response->set('metaDescription', $configPage->seoDescription);
 
         $page = $request->get('page', 1);
-        $result = Be::getService('App.ShopFai.Product')->search('', [
+        $result = Be::getService('App.Shop.Product')->search('', [
             'orderBy' => 'create_time',
             'orderByDir' => 'desc',
             'page' => $page,
         ]);
         $response->set('result', $result);
 
-        $paginationUrl = beUrl('ShopFai.Product.latest');
+        $paginationUrl = beUrl('Shop.Product.latest');
         $response->set('paginationUrl', $paginationUrl);
 
-        $response->display('App.ShopFai.Product.products');
+        $response->display('App.Shop.Product.products');
     }
 
     /**
@@ -173,23 +173,23 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.ShopFai.Page.Product.hottest');
+        $configPage = Be::getConfig('App.Shop.Page.Product.hottest');
         $response->set('title', $configPage->title);
         $response->set('metaKeywords', $configPage->seoKeywords);
         $response->set('metaDescription', $configPage->seoDescription);
 
         $page = $request->get('page', 1);
-        $result = Be::getService('App.ShopFai.Product')->search('', [
+        $result = Be::getService('App.Shop.Product')->search('', [
             'orderBy' => 'hits',
             'orderByDir' => 'desc',
             'page' => $page,
         ]);
         $response->set('result', $result);
 
-        $paginationUrl = beUrl('ShopFai.Product.hottest');
+        $paginationUrl = beUrl('Shop.Product.hottest');
         $response->set('paginationUrl', $paginationUrl);
 
-        $response->display('App.ShopFai.Product.products');
+        $response->display('App.Shop.Product.products');
     }
 
     /**
@@ -203,23 +203,23 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.ShopFai.Page.Product.topSales');
+        $configPage = Be::getConfig('App.Shop.Page.Product.topSales');
         $response->set('title', $configPage->title);
         $response->set('metaKeywords', $configPage->seoKeywords);
         $response->set('metaDescription', $configPage->seoDescription);
 
         $page = $request->get('page', 1);
-        $result = Be::getService('App.ShopFai.Product')->search('', [
+        $result = Be::getService('App.Shop.Product')->search('', [
             'orderBy' => 'sales_volume',
             'orderByDir' => 'desc',
             'page' => $page,
         ]);
         $response->set('result', $result);
 
-        $paginationUrl = beUrl('ShopFai.Product.topSales');
+        $paginationUrl = beUrl('Shop.Product.topSales');
         $response->set('paginationUrl', $paginationUrl);
 
-        $response->display('App.ShopFai.Product.products');
+        $response->display('App.Shop.Product.products');
     }
 
     /**
@@ -233,12 +233,12 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.ShopFai.Page.Product.topSearch');
+        $configPage = Be::getConfig('App.Shop.Page.Product.topSearch');
         $response->set('title', $configPage->title);
         $response->set('metaKeywords', $configPage->seoKeywords);
         $response->set('metaDescription', $configPage->seoDescription);
 
-        $rows = Be::getService('App.ShopFai.Product')->getTopSearchProducts(120);
+        $rows = Be::getService('App.Shop.Product')->getTopSearchProducts(120);
         $result = [
             'total' => count($rows),
             'pageSize' => 100,
@@ -248,10 +248,10 @@ class Product extends Base
 
         $response->set('result', $result);
 
-        $paginationUrl = beUrl('ShopFai.Product.topSearch');
+        $paginationUrl = beUrl('Shop.Product.topSearch');
         $response->set('paginationUrl', $paginationUrl);
 
-        $response->display('App.ShopFai.Product.products');
+        $response->display('App.Shop.Product.products');
     }
 
     /**
@@ -264,12 +264,12 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.ShopFai.Page.Product.guessYouLike');
+        $configPage = Be::getConfig('App.Shop.Page.Product.guessYouLike');
         $response->set('title', $configPage->title);
         $response->set('metaKeywords', $configPage->seoKeywords);
         $response->set('metaDescription', $configPage->seoDescription);
 
-        $rows = Be::getService('App.ShopFai.Product')->getGuessYouLikeProducts(120);
+        $rows = Be::getService('App.Shop.Product')->getGuessYouLikeProducts(120);
         $result = [
             'total' => count($rows),
             'pageSize' => 100,
@@ -279,10 +279,10 @@ class Product extends Base
 
         $response->set('result', $result);
 
-        $paginationUrl = beUrl('ShopFai.Product.guessYouLike');
+        $paginationUrl = beUrl('Shop.Product.guessYouLike');
         $response->set('paginationUrl', $paginationUrl);
 
-        $response->display('App.ShopFai.Product.products');
+        $response->display('App.Shop.Product.products');
     }
 
 

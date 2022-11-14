@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/js/cart/index.js"></script>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/cart/index.css"/>
@@ -16,14 +16,14 @@
 
 <be-page-content>
     <?php
-    $configStore = \Be\Be::getConfig('App.ShopFai.Store');
+    $configStore = \Be\Be::getConfig('App.Shop.Store');
     if (count($this->products) == 0) {
         ?>
         <div class="be-py-400 be-my-400 be-ta-center be-c-999">Your shopping cart is empty.</div>
         <?php
     } else {
         ?>
-        <form action="<?php echo beUrl('ShopFai.Cart.checkout'); ?>" method="post">
+        <form action="<?php echo beUrl('Shop.Cart.checkout'); ?>" method="post">
         <div class="be-row">
             <div class="be-col-24 be-lg-col-16">
                 <div class="cart-index-products">

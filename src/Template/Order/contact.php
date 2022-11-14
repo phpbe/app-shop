@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/lightbox/lightbox.min.js"></script>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/lib/lightbox/lightbox.min.css" />
@@ -16,11 +16,11 @@
     <div class="be-container be-mt-200 be-mb-400">
         <div class="be-d-flex">
             <div class="be-west">
-                <be-include>App.ShopFai.UserCenter.west</be-include>
+                <be-include>App.Shop.UserCenter.west</be-include>
             </div>
             <div class="be-center">
                 <h4 class="be-h4">
-                    <a href="<?php echo beURL('ShopFai.Order.orders') ;?>"><i class="user-center-back"></i></a>
+                    <a href="<?php echo beURL('Shop.Order.orders') ;?>"><i class="user-center-back"></i></a>
                     Order Contact
                 </h4>
 
@@ -64,7 +64,7 @@
                                         if ($my->avatar) {
                                             echo $my->avatar;
                                         } else {
-                                            echo \Be\Be::getConfig('App.ShopFai.Url')->cdn . '/image/user/avatar/default.png';
+                                            echo \Be\Be::getConfig('App.Shop.Url')->cdn . '/image/user/avatar/default.png';
                                         }
                                         ?>" alt="<?php echo $my->first_name . ' ' . $my->last_name; ?>">
                                     </div>
@@ -118,7 +118,7 @@
 
                     <div class="be-mt-200">
                         <input class="be-btn" type="submit" value="Submit">
-                        <a class="be-btn be-btn-outline" href="<?php echo beURL('ShopFai.Order.orders') ;?>">Back</a>
+                        <a class="be-btn be-btn-outline" href="<?php echo beURL('Shop.Order.orders') ;?>">Back</a>
                     </div>
                 </form>
 

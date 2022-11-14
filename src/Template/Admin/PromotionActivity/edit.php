@@ -95,7 +95,7 @@
         <div class="be-row">
             <div class="be-col">
                 <div style="padding: 1.25rem 0 0 2rem;">
-                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('ShopFai.PromotionActivity.activities'); ?>">返回满减活动列表</el-link>
+                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('Shop.PromotionActivity.activities'); ?>">返回满减活动列表</el-link>
                 </div>
             </div>
             <div class="be-col-auto">
@@ -743,10 +743,10 @@
             <div class="be-px-150">
                 <el-tabs v-model="drawerPosterActive" type="border-card">
                     <el-tab-pane label="移动端" name="mobile">
-                        <img src="<?php echo \Be\Be::getProperty('App.ShopFai')->getWwwUrl(); ?>/image/demo/promotion-activity-poster-mobile.png" alt="" class="be-mw-100">
+                        <img src="<?php echo \Be\Be::getProperty('App.Shop')->getWwwUrl(); ?>/image/demo/promotion-activity-poster-mobile.png" alt="" class="be-mw-100">
                     </el-tab-pane>
                     <el-tab-pane label="电礅端" name="desktop">
-                        <img src="<?php echo \Be\Be::getProperty('App.ShopFai')->getWwwUrl(); ?>/image/demo/promotion-activity-poster-desktop.png" alt="" class="be-mw-100">
+                        <img src="<?php echo \Be\Be::getProperty('App.Shop')->getWwwUrl(); ?>/image/demo/promotion-activity-poster-desktop.png" alt="" class="be-mw-100">
                     </el-tab-pane>
                 </el-tabs>
             </div>
@@ -896,7 +896,7 @@
 
                     <div class="be-row">
                         <div class="be-col-auto">
-                            <img src="<?php echo \Be\Be::getProperty('App.ShopFai')->getWwwUrl(); ?>/image/product/demo.png" alt="" style="max-width: 140px;">
+                            <img src="<?php echo \Be\Be::getProperty('App.Shop')->getWwwUrl(); ?>/image/product/demo.png" alt="" style="max-width: 140px;">
                         </div>
                         <div class="be-col">
                             <div class="be-pl-200">
@@ -1064,7 +1064,7 @@
                         }
                     }
 
-                    be.openDrawer("选择商品", "<?php echo beAdminUrl('ShopFai.Product.picker', ['multiple'=>1, 'callback' => 'selectProducts']); ?>", {width: "60%"}, formData);
+                    be.openDrawer("选择商品", "<?php echo beAdminUrl('Shop.Product.picker', ['multiple'=>1, 'callback' => 'selectProducts']); ?>", {width: "60%"}, formData);
                 },
                 selectProducts: function (rows) {
                     for (let row of rows) {
@@ -1101,7 +1101,7 @@
                         }
                     }
 
-                    be.openDrawer("选择分类", "<?php echo beAdminUrl('ShopFai.Category.picker', ['multiple'=>1, 'callback' => 'selectCategories']); ?>", {width: "60%"}, formData);
+                    be.openDrawer("选择分类", "<?php echo beAdminUrl('Shop.Category.picker', ['multiple'=>1, 'callback' => 'selectCategories']); ?>", {width: "60%"}, formData);
                 },
                 selectCategories: function (rows) {
                     for (let row of rows) {
@@ -1139,7 +1139,7 @@
                                 _this.formData.limit_times = 0;
                             }
 
-                            _this.$http.post("<?php echo beAdminUrl('ShopFai.PromotionActivity.' . ($this->promotionActivity ? 'edit' :'create')); ?>", {
+                            _this.$http.post("<?php echo beAdminUrl('Shop.PromotionActivity.' . ($this->promotionActivity ? 'edit' :'create')); ?>", {
                                 formData: _this.formData
                             }).then(function (response) {
                                 _this.loading = false;
@@ -1151,7 +1151,7 @@
                                         _this.$message.success(responseData.message);
                                         setTimeout(function () {
                                             window.onbeforeunload = null;
-                                            window.location.href = "<?php echo beAdminUrl('ShopFai.PromotionActivity.activities'); ?>";
+                                            window.location.href = "<?php echo beAdminUrl('Shop.PromotionActivity.activities'); ?>";
                                         }, 1000);
                                     } else {
                                         if (responseData.message) {
@@ -1173,7 +1173,7 @@
                 },
                 cancel: function () {
                     window.onbeforeunload = null;
-                    window.location.href = "<?php echo beAdminUrl('ShopFai.PromotionActivity.activities'); ?>";
+                    window.location.href = "<?php echo beAdminUrl('Shop.PromotionActivity.activities'); ?>";
                 }
 
                 <?php

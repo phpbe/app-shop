@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -21,10 +21,10 @@ class Es extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
         $response->set('configEs', $configEs);
 
-        $indexes = Be::getService('App.ShopFai.Admin.Es')->getIndexes();
+        $indexes = Be::getService('App.Shop.Admin.Es')->getIndexes();
         $response->set('indexes', $indexes);
 
         $response->set('title', 'ES搜索引擎');
@@ -44,7 +44,7 @@ class Es extends Auth
         $formData = $request->json('formData');
         $indexName = $formData['name'] ?? '';
         try {
-            Be::getService('App.ShopFai.Admin.Es')->createIndex($indexName, $formData);
+            Be::getService('App.Shop.Admin.Es')->createIndex($indexName, $formData);
             $response->success('创建成功！');
         } catch (\Throwable $t) {
             $response->error('创建失败：' . $t->getMessage());
@@ -64,7 +64,7 @@ class Es extends Auth
         $formData = $request->json('formData');
         $indexName = $formData['name'] ?? '';
         try {
-            Be::getService('App.ShopFai.Admin.Es')->deleteIndex($indexName);
+            Be::getService('App.Shop.Admin.Es')->deleteIndex($indexName);
             $response->success('删除成功！');
         } catch (\Throwable $t) {
             $response->error('删除失败：' . $t->getMessage());

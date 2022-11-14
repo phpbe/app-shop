@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\UserCenterMenu;
+namespace Be\App\Shop\Section\UserCenterMenu;
 
 /**
  * @BeConfig("用户中心菜单", icon="el-icon-user-solid")

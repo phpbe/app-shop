@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
 use Be\App\System\Controller\Admin\Auth;
@@ -32,7 +32,7 @@ class User extends Auth
     {
         Be::getAdminPlugin('Curd')->setting([
             'label' => '客户管理',
-            'table' => 'shopfai_user',
+            'table' => 'shop_user',
             'grid' => [
                 'title' => '客户管理',
 
@@ -417,7 +417,7 @@ class User extends Auth
         $db = Be::getDb();
 
         $keywords = $request->json('keywords');
-        $sql = 'SELECT `name` AS `value` FROM `shopfai_user` WHERE `name` LIKE '. $db->quoteValue('%'.$keywords.'%') . ' AND is_enable = 1 AND is_delete = 0 LIMIT 20';
+        $sql = 'SELECT `name` AS `value` FROM `shop_user` WHERE `name` LIKE '. $db->quoteValue('%'.$keywords.'%') . ' AND is_enable = 1 AND is_delete = 0 LIMIT 20';
         $suggestions = $db->getObjects($sql);
 
         $response->set('success', true);
@@ -440,7 +440,7 @@ class User extends Auth
             $multiple = $request->get('multiple', '0');
             $multiple = $multiple ? 1 : 0;
 
-            $pickerSetting = Be::getService('App.ShopFai.Admin.User')->getUserPicker($multiple);
+            $pickerSetting = Be::getService('App.Shop.Admin.User')->getUserPicker($multiple);
             if ($request->isAjax()) {
                 Be::getAdminPlugin('Curd')
                     ->setting($pickerSetting)
@@ -495,7 +495,7 @@ class User extends Auth
 
                 $theme = $pickerSetting['grid']['theme'] ?? 'Blank';
 
-                $response->display('App.ShopFai.Admin.Picker.picker', $theme);
+                $response->display('App.Shop.Admin.Picker.picker', $theme);
             }
 
         } catch (\Throwable $t) {

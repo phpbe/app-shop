@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -18,10 +18,10 @@ class UserAddress extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $shippingAddresses = Be::getService('App.ShopFai.UserShippingAddress')->getAddresses();
+        $shippingAddresses = Be::getService('App.Shop.UserShippingAddress')->getAddresses();
         $response->set('shippingAddresses', $shippingAddresses);
 
-        $billingAddress = Be::getService('App.ShopFai.UserBillingAddress')->getAddress();
+        $billingAddress = Be::getService('App.Shop.UserBillingAddress')->getAddress();
         $response->set('billingAddress', $billingAddress);
 
         $response->display();
@@ -37,7 +37,7 @@ class UserAddress extends Auth
 
         $addressId = $request->get('id');
         if ($addressId) {
-            $address = Be::getService('App.ShopFai.UserShippingAddress')->getAddress($addressId);
+            $address = Be::getService('App.Shop.UserShippingAddress')->getAddress($addressId);
             $response->set('address', $address);
         } else {
             $response->set('address', false);
@@ -56,7 +56,7 @@ class UserAddress extends Auth
         $response = Be::getResponse();
 
         try {
-            $result = Be::getService('App.ShopFai.UserShippingAddress')->edit($request->post());
+            $result = Be::getService('App.Shop.UserShippingAddress')->edit($request->post());
             $response->set('success', true);
             $response->set('message', ($result === 1 ? 'Add' : 'Edit') . ' shipping address success!');
             $response->json();
@@ -78,7 +78,7 @@ class UserAddress extends Auth
 
         try {
             $addressId = $request->post('id');
-            Be::getService('App.ShopFai.UserShippingAddress')->delete($addressId);
+            Be::getService('App.Shop.UserShippingAddress')->delete($addressId);
             $response->set('success', true);
             $response->set('message', 'Delete shipping address success!');
             $response->json();
@@ -100,7 +100,7 @@ class UserAddress extends Auth
 
         try {
             $addressId = $request->post('id');
-            $result = Be::getService('App.ShopFai.UserShippingAddress')->setDefault($addressId);
+            $result = Be::getService('App.Shop.UserShippingAddress')->setDefault($addressId);
             $response->set('success', true);
             $response->set('message', 'Set default shipping address success!');
             $response->json();
@@ -118,7 +118,7 @@ class UserAddress extends Auth
     {
         $response = Be::getResponse();
 
-        $address = Be::getService('App.ShopFai.UserBillingAddress')->getAddress();
+        $address = Be::getService('App.Shop.UserBillingAddress')->getAddress();
         $response->set('address', $address);
 
         $response->display();
@@ -133,7 +133,7 @@ class UserAddress extends Auth
         $response = Be::getResponse();
 
         try {
-            $result = Be::getService('App.ShopFai.UserBillingAddress')->edit($request->post());
+            $result = Be::getService('App.Shop.UserBillingAddress')->edit($request->post());
             $response->set('success', true);
             $response->set('message', ($result === 1 ? 'Add' : 'Edit') . ' billing address success!');
             $response->json();
@@ -154,7 +154,7 @@ class UserAddress extends Auth
         $response = Be::getResponse();
 
         try {
-            $result = Be::getService('App.ShopFai.UserBillingAddress')->delete();
+            $result = Be::getService('App.Shop.UserBillingAddress')->delete();
             $response->set('success', true);
             $response->set('message', 'Delete billing address success!');
             $response->json();

@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\UserFavorite;
+namespace Be\App\Shop\Config\Page\UserFavorite;
 
-use Be\App\ShopFai\Config\Page\UserCenter;
+use Be\App\Shop\Config\Page\UserCenter;
 
 class favorites extends UserCenter
 {

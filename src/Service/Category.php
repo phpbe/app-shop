@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -18,11 +18,11 @@ class Category
     {
         $cache = Be::getCache();
 
-        $key = 'ShopFai:Categories';
+        $key = 'Shop:Categories';
         $categories = $cache->get($key);
 
         if (!$categories) {
-            $table =  Be::getTable('shopfai_category');
+            $table =  Be::getTable('shop_category');
             $table->where('is_delete', 0);
             $table->where('is_enable', 1);
             $table->orderBy('ordering', 'ASC');
@@ -48,7 +48,7 @@ class Category
     {
         $cache = Be::getCache();
 
-        $key = 'ShopFai:Category:' . $categoryId;
+        $key = 'Shop:Category:' . $categoryId;
         $category = $cache->get($key);
 
         if (!$category) {
@@ -66,7 +66,7 @@ class Category
      */
     public function getRandCategory()
     {
-        $sql = 'SELECT id, `name` FROM shopfai_category WHERE is_enable = 1 AND is_delete = 0 LIMIT 1';
+        $sql = 'SELECT id, `name` FROM shop_category WHERE is_enable = 1 AND is_delete = 0 LIMIT 1';
         $category = Be::getDb()->getObject($sql);
         if ($category) {
             return $category;
@@ -89,7 +89,7 @@ class Category
     public function getCategoryUrl(array $params = []): string
     {
         $category = $this->getCategory($params['id']);
-        $config = Be::getConfig('App.ShopFai.Category');
+        $config = Be::getConfig('App.Shop.Category');
         return '/' . $config->urlPrefix . '/' . $category->url . $config->urlSuffix;
     }
 

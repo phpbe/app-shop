@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -18,7 +18,7 @@ class Product
      */
     public function getProduct(string $productId, array $with = [])
     {
-        $key = 'ShopFai:Product:' . $productId;
+        $key = 'Shop:Product:' . $productId;
         if (Be::hasContext($key)) {
             $product = Be::getContext($key);
         } else {
@@ -53,7 +53,7 @@ class Product
 
         $keys = [];
         foreach ($productIds as $productId) {
-            $keys[] = 'ShopFai:Product:' . $productId;
+            $keys[] = 'Shop:Product:' . $productId;
         }
 
         $products = $cache->getMany($keys);
@@ -100,7 +100,7 @@ class Product
         $originalPriceFrom = 0;
         $originalPriceTo = 0;
 
-        $image = Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+        $image = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
 
         $items = [];
         if ($style === 1) {
@@ -244,14 +244,14 @@ class Product
         if (isset($with['relate']) && $with['relate']) {
             $product->relate = [];
             if ($product->relate_id !== '') {
-                $key = 'ShopFai:ProductRelate:' . $product->relate_id;
+                $key = 'Shop:ProductRelate:' . $product->relate_id;
                 $cache = Be::getCache();
                 $productRelate = $cache->get($key);
                 if ($productRelate) {
                     $productRelate = json_decode($productRelate);
                     if ($productRelate) {
                         foreach ($productRelate->details as &$detail) {
-                            $detail->url = beUrl('ShopFai.Product.detail', ['id' => $detail->product_id]);
+                            $detail->url = beUrl('Shop.Product.detail', ['id' => $detail->product_id]);
                             if ($detail->product_id === $product->id) {
                                 $detail->self = 1;
                                 $productRelate->value = $detail->value;
@@ -307,7 +307,7 @@ class Product
             'style' => 1,
         ]);
 
-        $historyKey = 'ShopFai:ProductHistory:' . $my->id;
+        $historyKey = 'Shop:ProductHistory:' . $my->id;
         $history = $cache->get($historyKey);
 
         if (!$history || !is_array($history)) {
@@ -327,7 +327,7 @@ class Product
         // 点击量 使用REDIS 存放
         $hits = $product->hits;
         $n = 0;
-        $hitsKey = 'ShopFai:Product:hits:' . $productId;
+        $hitsKey = 'Shop:Product:hits:' . $productId;
         $cacheHits = $cache->get($hitsKey);
         if ($cacheHits !== false) {
             $cacheHitsArr = explode(',', $cacheHits);
@@ -342,7 +342,7 @@ class Product
 
         // 每 1000 次访问，更新到数据库
         if ($n >= 1000) {
-            $sql = 'UPDATE shopfai_product SET hits=?, update_time=? WHERE id=?';
+            $sql = 'UPDATE shop_product SET hits=?, update_time=? WHERE id=?';
             Be::getDb()->query($sql, [$hits, date('Y-m-d H:i:s'), $productId]);
         }
 
@@ -361,14 +361,14 @@ class Product
      */
     public function search(string $keywords, array $params = [], array $with = []): array
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $cache = Be::getCache();
         $es = Be::getEs();
 
         $keywords = trim($keywords);
         if ($keywords !== '') {
             // 将本用户搜索的关键词写入ES search_history
-            $counterKey = 'ShopFai:ProductSearchHistory';
+            $counterKey = 'Shop:ProductSearchHistory';
             $counter = (int)$cache->get($counterKey);
             $query = [
                 'index' => $config->indexProductSearchHistory,
@@ -632,7 +632,7 @@ class Product
      */
     public function getSimilarProducts(string $productId, string $productName, int $n = 12): array
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $query = [
             'index' => $config->indexProduct,
             'body' => [
@@ -692,7 +692,7 @@ class Product
      */
     public function getTopProducts(int $n, string $orderBy, string $orderByDir = 'desc'): array
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $query = [
             'index' => $config->indexProduct,
             'body' => [
@@ -777,7 +777,7 @@ class Product
      */
     public function getTopSearchProducts(int $n = 10): array
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
 
         $keywords = $this->getTopSearchKeywords(5);
         if (!$keywords) {
@@ -838,11 +838,11 @@ class Product
     public function getGuessYouLikeProducts(int $n = 40, string $excludeProductId = null): array
     {
         $my = Be::getUser();
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $cache = Be::getCache();
 
-        $historyKey = 'ShopFai:ProductHistory:' . $my->id;
+        $historyKey = 'Shop:ProductHistory:' . $my->id;
         $history = $cache->get($historyKey);
 
         $keywords = [];
@@ -917,7 +917,7 @@ class Product
      */
     public function getCategoryTopSearchProducts(string $categoryId, int $n = 10): array
     {
-        $subCategoryIds = Be::getService('App.ShopFai.Category')->getSubCategoryIds($categoryId);
+        $subCategoryIds = Be::getService('App.Shop.Category')->getSubCategoryIds($categoryId);
         if (!$subCategoryIds) return [];
 
         $keywords = $this->getTopSearchKeywords(10);
@@ -925,7 +925,7 @@ class Product
             return [];
         }
 
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $query = [
             'index' => $config->indexProduct,
             'body' => [
@@ -997,11 +997,11 @@ class Product
     public function getCategoryGuessYouLikeProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
     {
         $my = Be::getUser();
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $cache = Be::getCache();
 
-        $historyKey = 'ShopFai:ProductHistory:' . $my->id;
+        $historyKey = 'Shop:ProductHistory:' . $my->id;
         $history = $cache->get($historyKey);
 
         $keywords = [];
@@ -1128,7 +1128,7 @@ class Product
      */
     public function getTopSearchKeywords(int $n = 6): array
     {
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $query = [
             'index' => $config->indexProductSearchHistory,
@@ -1176,7 +1176,7 @@ class Product
      */
     public function getProductUrl(array $params = []): string
     {
-        $config = Be::getConfig('App.ShopFai.Product');
+        $config = Be::getConfig('App.Shop.Product');
 
         $product = $this->getProduct($params['id']);
         if (!$product) {

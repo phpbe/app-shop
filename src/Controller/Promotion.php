@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -8,7 +8,7 @@ use Be\Be;
  * 优惠
  *
  * Class Promotion
- * @package Be\App\ShopFai\Controller
+ * @package Be\App\Shop\Controller
  */
 class Promotion extends Base
 {
@@ -40,11 +40,11 @@ class Promotion extends Base
         }
 
         try {
-            $products = Be::getService('App.ShopFai.Cart')->formatProducts($productId, $productItemId, $quantity, true);
+            $products = Be::getService('App.Shop.Cart')->formatProducts($productId, $productItemId, $quantity, true);
 
             $cart = $request->post();
             $cart['products'] = $products;
-            $discountAmount = Be::getService('App.ShopFai.Promotion')->getDiscountAmount($cart);
+            $discountAmount = Be::getService('App.Shop.Promotion')->getDiscountAmount($cart);
 
             $response->set('success', true);
             $response->set('message', 'Get promotion discount success!');

@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\UserAddress;
+namespace Be\App\Shop\Config\Page\UserAddress;
 
-use Be\App\ShopFai\Config\Page\UserCenter;
+use Be\App\Shop\Config\Page\UserCenter;
 
 class editBillingAddress extends UserCenter
 {

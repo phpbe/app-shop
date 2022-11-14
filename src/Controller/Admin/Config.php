@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -18,7 +18,7 @@ class Config extends Auth
      */
     public function dashboard()
     {
-        Be::getAdminPlugin('Config')->setting(['appName' => 'ShopFai', 'title' => '参数'])->execute();
+        Be::getAdminPlugin('Config')->setting(['appName' => 'Shop', 'title' => '参数'])->execute();
     }
 
 

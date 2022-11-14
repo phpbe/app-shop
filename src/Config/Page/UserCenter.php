@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page;
+namespace Be\App\Shop\Config\Page;
 
 class UserCenter
 {
@@ -11,7 +11,7 @@ class UserCenter
 
     public array $westSections = [
         [
-            'name' => 'App.ShopFai.UserCenterMenu',
+            'name' => 'App.Shop.UserCenterMenu',
         ],
     ];
 

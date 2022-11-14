@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Table\Item\TableItemCustom;
@@ -28,12 +28,12 @@ class PromotionActivity extends Auth
      */
     public function activities()
     {
-        $serviceStore = Be::getService('App.ShopFai.Admin.Store');
+        $serviceStore = Be::getService('App.Shop.Admin.Store');
 
         Be::getAdminPlugin('Curd')->setting([
 
             'label' => '满减活动',
-            'table' => 'shopfai_promotion_activity',
+            'table' => 'shop_promotion_activity',
 
             'grid' => [
                 'title' => '满减活动',
@@ -104,7 +104,7 @@ class PromotionActivity extends Auth
                     'items' => [
                         [
                             'label' => '创建满减活动',
-                            'url' => beAdminUrl('ShopFai.PromotionActivity.create'),
+                            'url' => beAdminUrl('Shop.PromotionActivity.create'),
                             'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-plus',
@@ -146,7 +146,7 @@ class PromotionActivity extends Auth
                         ],
                         [
                             'label' => '批量删除',
-                            'url' => beAdminUrl('ShopFai.PromotionActivity.delete'),
+                            'url' => beAdminUrl('Shop.PromotionActivity.delete'),
                             'target' => 'ajax',
                             'confirm' => '确认要删除吗？',
                             'ui' => [
@@ -183,9 +183,9 @@ class PromotionActivity extends Auth
                             'driver' => TableItemCustom::class,
                             'value' => function ($row) {
 
-                                $configStore = Be::getConfig('App.ShopFai.Store');
+                                $configStore = Be::getConfig('App.Shop.Store');
 
-                                $discounts = Be::getTable('shopfai_promotion_activity_discount')
+                                $discounts = Be::getTable('shop_promotion_activity_discount')
                                     ->where('promotion_activity_id', $row['id'])
                                     ->orderBy('ordering', 'ASC')
                                     ->getObjects();
@@ -233,7 +233,7 @@ class PromotionActivity extends Auth
                             'label' => '已使用',
                             'width' => '90',
                             'value' => function ($row) {
-                                return Be::getTable('shopfai_order_promotion')
+                                return Be::getTable('shop_order_promotion')
                                     ->where('promotion_type', 'promotion_activity')
                                     ->where('promotion_id', $row['id'])
                                     ->count();
@@ -280,7 +280,7 @@ class PromotionActivity extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '编辑',
-                                'url' => beAdminUrl('ShopFai.PromotionActivity.edit'),
+                                'url' => beAdminUrl('Shop.PromotionActivity.edit'),
                                 'target' => 'self',
                                 'ui' => [
                                     ':underline' => 'false',
@@ -291,7 +291,7 @@ class PromotionActivity extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '统计',
-                                'url' => beAdminUrl('ShopFai.PromotionActivity.statistics'),
+                                'url' => beAdminUrl('Shop.PromotionActivity.statistics'),
                                 'target' => 'self',
                                 'ui' => [
                                     'type' => 'success',
@@ -303,7 +303,7 @@ class PromotionActivity extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '删除',
-                                'url' => beAdminUrl('ShopFai.PromotionActivity.delete'),
+                                'url' => beAdminUrl('Shop.PromotionActivity.delete'),
                                 'confirm' => '确认要删除么？',
                                 'target' => 'ajax',
                                 'ui' => [
@@ -340,7 +340,7 @@ class PromotionActivity extends Auth
                             'label' => '优惠规则',
                             'value' => function ($row) {
 
-                                $configStore = Be::getConfig('App.ShopFai.Store');
+                                $configStore = Be::getConfig('App.Shop.Store');
 
                                 $discount = '';
                                 if ($row['condition'] !== 'none') {
@@ -490,7 +490,7 @@ class PromotionActivity extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.PromotionActivity')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.PromotionActivity')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '新建满减活动成功！');
                 $response->json();
@@ -500,7 +500,7 @@ class PromotionActivity extends Auth
                 $response->json();
             }
         } else {
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
             $response->set('promotionActivity', false);
@@ -508,7 +508,7 @@ class PromotionActivity extends Auth
             $response->set('title', '新建满减活动');
 
             //$response->display();
-            $response->display('App.ShopFai.Admin.PromotionActivity.edit');
+            $response->display('App.Shop.Admin.PromotionActivity.edit');
         }
     }
 
@@ -524,7 +524,7 @@ class PromotionActivity extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.PromotionActivity')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.PromotionActivity')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑满减活动成功！');
                 $response->json();
@@ -538,16 +538,16 @@ class PromotionActivity extends Auth
             if ($postData) {
                 $postData = json_decode($postData, true);
                 if (isset($postData['row']['id']) && $postData['row']['id']) {
-                    $response->redirect(beAdminUrl('ShopFai.PromotionActivity.edit', ['id' => $postData['row']['id']]));
+                    $response->redirect(beAdminUrl('Shop.PromotionActivity.edit', ['id' => $postData['row']['id']]));
                 }
             }
         } else {
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
             $promotionActivityId = $request->get('id', '');
 
-            $service = Be::getService('App.ShopFai.Admin.PromotionActivity');
+            $service = Be::getService('App.Shop.Admin.PromotionActivity');
 
             $promotionActivity = $service->getPromotionActivity($promotionActivityId);
             $response->set('promotionActivity', $promotionActivity);
@@ -587,7 +587,7 @@ class PromotionActivity extends Auth
             }
 
             if (count($productIds) > 0) {
-                Be::getService('App.ShopFai.Admin.PromotionActivity')->delete($productIds);
+                Be::getService('App.Shop.Admin.PromotionActivity')->delete($productIds);
             }
 
             $response->set('success', true);
@@ -614,12 +614,12 @@ class PromotionActivity extends Auth
             $postData = json_decode($postData, true);
             if (isset($postData['row']['id']) && $postData['row']['id']) {
 
-                $configStore = Be::getConfig('App.ShopFai.Store');
+                $configStore = Be::getConfig('App.Shop.Store');
                 $response->set('configStore', $configStore);
 
                 $promotionActivityId = $postData['row']['id'];
 
-                $service = Be::getService('App.ShopFai.Admin.PromotionActivity');
+                $service = Be::getService('App.Shop.Admin.PromotionActivity');
 
                 $promotionActivity = $service->getPromotionActivity($promotionActivityId);
                 $response->set('promotionActivity', $promotionActivity);

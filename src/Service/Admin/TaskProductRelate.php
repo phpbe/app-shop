@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\Be;
 
@@ -32,14 +32,14 @@ class TaskProductRelate
                 continue;
             }
 
-            $key = 'ShopFai:ProductRelate:' . $relate->id;
+            $key = 'Shop:ProductRelate:' . $relate->id;
 
             $relate->is_delete = (int)$relate->is_delete;
 
             if ($relate->is_delete === 1) {
                 $cache->delete($key);
             } else {
-                $sql = 'SELECT * FROM shopfai_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
+                $sql = 'SELECT * FROM shop_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
                 $relate->details = $db->getObjects($sql, [$relate->id]);
                 $keyValues[$key] = $relate;
             }

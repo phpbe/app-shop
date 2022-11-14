@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\App\ControllerException;
 use Be\Be;
@@ -61,16 +61,16 @@ class User extends Base
             if ($return) {
                 $return = base64_decode($return);
             } else {
-                $return = beUrl('ShopFai.UserCenter.dashboard');
+                $return = beUrl('Shop.UserCenter.dashboard');
             }
 
-            $user = Be::getService('App.ShopFai.User')->login($email, $password, $request->getIp(), $my->token);
+            $user = Be::getService('App.Shop.User')->login($email, $password, $request->getIp(), $my->token);
             if ($user->avatar === '') {
-                $user->avatar = Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/user/avatar/default.png';
+                $user->avatar = Be::getProperty('App.Shop')->getWwwUrl() . '/images/user/avatar/default.png';
             }
 
-            $response->cookie('shopfai_user_token', $user->token, time() + 180*86400, '/', $request->getDomain(), false, true);
-            $response->cookie('shopfai_user_token_auth', 1, time() + 180*86400, '/', $request->getDomain(), false, true);
+            $response->cookie('shop_user_token', $user->token, time() + 180*86400, '/', $request->getDomain(), false, true);
+            $response->cookie('shop_user_token_auth', 1, time() + 180*86400, '/', $request->getDomain(), false, true);
             Be::setUser($user);
 
             $response->set('success', true);
@@ -95,8 +95,8 @@ class User extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
         Be::setUser(null);
-        $response->cookie('shopfai_user_token_auth', '', time() - 1, '/', $request->getDomain(), false, true);
-        $response->redirect(beUrl('ShopFai.User.login'));
+        $response->cookie('shop_user_token_auth', '', time() - 1, '/', $request->getDomain(), false, true);
+        $response->redirect(beUrl('Shop.User.login'));
     }
 
     /**
@@ -127,15 +127,15 @@ class User extends Base
             $data['ip'] = $request->getIp();
             $data['token'] = $my->token;
 
-            $user = Be::getService('App.ShopFai.User')->register($userId, $data);
+            $user = Be::getService('App.Shop.User')->register($userId, $data);
 
-            $response->cookie('shopfai_user_token', $user->token, time() + 180*86400, '/', $request->getDomain(), false, true);
-            $response->cookie('shopfai_user_token_auth', 1, time() + 180*86400, '/', $request->getDomain(), false, true);
+            $response->cookie('shop_user_token', $user->token, time() + 180*86400, '/', $request->getDomain(), false, true);
+            $response->cookie('shop_user_token_auth', 1, time() + 180*86400, '/', $request->getDomain(), false, true);
             Be::setUser($user);
 
             $response->set('success', true);
             $response->set('message', 'Create account success!');
-            $response->set('redirectUrl', beUrl('ShopFai.User.login'));
+            $response->set('redirectUrl', beUrl('Shop.User.login'));
             $response->json();
         } catch (\Throwable $t) {
             $response->set('success', false);
@@ -152,7 +152,7 @@ class User extends Base
     public function forgetPassword()
     {
         $response = Be::getResponse();
-        $response->display('App.ShopFai.User.login');
+        $response->display('App.Shop.User.login');
     }
 
 }

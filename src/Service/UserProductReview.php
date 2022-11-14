@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 
 use Be\App\ServiceException;
@@ -21,7 +21,7 @@ class UserProductReview
     public function getCount($userId, $option = [])
     {
         $db = Be::getDb();
-        $sql = 'SELECT COUNT(*) FROM shopfai_product_review WHERE user_id = ' . $db->quoteValue($userId);
+        $sql = 'SELECT COUNT(*) FROM shop_product_review WHERE user_id = ' . $db->quoteValue($userId);
         return $db->getValue($sql);
     }
 
@@ -36,7 +36,7 @@ class UserProductReview
     public function getReviews($userId, $option = [], $with = [])
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_review WHERE user_id = ' . $db->quoteValue($userId);
+        $sql = 'SELECT * FROM shop_product_review WHERE user_id = ' . $db->quoteValue($userId);
 
         $sql .= ' ORDER BY create_time DESC';
 
@@ -56,7 +56,7 @@ class UserProductReview
             $review->product = $this->getReviewProduct($review->product_id);
 
             if (isset($with['images'])) {
-                $sql = 'SELECT * FROM shopfai_product_review_image WHERE product_review_id = ?';
+                $sql = 'SELECT * FROM shop_product_review_image WHERE product_review_id = ?';
                 $review->images = $db->getObjects($sql, [$review->id]);
             }
         }
@@ -73,10 +73,10 @@ class UserProductReview
     public function getReview(string $reviewId): object
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_review WHERE id = ?';
+        $sql = 'SELECT * FROM shop_product_review WHERE id = ?';
         $review =  $db->getObject($sql, [$reviewId]);
 
-        $sql = 'SELECT * FROM shopfai_product_review_image WHERE product_review_id = ?';
+        $sql = 'SELECT * FROM shop_product_review_image WHERE product_review_id = ?';
         $review->images = $db->getObjects($sql, [$reviewId]);
 
         $review->product = $this->getReviewProduct($review->product_id);
@@ -85,7 +85,7 @@ class UserProductReview
     }
 
     private function getReviewProduct($productId) {
-        $product = Be::getService('App.ShopFai.Product')->getProduct($productId);
+        $product = Be::getService('App.Shop.Product')->getProduct($productId);
 
         $imageSmall = '';
         $imageMedium = '';
@@ -111,7 +111,7 @@ class UserProductReview
             'image_medium' => $imageMedium,
             'image_large' => $imageLarge,
             'price' => $product->price,
-            'url' =>  beUrl('ShopFai.Product.detail', ['id' => $product->id]),
+            'url' =>  beUrl('Shop.Product.detail', ['id' => $product->id]),
         ];
     }
 

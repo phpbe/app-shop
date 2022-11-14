@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\Product;
+namespace Be\App\Shop\Config\Page\Product;
 
 class guessYouLike
 {

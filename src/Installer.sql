@@ -1,4 +1,4 @@
-CREATE TABLE `shopfai_category` (
+CREATE TABLE `shop_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '名称',
 `description` varchar(500) NOT NULL DEFAULT '' COMMENT '描述',
@@ -20,7 +20,7 @@ CREATE TABLE `shopfai_category` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分类';
 
-CREATE TABLE `shopfai_collect_product` (
+CREATE TABLE `shop_collect_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `unique_key` varchar(200) NOT NULL COMMENT '唯一键',
 `product_id` varchar(36) NOT NULL COMMENT '商品ID',
@@ -30,7 +30,7 @@ CREATE TABLE `shopfai_collect_product` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品采集';
 
-CREATE TABLE `shopfai_order` (
+CREATE TABLE `shop_order` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_sn` varchar(60) NOT NULL DEFAULT '' COMMENT '订单编号',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
@@ -57,7 +57,7 @@ CREATE TABLE `shopfai_order` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单';
 
-CREATE TABLE `shopfai_order_billing_address` (
+CREATE TABLE `shop_order_billing_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `first_name` varchar(60) NOT NULL DEFAULT '' COMMENT 'First Name',
@@ -76,7 +76,7 @@ CREATE TABLE `shopfai_order_billing_address` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单账单地址';
 
-CREATE TABLE `shopfai_order_cancel` (
+CREATE TABLE `shop_order_cancel` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `reason` varchar(200) NOT NULL DEFAULT '' COMMENT '取消原因',
@@ -84,7 +84,7 @@ CREATE TABLE `shopfai_order_cancel` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单取消记录';
 
-CREATE TABLE `shopfai_order_contact` (
+CREATE TABLE `shop_order_contact` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `publisher` varchar(10) NOT NULL DEFAULT '' COMMENT '发布人：customer//system',
@@ -94,7 +94,7 @@ CREATE TABLE `shopfai_order_contact` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单联系记录';
 
-CREATE TABLE `shopfai_order_product` (
+CREATE TABLE `shop_order_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
@@ -112,7 +112,7 @@ CREATE TABLE `shopfai_order_product` (
 `weight_unit` varchar(3) NOT NULL DEFAULT 'kg' COMMENT '重量单位（kg/g/lb/oz）'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单商品';
 
-CREATE TABLE `shopfai_order_promotion` (
+CREATE TABLE `shop_order_promotion` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `promotion_type` varchar(60) NOT NULL DEFAULT '' COMMENT '优惠类型',
@@ -121,7 +121,7 @@ CREATE TABLE `shopfai_order_promotion` (
 `promotion_details` json NOT NULL COMMENT '优惠明细'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单优惠信息';
 
-CREATE TABLE `shopfai_order_shipping_address` (
+CREATE TABLE `shop_order_shipping_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `first_name` varchar(60) NOT NULL DEFAULT '' COMMENT 'First Name',
@@ -140,7 +140,7 @@ CREATE TABLE `shopfai_order_shipping_address` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单收货地址';
 
-CREATE TABLE `shopfai_payment` (
+CREATE TABLE `shop_payment` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `label` varchar(60) NOT NULL DEFAULT '' COMMENT '展示标签',
@@ -151,18 +151,18 @@ CREATE TABLE `shopfai_payment` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付方式';
 
-INSERT INTO `shopfai_payment` (`id`, `name`, `label`, `logo`, `description`, `is_enable`, `create_time`, `update_time`) VALUES
+INSERT INTO `shop_payment` (`id`, `name`, `label`, `logo`, `description`, `is_enable`, `create_time`, `update_time`) VALUES
 ('309ae563-76a5-11ec-8e56-0242ac180064', 'paypal', 'Paypal', 'paypal.svg', '通过绑定 PayPal 个人账号或者 PayPal 商户账号接受 PayPal 付款。您可以在<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_login-run\" target=\"_blank\">PayPal账户管理页</a>管理您的账户', 1, '2022-08-01 08:52:49', '2022-08-02 15:01:18'),
 ('7998faf2-76a5-11ec-8e56-0242ac180064', 'cod', 'Cash on Delivery', 'cod.jpg', '货到付款', 1, '2022-08-01 08:52:49', '2022-08-02 15:15:08');
 
-CREATE TABLE `shopfai_payment_cod` (
+CREATE TABLE `shop_payment_cod` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `description` varchar(120) NOT NULL DEFAULT '' COMMENT '描述',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='货到付款 收款信息';
 
-CREATE TABLE `shopfai_payment_log` (
+CREATE TABLE `shop_payment_log` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `store_id` varchar(36) NOT NULL DEFAULT '' COMMENT '店铺ID',
 `payment_type` varchar(30) NOT NULL DEFAULT '' COMMENT '支付类型',
@@ -177,7 +177,7 @@ CREATE TABLE `shopfai_payment_log` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收款日志';
 
-CREATE TABLE `shopfai_payment_paypal` (
+CREATE TABLE `shop_payment_paypal` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `client_id` varchar(120) NOT NULL DEFAULT '' COMMENT 'REST API 客户ID',
@@ -187,7 +187,7 @@ CREATE TABLE `shopfai_payment_paypal` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal 收款信息';
 
-CREATE TABLE `shopfai_payment_paypal_order` (
+CREATE TABLE `shop_payment_paypal_order` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `payment_paypal_id` varchar(36) NOT NULL DEFAULT '' COMMENT 'paypal 支付方式ID	',
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单 ID',
@@ -203,7 +203,7 @@ CREATE TABLE `shopfai_payment_paypal_order` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal 收款订单';
 
-CREATE TABLE `shopfai_payment_paypal_token` (
+CREATE TABLE `shop_payment_paypal_token` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `payment_paypal_id` varchar(36) NOT NULL DEFAULT '' COMMENT 'paypal 支付方式ID',
 `access_token` varchar(120) NOT NULL DEFAULT '' COMMENT 'Token',
@@ -212,7 +212,7 @@ CREATE TABLE `shopfai_payment_paypal_token` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal token';
 
-CREATE TABLE `shopfai_product` (
+CREATE TABLE `shop_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `spu` varchar(60) NOT NULL DEFAULT '' COMMENT 'SPU',
 `name` varchar(200) NOT NULL DEFAULT '' COMMENT '名称',
@@ -249,13 +249,13 @@ CREATE TABLE `shopfai_product` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品';
 
-CREATE TABLE `shopfai_product_category` (
+CREATE TABLE `shop_product_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
 
-CREATE TABLE `shopfai_product_image` (
+CREATE TABLE `shop_product_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `small` varchar(200) NOT NULL DEFAULT '' COMMENT '小',
@@ -268,7 +268,7 @@ CREATE TABLE `shopfai_product_image` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图像';
 
-CREATE TABLE `shopfai_product_item` (
+CREATE TABLE `shop_product_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商吕ID',
 `image` varchar(200) NOT NULL DEFAULT '' COMMENT '图像',
@@ -285,7 +285,7 @@ CREATE TABLE `shopfai_product_item` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品子项';
 
-CREATE TABLE `shopfai_product_relate` (
+CREATE TABLE `shop_product_relate` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '关联的名称',
 `icon_type` varchar(10) NOT NULL DEFAULT '' COMMENT '关联的图标类型',
@@ -295,7 +295,7 @@ CREATE TABLE `shopfai_product_relate` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联';
 
-CREATE TABLE `shopfai_product_relate_detail` (
+CREATE TABLE `shop_product_relate_detail` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `relate_id` varchar(36) NOT NULL DEFAULT '' COMMENT '关联ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
@@ -305,7 +305,7 @@ CREATE TABLE `shopfai_product_relate_detail` (
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联明细';
 
-CREATE TABLE `shopfai_product_review` (
+CREATE TABLE `shop_product_review` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
@@ -318,27 +318,27 @@ CREATE TABLE `shopfai_product_review` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品评论';
 
-CREATE TABLE `shopfai_product_review_image` (
+CREATE TABLE `shop_product_review_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_review_id` varchar(36) NOT NULL DEFAULT '',
 `small` varchar(200) NOT NULL DEFAULT '' COMMENT '小图',
 `large` varchar(200) NOT NULL DEFAULT '' COMMENT '大图'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品评论图像';
 
-CREATE TABLE `shopfai_product_style` (
+CREATE TABLE `shop_product_style` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '款式名称',
 `values` varchar(600) NOT NULL DEFAULT '' COMMENT '款式值'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品款式';
 
-CREATE TABLE `shopfai_product_tag` (
+CREATE TABLE `shop_product_tag` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `tag` varchar(60) NOT NULL DEFAULT '' COMMENT '标签'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
 
-CREATE TABLE `shopfai_promotion_activity` (
+CREATE TABLE `shop_promotion_activity` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `url` varchar(200) NOT NULL DEFAULT '' COMMENT '自定义网址',
@@ -362,14 +362,14 @@ CREATE TABLE `shopfai_promotion_activity` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动';
 
-CREATE TABLE `shopfai_promotion_activity_change` (
+CREATE TABLE `shop_promotion_activity_change` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `details` text NOT NULL COMMENT '变更明细',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动修改记录';
 
-CREATE TABLE `shopfai_promotion_activity_discount` (
+CREATE TABLE `shop_promotion_activity_discount` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `min_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '购买金额',
@@ -379,19 +379,19 @@ CREATE TABLE `shopfai_promotion_activity_discount` (
 `ordering` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动梯度优惠数据';
 
-CREATE TABLE `shopfai_promotion_activity_scope_category` (
+CREATE TABLE `shop_promotion_activity_scope_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动适用分类';
 
-CREATE TABLE `shopfai_promotion_activity_scope_product` (
+CREATE TABLE `shop_promotion_activity_scope_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动适用商品';
 
-CREATE TABLE `shopfai_promotion_coupon` (
+CREATE TABLE `shop_promotion_coupon` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `code` varchar(30) NOT NULL DEFAULT '' COMMENT '优惠码',
@@ -415,32 +415,32 @@ CREATE TABLE `shopfai_promotion_coupon` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券';
 
-CREATE TABLE `shopfai_promotion_coupon_change` (
+CREATE TABLE `shop_promotion_coupon_change` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `details` text NOT NULL COMMENT '变更明细',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券修改记录';
 
-CREATE TABLE `shopfai_promotion_coupon_scope_category` (
+CREATE TABLE `shop_promotion_coupon_scope_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用分类';
 
-CREATE TABLE `shopfai_promotion_coupon_scope_product` (
+CREATE TABLE `shop_promotion_coupon_scope_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用商品';
 
-CREATE TABLE `shopfai_promotion_coupon_scope_user` (
+CREATE TABLE `shop_promotion_coupon_scope_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '客户ID'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用客户';
 
-CREATE TABLE `shopfai_promotion_coupon_user` (
+CREATE TABLE `shop_promotion_coupon_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '客户ID',
@@ -451,7 +451,7 @@ CREATE TABLE `shopfai_promotion_coupon_user` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券领取的客户';
 
-CREATE TABLE `shopfai_region_continent` (
+CREATE TABLE `shop_region_continent` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `code` varchar(2) NOT NULL DEFAULT '' COMMENT '编码',
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '名称',
@@ -459,7 +459,7 @@ CREATE TABLE `shopfai_region_continent` (
 `ordering` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ShopLine 区域采集';
 
-INSERT INTO `shopfai_region_continent` (`id`, `code`, `name`, `name_cn`, `ordering`) VALUES
+INSERT INTO `shop_region_continent` (`id`, `code`, `name`, `name_cn`, `ordering`) VALUES
 ('418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'Africa', '非洲', 4),
 ('41832a38-7b65-11ec-8c1a-0242ac180065', 'AN', 'Antarctica', '南极洲', 6),
 ('418687ac-7b65-11ec-8c1a-0242ac180065', 'AS', 'Asia', '亚洲', 5),
@@ -468,7 +468,7 @@ INSERT INTO `shopfai_region_continent` (`id`, `code`, `name`, `name_cn`, `orderi
 ('418eb779-7b65-11ec-8c1a-0242ac180065', 'OA', 'Oceania', '大洋洲', 2),
 ('41914d6f-7b65-11ec-8c1a-0242ac180065', 'SA', 'South America', '南美洲', 3);
 
-CREATE TABLE `shopfai_region_country` (
+CREATE TABLE `shop_region_country` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `continent_id` varchar(36) NOT NULL DEFAULT '' COMMENT '区域ID',
 `continent_code` varchar(2) NOT NULL DEFAULT '' COMMENT '洲编码',
@@ -479,7 +479,7 @@ CREATE TABLE `shopfai_region_country` (
 `state_count` int(11) NOT NULL DEFAULT '0' COMMENT '该国省／州的个数'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域 - 国家';
 
-INSERT INTO `shopfai_region_country` (`id`, `continent_id`, `continent_code`, `code`, `name`, `name_cn`, `flag`, `state_count`) VALUES
+INSERT INTO `shop_region_country` (`id`, `continent_id`, `continent_code`, `code`, `name`, `name_cn`, `flag`, `state_count`) VALUES
 ('41c73f09-7b65-11ec-8c1a-0242ac180065', '418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'EG', 'Egypt', '埃及', 'eg.png', 29),
 ('41cb4f1b-7b65-11ec-8c1a-0242ac180065', '418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'NG', 'Nigeria', '尼日利亚', 'ng.png', 6),
 ('41cf27de-7b65-11ec-8c1a-0242ac180065', '418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'ZA', 'South Africa', '南非', 'za.png', 9),
@@ -728,7 +728,7 @@ INSERT INTO `shopfai_region_country` (`id`, `continent_id`, `continent_code`, `c
 ('46f2e4e1-7b65-11ec-8c1a-0242ac180065', '41914d6f-7b65-11ec-8c1a-0242ac180065', 'SA', 'UY', 'Uruguay', '乌拉圭', 'uy.png', 0),
 ('46f6d1b2-7b65-11ec-8c1a-0242ac180065', '41914d6f-7b65-11ec-8c1a-0242ac180065', 'SA', 'VE', 'Venezuela', '委内瑞拉', 've.png', 0);
 
-CREATE TABLE `shopfai_region_state` (
+CREATE TABLE `shop_region_state` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `country_id` varchar(36) NOT NULL DEFAULT '' COMMENT '国家ID',
 `country_code` varchar(2) NOT NULL DEFAULT '' COMMENT '所属国家编码',
@@ -736,7 +736,7 @@ CREATE TABLE `shopfai_region_state` (
 `name_cn` varchar(120) NOT NULL DEFAULT '' COMMENT '中文名称'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域 - 州';
 
-INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
+INSERT INTO `shop_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
 ('46fd23f0-7b65-11ec-8c1a-0242ac180065', '41c73f09-7b65-11ec-8c1a-0242ac180065', 'EG', '6th of October', '十月六日省'),
 ('470011e3-7b65-11ec-8c1a-0242ac180065', '41c73f09-7b65-11ec-8c1a-0242ac180065', 'EG', 'Al Sharqia', '东部省'),
 ('4702fd1b-7b65-11ec-8c1a-0242ac180065', '41c73f09-7b65-11ec-8c1a-0242ac180065', 'EG', 'Alexandria', '亚历山大省'),
@@ -1189,7 +1189,7 @@ INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, 
 ('4c237825-7b65-11ec-8c1a-0242ac180065', '4339df6e-7b65-11ec-8c1a-0242ac180065', 'JP', '熊本県', '熊本'),
 ('4c260cf5-7b65-11ec-8c1a-0242ac180065', '4339df6e-7b65-11ec-8c1a-0242ac180065', 'JP', '大分県', '大分'),
 ('4c28e7f8-7b65-11ec-8c1a-0242ac180065', '4339df6e-7b65-11ec-8c1a-0242ac180065', 'JP', '宮崎県', '宫崎');
-INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
+INSERT INTO `shop_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
 ('4c2ba1fe-7b65-11ec-8c1a-0242ac180065', '4339df6e-7b65-11ec-8c1a-0242ac180065', 'JP', '鹿児島県', '鹿儿岛'),
 ('4c2e5f0d-7b65-11ec-8c1a-0242ac180065', '4339df6e-7b65-11ec-8c1a-0242ac180065', 'JP', '沖縄県', '冲绳'),
 ('4c315374-7b65-11ec-8c1a-0242ac180065', '433f3759-7b65-11ec-8c1a-0242ac180065', 'KR', 'Busan', '釜山'),
@@ -1655,7 +1655,7 @@ INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, 
 ('51370f53-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'Colorado', '科罗拉多州'),
 ('513a1354-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'Connecticut', '康涅狄格州'),
 ('513cc3f9-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'Delaware', '特拉华州');
-INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
+INSERT INTO `shop_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
 ('513f6b5a-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'District of Columbia', '华盛顿哥伦比亚特区'),
 ('51422817-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'Federated States of Micronesia', '密克罗尼西亚'),
 ('5144ccc1-7b65-11ec-8c1a-0242ac180065', '455a7f5b-7b65-11ec-8c1a-0242ac180065', 'US', 'Florida', '佛罗里达州'),
@@ -1940,14 +1940,14 @@ INSERT INTO `shopfai_region_state` (`id`, `country_id`, `country_code`, `name`, 
 ('54364723-7b65-11ec-8c1a-0242ac180065', '46da1810-7b65-11ec-8c1a-0242ac180065', 'PE', 'Tumbes', '通贝斯省'),
 ('543928b1-7b65-11ec-8c1a-0242ac180065', '46da1810-7b65-11ec-8c1a-0242ac180065', 'PE', 'Ucayali', '乌卡亚利省');
 
-CREATE TABLE `shopfai_shipping` (
+CREATE TABLE `shop_shipping` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '方案名称',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费方案';
 
-CREATE TABLE `shopfai_shipping_plan` (
+CREATE TABLE `shop_shipping_plan` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `shipping_id` varchar(36) NOT NULL DEFAULT '' COMMENT '运费ID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '方案名称',
@@ -1974,7 +1974,7 @@ CREATE TABLE `shopfai_shipping_plan` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 方案';
 
-CREATE TABLE `shopfai_shipping_region` (
+CREATE TABLE `shop_shipping_region` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `shipping_id` varchar(36) NOT NULL DEFAULT '' COMMENT '运费ID',
 `country_id` varchar(36) NOT NULL DEFAULT '' COMMENT '国家ID',
@@ -1984,7 +1984,7 @@ CREATE TABLE `shopfai_shipping_region` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 配送区域';
 
-CREATE TABLE `shopfai_shipping_region_state` (
+CREATE TABLE `shop_shipping_region_state` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `shipping_id` varchar(36) NOT NULL DEFAULT '' COMMENT '运费ID',
 `shipping_region_id` varchar(36) NOT NULL DEFAULT '' COMMENT '运费 - 配送区域 ID',
@@ -1994,7 +1994,7 @@ CREATE TABLE `shopfai_shipping_region_state` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 配送区域';
 
-CREATE TABLE `shopfai_user` (
+CREATE TABLE `shop_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `email` varchar(120) NOT NULL DEFAULT '' COMMENT '邮箱',
 `password` char(40) NOT NULL DEFAULT '' COMMENT '密码',
@@ -2015,7 +2015,7 @@ CREATE TABLE `shopfai_user` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
 
-CREATE TABLE `shopfai_user_billing_address` (
+CREATE TABLE `shop_user_billing_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
 `first_name` varchar(60) NOT NULL DEFAULT '' COMMENT 'First Name',
@@ -2034,7 +2034,7 @@ CREATE TABLE `shopfai_user_billing_address` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户账单地址';
 
-CREATE TABLE `shopfai_user_favorite` (
+CREATE TABLE `shop_user_favorite` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
@@ -2044,7 +2044,7 @@ CREATE TABLE `shopfai_user_favorite` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收货地址';
 
-CREATE TABLE `shopfai_user_shipping_address` (
+CREATE TABLE `shop_user_shipping_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
 `first_name` varchar(60) NOT NULL DEFAULT '' COMMENT 'First Name',
@@ -2064,7 +2064,7 @@ CREATE TABLE `shopfai_user_shipping_address` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收货地址';
 
-CREATE TABLE `shopfai_user_token` (
+CREATE TABLE `shop_user_token` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `user_id` varchar(37) NOT NULL DEFAULT '' COMMENT '用户ID',
 `token` varchar(32) NOT NULL DEFAULT '' COMMENT '识别token',
@@ -2077,213 +2077,213 @@ CREATE TABLE `shopfai_user_token` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户身份识别 token';
 
 
-ALTER TABLE `shopfai_category`
+ALTER TABLE `shop_category`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `url` (`url`) USING BTREE,
 ADD KEY `update_time` (`update_time`);
 
-ALTER TABLE `shopfai_collect_product`
+ALTER TABLE `shop_collect_product`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `product_id` (`product_id`) USING BTREE,
 ADD KEY `relate_key` (`relate_key`) USING BTREE,
 ADD KEY `unique_key` (`unique_key`) USING BTREE;
 
-ALTER TABLE `shopfai_order`
+ALTER TABLE `shop_order`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `order_sn` (`order_sn`) USING BTREE,
 ADD KEY `user_id` (`user_id`,`email`) USING BTREE,
 ADD KEY `update_time` (`update_time`);
 
-ALTER TABLE `shopfai_order_billing_address`
+ALTER TABLE `shop_order_billing_address`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `order_sn` (`order_id`);
 
-ALTER TABLE `shopfai_order_cancel`
+ALTER TABLE `shop_order_cancel`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_sn` (`order_id`) USING BTREE;
 
-ALTER TABLE `shopfai_order_contact`
+ALTER TABLE `shop_order_contact`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_sn` (`order_id`) USING BTREE;
 
-ALTER TABLE `shopfai_order_product`
+ALTER TABLE `shop_order_product`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_id` (`order_id`) USING BTREE,
 ADD KEY `user_id` (`user_id`);
 
-ALTER TABLE `shopfai_order_promotion`
+ALTER TABLE `shop_order_promotion`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_id` (`order_id`),
 ADD KEY `promotion_type` (`promotion_type`,`promotion_id`);
 
-ALTER TABLE `shopfai_order_shipping_address`
+ALTER TABLE `shop_order_shipping_address`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `order_sn` (`order_id`);
 
-ALTER TABLE `shopfai_payment`
+ALTER TABLE `shop_payment`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `shopfai_payment_cod`
+ALTER TABLE `shop_payment_cod`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `shopfai_payment_log`
+ALTER TABLE `shop_payment_log`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_id` (`order_id`),
 ADD KEY `order_sn` (`store_id`,`order_sn`) USING BTREE;
 
-ALTER TABLE `shopfai_payment_paypal`
+ALTER TABLE `shop_payment_paypal`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `shopfai_payment_paypal_order`
+ALTER TABLE `shop_payment_paypal_order`
 ADD PRIMARY KEY (`id`),
 ADD KEY `order_id` (`order_id`),
 ADD KEY `order_sn` (`order_sn`) USING BTREE;
 
-ALTER TABLE `shopfai_payment_paypal_token`
+ALTER TABLE `shop_payment_paypal_token`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `payment_paypal_id` (`payment_paypal_id`);
 
-ALTER TABLE `shopfai_product`
+ALTER TABLE `shop_product`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `url` (`url`) USING BTREE,
 ADD KEY `update_time` (`update_time`),
 ADD KEY `spu` (`spu`) USING BTREE,
 ADD KEY `name` (`name`(191)) USING BTREE;
 
-ALTER TABLE `shopfai_product_category`
+ALTER TABLE `shop_product_category`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `product_id` (`product_id`,`category_id`) USING BTREE,
 ADD KEY `category_id` (`category_id`) USING BTREE;
 
-ALTER TABLE `shopfai_product_image`
+ALTER TABLE `shop_product_image`
 ADD PRIMARY KEY (`id`),
 ADD KEY `goods_id` (`product_id`,`is_main`);
 
-ALTER TABLE `shopfai_product_item`
+ALTER TABLE `shop_product_item`
 ADD PRIMARY KEY (`id`),
 ADD KEY `product_id` (`product_id`),
 ADD KEY `sku` (`sku`);
 
-ALTER TABLE `shopfai_product_relate`
+ALTER TABLE `shop_product_relate`
 ADD PRIMARY KEY (`id`),
 ADD KEY `update_time` (`update_time`);
 
-ALTER TABLE `shopfai_product_relate_detail`
+ALTER TABLE `shop_product_relate_detail`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `relate_id` (`relate_id`,`product_id`),
 ADD UNIQUE KEY `product_id` (`product_id`);
 
-ALTER TABLE `shopfai_product_review`
+ALTER TABLE `shop_product_review`
 ADD PRIMARY KEY (`id`),
 ADD KEY `user_id` (`user_id`),
 ADD KEY `product_id` (`product_id`) USING BTREE;
 
-ALTER TABLE `shopfai_product_review_image`
+ALTER TABLE `shop_product_review_image`
 ADD PRIMARY KEY (`id`),
 ADD KEY `goods_review_id` (`product_review_id`);
 
-ALTER TABLE `shopfai_product_style`
+ALTER TABLE `shop_product_style`
 ADD PRIMARY KEY (`id`),
 ADD KEY `product_id` (`product_id`);
 
-ALTER TABLE `shopfai_product_tag`
+ALTER TABLE `shop_product_tag`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `product_tag` (`product_id`,`tag`) USING BTREE;
 
-ALTER TABLE `shopfai_promotion_activity`
+ALTER TABLE `shop_promotion_activity`
 ADD PRIMARY KEY (`id`),
 ADD KEY `time` (`is_delete`,`start_time`,`end_time`,`is_enable`) USING BTREE;
 
-ALTER TABLE `shopfai_promotion_activity_change`
+ALTER TABLE `shop_promotion_activity_change`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_activity_id`);
 
-ALTER TABLE `shopfai_promotion_activity_discount`
+ALTER TABLE `shop_promotion_activity_discount`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_activity_id` (`promotion_activity_id`);
 
-ALTER TABLE `shopfai_promotion_activity_scope_category`
+ALTER TABLE `shop_promotion_activity_scope_category`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_activity_id`);
 
-ALTER TABLE `shopfai_promotion_activity_scope_product`
+ALTER TABLE `shop_promotion_activity_scope_product`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_activity_id`);
 
-ALTER TABLE `shopfai_promotion_coupon`
+ALTER TABLE `shop_promotion_coupon`
 ADD PRIMARY KEY (`id`),
 ADD KEY `code` (`is_delete`,`code`,`is_enable`) USING BTREE,
 ADD KEY `time` (`is_delete`,`start_time`,`end_time`,`is_enable`) USING BTREE;
 
-ALTER TABLE `shopfai_promotion_coupon_change`
+ALTER TABLE `shop_promotion_coupon_change`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_coupon_id`);
 
-ALTER TABLE `shopfai_promotion_coupon_scope_category`
+ALTER TABLE `shop_promotion_coupon_scope_category`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_coupon_id`);
 
-ALTER TABLE `shopfai_promotion_coupon_scope_product`
+ALTER TABLE `shop_promotion_coupon_scope_product`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_coupon_id`);
 
-ALTER TABLE `shopfai_promotion_coupon_scope_user`
+ALTER TABLE `shop_promotion_coupon_scope_user`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_coupon_id`);
 
-ALTER TABLE `shopfai_promotion_coupon_user`
+ALTER TABLE `shop_promotion_coupon_user`
 ADD PRIMARY KEY (`id`),
 ADD KEY `promotion_coupon_id` (`promotion_coupon_id`),
 ADD KEY `user_id` (`user_id`);
 
-ALTER TABLE `shopfai_region_continent`
+ALTER TABLE `shop_region_continent`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `code` (`code`);
 
-ALTER TABLE `shopfai_region_country`
+ALTER TABLE `shop_region_country`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `code` (`code`),
 ADD KEY `continent_code` (`continent_code`),
 ADD KEY `continent_id` (`continent_id`);
 
-ALTER TABLE `shopfai_region_state`
+ALTER TABLE `shop_region_state`
 ADD PRIMARY KEY (`id`),
 ADD KEY `country_code` (`country_code`),
 ADD KEY `country_id` (`country_id`);
 
-ALTER TABLE `shopfai_shipping`
+ALTER TABLE `shop_shipping`
 ADD PRIMARY KEY (`id`);
 
-ALTER TABLE `shopfai_shipping_plan`
+ALTER TABLE `shop_shipping_plan`
 ADD PRIMARY KEY (`id`),
 ADD KEY `shipping_id` (`shipping_id`);
 
-ALTER TABLE `shopfai_shipping_region`
+ALTER TABLE `shop_shipping_region`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `shipping_id` (`shipping_id`,`country_code`),
 ADD UNIQUE KEY `country_code` (`country_code`) USING BTREE;
 
-ALTER TABLE `shopfai_shipping_region_state`
+ALTER TABLE `shop_shipping_region_state`
 ADD PRIMARY KEY (`id`),
 ADD KEY `shipping_region_id` (`shipping_region_id`),
 ADD KEY `shipping_id` (`shipping_id`,`shipping_region_id`);
 
-ALTER TABLE `shopfai_user`
+ALTER TABLE `shop_user`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `email` (`email`) USING BTREE;
 
-ALTER TABLE `shopfai_user_billing_address`
+ALTER TABLE `shop_user_billing_address`
 ADD PRIMARY KEY (`id`),
 ADD KEY `user_id` (`user_id`);
 
-ALTER TABLE `shopfai_user_favorite`
+ALTER TABLE `shop_user_favorite`
 ADD PRIMARY KEY (`id`),
 ADD KEY `user_id` (`user_id`,`product_id`) USING BTREE;
 
-ALTER TABLE `shopfai_user_shipping_address`
+ALTER TABLE `shop_user_shipping_address`
 ADD PRIMARY KEY (`id`),
 ADD KEY `user_id` (`user_id`);
 
-ALTER TABLE `shopfai_user_token`
+ALTER TABLE `shop_user_token`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `token` (`token`);

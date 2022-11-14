@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -8,13 +8,13 @@ use Be\Be;
  * 活动
  *
  * Class PromotionActivity
- * @package Be\App\ShopFai\Controller
+ * @package Be\App\Shop\Controller
  */
 class PromotionActivity extends Base
 {
 
     /**
-     * @BeRoute("\Be\Be::getService('App.ShopFai.PromotionActivity')->getPromotionActivityUrl($params)")
+     * @BeRoute("\Be\Be::getService('App.Shop.PromotionActivity')->getPromotionActivityUrl($params)")
      */
     public function detail()
     {
@@ -23,7 +23,7 @@ class PromotionActivity extends Base
 
         $id = $request->get('id');
 
-        $service = Be::getService('App.ShopFai.PromotionActivity');
+        $service = Be::getService('App.Shop.PromotionActivity');
 
         $promotionActivity = $service->getPromotionActivity($id);
         $response->set('promotionActivity', $promotionActivity);

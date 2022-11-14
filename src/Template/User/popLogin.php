@@ -1,10 +1,10 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/js/user/popLogin.js"></script>
     <script>
-        const userPopLogin_loginCheckUrl = "<?php echo beUrl('ShopFai.User.loginCheck'); ?>";
+        const userPopLogin_loginCheckUrl = "<?php echo beUrl('Shop.User.loginCheck'); ?>";
     </script>
 </be-head>
 
@@ -25,10 +25,10 @@
                     <label class="be-floating-label">Password <span class="be-c-red">*</span></label>
                 </div>
 
-                <div class="be-mt-150 be-ta-right"><a href="<?php echo beUrl('ShopFai.User.forgotPassword'); ?>">Forgot Password?</a></div>
+                <div class="be-mt-150 be-ta-right"><a href="<?php echo beUrl('Shop.User.forgotPassword'); ?>">Forgot Password?</a></div>
 
                 <button type="submit" class="be-btn be-btn-main be-btn-lg be-mt-150">Login</button>
-                <a href="<?php echo beUrl('ShopFai.User.register'); ?>" class="be-btn be-btn-outline be-btn-lg be-mt-150">Create Account</a>
+                <a href="<?php echo beUrl('Shop.User.register'); ?>" class="be-btn be-btn-outline be-btn-lg be-mt-150">Create Account</a>
             </form>
         </div>
     </div>

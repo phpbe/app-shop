@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Util\Crypt\Random;
@@ -36,7 +36,7 @@ class User
         $db = Be::getDb();
         $db->beginTransaction();
         try {
-            $tupleUser = Be::getTuple('shopfai_user');
+            $tupleUser = Be::getTuple('shop_user');
 
             try {
                 $tupleUser->loadBy([
@@ -63,7 +63,7 @@ class User
                 throw new ServiceException('Password error!');
             }
 
-            $tupleUserToken = Be::getTuple('shopfai_user_token');
+            $tupleUserToken = Be::getTuple('shop_user_token');
             try {
                 $tupleUserToken->loadBy([
                     'token' => $token
@@ -85,11 +85,11 @@ class User
                 $exist = null;
                 do {
                     $token = Random::simple(32);
-                    $sql = 'SELECT COUNT(*) FROM shopfai_user_token WHERE token=?';
+                    $sql = 'SELECT COUNT(*) FROM shop_user_token WHERE token=?';
                     $exist = $db->getValue($sql, [$token]) > 0;
                 } while ($exist);
 
-                $tupleUserToken = Be::getTuple('shopfai_user_token');
+                $tupleUserToken = Be::getTuple('shop_user_token');
                 $tupleUserToken->user_id = $tupleUser->id;
                 $tupleUserToken->token = $token;
                 $tupleUserToken->last_login_time = $now;
@@ -129,8 +129,8 @@ class User
     private function importTmpCart(string $tmpUserId, string $userId): bool
     {
         $redis = Be::getRedis();
-        $tmpData = $redis->hGetAll('ShopFai:Cart:' . $tmpUserId);
-        $data = $redis->hGetAll('ShopFai:Cart:' . $userId);
+        $tmpData = $redis->hGetAll('Shop:Cart:' . $tmpUserId);
+        $data = $redis->hGetAll('Shop:Cart:' . $userId);
 
         if ($tmpData) {
             foreach ($tmpData as $k => $v) {
@@ -142,10 +142,10 @@ class User
             }
 
             foreach ($data as $k => $v) {
-                $redis->hset('ShopFai:Cart:' . $userId, $k, $v);
+                $redis->hset('Shop:Cart:' . $userId, $k, $v);
             }
         }
-        $redis->del('ShopFai:Cart:' . $tmpUserId);
+        $redis->del('Shop:Cart:' . $tmpUserId);
         return true;
     }
 
@@ -165,7 +165,7 @@ class User
 
         $db->beginTransaction();
         try {
-            $tupleUserToken = Be::getTuple('shopfai_user_token');
+            $tupleUserToken = Be::getTuple('shop_user_token');
             try {
                 $tupleUserToken->loadBy([
                     'token' => $token
@@ -196,7 +196,7 @@ class User
                     'last_login_ip' => $ip,
                 ];
             } else {
-                $tupleUser = Be::getTuple('shopfai_user');
+                $tupleUser = Be::getTuple('shop_user');
                 $tupleUser->load($tupleUserToken->user_id);
 
                 if ($tupleUser->is_delete === 1) {
@@ -250,11 +250,11 @@ class User
         $exist = null;
         do {
             $token = Random::simple(32);
-            $sql = 'SELECT COUNT(*) FROM shopfai_user_token WHERE token=?';
+            $sql = 'SELECT COUNT(*) FROM shop_user_token WHERE token=?';
             $exist = $db->getValue($sql, [$token]) > 0;
         } while ($exist);
 
-        $tupleUserToken = Be::getTuple('shopfai_user_token');
+        $tupleUserToken = Be::getTuple('shop_user_token');
         $tupleUserToken->user_id = '';
         $tupleUserToken->token = $token;
         $tupleUserToken->last_login_time = $now;
@@ -310,7 +310,7 @@ class User
         }
 
         $db = Be::getDb();
-        $sql = 'SELECT COUNT(*) FROM shopfai_user WHERE email=?';
+        $sql = 'SELECT COUNT(*) FROM shop_user WHERE email=?';
         if ($db->getValue($sql, [$email]) > 0) {
             throw new ServiceException('Email ' . $email . ' is unavailable!');
         }
@@ -318,7 +318,7 @@ class User
         $db->startTransaction();
         try {
             $now = date('Y-m-d H:i:s');
-            $tupleUser = Be::getTuple('shopfai_user');
+            $tupleUser = Be::getTuple('shop_user');
             $tupleUser->email = $email;
             $tupleUser->first_name = $first_name;
             $tupleUser->last_name = $last_name;
@@ -332,14 +332,14 @@ class User
             $tupleUser->update_time = $now;
             $tupleUser->insert();
 
-            $sql = 'SELECT COUNT(*) FROM shopfai_order WHERE user_id=\'\' AND email=?';
+            $sql = 'SELECT COUNT(*) FROM shop_order WHERE user_id=\'\' AND email=?';
             if ($db->getValue($sql, [$email]) > 0) {
                 // 将未登录前创建的订单与用户关联
-                $sql = 'UPDATE shopfai_order SET user_id =? WHERE user_id=\'\' AND email=?';
+                $sql = 'UPDATE shop_order SET user_id =? WHERE user_id=\'\' AND email=?';
                 $db->query($sql, [$tupleUser->id, $email]);
             }
 
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
 
             $rootUrl = Be::getRequest()->getRootUrl();
             $mailSubject = 'Welcome to ' . $configStore->name;
@@ -376,7 +376,7 @@ class User
 
             Be::getService('App.System.MailQueue')->send($email, $mailSubject, $mailBody);
 
-            $tupleUserToken = Be::getTuple('shopfai_user_token');
+            $tupleUserToken = Be::getTuple('shop_user_token');
             if ($token) {
                 try {
                     $tupleUserToken->loadBy([
@@ -400,11 +400,11 @@ class User
                 $exist = null;
                 do {
                     $token = Random::simple(32);
-                    $sql = 'SELECT COUNT(*) FROM shopfai_user_token WHERE token=?';
+                    $sql = 'SELECT COUNT(*) FROM shop_user_token WHERE token=?';
                     $exist = $db->getValue($sql, [$token]) > 0;
                 } while ($exist);
 
-                $tupleUserToken = Be::getTuple('shopfai_user_token');
+                $tupleUserToken = Be::getTuple('shop_user_token');
                 $tupleUserToken->user_id = $tupleUser->id;
                 $tupleUserToken->token = $token;
                 $tupleUserToken->last_login_time = $now;
@@ -464,7 +464,7 @@ class User
     public function getUser(): object
     {
         $my = Be::getUser();
-        $tupleUser = Be::getTuple('shopfai_user');
+        $tupleUser = Be::getTuple('shop_user');
         try {
             $tupleUser->load($my->id);
         } catch (\Throwable $t) {
@@ -483,7 +483,7 @@ class User
     public function updateProfile(array $profile)
     {
         $my = Be::getUser();
-        $tupleUser = Be::getTuple('shopfai_user');
+        $tupleUser = Be::getTuple('shop_user');
         try {
             $tupleUser->load($my->id);
         } catch (\Throwable $t) {
@@ -526,7 +526,7 @@ class User
         }
 
         $my = Be::getUser();
-        $tupleUser = Be::getTuple('shopfai_user');
+        $tupleUser = Be::getTuple('shop_user');
         try {
             $tupleUser->load($my->id);
         } catch (\Throwable $t) {
@@ -537,7 +537,7 @@ class User
             throw new ServiceException('Existing password is wrong!');
         }
 
-        $sql = 'SELECT COUNT(*) FROM shopfai_user WHERE id!=? AND email=?';
+        $sql = 'SELECT COUNT(*) FROM shop_user WHERE id!=? AND email=?';
         if (Be::getDb()->getValue($sql, [$my->id, $email]) > 0) {
             throw new ServiceException('Sorry, this email address has already been used!');
         }
@@ -566,7 +566,7 @@ class User
         }
 
         $my = Be::getUser();
-        $tupleUser = Be::getTuple('shopfai_user');
+        $tupleUser = Be::getTuple('shop_user');
         try {
             $tupleUser->load($my->id);
         } catch (\Throwable $t) {

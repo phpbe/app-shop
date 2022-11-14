@@ -27,7 +27,7 @@
 <be-north>
     <div class="be-north" id="be-north">
         <div style="padding: 1.25rem 0 0 2rem;">
-            <el-link icon="el-icon-back" href="<?php echo beAdminUrl('ShopFai.PromotionCoupon.coupons'); ?>">返回优惠券列表</el-link>
+            <el-link icon="el-icon-back" href="<?php echo beAdminUrl('Shop.PromotionCoupon.coupons'); ?>">返回优惠券列表</el-link>
         </div>
     </div>
     <script>

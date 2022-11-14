@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\Be;
 
@@ -26,7 +26,7 @@ class Section
         $html = '';
         $html .= '<style type="text/css">';
 
-        $html .= Be::getService('App.ShopFai.Ui')->getProductGlobalCss();
+        $html .= Be::getService('App.Shop.Ui')->getProductGlobalCss();
 
         $html .= $section->getCssBackgroundColor($class);
         $html .= $section->getCssPadding($class);
@@ -151,7 +151,7 @@ class Section
             $html .= $section->page->tag1('be-section-title', true);
         }
 
-        $nnImage = Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+        $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
 
         $html .= $section->page->tag0('be-section-content', true);
         $html .= '<div class="' . $class . '-products">';
@@ -197,7 +197,7 @@ class Section
             $html .= '<div class="' . $class . '-product">';
 
             $html .= '<div class="' . $class . '-product-image">';
-            $html .= '<a href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+            $html .= '<a href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
             if (!$isMobile) {
                 $html .= ' target="_blank"';
             }
@@ -224,7 +224,7 @@ class Section
             $html .= '</div>';
 
             $html .= '<div class="be-mt-50">';
-            $html .= '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+            $html .= '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
             if (!$isMobile) {
                 $html .= ' target="_blank"';
             }
@@ -304,7 +304,7 @@ class Section
         $html = '';
         $html .= '<style type="text/css">';
 
-        $html .= Be::getService('App.ShopFai.Ui')->getProductGlobalCss();
+        $html .= Be::getService('App.Shop.Ui')->getProductGlobalCss();
 
         $html .= $section->getCssBackgroundColor($class);
         $html .= $section->getCssPadding($class);
@@ -390,7 +390,7 @@ class Section
             $html .= '<div class="be-container">';
         }
 
-        $nnImage = \Be\Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+        $nnImage = \Be\Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
 
         $html .= $section->page->tag0('be-section-content', true);
 
@@ -439,7 +439,7 @@ class Section
             $html .= '<div class="' . $class . '-product">';
 
             $html .= '<div class="' . $class . '-product-image">';
-            $html .= '<a href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+            $html .= '<a href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
             if (!$isMobile) {
                 $html .= ' target="_blank"';
             }
@@ -466,7 +466,7 @@ class Section
             $html .= '</div>';
 
             $html .= '<div class="be-mt-50">';
-            $html .= '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('ShopFai.Product.detail', ['id' => $product->id]) . '"';
+            $html .= '<a class="be-d-block be-t-ellipsis-2" href="' . beUrl('Shop.Product.detail', ['id' => $product->id]) . '"';
             if (!$isMobile) {
                 $html .= ' target="_blank"';
             }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -25,7 +25,7 @@ class TaskProduct
     {
         if (count($products) === 0) return;
 
-        $config = Be::getConfig('App.ShopFai.Es');
+        $config = Be::getConfig('App.Shop.Es');
 
         $db = Be::getDb();
 
@@ -54,17 +54,17 @@ class TaskProduct
                 ];
             } else {
                 $categories = [];
-                $sql = 'SELECT category_id FROM shopfai_product_category WHERE product_id = ?';
+                $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
                 $categoryIds = $db->getValues($sql, [$product->id]);
                 if (count($categoryIds) > 0) {
-                    $sql = 'SELECT id, `name` FROM shopfai_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
+                    $sql = 'SELECT id, `name` FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
                     $categories = $db->getObjects($sql);
                 }
 
-                $sql = 'SELECT tag FROM shopfai_product_tag WHERE product_id = ?';
+                $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
                 $tags = $db->getValues($sql, [$product->id]);
 
-                $sql = 'SELECT small, medium, large, is_main, `ordering`  FROM shopfai_product_image WHERE product_id = ? ORDER BY `ordering` ASC';
+                $sql = 'SELECT small, medium, large, is_main, `ordering`  FROM shop_product_image WHERE product_id = ? ORDER BY `ordering` ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as &$image) {
                     $image->is_main = $image->is_main ? true : false;
@@ -72,7 +72,7 @@ class TaskProduct
                 }
                 unset($image);
 
-                $sql = 'SELECT id, image, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shopfai_product_item WHERE product_id = ?';
+                $sql = 'SELECT id, image, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ?';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as &$item) {
                     $item->price = (float)$item->price;
@@ -156,7 +156,7 @@ class TaskProduct
 
             $product->is_delete = (int)$product->is_delete;
 
-            $key = 'ShopFai:Product:' . $product->id;
+            $key = 'Shop:Product:' . $product->id;
             if ($product->is_delete === 1) {
                 $cache->delete($key);
             } else {
@@ -175,13 +175,13 @@ class TaskProduct
                 $product->is_enable = (int)$product->is_enable;
 
                 if ($product->relate_id !== '') {
-                    $sql = 'SELECT * FROM shopfai_product_relate WHERE id = ?';
+                    $sql = 'SELECT * FROM shop_product_relate WHERE id = ?';
                     $relate = $db->getObject($sql, [$product->relate_id]);
 
-                    $sql = 'SELECT * FROM shopfai_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
+                    $sql = 'SELECT * FROM shop_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
                     $details = $db->getObjects($sql, [$product->relate_id]);
                     foreach ($details as &$detail) {
-                        $sql = 'SELECT `name` FROM shopfai_product WHERE id = ?';
+                        $sql = 'SELECT `name` FROM shop_product WHERE id = ?';
                         $detail->product_name = $db->getValue($sql, [$detail->product_id]);
                     }
                     unset($detail);
@@ -191,7 +191,7 @@ class TaskProduct
                     $product->relate = $relate;
                 }
 
-                $sql = 'SELECT * FROM shopfai_product_image WHERE product_id = ? ORDER BY ordering ASC';
+                $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? ORDER BY ordering ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as $image) {
                     $image->is_main = (int)$image->is_main;
@@ -199,12 +199,12 @@ class TaskProduct
                 }
                 $product->images = $images;
 
-                $sql = 'SELECT category_id FROM shopfai_product_category WHERE product_id = ?';
+                $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
                 $categoryIds = $db->getValues($sql, [$product->id]);
                 if (count($categoryIds) > 0) {
                     $product->category_ids = $categoryIds;
 
-                    $sql = 'SELECT * FROM shopfai_category WHERE id IN (?)';
+                    $sql = 'SELECT * FROM shop_category WHERE id IN (?)';
                     $categories = $db->getObjects($sql, ['\'' . implode('\',\'', $categoryIds) . '\'']);
                     foreach ($categories as $category) {
                         $category->ordering = (int)$category->ordering;
@@ -215,14 +215,14 @@ class TaskProduct
                     $product->categories = [];
                 }
 
-                $sql = 'SELECT tag FROM shopfai_product_tag WHERE product_id = ?';
+                $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
                 $product->tags = $db->getValues($sql, [$product->id]);
 
-                $sql = 'SELECT * FROM shopfai_product_style WHERE product_id = ?';
+                $sql = 'SELECT * FROM shop_product_style WHERE product_id = ?';
                 $styles = $db->getObjects($sql, [$product->id]);
                 $product->styles = $styles;
 
-                $sql = 'SELECT * FROM shopfai_product_item WHERE product_id = ?';
+                $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as $item) {
                     $item->stock = (int)$item->stock;
@@ -257,7 +257,7 @@ class TaskProduct
 
             $imageKeyValues = [];
 
-            $images = $db->getObjects('SELECT * FROM shopfai_product_image WHERE `product_id`=?', [$product->id]);
+            $images = $db->getObjects('SELECT * FROM shop_product_image WHERE `product_id`=?', [$product->id]);
             foreach ($images as $image) {
                 $remoteImage = trim($image->original);
                 if ($remoteImage !== '') {
@@ -278,7 +278,7 @@ class TaskProduct
                             $obj->large = $storageImage;
                             $obj->original = $storageImage;
                             $obj->update_time = $now;
-                            $db->update('shopfai_product_image', $obj, 'id');
+                            $db->update('shop_product_image', $obj, 'id');
                         }
                     }
                 }
@@ -288,7 +288,7 @@ class TaskProduct
 
             // 多款式SKU
             if ($product->style === 2) {
-                $items = $db->getObjects('SELECT * FROM shopfai_product_item WHERE `product_id`=?', [$product->id]);
+                $items = $db->getObjects('SELECT * FROM shop_product_item WHERE `product_id`=?', [$product->id]);
                 foreach ($items as $item) {
                     $remoteImage = trim($item->image);
                     if ($remoteImage !== '') {
@@ -308,7 +308,7 @@ class TaskProduct
                                 $obj->id = $item->id;
                                 $obj->image = $storageImage;
                                 $obj->update_time = $now;
-                                $db->update('shopfai_product_item', $obj, 'id');
+                                $db->update('shop_product_item', $obj, 'id');
                             }
                         }
                     }
@@ -316,7 +316,7 @@ class TaskProduct
             }
 
             if ($product->relate_id !== '') {
-                $productRelateDetail = $db->getObject('SELECT * FROM shopfai_product_relate_detail WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
+                $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_detail WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
                 if ($productRelateDetail) {
                     $remoteImage = trim($productRelateDetail->icon_image);
                     if ($remoteImage !== '') {
@@ -336,18 +336,18 @@ class TaskProduct
                                 $obj->id = $item->id;
                                 $obj->icon_image = $storageImage;
                                 $obj->update_time = $now;
-                                $db->update('shopfai_product_relate_detail', $obj, 'id');
+                                $db->update('shop_product_relate_detail', $obj, 'id');
                             }
                         }
                     }
                 }
             }
 
-            $db->query('UPDATE shopfai_product SET download_remote=2, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
+            $db->query('UPDATE shop_product SET download_remote=2, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
 
         } catch (\Throwable $t) {
             Be::getLog()->error($t);
-            $db->query('UPDATE shopfai_product SET download_remote=-1, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
+            $db->query('UPDATE shop_product SET download_remote=-1, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
             throw new ServiceException('导入采集的商品下载远程图像时发生异常！');
         }
 
@@ -430,7 +430,7 @@ class TaskProduct
                 }
             }
 
-            $configCollectProductApi = Be::getConfig('App.ShopFai.CollectProductApi');
+            $configCollectProductApi = Be::getConfig('App.Shop.CollectProductApi');
 
             $newName = null;
             switch ($configCollectProductApi->downloadRemoteFileRename) {

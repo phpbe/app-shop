@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -27,13 +27,13 @@ class StaticsCart extends Task
         $redis = Be::getRedis();
         $es = Be::getEs();
 
-        $configEs = Be::getConfig('App.ShopFai.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
 
         $t0 = time();
 
         $batch = [];
         while (true) {
-            $cart = $redis->rPop('ShopFai:Statistic:cart');
+            $cart = $redis->rPop('Shop:Statistic:cart');
             if ($cart === false) {
                 break;
             }

@@ -16,7 +16,7 @@
                         </div>
                         <div class="be-col">
                             <?php echo $index['value']; ?>
-                            <el-link class="be-ml-100" type="primary" href="<?php echo beAdminUrl('ShopFai.Config.dashboard', ['configName' => 'Es']); ?>">修改</el-link>
+                            <el-link class="be-ml-100" type="primary" href="<?php echo beAdminUrl('Shop.Config.dashboard', ['configName' => 'Es']); ?>">修改</el-link>
                         </div>
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                     this.$refs[formRef].validate(function (valid) {
                         if (valid) {
                             _this.loading = true;
-                            _this.$http.post("<?php echo beAdminUrl('ShopFai.Es.createIndex'); ?>", {
+                            _this.$http.post("<?php echo beAdminUrl('Shop.Es.createIndex'); ?>", {
                                 formData: _this[formData]
                             }).then(function (response) {
                                 _this.loading = false;
@@ -172,7 +172,7 @@
                     }).then(function(){
 
                         _this.loading = true;
-                        _this.$http.post("<?php echo beAdminUrl('ShopFai.Es.deleteIndex'); ?>", {
+                        _this.$http.post("<?php echo beAdminUrl('Shop.Es.deleteIndex'); ?>", {
                             formData: {
                                 name: indexname
                             }

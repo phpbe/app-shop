@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -18,16 +18,16 @@ class Payment extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
 
         if ($order->status != 'pending') {
-            $response->redirect(beUrl('ShopFai.Order.detail', ['order_id' => $orderId]));
+            $response->redirect(beUrl('Shop.Order.detail', ['order_id' => $orderId]));
             return;
         }
 
         $response->set('order', $order);
 
-        $servicePayment = Be::getService('App.ShopFai.Payment');
+        $servicePayment = Be::getService('App.Shop.Payment');
 
         if ($order->payment_id !== '') {
             $storePayment = $servicePayment->getStorePayment($order->payment_id);
@@ -43,7 +43,7 @@ class Payment extends Base
             return;
         } elseif ($count === 1) {
             $storePayment = $storePayments[0];
-            Be::getService('App.ShopFai.Order')->setPayment($orderId, $storePayment->id, $storePayment->item->id);
+            Be::getService('App.Shop.Order')->setPayment($orderId, $storePayment->id, $storePayment->item->id);
             $response->redirect($storePayment->url);
             return;
         }
@@ -64,16 +64,16 @@ class Payment extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
 
         if ($order->status != 'pending') {
-            $response->redirect(beUrl('ShopFai.Order.detail', ['order_id' => $orderId]));
+            $response->redirect(beUrl('Shop.Order.detail', ['order_id' => $orderId]));
             return;
         }
 
         $response->set('order', $order);
 
-        $servicePayment = Be::getService('App.ShopFai.Payment');
+        $servicePayment = Be::getService('App.Shop.Payment');
 
         $storePayments = $servicePayment->getStorePaymentsByOrderId($orderId);
         $count = count($storePayments);
@@ -102,11 +102,11 @@ class Payment extends Base
         $paymentItemId = $request->post('payment_item_id');
 
         try {
-            $storePayment = Be::getService('App.ShopFai.Order')->setPayment($orderId, $paymentId, $paymentItemId);
+            $storePayment = Be::getService('App.Shop.Order')->setPayment($orderId, $paymentId, $paymentItemId);
             $response->set('success', true);
             $response->set('message', 'Confirm payment success!');
 
-            $redirectUrl = Be::getService('App.ShopFai.Payment')->getPaymentUrl($storePayment->name, $orderId);
+            $redirectUrl = Be::getService('App.Shop.Payment')->getPaymentUrl($storePayment->name, $orderId);
             $response->set('redirectUrl', $redirectUrl);
 
             $response->json();
@@ -128,7 +128,7 @@ class Payment extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
         $response->set('order', $order);
 
         $response->display();
@@ -146,7 +146,7 @@ class Payment extends Base
 
         $shippingPlanId = $request->post('shipping_plan_id');
 
-        $servicePayment = Be::getService('App.ShopFai.Payment');
+        $servicePayment = Be::getService('App.Shop.Payment');
         $storePayments = $servicePayment->getStorePaymentsByShippingPlanId($shippingPlanId);
         $count = count($storePayments);
         if ($count === 0) {

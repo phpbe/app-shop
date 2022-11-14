@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\Latest;
+namespace Be\App\Shop\Section\Latest;
 
 /**
  * @BeConfig("最新商品", icon="el-icon-present")

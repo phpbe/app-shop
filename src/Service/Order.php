@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -36,7 +36,7 @@ class Order
      */
     public function setPayment(string $orderId, string $paymentId, string $paymentItemId): object
     {
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         try {
             $tupleOrder->load($orderId);
         } catch (\Throwable $t) {
@@ -47,7 +47,7 @@ class Order
             throw new ServiceException('Order (#' . $tupleOrder->order_sn . ') current status could not change payment method!');
         }
 
-        $servicePayment = Be::getService('App.ShopFai.Payment');
+        $servicePayment = Be::getService('App.Shop.Payment');
         $storePayment = $servicePayment->getStorePayment($paymentId, $paymentItemId);
 
         $cod = 0;
@@ -56,7 +56,7 @@ class Order
                 throw new ServiceException('Order (#' . $tupleOrder->order_sn . ') shipping method does support payment: ' . $storePayment->label . '!');
             }
 
-            $tupleShippingPlan = Be::getTuple('shopfai_shipping_plan');
+            $tupleShippingPlan = Be::getTuple('shop_shipping_plan');
             try {
                 $tupleShippingPlan->load($tupleOrder->shipping_plan_id);
             } catch (\Throwable $t) {
@@ -91,7 +91,7 @@ class Order
         $my = Be::getUser();
         $now = date('Y-m-d H:i:s');
 
-        Be::getTable('shopfai_order')
+        Be::getTable('shop_order')
             ->where('user_id', $my->id)
             ->where('is_delete', 0)
             ->where('status', 'pending')
@@ -113,7 +113,7 @@ class Order
         $my = Be::getUser();
         $db = Be::getDb();
 
-        $sql = 'SELECT COUNT(*) FROM shopfai_order WHERE user_id = \'' . $my->id . '\' AND is_delete = 0';
+        $sql = 'SELECT COUNT(*) FROM shop_order WHERE user_id = \'' . $my->id . '\' AND is_delete = 0';
 
         if (isset($option['status']) && $option['status']) {
             if ($option['status'] != 'ALL') {
@@ -129,7 +129,7 @@ class Order
 
         if (isset($option['keywords']) && $option['keywords']) {
             $sql .= ' AND (order_sn LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '';
-            $sql .= ' OR id IN(SELECT order_id FROM shopfai_order_product WHERE user_id = ' . $my->id . ' AND product_name LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '))';
+            $sql .= ' OR id IN(SELECT order_id FROM shop_order_product WHERE user_id = ' . $my->id . ' AND product_name LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '))';
         }
 
         return $db->getValue($sql);
@@ -146,7 +146,7 @@ class Order
         $my = Be::getUser();
         $db = Be::getDb();
 
-        $sql = 'SELECT * FROM shopfai_order WHERE user_id = \'' . $my->id . '\' AND is_delete = 0';
+        $sql = 'SELECT * FROM shop_order WHERE user_id = \'' . $my->id . '\' AND is_delete = 0';
 
         if (isset($option['status']) && $option['status']) {
             if ($option['status'] != 'ALL') {
@@ -162,7 +162,7 @@ class Order
 
         if (isset($option['keywords']) && $option['keywords']) {
             $sql .= ' AND (order_sn LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '';
-            $sql .= ' OR id IN(SELECT order_id FROM shopfai_order_product WHERE user_id = ' . $my->id . ' AND product_name LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '))';
+            $sql .= ' OR id IN(SELECT order_id FROM shop_order_product WHERE user_id = ' . $my->id . ' AND product_name LIKE ' . $db->quoteValue('%' . $option['keywords'] . '%') . '))';
         }
 
         $sql .= ' ORDER BY id DESC';
@@ -183,7 +183,7 @@ class Order
         foreach ($orders as &$order) {
             $order->status_name = $statusKeyValues[$order->status];
 
-            $sql = 'SELECT * FROM shopfai_order_product WHERE order_id=?';
+            $sql = 'SELECT * FROM shop_order_product WHERE order_id=?';
             $order->products = $db->getObjects($sql, [$order->id]);
         }
 
@@ -203,7 +203,7 @@ class Order
         $my = Be::getUser();
         $db = Be::getDb();
 
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         try {
             $tupleOrder->load($orderId);
         } catch (\Throwable $t) {
@@ -220,17 +220,17 @@ class Order
         $order->status_name = $statusKeyValues[$order->status];
 
         if (isset($with['shipping_address']) && $with['shipping_address']) {
-            $sql = 'SELECT * FROM shopfai_order_shipping_address WHERE order_id=?';
+            $sql = 'SELECT * FROM shop_order_shipping_address WHERE order_id=?';
             $order->shipping_address = $db->getObject($sql, [$orderId]);
         }
 
         if (isset($with['billing_address']) && $with['billing_address']) {
-            $sql = 'SELECT * FROM shopfai_order_billing_address WHERE order_id=?';
+            $sql = 'SELECT * FROM shop_order_billing_address WHERE order_id=?';
             $order->billing_address = $db->getObject($sql, [$orderId]);
         }
 
         if (isset($with['products']) && $with['products']) {
-            $sql = 'SELECT * FROM shopfai_order_product WHERE order_id=?';
+            $sql = 'SELECT * FROM shop_order_product WHERE order_id=?';
             $order->products = $db->getObjects($sql, [$orderId]);
         }
 
@@ -246,7 +246,7 @@ class Order
     public function getContacts(string $orderId): array
     {
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_order_contact WHERE order_id=? ORDER BY create_time ASC';
+        $sql = 'SELECT * FROM shop_order_contact WHERE order_id=? ORDER BY create_time ASC';
         $contacts = $db->getObjects($sql, [$orderId]);
 
         return $contacts;
@@ -263,7 +263,7 @@ class Order
     {
         $my = Be::getUser();
 
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         try {
             $tupleOrder->load($orderId);
         } catch (\Throwable $t) {
@@ -288,7 +288,7 @@ class Order
             $tupleOrder->update_time = $now;
             $tupleOrder->update();
 
-            $tupleOrderCancel = Be::getTuple('shopfai_order_cancel');
+            $tupleOrderCancel = Be::getTuple('shop_order_cancel');
             $tupleOrderCancel->order_id = $orderId;
             $tupleOrderCancel->reason = $reason;
             $tupleOrderCancel->create_time = $now;
@@ -316,7 +316,7 @@ class Order
     {
         $my = Be::getUser();
 
-        $tupleOrder = Be::getTuple('shopfai_order');
+        $tupleOrder = Be::getTuple('shop_order');
         try {
             $tupleOrder->load($orderId);
         } catch (\Throwable $t) {
@@ -333,13 +333,13 @@ class Order
             $image = '';
             if ($file) {
                 $storageCategoryNames = '订单>客户联系>'. $tupleOrder->order_sn;
-                $serviceStorage = Be::getService('App.ShopFai.Storage');
+                $serviceStorage = Be::getService('App.Shop.Storage');
                 $storageCategory = $serviceStorage->makeCategory($storageCategoryNames);
-                $image = Be::getService('App.ShopFai.Storage')->uploadImage($storageCategory->id, $file);
+                $image = Be::getService('App.Shop.Storage')->uploadImage($storageCategory->id, $file);
             }
 
             $now = date('Y-m-d H:i:s');
-            $tupleOrderContact = Be::getTuple('shopfai_order_contact');
+            $tupleOrderContact = Be::getTuple('shop_order_contact');
             $tupleOrderContact->order_id = $orderId;
             $tupleOrderContact->publisher = 'customer';
             $tupleOrderContact->content = $content;

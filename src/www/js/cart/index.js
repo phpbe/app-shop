@@ -5,7 +5,7 @@ function remove(e) {
     let productId = $product.data("productid");
     let productItemId = $product.data("productitemid");
     $.ajax({
-        url: ShopFaiUrl.cartRemove,
+        url: ShopUrl.cartRemove,
         data: {
             "product_id": productId,
             "product_item_id": productItemId
@@ -53,7 +53,7 @@ function changeQuantity (e, n) {
     $quantity.val(quantity);
 
     $.ajax({
-        url: ShopFaiUrl.cartChange,
+        url: ShopUrl.cartChange,
         data: {
             "product_id": productId,
             "product_item_id": productItemId,
@@ -81,7 +81,7 @@ function changeQuantity (e, n) {
  */
 function reloadCart() {
     $.ajax({
-        url: ShopFaiUrl.cartGetProducts,
+        url: ShopUrl.cartGetProducts,
         method: "GET",
         success: function (json) {
             if (json.success) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -17,7 +17,7 @@ class UserShippingAddress
     {
         $my = Be::getUser();
 
-        return Be::getTable('shopfai_user_shipping_address')
+        return Be::getTable('shop_user_shipping_address')
             ->where('user_id', $my->id)
             ->orderBy('create_time', 'ASC')
             ->getObjects();
@@ -32,7 +32,7 @@ class UserShippingAddress
      */
     public function getAddress(string $addressId): object
     {
-        $tuple = Be::getTuple('shopfai_user_shipping_address');
+        $tuple = Be::getTuple('shop_user_shipping_address');
         try {
             $tuple->load($addressId);
         } catch (\Throwable $t) {
@@ -56,13 +56,13 @@ class UserShippingAddress
     {
         $my = Be::getUser();
 
-        $defaultAddress = Be::getTable('shopfai_user_shipping_address')
+        $defaultAddress = Be::getTable('shop_user_shipping_address')
             ->where('user_id', $my->id)
             ->where('is_default', 1)
             ->getObject();
 
         if (!$defaultAddress) {
-            $defaultAddress = Be::getTable('shopfai_user_shipping_address')
+            $defaultAddress = Be::getTable('shop_user_shipping_address')
                 ->where('user_id', $my->id)
                 ->orderBy('create_time', 'DESC')
                 ->getObject();
@@ -89,7 +89,7 @@ class UserShippingAddress
         $isNew = $data['id'] === '';
 
         if ($isNew) {
-            if (Be::getTable('shopfai_user_shipping_address')
+            if (Be::getTable('shop_user_shipping_address')
                 ->where('user_id', $my->id)
                 ->count() >= 10) {
                 throw new ServiceException('You can max add 10 shipping address!');
@@ -166,7 +166,7 @@ class UserShippingAddress
 
         $data['country_name'] = '';
         $data['country_code'] = '';
-        $tupleRegionCountry = Be::getTuple('shopfai_region_country');
+        $tupleRegionCountry = Be::getTuple('shop_region_country');
         try {
             $tupleRegionCountry->load($data['country_id']);
             $data['country_name'] = $tupleRegionCountry->name;
@@ -177,7 +177,7 @@ class UserShippingAddress
 
         $data['state_name'] = '';
         if ($data['state_id'] !== '') {
-            $tupleRegionState = Be::getTuple('shopfai_region_state');
+            $tupleRegionState = Be::getTuple('shop_region_state');
             try {
                 $tupleRegionState->load($data['state_id']);
                 $data['state_name'] = $tupleRegionState->name;
@@ -186,7 +186,7 @@ class UserShippingAddress
             }
         }
 
-        $tupleUserAddress = Be::getTuple('shopfai_user_shipping_address');
+        $tupleUserAddress = Be::getTuple('shop_user_shipping_address');
         if ($data['id'] !== '') {
             try {
                 $tupleUserAddress->load($data['id']);
@@ -218,7 +218,7 @@ class UserShippingAddress
             $tupleUserAddress->mobile = $data['mobile'];
 
             if (isset($data['is_default']) && $data['is_default']) {
-                $table = Be::getTable('shopfai_user_shipping_address');
+                $table = Be::getTable('shop_user_shipping_address');
                 $table->where('user_id', $my->id);
                 $table->where('is_default', 1);
                 if (!$isNew) {
@@ -262,7 +262,7 @@ class UserShippingAddress
     {
         $my = Be::getUser();
 
-        $tupleUserAddress = Be::getTuple('shopfai_user_shipping_address');
+        $tupleUserAddress = Be::getTuple('shop_user_shipping_address');
         try {
             $tupleUserAddress->load($addressId);
         } catch (\Throwable $t) {
@@ -297,7 +297,7 @@ class UserShippingAddress
     {
         $my = Be::getUser();
 
-        $n = Be::getTable('shopfai_user_shipping_address')
+        $n = Be::getTable('shop_user_shipping_address')
             ->where('user_id', $my->id)
             ->where('is_default', 1)
             ->count();
@@ -306,22 +306,22 @@ class UserShippingAddress
 
         if ($n === 0) {
             // 没有默认收货地址时，取一条标记为默认收货地址
-            $addressId = Be::getTable('shopfai_user_shipping_address')
+            $addressId = Be::getTable('shop_user_shipping_address')
                 ->where('user_id', $my->id)
                 ->getValue('id');
             if ($addressId) {
-                Be::getTable('shopfai_user_shipping_address')
+                Be::getTable('shop_user_shipping_address')
                     ->where('id', $addressId)
                     ->update(['is_default' => 1]);
             }
         } elseif ($n > 1) {
             // 有多个收货地址时，只保留一个
-            $addressId = Be::getTable('shopfai_user_shipping_address')
+            $addressId = Be::getTable('shop_user_shipping_address')
                 ->where('user_id', $my->id)
                 ->where('is_default', 1)
                 ->getValue('id');
 
-            Be::getTable('shopfai_user_shipping_address')
+            Be::getTable('shop_user_shipping_address')
                 ->where('id', '!=', $addressId)
                 ->where('user_id', $my->id)
                 ->where('is_default', 1)
@@ -339,7 +339,7 @@ class UserShippingAddress
     public function setDefault(string $addressId): bool
     {
         $my = Be::getUser();
-        $tupleUserAddress = Be::getTuple('shopfai_user_shipping_address');
+        $tupleUserAddress = Be::getTuple('shop_user_shipping_address');
         try {
             $tupleUserAddress->load($addressId);
         } catch (\Throwable $t) {
@@ -353,7 +353,7 @@ class UserShippingAddress
         $db = Be::getDb();
         $db->startTransaction();
         try {
-            Be::getTable('shopfai_user_shipping_address')
+            Be::getTable('shop_user_shipping_address')
                 ->where('user_id', $my->id)
                 ->where('is_default', 1)
                 ->update(['is_default' => 0]);

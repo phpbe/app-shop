@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\Hottest;
+namespace Be\App\Shop\Section\Hottest;
 
 use Be\Be;
 use Be\Theme\Section;
@@ -17,13 +17,13 @@ class Template extends Section
             return;
         }
 
-        $products = Be::getService('App.ShopFai.Product')->getHottestProducts($this->config->quantity);
+        $products = Be::getService('App.Shop.Product')->getHottestProducts($this->config->quantity);
         if (count($products) === 0) {
-            $products = Be::getService('App.ShopFai.Product')->getSampleProducts($this->config->quantity);
+            $products = Be::getService('App.Shop.Product')->getSampleProducts($this->config->quantity);
         }
 
-        $moreLink = beUrl('ShopFai.Product.hottest');
-        echo Be::getService('App.ShopFai.Section')->makeProductsSection($this, 'hottest', $products, $moreLink);
+        $moreLink = beUrl('Shop.Product.hottest');
+        echo Be::getService('App.Shop.Section')->makeProductsSection($this, 'hottest', $products, $moreLink);
     }
 
 }

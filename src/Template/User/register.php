@@ -1,10 +1,10 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/js/user/register.js"></script>
     <script>
-        const userRegister_registerSaveUrl = "<?php echo beUrl('ShopFai.User.registerSave'); ?>";
+        const userRegister_registerSaveUrl = "<?php echo beUrl('Shop.User.registerSave'); ?>";
     </script>
 </be-head>
 
@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="be-mt-150 be-ta-right">Already have an account? <a href="<?php echo beUrl('ShopFai.User.login'); ?>">Click here to log in</a></div>
+                <div class="be-mt-150 be-ta-right">Already have an account? <a href="<?php echo beUrl('Shop.User.login'); ?>">Click here to log in</a></div>
 
             </form>
         </div>

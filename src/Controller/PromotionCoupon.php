@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -8,7 +8,7 @@ use Be\Be;
  * 优惠券
  *
  * Class PromotionCoupon
- * @package Be\App\ShopFai\Controller
+ * @package Be\App\Shop\Controller
  */
 class PromotionCoupon extends Base
 {
@@ -23,7 +23,7 @@ class PromotionCoupon extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
         try {
-            Be::getService('App.ShopFai.PromotionCoupon')->check($request->post());
+            Be::getService('App.Shop.PromotionCoupon')->check($request->post());
             $response->set('success', true);
             $response->set('message', 'Your discount code is available!');
             $response->json();

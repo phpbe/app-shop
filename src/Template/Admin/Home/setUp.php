@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Product.products'); ?>'">去添加</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Product.products'); ?>'">去添加</el-button>
                             </div>
                             <?php
                         } else {
@@ -40,7 +40,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Product.products'); ?>'">继续添加</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Product.products'); ?>'">继续添加</el-button>
                             </div>
                             <?php
                         }
@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Shipping.index'); ?>'">设置物流运费</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Shipping.index'); ?>'">设置物流运费</el-button>
                             </div>
                             <?php
                         } else {
@@ -75,7 +75,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Shipping.index'); ?>'">设置物流运费</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Shipping.index'); ?>'">设置物流运费</el-button>
                             </div>
                             <?php
                         }
@@ -95,7 +95,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Payment.payments'); ?>'">设置收款方式</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Payment.payments'); ?>'">设置收款方式</el-button>
                             </div>
                             <?php
                         } else {
@@ -110,7 +110,7 @@
                             </div>
 
                             <div class="be-mt-400">
-                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('ShopFai.Payment.payments'); ?>'">设置收款方式</el-button>
+                                <el-button type="primary" size="medium" @click="window.location.href='<?php echo beAdminUrl('Shop.Payment.payments'); ?>'">设置收款方式</el-button>
                             </div>
                             <?php
                         }

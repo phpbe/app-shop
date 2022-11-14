@@ -1,8 +1,8 @@
 <?php
 
-namespace Be\App\ShopFai\Config\Page\UserProductReview;
+namespace Be\App\Shop\Config\Page\UserProductReview;
 
-use Be\App\ShopFai\Config\Page\UserCenter;
+use Be\App\Shop\Config\Page\UserCenter;
 
 class reviews extends UserCenter
 {

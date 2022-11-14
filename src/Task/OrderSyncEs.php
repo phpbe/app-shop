@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\TaskInterval;
@@ -36,10 +36,10 @@ class OrderSyncEs extends TaskInterval
         $d1 = date('Y-m-d H:i:s', $t1 - 60);
         $d2 = date('Y-m-d H:i:s', $t2);
 
-        $service = Be::getService('App.ShopFai.Admin.TaskOrder');
+        $service = Be::getService('App.Shop.Admin.TaskOrder');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_order WHERE update_time >= ? AND update_time <= ?';
+        $sql = 'SELECT * FROM shop_order WHERE update_time >= ? AND update_time <= ?';
         $orders = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];

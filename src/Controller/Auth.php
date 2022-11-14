@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\App\ControllerException;
 use Be\Be;
@@ -18,13 +18,13 @@ class Auth extends Base
 
             $redirect = null;
             if ($request->isAjax()) {
-                $redirectUrl = beUrl('ShopFai.User.login');
+                $redirectUrl = beUrl('Shop.User.login');
                 $redirect = [
                     'url' => $redirectUrl
                 ];
             } else {
                 $return = $request->getUrl();
-                $redirectUrl = beUrl('ShopFai.User.login', ['return' => base64_encode($return)]);
+                $redirectUrl = beUrl('Shop.User.login', ['return' => base64_encode($return)]);
                 $redirect = [
                     'url' => $redirectUrl,
                     'message' => 'Redirect to <a href="{url}">Login page</a> after {timeout} seconds.',

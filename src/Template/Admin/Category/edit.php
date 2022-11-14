@@ -85,7 +85,7 @@
         <div class="be-row">
             <div class="be-col">
                 <div style="padding: 1.25rem 0 0 2rem;">
-                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('ShopFai.Category.categories'); ?>">返回分类列表</el-link>
+                    <el-link icon="el-icon-back" href="<?php echo beAdminUrl('Shop.Category.categories'); ?>">返回分类列表</el-link>
                 </div>
             </div>
             <div class="be-col-auto">
@@ -414,7 +414,7 @@
                         if (valid) {
                             _this.loading = true;
                             vueNorth.loading = true;
-                            _this.$http.post("<?php echo beAdminUrl('ShopFai.Category.' . ($this->category ? 'edit' :'create')); ?>", {
+                            _this.$http.post("<?php echo beAdminUrl('Shop.Category.' . ($this->category ? 'edit' :'create')); ?>", {
                                 formData: _this.formData
                             }).then(function (response) {
                                 _this.loading = false;
@@ -426,7 +426,7 @@
                                         _this.$message.success(responseData.message);
                                         setTimeout(function () {
                                             window.onbeforeunload = null;
-                                            window.location.href = "<?php echo beAdminUrl('ShopFai.Category.categories'); ?>";
+                                            window.location.href = "<?php echo beAdminUrl('Shop.Category.categories'); ?>";
                                         }, 1000);
                                     } else {
                                         if (responseData.message) {
@@ -448,7 +448,7 @@
                 },
                 cancel: function () {
                     window.onbeforeunload = null;
-                    window.location.href = "<?php echo beAdminUrl('ShopFai.Category.categories'); ?>";
+                    window.location.href = "<?php echo beAdminUrl('Shop.Category.categories'); ?>";
                 },
 
                 nameChange: function () {

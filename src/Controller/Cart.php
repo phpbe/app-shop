@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -17,7 +17,7 @@ class Cart extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $products = Be::getService('App.ShopFai.Cart')->getProducts();
+        $products = Be::getService('App.Shop.Cart')->getProducts();
         $response->set('products', $products);
 
         $productTotalQuantity = 0;
@@ -32,7 +32,7 @@ class Cart extends Base
 
         $cart = [];
         $cart['products'] = $products;
-        $discountAmount = Be::getService('App.ShopFai.Promotion')->getDiscountAmount($cart);
+        $discountAmount = Be::getService('App.Shop.Promotion')->getDiscountAmount($cart);
         $response->set('discountAmount', $discountAmount);
 
         $totalAmount = bcsub($productTotalAmount, $discountAmount, 2);
@@ -58,7 +58,7 @@ class Cart extends Base
         $response->set('from', $from);
 
         $cart = $request->post();
-        $products = Be::getService('App.ShopFai.Cart')->formatProducts($request->post(), true);
+        $products = Be::getService('App.Shop.Cart')->formatProducts($request->post(), true);
         $response->set('products', $products);
 
         $cart['products'] = $products;
@@ -73,7 +73,7 @@ class Cart extends Base
         $response->set('productTotalAmount', $productTotalAmount);
         $response->set('shippingFee', '0.00');
 
-        $discountAmount = Be::getService('App.ShopFai.Promotion')->getDiscountAmount($cart);
+        $discountAmount = Be::getService('App.Shop.Promotion')->getDiscountAmount($cart);
         $response->set('discountAmount', $discountAmount);
 
         $totalAmount = bcsub($productTotalAmount, $discountAmount, 2);
@@ -95,11 +95,11 @@ class Cart extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $order = Be::getService('App.ShopFai.Cart')->checkout($request->post());
+        $order = Be::getService('App.Shop.Cart')->checkout($request->post());
         $response->set('success', true);
         $response->set('message', 'Check out success!');
 
-        $redirectUrl = beUrl('ShopFai.Payment.pay', ['order_id' => $order->id]);
+        $redirectUrl = beUrl('Shop.Payment.pay', ['order_id' => $order->id]);
         $response->set('redirectUrl', $redirectUrl);
         $response->json();
     }
@@ -118,12 +118,12 @@ class Cart extends Base
         $productItemId = $request->post('product_item_id');
         $quantity = $request->post('quantity', 1);
 
-        Be::getService('App.ShopFai.Cart')->add($productId, $productItemId, $quantity);
+        Be::getService('App.Shop.Cart')->add($productId, $productItemId, $quantity);
         $response->set('success', true);
         $response->set('message', 'Added to cart!');
         $response->json();
 
-        Be::getService('App.ShopFai.Statistic')->cart($productId, $productItemId);
+        Be::getService('App.Shop.Statistic')->cart($productId, $productItemId);
     }
 
     /**
@@ -140,7 +140,7 @@ class Cart extends Base
         $productItemId = $request->post('product_item_id');
         $quantity = $request->post('quantity', 1);
 
-        Be::getService('App.ShopFai.Cart')->change($productId, $productItemId, $quantity);
+        Be::getService('App.Shop.Cart')->change($productId, $productItemId, $quantity);
         $response->set('success', true);
         $response->set('message', 'Cart item quantity is changed!');
         $response->json();
@@ -159,7 +159,7 @@ class Cart extends Base
         $productId = $request->post('product_id');
         $productItemId = $request->post('product_item_id');
 
-        Be::getService('App.ShopFai.Cart')->remove($productId, $productItemId);
+        Be::getService('App.Shop.Cart')->remove($productId, $productItemId);
         $response->set('success', true);
         $response->set('message', 'Cart item is deleted!');
         $response->json();
@@ -174,7 +174,7 @@ class Cart extends Base
     {
         $response = Be::getResponse();
 
-        $products = Be::getService('App.ShopFai.Cart')->getProducts();
+        $products = Be::getService('App.Shop.Cart')->getProducts();
         $response->set('products', $products);
 
         $productTotalQuantity = 0;
@@ -189,7 +189,7 @@ class Cart extends Base
 
         $cart = [];
         $cart['products'] = $products;
-        $discountAmount = Be::getService('App.ShopFai.Promotion')->getDiscountAmount($cart);
+        $discountAmount = Be::getService('App.Shop.Promotion')->getDiscountAmount($cart);
         $response->set('discountAmount', $discountAmount);
 
         $totalAmount = bcsub($productTotalAmount, $discountAmount, 2);

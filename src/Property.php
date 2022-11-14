@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai;
+namespace Be\App\Shop;
 
 
 class Property extends \Be\App\Property

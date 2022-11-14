@@ -1,13 +1,13 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
 
     <script>
-        const userAddress_editShippingAddressSaveUrl = "<?php echo beUrl('ShopFai.UserAddress.editShippingAddressSave'); ?>";
-        const userAddress_addressesUrl = "<?php echo beUrl('ShopFai.UserAddress.addresses'); ?>";
-        const userAddress_shippingGetStateKeyValuesUrl = "<?php echo beUrl('ShopFai.Shipping.getStateKeyValues'); ?>";
+        const userAddress_editShippingAddressSaveUrl = "<?php echo beUrl('Shop.UserAddress.editShippingAddressSave'); ?>";
+        const userAddress_addressesUrl = "<?php echo beUrl('Shop.UserAddress.addresses'); ?>";
+        const userAddress_shippingGetStateKeyValuesUrl = "<?php echo beUrl('Shop.Shipping.getStateKeyValues'); ?>";
 
         var stateId = "<?php echo $this->address ? $this->address->state_id : ''; ?>";
     </script>
@@ -17,10 +17,10 @@
 
 <be-page-content>
     <?php
-    $countryKeyValues = \Be\Be::getService('App.ShopFai.Shipping')->getCountryIdNameKeyValues();
+    $countryKeyValues = \Be\Be::getService('App.Shop.Shipping')->getCountryIdNameKeyValues();
     ?>
     <h4 class="be-h4">
-        <a href="<?php echo beURL('ShopFai.UserAddress.addresses') ;?>"><i class="user-center-back"></i></a>
+        <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>"><i class="user-center-back"></i></a>
         <?php echo $this->address ? 'Edit Shipping Address' : 'Add a New Shipping Address'; ?>
     </h4>
 
@@ -119,7 +119,7 @@
             </div>
             <div class="be-col-0 be-md-col-2 be-lg-col-1"></div>
             <div class="be-col-24 be-md-col-11 be-lg-col-6 be-mt-150">
-                <a href="<?php echo beURL('ShopFai.UserAddress.addresses') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
+                <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>
             </div>
         </div>
 

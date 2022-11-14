@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -23,7 +23,7 @@ class CollectProductApi extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $config = Be::getService('App.ShopFai.Admin.CollectProductApi')->getConfig();
+        $config = Be::getService('App.Shop.Admin.CollectProductApi')->getConfig();
         $response->set('config', $config);
         $response->set('title', '采集接口');
         $response->display();
@@ -39,7 +39,7 @@ class CollectProductApi extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
         try {
-            $enable = Be::getService('App.ShopFai.Admin.CollectProductApi')->toggleEnable();
+            $enable = Be::getService('App.Shop.Admin.CollectProductApi')->toggleEnable();
             $response->set('success', true);
             $response->set('message', '接口开关'.($enable ? '启用':'停用').'成功！');
             $response->json();
@@ -60,8 +60,8 @@ class CollectProductApi extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
         try {
-            Be::getService('App.ShopFai.Admin.CollectProductApi')->resetToken();
-            $response->redirect(beAdminUrl('ShopFai.CollectProductApi.config'));
+            Be::getService('App.Shop.Admin.CollectProductApi')->resetToken();
+            $response->redirect(beAdminUrl('Shop.CollectProductApi.config'));
         } catch (\Throwable $t) {
             $response->error($t->getMessage());
         }

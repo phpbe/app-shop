@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/echarts/5.3.2/echarts.min.js"></script>
     <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/statistic-sales/css/conversion-rate.css" />
@@ -285,7 +285,7 @@
                     _this.salesPaidChart.showLoading(_this.chartLoading);
                     _this.salesPaidAvgChart.showLoading(_this.chartLoading);
 
-                    _this.$http.post("<?php echo beAdminUrl('ShopFai.Statistic.getReports'); ?>", {
+                    _this.$http.post("<?php echo beAdminUrl('Shop.Statistic.getReports'); ?>", {
                         formData: {
                             dateRangeType: 'custom',
                             startDate: _this.dateRange[0],
@@ -404,7 +404,7 @@
                 loadCompareData: function () {
                     let _this = this;
 
-                    _this.$http.post("<?php echo beAdminUrl('ShopFai.Statistic.getReports'); ?>", {
+                    _this.$http.post("<?php echo beAdminUrl('Shop.Statistic.getReports'); ?>", {
                         formData: {
                             dateRangeType: 'custom',
                             startDate: _this.compareDateRange[0],

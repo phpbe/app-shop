@@ -15,7 +15,7 @@ $(function () {
 
         submitHandler: function (form) {
             $.ajax({
-                url: beUrl  + "/?route=ShopFai.Order.contactSave",
+                url: beUrl  + "/?route=Shop.Order.contactSave",
                 method: "POST",
                 cache: false,
                 data: new FormData($('#order-contact-form')[0]),

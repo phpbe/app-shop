@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemCode;
 use Be\AdminPlugin\Detail\Item\DetailItemToggleIcon;
@@ -37,7 +37,7 @@ class Payment extends Auth
     {
         Be::getAdminPlugin('Curd')->setting([
             'label' => '收款',
-            'table' => 'shopfai_payment',
+            'table' => 'shop_payment',
             'grid' => [
                 'title' => '收款',
                 'titleToolbar' => [
@@ -66,7 +66,7 @@ class Payment extends Auth
                                 'style' => 'width:150px; padding: 20px 10px',
                             ],
                             'value' => function($row) {
-                                return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/payment/' . $row['logo'];
+                                return Be::getProperty('App.Shop')->getWwwUrl() . '/images/payment/' . $row['logo'];
                             },
                         ],
                         [
@@ -124,7 +124,7 @@ class Payment extends Auth
                         if ($field === 'is_enable') {
                             $value = (int)$postData['row']['is_enable'];
                             if ($value === 1) {
-                                Be::getService('App.ShopFai.Admin.Store')->setUp(4);
+                                Be::getService('App.Shop.Admin.Store')->setUp(4);
                             }
                         }
                     },
@@ -144,7 +144,7 @@ class Payment extends Auth
         Be::getAdminPlugin('Curd')->setting([
 
             'label' => '收款记录',
-            'table' => 'shopfai_payment_log',
+            'table' => 'shop_payment_log',
 
             'grid' => [
                 'title' => '收款记录',
@@ -190,7 +190,7 @@ class Payment extends Auth
                             'menus' => [
                                 [
                                     'label' => 'CSV',
-                                    'url' => beAdminUrl('ShopFai.Payment.logs', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.logs', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'csv',
                                     ],
@@ -198,7 +198,7 @@ class Payment extends Auth
                                 ],
                                 [
                                     'label' => 'EXCEL',
-                                    'url' => beAdminUrl('ShopFai.Payment.logs', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.logs', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'excel',
                                     ],
@@ -213,7 +213,7 @@ class Payment extends Auth
                     'items' => [
                         [
                             'label' => '返回',
-                            'url' => beAdminUrl('ShopFai.Payment.payments'),
+                            'url' => beAdminUrl('Shop.Payment.payments'),
                             'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-back'
@@ -237,7 +237,7 @@ class Payment extends Auth
                             'value' => function ($row) {
                                 switch ($row['payment_type']) {
                                     case 'paypal':
-                                        $sql = 'SELECT `name` FROM shopfai_payment_paypal WHERE id = ?';
+                                        $sql = 'SELECT `name` FROM shop_payment_paypal WHERE id = ?';
                                         $paypalAccount = Be::getDb()->getValue($sql, [$row['payment_item_id']]);
                                         if ($paypalAccount) {
                                             return $paypalAccount;
@@ -285,7 +285,7 @@ class Payment extends Auth
                         'items' => [
                             [
                                 'label' => '明细',
-                                'url' => beAdminUrl('ShopFai.Payment.logs', ['task' => 'detail']),
+                                'url' => beAdminUrl('Shop.Payment.logs', ['task' => 'detail']),
                                 'target' => 'drawer',
                                 'ui' => [
                                     'type' => 'primary'
@@ -317,7 +317,7 @@ class Payment extends Auth
                             'value' => function ($row) {
                                 switch ($row['payment_type']) {
                                     case 'paypal':
-                                        $sql = 'SELECT `name` FROM shopfai_payment_paypal WHERE id = ?';
+                                        $sql = 'SELECT `name` FROM shop_payment_paypal WHERE id = ?';
                                         $paypalAccount = Be::getDb()->getValue($sql, [$row['payment_item_id']]);
                                         if ($paypalAccount) {
                                             return $paypalAccount;
@@ -387,7 +387,7 @@ class Payment extends Auth
             if (isset($postData['row']['id']) && $postData['row']['id']) {
                 switch ($postData['row']['name']) {
                     case 'paypal':
-                        $response->redirect(beAdminUrl('ShopFai.Payment.paypal'));
+                        $response->redirect(beAdminUrl('Shop.Payment.paypal'));
                         break;
                     case 'cod':
                         break;
@@ -405,7 +405,7 @@ class Payment extends Auth
     {
         Be::getAdminPlugin('Curd')->setting([
             'label' => 'PayPal 收款',
-            'table' => 'shopfai_payment_paypal',
+            'table' => 'shop_payment_paypal',
             'grid' => [
                 'title' => 'PPayPal 收款账号',
 
@@ -444,7 +444,7 @@ class Payment extends Auth
                             'menus' => [
                                 [
                                     'label' => 'CSV',
-                                    'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'csv',
                                     ],
@@ -452,7 +452,7 @@ class Payment extends Auth
                                 ],
                                 [
                                     'label' => 'EXCEL',
-                                    'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'excel',
                                     ],
@@ -463,7 +463,7 @@ class Payment extends Auth
                         [
                             'label' => 'PayPal 收款记录',
                             'driver' => ToolbarItemLink::class,
-                            'url' => beAdminUrl('ShopFai.Payment.paypalLogs'),
+                            'url' => beAdminUrl('Shop.Payment.paypalLogs'),
                             'target' => '_blank',
                             'ui' => [
                                 'icon' => 'el-icon-tickets',
@@ -472,7 +472,7 @@ class Payment extends Auth
                         [
                             'label' => 'PayPal 收款设置',
                             'driver' => ToolbarItemLink::class,
-                            'url' => beAdminUrl('ShopFai.Config.dashboard', ['configName' => 'PaymentPaypal']),
+                            'url' => beAdminUrl('Shop.Config.dashboard', ['configName' => 'PaymentPaypal']),
                             'target' => '_blank',
                             'ui' => [
                                 'icon' => 'el-icon-setting',
@@ -485,7 +485,7 @@ class Payment extends Auth
                     'items' => [
                         [
                             'label' => '返回',
-                            'url' => beAdminUrl('ShopFai.Payment.payments'),
+                            'url' => beAdminUrl('Shop.Payment.payments'),
                             'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-back'
@@ -493,7 +493,7 @@ class Payment extends Auth
                         ],
                         [
                             'label' => '新增PayPal收款账号',
-                            'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'create']),
+                            'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'create']),
                             'target' => 'drawer', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-plus',
@@ -515,7 +515,7 @@ class Payment extends Auth
                             'label' => '名称',
                             'align' => 'left',
                             'driver' => TableItemLink::class,
-                            'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'detail']),
+                            'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'detail']),
                             'drawer' => [
                                 'width' => '60%'
                             ],
@@ -529,7 +529,7 @@ class Payment extends Auth
                             'label' => '启用/禁用',
                             'driver' => TableItemToggleIcon::class,
                             'target' => 'ajax',
-                            'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'fieldEdit']),
+                            'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'fieldEdit']),
                             'width' => '120',
                             'exportValue' => function ($row) {
                                 return $row['is_enable'] ? '启用' : '禁用';
@@ -550,7 +550,7 @@ class Payment extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '编辑',
-                                'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'edit']),
+                                'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'edit']),
                                 'target' => 'drawer',
                                 'drawer' => [
                                     'width' => '60%',
@@ -564,7 +564,7 @@ class Payment extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '删除',
-                                'url' => beAdminUrl('ShopFai.Payment.paypal', ['task' => 'delete']),
+                                'url' => beAdminUrl('Shop.Payment.paypal', ['task' => 'delete']),
                                 'target' => 'ajax',
                                 'confirm' => '确认要删除么？',
                                 'ui' => [
@@ -697,7 +697,7 @@ class Payment extends Auth
                             if ($postData['row']['is_enable'] === '1') {
 
                                 // 默认只能启用一个账号
-                                Be::getTable('shopfai_payment_paypal')
+                                Be::getTable('shop_payment_paypal')
                                     ->where('id', '!=', $postData['row']['id'])
                                     ->where('is_enable', 1)
                                     ->update([
@@ -707,7 +707,7 @@ class Payment extends Auth
 
                             } elseif ($postData['row']['is_enable'] === '0') {
 
-                                if (Be::getTable('shopfai_payment_paypal')
+                                if (Be::getTable('shop_payment_paypal')
                                         ->where('id', '!=', $postData['row']['id'])
                                         ->where('is_enable', 1)
                                         ->count() === '0') {
@@ -737,11 +737,11 @@ class Payment extends Auth
      */
     public function paypalLogs()
     {
-        $paymentPaypalKeyValues = Be::getDb()->getKeyValues('SELECT id, `name` FROM shopfai_payment_paypal');
+        $paymentPaypalKeyValues = Be::getDb()->getKeyValues('SELECT id, `name` FROM shop_payment_paypal');
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => 'PayPal 收款记录',
-            'table' => 'shopfai_payment_paypal_order',
+            'table' => 'shop_payment_paypal_order',
             'grid' => [
                 'title' => 'PayPal 收款记录',
                 'theme' => 'Blank',
@@ -789,7 +789,7 @@ class Payment extends Auth
                             'menus' => [
                                 [
                                     'label' => 'CSV',
-                                    'url' => beAdminUrl('ShopFai.Payment.paypalogs', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.paypalogs', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'csv',
                                     ],
@@ -797,7 +797,7 @@ class Payment extends Auth
                                 ],
                                 [
                                     'label' => 'EXCEL',
-                                    'url' => beAdminUrl('ShopFai.Payment.paypalogs', ['task' => 'export']),
+                                    'url' => beAdminUrl('Shop.Payment.paypalogs', ['task' => 'export']),
                                     'postData' => [
                                         'driver' => 'excel',
                                     ],
@@ -899,7 +899,7 @@ class Payment extends Auth
 
             'detail' => [
 
-                'theme' => 'ShopFaiAdmin',
+                'theme' => 'ShopAdmin',
 
                 'form' => [
                     'items' => [
@@ -917,7 +917,7 @@ class Payment extends Auth
                             'value' => function ($row) {
                                 switch ($row['payment_type']) {
                                     case 'paypal':
-                                        $sql = 'SELECT `name` FROM shopfai_payment_paypal WHERE id = ?';
+                                        $sql = 'SELECT `name` FROM shop_payment_paypal WHERE id = ?';
                                         $paypalAccount = Be::getDb()->getValue($sql, [$row['payment_paypal_id']]);
                                         if ($paypalAccount) {
                                             return $paypalAccount;

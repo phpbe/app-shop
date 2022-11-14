@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 
 use Be\Be;
@@ -24,7 +24,7 @@ class TaskCategory
 
             $category->is_delete = (int)$category->is_delete;
 
-            $key = 'ShopFai:Category:' . $category->id;
+            $key = 'Shop:Category:' . $category->id;
 
             if ($category->is_delete === 1) {
                 $redis->delete($key);

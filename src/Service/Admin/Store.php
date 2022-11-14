@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\Be;
 use Be\Config\ConfigHelper;
@@ -15,7 +15,7 @@ class Store
      */
     public function storeTime2SystemTime($storeTime, $format = 'Y-m-d H:i:s'): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $configSystem = Be::getConfig('App.System.System');
         $systemTime = new \DateTime($storeTime, new \DateTimeZone($configStore->timezone));
         $systemTime->setTimezone(new \DateTimeZone($configSystem->timezone));
@@ -29,7 +29,7 @@ class Store
      */
     public function systemTime2StoreTime($systemTime, $format = 'Y-m-d H:i:s'): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $configSystem = Be::getConfig('App.System.System');
         $storeTime = new \DateTime($systemTime, new \DateTimeZone($configSystem->timezone));
         $storeTime->setTimezone(new \DateTimeZone($configStore->timezone));
@@ -45,10 +45,10 @@ class Store
      */
     public function setUp(int $key)
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         if (($configStore->setUp & $key) === 0) {
             $configStore->setUp = $configStore->setUp | $key;
-            ConfigHelper::update('App.ShopFai.Store', $configStore);
+            ConfigHelper::update('App.Shop.Store', $configStore);
 
             if (Be::getRuntime()->isSwooleMode()) {
                 Be::getRuntime()->reload();

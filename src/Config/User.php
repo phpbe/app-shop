@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Config;
+namespace Be\App\Shop\Config;
 
 /**
  * @BeConfig("用户")

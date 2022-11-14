@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -13,10 +13,10 @@ class AllProductRelateSyncCache extends Task
 
     public function execute()
     {
-        $service = Be::getService('App.ShopFai.Admin.TaskProductRelate');
+        $service = Be::getService('App.Shop.Admin.TaskProductRelate');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_relate WHERE is_enable != -1';
+        $sql = 'SELECT * FROM shop_product_relate WHERE is_enable != -1';
         $relates = $db->getYieldObjects($sql);
 
         $batch = [];

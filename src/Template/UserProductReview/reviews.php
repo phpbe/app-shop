@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
 </be-head>
@@ -40,7 +40,7 @@
                         </td>
                         <td class="be-ta-center"><?php echo $review->content; ?></td>
                         <td class="be-ta-center">
-                            <a class="be-btn be-btn-outline" href="<?php echo beUrl('ShopFai.UserCenter.reviewDetail', ['reviewId' => $review->id]); ?>">View more</a>
+                            <a class="be-btn be-btn-outline" href="<?php echo beUrl('Shop.UserCenter.reviewDetail', ['reviewId' => $review->id]); ?>">View more</a>
                         </td>
                     </tr>
                     <?php
@@ -63,7 +63,7 @@
         <?php
         if ($this->total > 0) {
             $paginationUrl = [
-                'route' => 'ShopFai.UserProductReview.reviews',
+                'route' => 'Shop.UserProductReview.reviews',
                 'params' => []
             ];
 

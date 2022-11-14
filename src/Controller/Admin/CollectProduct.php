@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Table\Item\TableItemToggleIcon;
 use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
@@ -25,11 +25,11 @@ class CollectProduct extends Auth
      */
     public function products()
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '采集的商品',
-            'table' => 'shopfai_product',
+            'table' => 'shop_product',
             'grid' => [
                 'title' => '采集的商品管理',
 
@@ -103,7 +103,7 @@ class CollectProduct extends Auth
                     'items' => [
                         [
                             'label' => '批量导入',
-                            'url' => beAdminUrl('ShopFai.CollectProduct.import'),
+                            'url' => beAdminUrl('Shop.CollectProduct.import'),
                             'drawer' => [
                                 'title' => '批量导入',
                                 'width' => '80%'
@@ -115,7 +115,7 @@ class CollectProduct extends Auth
                         ],
                         [
                             'label' => '批量删除',
-                            'url' => beAdminUrl('ShopFai.CollectProduct.delete'),
+                            'url' => beAdminUrl('Shop.CollectProduct.delete'),
                             'target' => 'ajax',
                             'confirm' => '确认要删除吗？',
                             'ui' => [
@@ -140,19 +140,19 @@ class CollectProduct extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shopfai_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.ShopFai')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
                                 }
                             },
                             'ui' => [
                                 'style' => 'max-width: 60px; max-height: 60px',
                                 ':disabled' => 'scope.row.is_enable !== \'-1\'',
                             ],
-                            'url' => beAdminUrl('ShopFai.CollectProduct.edit'),
+                            'url' => beAdminUrl('Shop.CollectProduct.edit'),
                             'target' => 'self',
                         ],
                         [
@@ -160,7 +160,7 @@ class CollectProduct extends Auth
                             'label' => '商品名称',
                             'driver' => TableItemLink::class,
                             'align' => 'left',
-                            'url' => beAdminUrl('ShopFai.CollectProduct.edit'),
+                            'url' => beAdminUrl('Shop.CollectProduct.edit'),
                             'target' => 'self',
                             'ui' => [
                                 ':disabled' => 'scope.row.is_enable !== \'-1\'',
@@ -219,7 +219,7 @@ class CollectProduct extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '导入',
-                                'url' => beAdminUrl('ShopFai.CollectProduct.import'),
+                                'url' => beAdminUrl('Shop.CollectProduct.import'),
                                 'drawer' => [
                                     'title' => '导入',
                                     'width' => '80%'
@@ -235,7 +235,7 @@ class CollectProduct extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '编辑',
-                                'url' => beAdminUrl('ShopFai.CollectProduct.edit'),
+                                'url' => beAdminUrl('Shop.CollectProduct.edit'),
                                 'target' => 'self',
                                 'ui' => [
                                     ':underline' => 'false',
@@ -247,7 +247,7 @@ class CollectProduct extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '删除',
-                                'url' => beAdminUrl('ShopFai.CollectProduct.delete'),
+                                'url' => beAdminUrl('Shop.CollectProduct.delete'),
                                 'confirm' => '确认要删除么？',
                                 'target' => 'ajax',
                                 'ui' => [
@@ -278,10 +278,10 @@ class CollectProduct extends Auth
         $response = Be::getResponse();
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.Product')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.Product')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑商品成功！');
-                $response->set('redirectUrl', beAdminUrl('ShopFai.CollectProduct.products'));
+                $response->set('redirectUrl', beAdminUrl('Shop.CollectProduct.products'));
                 $response->json();
             } catch (\Throwable $t) {
                 $response->set('success', false);
@@ -293,18 +293,18 @@ class CollectProduct extends Auth
             if ($postData) {
                 $postData = json_decode($postData, true);
                 if (isset($postData['row']['id']) && $postData['row']['id']) {
-                    $response->redirect(beAdminUrl('ShopFai.CollectProduct.edit', ['id' => $postData['row']['id']]));
+                    $response->redirect(beAdminUrl('Shop.CollectProduct.edit', ['id' => $postData['row']['id']]));
                 }
             }
         } else {
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
-            $configProduct = Be::getConfig('App.ShopFai.Product');
+            $configProduct = Be::getConfig('App.Shop.Product');
             $response->set('configProduct', $configProduct);
 
             $productId = $request->get('id', '');
-            $product = Be::getService('App.ShopFai.Admin.Product')->getProduct($productId, [
+            $product = Be::getService('App.Shop.Admin.Product')->getProduct($productId, [
                 'relate' => 1,
                 'images' => 1,
                 'categories' => 1,
@@ -319,15 +319,15 @@ class CollectProduct extends Auth
                 return;
             }
 
-            $categoryKeyValues = Be::getService('App.ShopFai.Admin.Category')->getCategoryKeyValues();
+            $categoryKeyValues = Be::getService('App.Shop.Admin.Category')->getCategoryKeyValues();
             $response->set('categoryKeyValues', $categoryKeyValues);
 
-            $response->set('backUrl', beAdminUrl('ShopFai.CollectProduct.products'));
-            $response->set('formActionUrl', beAdminUrl('ShopFai.CollectProduct.edit'));
+            $response->set('backUrl', beAdminUrl('Shop.CollectProduct.products'));
+            $response->set('formActionUrl', beAdminUrl('Shop.CollectProduct.edit'));
 
             $response->set('title', '编辑采集的商品');
 
-            $response->display('App.ShopFai.Admin.Product.edit');
+            $response->display('App.Shop.Admin.Product.edit');
         }
     }
 
@@ -359,7 +359,7 @@ class CollectProduct extends Auth
         $response->set('title', '导入');
         $response->set('collectProducts', $collectProducts);
 
-        $categoryKeyValues = Be::getService('App.ShopFai.Admin.Category')->getCategoryKeyValues();
+        $categoryKeyValues = Be::getService('App.Shop.Admin.Category')->getCategoryKeyValues();
         $response->set('categoryKeyValues', $categoryKeyValues);
 
         $response->display(null, 'Blank');
@@ -378,7 +378,7 @@ class CollectProduct extends Auth
         try {
             $formData = $request->json('formData');
             $collectProducts = $formData['collectProducts'];
-            Be::getService('App.ShopFai.Admin.CollectProduct')->import($collectProducts);
+            Be::getService('App.Shop.Admin.CollectProduct')->import($collectProducts);
             $response->set('success', true);
             $response->set('message', '导入成功！');
             $response->json();
@@ -412,7 +412,7 @@ class CollectProduct extends Auth
             }
 
             if (count($productIds) > 0) {
-                Be::getService('App.ShopFai.Admin.CollectProduct')->delete($productIds);
+                Be::getService('App.Shop.Admin.CollectProduct')->delete($productIds);
             }
 
             $response->set('success', true);

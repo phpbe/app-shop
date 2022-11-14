@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\CategoryProducts;
+namespace Be\App\Shop\Section\CategoryProducts;
 
 use Be\Be;
 use Be\Theme\Section;
@@ -17,8 +17,8 @@ class Template extends Section
             return;
         }
 
-        $paginationUrl = beUrl('ShopFai.Category.products', ['id' => $this->page->category->id]);
-        echo Be::getService('App.ShopFai.Section')->makePaginationProductsSection($this, 'category-products', $this->page->result, $paginationUrl);
+        $paginationUrl = beUrl('Shop.Category.products', ['id' => $this->page->category->id]);
+        echo Be::getService('App.Shop.Section')->makePaginationProductsSection($this, 'category-products', $this->page->result, $paginationUrl);
     }
 
 }

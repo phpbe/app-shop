@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -16,7 +16,7 @@ class Payment
     public function getPayment(string $paymentId): object
     {
         $cacht = Be::getCache();
-        $key = 'ShopFai:Payment:' . $paymentId;
+        $key = 'Shop:Payment:' . $paymentId;
         $payment = $cacht->get($key);
 
         if (!$payment) {
@@ -34,7 +34,7 @@ class Payment
      */
     public function getPaymentFromDb(string $paymentId): object
     {
-        $tuple = Be::getTuple('shopfai_payment');
+        $tuple = Be::getTuple('shop_payment');
         try {
             $tuple->load($paymentId);
         } catch (\Throwable $t) {
@@ -53,7 +53,7 @@ class Payment
     {
         $payment = $this->getPayment($paymentId);
 
-        if (Be::getTable('shopfai_payment_store')
+        if (Be::getTable('shop_payment_store')
                 ->where('payment_id', $paymentId)
                 ->where('is_enable', 1)
                 ->count() === 0) {
@@ -64,23 +64,23 @@ class Payment
         switch ($payment->name) {
             case 'paypal':
                 if ($paymentItemId !== '') {
-                    $item = Be::getTable('shopfai_payment_paypal')
+                    $item = Be::getTable('shop_payment_paypal')
                         ->where('is_enable', 1)
                         ->where('id', $paymentItemId)
                         ->getObject();
                 } else {
-                    $item = Be::getTable('shopfai_payment_paypal')
+                    $item = Be::getTable('shop_payment_paypal')
                         ->where('is_enable', 1)
                         ->getObject();
                 }
                 break;
             case 'cod':
                 if ($paymentItemId !== '') {
-                    $item = Be::getTable('shopfai_payment_cod')
+                    $item = Be::getTable('shop_payment_cod')
                         ->where('id', $paymentItemId)
                         ->getObject();
                 } else {
-                    $item = Be::getTable('shopfai_payment_cod')
+                    $item = Be::getTable('shop_payment_cod')
                         ->getObject();
                 }
                 break;
@@ -106,7 +106,7 @@ class Payment
      */
     public function getStorePaymentsByShippingPlanId(string $shippingPlanId): array
     {
-        $paymentIds = Be::getTable('shopfai_payment_store')
+        $paymentIds = Be::getTable('shop_payment_store')
             ->where('is_enable', 1)
             ->getValues('payment_id');
 
@@ -118,16 +118,16 @@ class Payment
                 $item = null;
                 switch ($payment->name) {
                     case 'paypal':
-                        $item = Be::getTable('shopfai_payment_paypal')
+                        $item = Be::getTable('shop_payment_paypal')
                             ->where('is_enable', 1)
                             ->getObject();
                         break;
                     case 'cod':
-                        $shippingPlanCod = Be::getTable('shopfai_shipping_plan')
+                        $shippingPlanCod = Be::getTable('shop_shipping_plan')
                             ->where('id', $shippingPlanId)
                             ->getValue('cod');
                         if ($shippingPlanCod) {
-                            $item = Be::getTable('shopfai_payment_cod')
+                            $item = Be::getTable('shop_payment_cod')
                                 ->getObject();
                         }
                         break;
@@ -154,7 +154,7 @@ class Payment
      */
     public function getStorePaymentsByOrderId(string $orderId = ''): array
     {
-        $paymentIds = Be::getTable('shopfai_payment')
+        $paymentIds = Be::getTable('shop_payment')
             ->where('is_enable', 1)
             ->getValues('payment_id');
 
@@ -166,20 +166,20 @@ class Payment
                 $item = null;
                 switch ($payment->name) {
                     case 'paypal':
-                        $item = Be::getTable('shopfai_payment_paypal')
+                        $item = Be::getTable('shop_payment_paypal')
                             ->where('is_enable', 1)
                             ->getObject();
                         break;
                     case 'cod':
-                        $shippingPlanId = Be::getTable('shopfai_order')
+                        $shippingPlanId = Be::getTable('shop_order')
                             ->where('id', $orderId)
                             ->getValue('shipping_plan_id');
                         if ($shippingPlanId) {
-                            $shippingPlanCod = Be::getTable('shopfai_shipping_plan')
+                            $shippingPlanCod = Be::getTable('shop_shipping_plan')
                                 ->where('id', $shippingPlanId)
                                 ->getValue('cod');
                             if ($shippingPlanCod) {
-                                $item = Be::getTable('shopfai_payment_cod')
+                                $item = Be::getTable('shop_payment_cod')
                                     ->getObject();
                             }
                         }
@@ -210,9 +210,9 @@ class Payment
     {
         switch ($paymentName) {
             case 'paypal':
-                return beUrl('ShopFai.PaymentPaypal.pay', ['order_id' => $orderId]);
+                return beUrl('Shop.PaymentPaypal.pay', ['order_id' => $orderId]);
             case 'cod':
-                return beUrl('ShopFai.PaymentCod.pay', ['order_id' => $orderId]);
+                return beUrl('Shop.PaymentCod.pay', ['order_id' => $orderId]);
             default:
                 throw new ServiceException('Unknown payment (' . $paymentName . ')!');
         }

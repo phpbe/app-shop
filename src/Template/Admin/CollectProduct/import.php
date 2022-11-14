@@ -107,7 +107,7 @@
                 importConfirm: function () {
                     let _this = this;
                     _this.loading = true;
-                    _this.$http.post("<?php echo beAdminUrl('ShopFai.CollectProduct.importSave'); ?>", {
+                    _this.$http.post("<?php echo beAdminUrl('Shop.CollectProduct.importSave'); ?>", {
                         formData: _this.formData
                     }).then(function (response) {
                         _this.loading = false;

@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\Task;
@@ -13,10 +13,10 @@ class AllCategorySyncCache extends Task
 
     public function execute()
     {
-        $service = Be::getService('App.ShopFai.Admin.TaskCategory');
+        $service = Be::getService('App.Shop.Admin.TaskCategory');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_category';
+        $sql = 'SELECT * FROM shop_category';
         $categories = $db->getObjects($sql);
 
         if (count($categories) === 0) return;

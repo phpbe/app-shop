@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ControllerException;
 use Be\App\ServiceException;
@@ -9,7 +9,7 @@ use Be\Be;
 /**
  * Class Shipping
  *
- * @package Be\App\ShopFai\Service
+ * @package Be\App\Shop\Service
  */
 class Shipping
 {
@@ -21,14 +21,14 @@ class Shipping
      */
     public function getCountryIdNameKeyValues(): array
     {
-        $countryIds = Be::getTable('shopfai_shipping_region')
+        $countryIds = Be::getTable('shop_shipping_region')
             ->getValues('country_id');
 
         if (count($countryIds) === 0) {
             return [];
         }
 
-        $countryKeyValues = Be::getTable('shopfai_region_country')
+        $countryKeyValues = Be::getTable('shop_region_country')
             ->where('id', 'in', $countryIds)
             ->getKeyValues('id', 'name');
 
@@ -43,7 +43,7 @@ class Shipping
      */
     public function getStateIdNameKeyValues(string $countryId): array
     {
-        $tupleCountry = Be::getTuple('shopfai_region_country');
+        $tupleCountry = Be::getTuple('shop_region_country');
         try {
             $tupleCountry->load($countryId);
         } catch (\Throwable $t) {
@@ -55,18 +55,18 @@ class Shipping
             return [];
         }
 
-        $shippingRegions = Be::getTable('shopfai_shipping_region')
+        $shippingRegions = Be::getTable('shop_shipping_region')
             ->where('country_id', $countryId)
             ->getObjects();
 
-        $serviceRegion = Be::getService('App.ShopFai.Region');
+        $serviceRegion = Be::getService('App.Shop.Region');
 
         $stateIdNameKeyValues = [];
         foreach ($shippingRegions as $shippingRegion) {
             if ($shippingRegion->assign_state === '0') {
                 return $serviceRegion->getStateIdNameKeyValues($countryId);
             } else {
-                $shippingRegionStates = Be::getTable('shopfai_shipping_region_state')
+                $shippingRegionStates = Be::getTable('shop_shipping_region_state')
                     ->where('shipping_region_id', $shippingRegion->id)
                     ->getObjects();
 
@@ -92,7 +92,7 @@ class Shipping
         }
         $countryId = $cart['country_id'];
 
-        $tupleCountry = Be::getTuple('shopfai_region_country');
+        $tupleCountry = Be::getTuple('shop_region_country');
         try {
             $tupleCountry->load($cart['country_id']);
         } catch (\Throwable $t) {
@@ -102,7 +102,7 @@ class Shipping
         $stateId = $cart['state_id'] ?? '';
 
         $shippingIds = [];
-        $shippingRegions = Be::getTable('shopfai_shipping_region')
+        $shippingRegions = Be::getTable('shop_shipping_region')
             ->where('country_id', $countryId)
             ->getObjects();
         foreach ($shippingRegions as $shippingRegion) {
@@ -115,7 +115,7 @@ class Shipping
                 if ($shippingRegion->assign_state === '0') {
                     $shippingIds[] = $shippingRegion->shipping_id;
                 } else {
-                    if (Be::getTable('shopfai_shipping_region_state')
+                    if (Be::getTable('shop_shipping_region_state')
                             ->where('shipping_region_id', $shippingRegion->id)
                             ->where('state_id', $stateId)
                             ->count() > 0) {
@@ -129,7 +129,7 @@ class Shipping
             return [];
         }
 
-        $shippingPlans = Be::getTable('shopfai_shipping_plan')
+        $shippingPlans = Be::getTable('shop_shipping_plan')
             ->where('shipping_id', 'in', $shippingIds)
             ->getObjects();
         foreach ($shippingPlans as $shippingPlan) {
@@ -170,7 +170,7 @@ class Shipping
         }
         $countryId = $cart['country_id'];
 
-        $tupleCountry = Be::getTuple('shopfai_region_country');
+        $tupleCountry = Be::getTuple('shop_region_country');
         try {
             $tupleCountry->load($cart['country_id']);
         } catch (\Throwable $t) {
@@ -180,7 +180,7 @@ class Shipping
         $stateId = $cart['state_id'] ?? '';
 
         // 讯取物流方案
-        $tupleShippingPlan = Be::getTuple('shopfai_shipping_plan');
+        $tupleShippingPlan = Be::getTuple('shop_shipping_plan');
         try {
             $tupleShippingPlan->load($cart['shipping_plan_id']);
         } catch (\Throwable $t) {
@@ -188,7 +188,7 @@ class Shipping
         }
 
         // 检查国家是否可以寄达
-        $tupleShippingRegion = Be::getTuple('shopfai_shipping_region');
+        $tupleShippingRegion = Be::getTuple('shop_shipping_region');
         try {
             $tupleShippingRegion->loadBy([
                 'shipping_id' => $tupleShippingPlan->shipping_id,
@@ -200,7 +200,7 @@ class Shipping
 
         if ($tupleShippingRegion->assign_state === 1) {
             // 检查州是否可以寄达
-            $tupleShippingRegionState = Be::getTuple('shopfai_shipping_region_state');
+            $tupleShippingRegionState = Be::getTuple('shop_shipping_region_state');
             try {
                 $tupleShippingRegionState->loadBy([
                     'shipping_id' => $tupleShippingPlan->shipping_id,
@@ -226,10 +226,10 @@ class Shipping
      */
     private function calcShippingFee($shippingPlan, array $cart = []): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
 
         if (!isset($cart['products']) || !is_array($cart['products']) || count($cart['products']) === 0) {
-            $cart['products'] = Be::getService('App.ShopFai.Cart')->formatProducts($cart, true);
+            $cart['products'] = Be::getService('App.Shop.Cart')->formatProducts($cart, true);
         }
 
         $productTotalAmount = '0.00';

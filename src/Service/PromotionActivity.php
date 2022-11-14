@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -8,7 +8,7 @@ use Be\Be;
 /**
  * Class PromotionActivity
  *
- * @package Be\App\ShopFai\Service
+ * @package Be\App\Shop\Service
  */
 class PromotionActivity extends PromotionDriver
 {
@@ -21,11 +21,11 @@ class PromotionActivity extends PromotionDriver
      */
     public function getProductTemplate(string $productId): string
     {
-        $configStore = Be::getConfig('App.ShopFai.Store');
-        $storeService = Be::getService('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
+        $storeService = Be::getService('App.Shop.Store');
         $now = $storeService->systemTime2StoreTime(date('Y-m-d H:i:s'));
 
-        $promotionActivities = Be::getTable('shopfai_promotion_activity')
+        $promotionActivities = Be::getTable('shop_promotion_activity')
             ->where('start_time', '<', $now)
             ->where('end_time', '>', $now)
             ->where('is_enable', 1)
@@ -42,16 +42,16 @@ class PromotionActivity extends PromotionDriver
             if ($promotionActivity->scope_product === 'all') {
                 $match = true;
             } elseif ($promotionActivity->scope_product === 'assign') {
-                if (Be::getTable('shopfai_promotion_activity_scope_product')
+                if (Be::getTable('shop_promotion_activity_scope_product')
                         ->where('promotion_activity_id', $promotionActivity->id)
                         ->where('product_id', $productId)
                         ->count() > 0) {
                     $match = true;
                 }
             } elseif ($promotionActivity->scope_product === 'category') {
-                $product = Be::getService('ShopFai.Product')->getProduct($productId);
+                $product = Be::getService('Shop.Product')->getProduct($productId);
                 $productCategoryIds = $product->category_ids;
-                $promotionActivityCategoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+                $promotionActivityCategoryIds = Be::getTable('shop_promotion_activity_scope_category')
                     ->where('promotion_activity_id', $promotionActivity->id)
                     ->getValues('category_id');
                 if (count(array_intersect($productCategoryIds, $promotionActivityCategoryIds)) > 0) {
@@ -60,7 +60,7 @@ class PromotionActivity extends PromotionDriver
             }
 
             if ($match) {
-                $promotionActivity->discounts = Be::getTable('shopfai_promotion_activity_discount')
+                $promotionActivity->discounts = Be::getTable('shop_promotion_activity_discount')
                     ->where('promotion_activity_id', $promotionActivity->id)
                     ->orderBy('ordering', 'ASC')
                     ->getObjects();
@@ -112,7 +112,7 @@ class PromotionActivity extends PromotionDriver
                         $template .= '</div>';
 
                         $template .= '<div class="be-col-auto">';
-                        $template .= '<div class="be-pl-100 be-py-20"><a href="' . beUrl('ShopFai.PromotionActivity.detail', ['id' => $promotionActivity->id]) . '">Shop more &gt;</a></div>';
+                        $template .= '<div class="be-pl-100 be-py-20"><a href="' . beUrl('Shop.PromotionActivity.detail', ['id' => $promotionActivity->id]) . '">Shop more &gt;</a></div>';
                         $template .= '</div>';
                         $template .= '</div>';
                     }
@@ -134,14 +134,14 @@ class PromotionActivity extends PromotionDriver
     {
         if (isset($cart['promotion_activity_id'])) {
             try {
-                $tuplePromotionActivity = Be::getTuple('shopfai_promotion_activity');
+                $tuplePromotionActivity = Be::getTuple('shop_promotion_activity');
                 $tuplePromotionActivity->loadBy([
                     'id' => $cart['promotion_activity_id'],
                     'is_enable' => 1,
                     'is_delete' => 0,
                 ]);
 
-                $storeService = Be::getService('App.ShopFai.Store');
+                $storeService = Be::getService('App.Shop.Store');
                 $now = $storeService->systemTime2StoreTime(date('Y-m-d H:i:s'));
                 $t0 = strtotime($now);
                 $t1 = strtotime($tuplePromotionActivity->start_time);
@@ -187,7 +187,7 @@ class PromotionActivity extends PromotionDriver
     {
         $db = Be::getDb();
 
-        $sql = 'SELECT * FROM shopfai_promotion_activity WHERE id=?';
+        $sql = 'SELECT * FROM shop_promotion_activity WHERE id=?';
         $promotionActivity = $db->getObject($sql, [$id]);
 
         $promotionActivity->poster = (int)$promotionActivity->poster;
@@ -199,21 +199,21 @@ class PromotionActivity extends PromotionDriver
         $promotionActivity->scope_products = [];
         $promotionActivity->scope_categories = [];
         if ($promotionActivity->scope_product === 'assign') {
-            $productIds = Be::getTable('shopfai_promotion_activity_scope_product')
+            $productIds = Be::getTable('shop_promotion_activity_scope_product')
                 ->where('promotion_coupon_id', $id)
                 ->getValues('product_id');
             if (count($productIds) > 0) {
-                $products = Be::getTable('shopfai_product')
+                $products = Be::getTable('shop_product')
                     ->where('id', 'IN', $productIds)
                     ->getObjects();
                 if (count($products) > 0) {
                     foreach ($products as &$product) {
-                        $sql = 'SELECT small FROM shopfai_product_image WHERE product_id = ? AND is_main = 1';
+                        $sql = 'SELECT small FROM shop_product_image WHERE product_id = ? AND is_main = 1';
                         $image = $db->getValue($sql, [$product->id]);
                         if ($image) {
                             $product->image = $image;
                         } else {
-                            $product->image = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/product/no-image.jpg';
+                            $product->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/product/no-image.jpg';
                         }
                     }
                     unset($product);
@@ -222,16 +222,16 @@ class PromotionActivity extends PromotionDriver
                 }
             }
         } elseif ($promotionActivity->scope_product === 'category') {
-            $categoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+            $categoryIds = Be::getTable('shop_promotion_activity_scope_category')
                 ->where('promotion_coupon_id', $id)
                 ->getValues('category_id');
             if (count($categoryIds) > 0) {
-                $categories = Be::getTable('shopfai_category')
+                $categories = Be::getTable('shop_category')
                     ->where('id', 'IN', $categoryIds)
                     ->getObjects();
                 foreach ($categories as &$category) {
                     if (!$category->image_small) {
-                        $category->image_small = Be::getProperty('App.ShopFai')->getWwwUrl() . '/image/category/no-image.jpg';
+                        $category->image_small = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image.jpg';
                     }
                 }
                 unset($category);
@@ -240,7 +240,7 @@ class PromotionActivity extends PromotionDriver
             }
         }
 
-        $promotionActivity->discounts = Be::getTable('shopfai_promotion_activity_discount')
+        $promotionActivity->discounts = Be::getTable('shop_promotion_activity_discount')
             ->where('promotion_activity_id', $id)
             ->orderBy('ordering', 'ASC')
             ->getObjects();
@@ -258,10 +258,10 @@ class PromotionActivity extends PromotionDriver
      */
     public function getAvailableActivities(array $cart = []): array
     {
-        $storeService = Be::getService('App.ShopFai.Store');
+        $storeService = Be::getService('App.Shop.Store');
         $now = $storeService->systemTime2StoreTime(date('Y-m-d H:i:s'));
 
-        $productActivities = Be::getTable('shopfai_promotion_activity')
+        $productActivities = Be::getTable('shop_promotion_activity')
             ->where('start_time', '<', $now)
             ->where('end_time', '>', $now)
             ->where('is_enable', 1)
@@ -313,7 +313,7 @@ class PromotionActivity extends PromotionDriver
     private function getActivityDiscountAmount(object $promotionActivity, array $cart = [])
     {
         if (!isset($cart['products']) || !is_array($cart['products']) || count($cart['products']) === 0) {
-            $cart['products'] = Be::getService('App.ShopFai.Cart')->formatProducts($cart, true);
+            $cart['products'] = Be::getService('App.Shop.Cart')->formatProducts($cart, true);
         }
 
         $totalAmount = '0.00';
@@ -337,7 +337,7 @@ class PromotionActivity extends PromotionDriver
             }
 
         } elseif ($promotionActivity->scope_product === 'assign') { // 指定商品
-            $assignedProductIds = Be::getTable('shopfai_promotion_activity_scope_product')
+            $assignedProductIds = Be::getTable('shop_promotion_activity_scope_product')
                 ->where('promotion_activity_id', $promotionActivity->id)
                 ->getValues('product_id');
 
@@ -360,7 +360,7 @@ class PromotionActivity extends PromotionDriver
             }
         } elseif ($promotionActivity->scope_product === 'category') { // 指定分类
             // 指定分类
-            $assignedCategoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+            $assignedCategoryIds = Be::getTable('shop_promotion_activity_scope_category')
                 ->where('promotion_activity_id', $promotionActivity->id)
                 ->getValues('category_id');
 
@@ -387,7 +387,7 @@ class PromotionActivity extends PromotionDriver
             return false;
         }
 
-        $discounts = Be::getTable('shopfai_promotion_activity_discount')
+        $discounts = Be::getTable('shop_promotion_activity_discount')
             ->where('promotion_activity_id', $promotionActivity->id)
             ->orderBy('ordering', 'ASC')
             ->getObjects();
@@ -431,7 +431,7 @@ class PromotionActivity extends PromotionDriver
      */
     public function getPromotionActivity(string $promotionActivityId): object
     {
-        $tuplePromotionActivity = Be::getTuple('shopfai_promotion_activity');
+        $tuplePromotionActivity = Be::getTuple('shop_promotion_activity');
         try {
             $tuplePromotionActivity->loadBy([
                 'id' => $promotionActivityId,
@@ -442,7 +442,7 @@ class PromotionActivity extends PromotionDriver
             throw new ServiceException('Activity (#' . $promotionActivityId . ') does not exist!');
         }
 
-        $storeService = Be::getService('App.ShopFai.Store');
+        $storeService = Be::getService('App.Shop.Store');
         $now = $storeService->systemTime2StoreTime(date('Y-m-d H:i:s'));
         $t0 = strtotime($now);
         $t1 = strtotime($tuplePromotionActivity->start_time);
@@ -483,24 +483,24 @@ class PromotionActivity extends PromotionDriver
         }
 
         if ($promotionActivity->scope_product === 'all') {
-            return Be::getService('App.ShopFai.Product')->filter([
+            return Be::getService('App.Shop.Product')->filter([
                 'pageSize' => $pageSize,
                 'page' => $page,
             ]);
         } elseif ($promotionActivity->scope_product === 'assign') {
-            $promotionActivityProductIds = Be::getTable('shopfai_promotion_activity_scope_product')
+            $promotionActivityProductIds = Be::getTable('shop_promotion_activity_scope_product')
                 ->where('promotion_activity_id', $promotionActivity->id)
                  ->getValues('product_id');
-            return Be::getService('App.ShopFai.Product')->filter([
+            return Be::getService('App.Shop.Product')->filter([
                 'productIds' => $promotionActivityProductIds,
                 'pageSize' => $pageSize,
                 'page' => $page,
             ]);
         } elseif ($promotionActivity->scope_product === 'category') {
-            $promotionActivityCategoryIds = Be::getTable('shopfai_promotion_activity_scope_category')
+            $promotionActivityCategoryIds = Be::getTable('shop_promotion_activity_scope_category')
                 ->where('promotion_activity_id', $promotionActivity->id)
                 ->getValues('category_id');
-            return Be::getService('App.ShopFai.Product')->filter([
+            return Be::getService('App.Shop.Product')->filter([
                 'categoryIds' => $promotionActivityCategoryIds,
                 'pageSize' => $pageSize,
                 'page' => $page,

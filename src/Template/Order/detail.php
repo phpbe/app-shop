@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/user-center/user-center.css" />
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/order/detail.css" />
@@ -12,11 +12,11 @@
     <div class="be-container be-mt-200 be-mb-400">
         <div class="be-d-flex">
             <div class="be-west">
-                <be-include>App.ShopFai.UserCenter.west</be-include>
+                <be-include>App.Shop.UserCenter.west</be-include>
             </div>
             <div class="be-center">
                 <h4 class="be-h4">
-                    <a href="<?php echo beURL('ShopFai.Order.orders') ;?>"><i class="user-center-back"></i></a>
+                    <a href="<?php echo beURL('Shop.Order.orders') ;?>"><i class="user-center-back"></i></a>
                     Order Details
                 </h4>
 
@@ -130,7 +130,7 @@
                             </div>
                             <div class="be-col">
                                 <div class="be-mx-50">
-                                    <a class="be-d-block be-t-ellipsis-2 be-fw-lighter" href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
+                                    <a class="be-d-block be-t-ellipsis-2 be-fw-lighter" href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
                                         <?php echo $product->name; ?>
                                     </a>
                                     <div class="be-c-999">
@@ -178,13 +178,13 @@
                         switch ($this->order->status) {
                             case 'pending':
                                 ?>
-                                <a class="be-mt-100 be-btn be-w-100" href="<?php echo beURL('ShopFai.Payment.pay', ['order_id' => $this->order->id]) ;?>">Pay now</a>
-                                <a class="be-mt-100 be-btn be-btn-orange be-w-100" href="<?php echo beURL('ShopFai.Order.cancel', ['order_id' => $this->order->id]) ;?>">Cancel</a>
+                                <a class="be-mt-100 be-btn be-w-100" href="<?php echo beURL('Shop.Payment.pay', ['order_id' => $this->order->id]) ;?>">Pay now</a>
+                                <a class="be-mt-100 be-btn be-btn-orange be-w-100" href="<?php echo beURL('Shop.Order.cancel', ['order_id' => $this->order->id]) ;?>">Cancel</a>
                                 <?php
                                 break;
                         }
                         ?>
-                        <a class="be-mt-100 be-btn be-btn-outline be-w-100" href="<?php echo beURL('ShopFai.Order.orders') ;?>">Back</a>
+                        <a class="be-mt-100 be-btn be-btn-outline be-w-100" href="<?php echo beURL('Shop.Order.orders') ;?>">Back</a>
                     </div>
 
                 </div>
@@ -336,8 +336,8 @@
                                 switch ($this->order->status) {
                                     case 'pending':
                                         ?>
-                                        <a class="be-btn" href="<?php echo beURL('ShopFai.Payment.pay', ['order_id' => $this->order->id]) ;?>">Pay now</a>
-                                        <a class="be-btn be-btn-orange" href="<?php echo beURL('ShopFai.Order.cancel', ['order_id' => $this->order->id]) ;?>">Cancel</a>
+                                        <a class="be-btn" href="<?php echo beURL('Shop.Payment.pay', ['order_id' => $this->order->id]) ;?>">Pay now</a>
+                                        <a class="be-btn be-btn-orange" href="<?php echo beURL('Shop.Order.cancel', ['order_id' => $this->order->id]) ;?>">Cancel</a>
                                         <?php
                                         break;
                                 }
@@ -369,7 +369,7 @@
                                     <img class="be-mw-100" src="<?php echo $product->image; ?>" alt="<?php echo $product->_name; ?>">
                                 </td>
                                 <td class="be-ta-left">
-                                    <a class="be-d-block" href="<?php echo beUrl('ShopFai.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
+                                    <a class="be-d-block" href="<?php echo beUrl('Shop.Product.detail', ['id' => $product->product_id]); ?>" target="_blank">
                                         <?php echo $product->name; ?>
                                     </a>
                                     <div class="be-c-999">
@@ -386,7 +386,7 @@
                         </tbody>
                     </table>
 
-                    <a class="be-mt-100 be-btn be-btn-outline" href="<?php echo beURL('ShopFai.Order.orders') ;?>">Back</a>
+                    <a class="be-mt-100 be-btn be-btn-outline" href="<?php echo beURL('Shop.Order.orders') ;?>">Back</a>
 
                 </div>
                 <!-- PC端 结束 -->

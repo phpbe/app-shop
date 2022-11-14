@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai;
+namespace Be\App\Shop;
 
 use Be\Be;
 

@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <link rel="stylesheet" href="<?php echo $wwwUrl; ?>/css/payment-paypal/pay.css" />
 </be-head>
@@ -24,7 +24,7 @@
 
                 createOrder: function(data, actions) {
                     return fetch(
-                        '<?php echo beUrl('ShopFai.PaymentPaypal.create', ['order_id' => $this->order->id]); ?>', {
+                        '<?php echo beUrl('Shop.PaymentPaypal.create', ['order_id' => $this->order->id]); ?>', {
                             method: 'post',
                             headers: {
                                 'content-type': 'application/json'
@@ -48,7 +48,7 @@
 
                 onApprove: function(data, actions) {
                     return fetch(
-                        '<?php echo beUrl('ShopFai.PaymentPaypal.approve', ['order_id' => $this->order->id]); ?>',
+                        '<?php echo beUrl('Shop.PaymentPaypal.approve', ['order_id' => $this->order->id]); ?>',
                         {
                             method: 'post',
                             headers: {
@@ -64,7 +64,7 @@
                     }).then(function(json) {
                         //console.log(json);
                         if (json.success) {
-                            window.location.href = "<?php echo beUrl('ShopFai.Payment.success', ['order_id' => $this->order->id]); ?>";
+                            window.location.href = "<?php echo beUrl('Shop.Payment.success', ['order_id' => $this->order->id]); ?>";
                         } else {
                             if (json.message) {
                                 alert(json.message);

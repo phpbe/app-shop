@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\App\ServiceException;
 use Be\Be;
@@ -22,7 +22,7 @@ class CollectProduct
         $now = date('Y-m-d H:i:s');
         foreach ($products as $product) {
 
-            $tupleProduct = Be::getTuple('shopfai_product');
+            $tupleProduct = Be::getTuple('shop_product');
             try {
                 $tupleProduct->loadBy([
                     'id' => $product['id'],
@@ -39,7 +39,7 @@ class CollectProduct
             try {
 
                 if (isset($product['category_ids']) && is_array($product['category_ids'])) {
-                    $existCategoryIds = Be::getTable('shopfai_product_category')
+                    $existCategoryIds = Be::getTable('shop_product_category')
                         ->where('product_id', $product['id'])
                         ->getValues('category_id');
 
@@ -47,7 +47,7 @@ class CollectProduct
                     if (count($existCategoryIds) > 0) {
                         $removeCategoryIds = array_diff($existCategoryIds, $product['category_ids']);
                         if (count($removeCategoryIds) > 0) {
-                            Be::getTable('shopfai_product_category')
+                            Be::getTable('shop_product_category')
                                 ->where('product_id', $product['id'])
                                 ->where('category_id', 'NOT IN', $removeCategoryIds)
                                 ->delete();
@@ -63,7 +63,7 @@ class CollectProduct
                     }
                     if (count($newCategoryIds) > 0) {
                         foreach ($newCategoryIds as $category_id) {
-                            $tupleProductCategory = Be::getTuple('shopfai_product_category');
+                            $tupleProductCategory = Be::getTuple('shop_product_category');
                             $tupleProductCategory->product_id = $tupleProduct->id;
                             $tupleProductCategory->category_id = $category_id;
                             $tupleProductCategory->insert();
@@ -77,7 +77,7 @@ class CollectProduct
                 $tupleProduct->update();
 
                 if ($tupleProduct->relate_id !== '') {
-                    $tupleProductRelate = Be::getTuple('shopfai_product_relate');
+                    $tupleProductRelate = Be::getTuple('shop_product_relate');
                     $tupleProductRelate->load($tupleProduct->relate_id);
                     if ($tupleProductRelate->is_enable === -1) {
                         $tupleProductRelate->is_enable = 1;
@@ -107,7 +107,7 @@ class CollectProduct
         if (count($productIds) === 0) return;
 
         foreach ($productIds as $productId) {
-            $tupleProduct = Be::getTuple('shopfai_product');
+            $tupleProduct = Be::getTuple('shop_product');
             try {
                 $tupleProduct->loadBy([
                     'id' => $productId,
@@ -119,48 +119,48 @@ class CollectProduct
             if ($tupleProduct->is_enable === -1) { // 未曾导入，直接物理删除
 
                 // 删除商品主图
-                Be::getTable('shopfai_product_image')
+                Be::getTable('shop_product_image')
                     ->where('product_id', $productId)
                     ->delete();
 
                 // 删除商品分类
-                Be::getTable('shopfai_product_category')
+                Be::getTable('shop_product_category')
                     ->where('product_id', $productId)
                     ->delete();
 
                 // 如查商品有设置关联，删除商品关联
                 if ($tupleProduct->relate_id !== '') {
-                    Be::getTable('shopfai_product_relate_detail')
+                    Be::getTable('shop_product_relate_detail')
                         ->where('relate_id', $tupleProduct->relate_id)
                         ->where('product_id', $productId)
                         ->delete();
 
-                    if (Be::getTable('shopfai_product_relate_detail')
+                    if (Be::getTable('shop_product_relate_detail')
                             ->where('relate_id', $tupleProduct->relate_id)
                             ->count() === 0) {
 
-                        Be::getTuple('shopfai_product_relate')
+                        Be::getTuple('shop_product_relate')
                             ->delete($tupleProduct->relate_id);
                     }
                 }
 
                 // 删除商品SKU
-                Be::getTable('shopfai_product_item')
+                Be::getTable('shop_product_item')
                     ->where('product_id', $productId)
                     ->delete();
 
                 // 删除商品款式
-                Be::getTable('shopfai_product_style')
+                Be::getTable('shop_product_style')
                     ->where('product_id', $productId)
                     ->delete();
 
                 // 删除商品款式
-                Be::getTable('shopfai_product_tag')
+                Be::getTable('shop_product_tag')
                     ->where('product_id', $productId)
                     ->delete();
 
                 if ($tupleProduct->collect_product_id !== '') {
-                    Be::getTuple('shopfai_collect_product')
+                    Be::getTuple('shop_collect_product')
                         ->delete($tupleProduct->collect_product_id);
                 }
 
@@ -170,7 +170,7 @@ class CollectProduct
             } else {
 
                 if ($tupleProduct->collect_product_id !== '') {
-                    Be::getTuple('shopfai_collect_product')
+                    Be::getTuple('shop_collect_product')
                         ->delete($tupleProduct->collect_product_id);
                 }
 

@@ -1,6 +1,6 @@
 <be-head>
     <?php
-    $wwwUrl = \Be\Be::getProperty('App.ShopFai')->getWwwUrl();
+    $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/sortable/sortable.min.js"></script>
     <script src="<?php echo $wwwUrl; ?>/lib/vuedraggable/vuedraggable.umd.min.js"></script>
@@ -1475,7 +1475,7 @@
                     for(let detail of this.formData.relate.details) {
                         excludeProductIds.push(detail.product_id)
                     }
-                    let url = "<?php echo beAdminUrl('ShopFai.Product.relate'); ?>";
+                    let url = "<?php echo beAdminUrl('Shop.Product.relate'); ?>";
                     url +=  url.indexOf("?") === -1 ? "?" : "&";
                     url += "exclude_product_ids=" + excludeProductIds.join(",");
 

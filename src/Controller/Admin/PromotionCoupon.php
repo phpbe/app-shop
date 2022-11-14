@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\AdminPlugin\Detail\Item\DetailItemHtml;
 use Be\AdminPlugin\Table\Item\TableItemCustom;
@@ -28,12 +28,12 @@ class PromotionCoupon extends Auth
      */
     public function coupons()
     {
-        $serviceStore = Be::getService('App.ShopFai.Admin.Store');
+        $serviceStore = Be::getService('App.Shop.Admin.Store');
 
         Be::getAdminPlugin('Curd')->setting([
 
             'label' => '优惠券',
-            'table' => 'shopfai_promotion_coupon',
+            'table' => 'shop_promotion_coupon',
 
             'grid' => [
                 'title' => '优惠券',
@@ -104,7 +104,7 @@ class PromotionCoupon extends Auth
                     'items' => [
                         [
                             'label' => '创建优惠券',
-                            'url' => beAdminUrl('ShopFai.PromotionCoupon.create'),
+                            'url' => beAdminUrl('Shop.PromotionCoupon.create'),
                             'target' => 'self', // 'ajax - ajax请求 / dialog - 对话框窗口 / drawer - 抽屉 / self - 当前页面 / blank - 新页面'
                             'ui' => [
                                 'icon' => 'el-icon-plus',
@@ -146,7 +146,7 @@ class PromotionCoupon extends Auth
                         ],
                         [
                             'label' => '批量删除',
-                            'url' => beAdminUrl('ShopFai.PromotionCoupon.delete'),
+                            'url' => beAdminUrl('Shop.PromotionCoupon.delete'),
                             'target' => 'ajax',
                             'confirm' => '确认要删除吗？',
                             'ui' => [
@@ -186,7 +186,7 @@ class PromotionCoupon extends Auth
                             'label' => '优惠规则',
                             'align' => 'left',
                             'value' => function ($row) {
-                                $configStore = Be::getConfig('App.ShopFai.Store');
+                                $configStore = Be::getConfig('App.Shop.Store');
 
                                 $discount = '';
                                 if ($row['condition'] !== 'none') {
@@ -226,7 +226,7 @@ class PromotionCoupon extends Auth
                             'label' => '已邻取/发放量',
                             'width' => '120',
                             'value' => function ($row) {
-                                return Be::getTable('shopfai_promotion_coupon_user')
+                                return Be::getTable('shop_promotion_coupon_user')
                                         ->where('promotion_coupon_id', $row['id'])
                                         ->count() . '/' . ($row['limit_quantity'] === '0' ? '不限' : $row['limit_quantity']);
                             },
@@ -236,7 +236,7 @@ class PromotionCoupon extends Auth
                             'label' => '已使用',
                             'width' => '90',
                             'value' => function ($row) {
-                                return Be::getTable('shopfai_order_promotion')
+                                return Be::getTable('shop_order_promotion')
                                     ->where('promotion_type', 'promotion_coupon')
                                     ->where('promotion_id', $row['id'])
                                     ->count();
@@ -283,7 +283,7 @@ class PromotionCoupon extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '编辑',
-                                'url' => beAdminUrl('ShopFai.PromotionCoupon.edit'),
+                                'url' => beAdminUrl('Shop.PromotionCoupon.edit'),
                                 'target' => 'self',
                                 'ui' => [
                                     ':underline' => 'false',
@@ -294,7 +294,7 @@ class PromotionCoupon extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '统计',
-                                'url' => beAdminUrl('ShopFai.PromotionCoupon.statistics'),
+                                'url' => beAdminUrl('Shop.PromotionCoupon.statistics'),
                                 'target' => 'self',
                                 'ui' => [
                                     'type' => 'success',
@@ -306,7 +306,7 @@ class PromotionCoupon extends Auth
                             [
                                 'label' => '',
                                 'tooltip' => '删除',
-                                'url' => beAdminUrl('ShopFai.PromotionCoupon.delete'),
+                                'url' => beAdminUrl('Shop.PromotionCoupon.delete'),
                                 'confirm' => '确认要删除么？',
                                 'target' => 'ajax',
                                 'ui' => [
@@ -343,7 +343,7 @@ class PromotionCoupon extends Auth
                             'label' => '优惠规则',
                             'value' => function ($row) {
 
-                                $configStore = Be::getConfig('App.ShopFai.Store');
+                                $configStore = Be::getConfig('App.Shop.Store');
 
                                 $discount = '';
                                 if ($row['condition'] !== 'none') {
@@ -493,7 +493,7 @@ class PromotionCoupon extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.PromotionCoupon')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.PromotionCoupon')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '新建优惠券成功！');
                 $response->json();
@@ -503,7 +503,7 @@ class PromotionCoupon extends Auth
                 $response->json();
             }
         } else {
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
             $response->set('promotionCoupon', false);
@@ -511,7 +511,7 @@ class PromotionCoupon extends Auth
             $response->set('title', '新建优惠券');
 
             //$response->display();
-            $response->display('App.ShopFai.Admin.PromotionCoupon.edit');
+            $response->display('App.Shop.Admin.PromotionCoupon.edit');
         }
     }
 
@@ -527,7 +527,7 @@ class PromotionCoupon extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.ShopFai.Admin.PromotionCoupon')->edit($request->json('formData'));
+                Be::getService('App.Shop.Admin.PromotionCoupon')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑优惠券成功！');
                 $response->json();
@@ -541,16 +541,16 @@ class PromotionCoupon extends Auth
             if ($postData) {
                 $postData = json_decode($postData, true);
                 if (isset($postData['row']['id']) && $postData['row']['id']) {
-                    $response->redirect(beAdminUrl('ShopFai.PromotionCoupon.edit', ['id' => $postData['row']['id']]));
+                    $response->redirect(beAdminUrl('Shop.PromotionCoupon.edit', ['id' => $postData['row']['id']]));
                 }
             }
         } else {
-            $configStore = Be::getConfig('App.ShopFai.Store');
+            $configStore = Be::getConfig('App.Shop.Store');
             $response->set('configStore', $configStore);
 
             $promotionCouponId = $request->get('id', '');
 
-            $service = Be::getService('App.ShopFai.Admin.PromotionCoupon');
+            $service = Be::getService('App.Shop.Admin.PromotionCoupon');
 
             $promotionCoupon = $service->getPromotionCoupon($promotionCouponId);
             $response->set('promotionCoupon', $promotionCoupon);
@@ -577,7 +577,7 @@ class PromotionCoupon extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
         try {
-            $result = Be::getService('App.ShopFai.Admin.PromotionCoupon')->generate();
+            $result = Be::getService('App.Shop.Admin.PromotionCoupon')->generate();
             $response->set('success', true);
             $response->set('message', '生成优惠码成功！');
             $response->set('result', $result);
@@ -612,7 +612,7 @@ class PromotionCoupon extends Auth
             }
 
             if (count($productIds) > 0) {
-                Be::getService('App.ShopFai.Admin.PromotionCoupon')->delete($productIds);
+                Be::getService('App.Shop.Admin.PromotionCoupon')->delete($productIds);
             }
 
             $response->set('success', true);
@@ -639,12 +639,12 @@ class PromotionCoupon extends Auth
             $postData = json_decode($postData, true);
             if (isset($postData['row']['id']) && $postData['row']['id']) {
 
-                $configStore = Be::getConfig('App.ShopFai.Store');
+                $configStore = Be::getConfig('App.Shop.Store');
                 $response->set('configStore', $configStore);
 
                 $promotionCouponId = $postData['row']['id'];
 
-                $service = Be::getService('App.ShopFai.Admin.PromotionCoupon');
+                $service = Be::getService('App.Shop.Admin.PromotionCoupon');
 
                 $promotionCoupon = $service->getPromotionCoupon($promotionCouponId);
                 $response->set('promotionCoupon', $promotionCoupon);

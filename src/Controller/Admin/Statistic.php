@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -42,7 +42,7 @@ class Statistic extends Auth
                     $reportFormData = $formData;
                 }
 
-                $returnReports[] = Be::getService('App.ShopFai.Admin.Statistic' . $report['type'])->$name($reportFormData);
+                $returnReports[] = Be::getService('App.Shop.Admin.Statistic' . $report['type'])->$name($reportFormData);
             }
         }
 

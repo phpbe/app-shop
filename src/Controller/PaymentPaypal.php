@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -17,13 +17,13 @@ class PaymentPaypal extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId, ['shipping_address' => 1, 'billing_address' => 1, 'products' => 1]);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId, ['shipping_address' => 1, 'billing_address' => 1, 'products' => 1]);
         if ($order->status != 'pending') {
-            $response->redirect(beUrl('ShopFai.Order.detail', ['order_id' => $orderId]));
+            $response->redirect(beUrl('Shop.Order.detail', ['order_id' => $orderId]));
             return;
         }
 
-        $servicePaymentPaypal = Be::getService('App.ShopFai.PaymentPaypal');
+        $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
         $configPaymentPaypal = $servicePaymentPaypal->getConfig();
         if ($configPaymentPaypal->pop) {
             $response->set('order', $order);
@@ -33,7 +33,7 @@ class PaymentPaypal extends Base
 
             $response->display();
         } else {
-            $response->redirect(beUrl('ShopFai.PaymentPaypal.create', ['order_id' => $orderId]));
+            $response->redirect(beUrl('Shop.PaymentPaypal.create', ['order_id' => $orderId]));
         }
     }
 
@@ -48,9 +48,9 @@ class PaymentPaypal extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId, ['shipping_address' => 1, 'billing_address' => 1, 'products' => 1]);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId, ['shipping_address' => 1, 'billing_address' => 1, 'products' => 1]);
 
-        $servicePaymentPaypal = Be::getService('App.ShopFai.PaymentPaypal');
+        $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
         $configPaymentPaypal = $servicePaymentPaypal->getConfig();
         if ($configPaymentPaypal->pop) {
             // JS ajax 请求 createOrder
@@ -74,7 +74,7 @@ class PaymentPaypal extends Base
             }
         } else {
             if ($order->status != 'pending') {
-                $response->redirect(beUrl('ShopFai.Order.detail', ['order_id' => $orderId]));
+                $response->redirect(beUrl('Shop.Order.detail', ['order_id' => $orderId]));
                 return;
             }
 
@@ -94,9 +94,9 @@ class PaymentPaypal extends Base
         $response = Be::getResponse();
 
         $orderId = $request->get('order_id');
-        $order = Be::getService('App.ShopFai.Order')->getOrder($orderId);
+        $order = Be::getService('App.Shop.Order')->getOrder($orderId);
 
-        $servicePaymentPaypal = Be::getService('App.ShopFai.PaymentPaypal');
+        $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
         $configPaymentPaypal = $servicePaymentPaypal->getConfig();
         if ($configPaymentPaypal->pop) {
 

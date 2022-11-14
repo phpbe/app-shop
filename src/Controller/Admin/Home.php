@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller\Admin;
+namespace Be\App\Shop\Controller\Admin;
 
 use Be\App\System\Controller\Admin\Auth;
 use Be\Be;
@@ -23,13 +23,13 @@ class Home extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configStore = Be::getConfig('App.ShopFai.Store');
+        $configStore = Be::getConfig('App.Shop.Store');
         $response->set('configStore', $configStore);
 
         $response->set('title', '首页');
 
         if ($configStore->setUp === 7) {
-            $serviceStatisticSales = Be::getService('App.ShopFai.Admin.StatisticSales');
+            $serviceStatisticSales = Be::getService('App.Shop.Admin.StatisticSales');
             $todaySalesPaidSum = $serviceStatisticSales->getPaidSum(['dateRangeType' => 'today']);
             $response->set('todaySalesPaidSum', $todaySalesPaidSum);
 
@@ -39,7 +39,7 @@ class Home extends Auth
             $todaySalesPaidNotShippedCount = $serviceStatisticSales->getPaidNotShippedCount(['dateRangeType' => 'today']);
             $response->set('todaySalesPaidNotShippedCount', $todaySalesPaidNotShippedCount);
 
-            $serviceStatisticVisit = Be::getService('App.ShopFai.Admin.StatisticVisit');
+            $serviceStatisticVisit = Be::getService('App.Shop.Admin.StatisticVisit');
             $todayVisitUniqueUserCount = $serviceStatisticVisit->getUniqueUserCount(['dateRangeType' => 'today']);
             $response->set('todayVisitUniqueUserCount', $todayVisitUniqueUserCount);
 
@@ -50,7 +50,7 @@ class Home extends Auth
             $themeProperty = Be::getProperty('Theme.' . $configTheme->default);
             $response->set('themeProperty', $themeProperty);
 
-            $response->display('App.ShopFai.Admin.Home.setUp');
+            $response->display('App.Shop.Admin.Home.setUp');
         }
     }
 

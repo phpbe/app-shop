@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Section\TopSales;
+namespace Be\App\Shop\Section\TopSales;
 
 /**
  * @BeConfig("热销商品", icon="el-icon-s-data")

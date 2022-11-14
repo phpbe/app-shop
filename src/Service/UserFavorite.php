@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Service;
+namespace Be\App\Shop\Service;
 
 use Be\Be;
 
@@ -20,16 +20,16 @@ class UserFavorite
         $redis = Be::getRedis();
 
         $productIds = null;
-        $config = Be::getConfig('App.ShopFai.User');
+        $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
-            $productIds = $redis->sMembers('ShopFai:User:Favorite:' . $my->id);
+            $productIds = $redis->sMembers('Shop:User:Favorite:' . $my->id);
         } else {
-            $sql = 'SELECT product_id FROM shopfai_user_favorite WHERE user_id = ? AND is_enable = 1 AND is_delete = 0';
+            $sql = 'SELECT product_id FROM shop_user_favorite WHERE user_id = ? AND is_enable = 1 AND is_delete = 0';
             $productIds = Be::getDb()->getValues($sql, [$my->id]);
         }
 
         foreach ($productIds as $productId) {
-            $product = $redis->get('ShopFai:Product:' . $productId);
+            $product = $redis->get('Shop:Product:' . $productId);
             if (!$product) {
                 continue;
             }
@@ -60,7 +60,7 @@ class UserFavorite
                 'image_medium' => $imageMedium,
                 'image_large' => $imageLarge,
                 'price' => $product['price'],
-                'url' =>  beUrl('ShopFai.Product.detail', ['id' => $product['id']]),
+                'url' =>  beUrl('Shop.Product.detail', ['id' => $product['id']]),
             ];
         }
 
@@ -75,12 +75,12 @@ class UserFavorite
     public function addFavorite(string$productId)
     {
         $my = Be::getUser();
-        $config = Be::getConfig('App.ShopFai.User');
+        $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            $redis->sAdd('ShopFai:User:Favorite:' . $my->id, $productId);
+            $redis->sAdd('Shop:User:Favorite:' . $my->id, $productId);
         } else {
-            $tupleUserFavorite = Be::getTuple('shopfai_user_favorite');
+            $tupleUserFavorite = Be::getTuple('shop_user_favorite');
             try {
                 $tupleUserFavorite->load([
                     'user_id' => $my->id,
@@ -107,12 +107,12 @@ class UserFavorite
     public function isFavorite(string $productId): bool
     {
         $my = Be::getUser();
-        $config = Be::getConfig('App.ShopFai.User');
+        $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            return $redis->sIsMember('ShopFai:User:Favorite:' . $my->id, $productId);
+            return $redis->sIsMember('Shop:User:Favorite:' . $my->id, $productId);
         } else {
-            $sql = 'SELECT COUNT(*) FROM shopfai_user_favorite WHERE user_id = ? AND product_id = ? AND is_enable = 1 AND is_delete = 0';
+            $sql = 'SELECT COUNT(*) FROM shop_user_favorite WHERE user_id = ? AND product_id = ? AND is_enable = 1 AND is_delete = 0';
             return Be::getDb()->getValue($sql, [$my->id, $productId]) > 0;
         }
     }
@@ -125,12 +125,12 @@ class UserFavorite
     public function deleteFavorite(string $productId)
     {
         $my = Be::getUser();
-        $config = Be::getConfig('App.ShopFai.User');
+        $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            $redis->sRem('ShopFai:User:Favorite:' . $my->id, $productId);
+            $redis->sRem('Shop:User:Favorite:' . $my->id, $productId);
         } else {
-            $tupleUserFavorite = Be::getTuple('shopfai_user_favorite');
+            $tupleUserFavorite = Be::getTuple('shop_user_favorite');
             try {
                 $tupleUserFavorite->loadBy([
                     'user_id' => $my->id,

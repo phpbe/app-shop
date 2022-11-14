@@ -1,6 +1,6 @@
 <?php
 
-namespace Be\App\ShopFai\Controller;
+namespace Be\App\Shop\Controller;
 
 use Be\Be;
 
@@ -23,7 +23,7 @@ class UserProductReview extends Auth
 
         $option = [];
 
-        $total = Be::getService('App.ShopFai.UserProductReview')->getCount($userId, $option);
+        $total = Be::getService('App.Shop.UserProductReview')->getCount($userId, $option);
         $response->set('total', $total);
 
         $pageSize = $request->get('pageSize', 12);
@@ -41,7 +41,7 @@ class UserProductReview extends Auth
         $option['pageSize'] = $pageSize;
         $option['page'] = $page;
 
-        $reviews = Be::getService('App.ShopFai.UserProductReview')->getReviews($userId, $option);
+        $reviews = Be::getService('App.Shop.UserProductReview')->getReviews($userId, $option);
         $response->set('reviews', $reviews);
 
         $response->display();

@@ -1,13 +1,13 @@
 <?php
 
-namespace Be\App\ShopFai\Service\Admin;
+namespace Be\App\Shop\Service\Admin;
 
 use Be\Be;
 
 /**
  * Class Region
  *
- * @package Be\App\ShopFai\Admin\Service
+ * @package Be\App\Shop\Admin\Service
  */
 class Region
 {
@@ -20,10 +20,10 @@ class Region
     public function getContinentCountryTree()
     {
         $db = Be::getDb();
-        $sql = 'SELECT code, `name`, name_cn FROM `shopfai_region_continent` ORDER BY `ordering` ASC';
+        $sql = 'SELECT code, `name`, name_cn FROM `shop_region_continent` ORDER BY `ordering` ASC';
         $continents = $db->getObjects($sql);
         foreach ($continents as $continent) {
-            $sql = 'SELECT continent_code, code, `name`, name_cn, flag FROM `shopfai_region_country` WHERE continent_code = \'' . $continent->code . '\' ORDER BY `name` ASC';
+            $sql = 'SELECT continent_code, code, `name`, name_cn, flag FROM `shop_region_country` WHERE continent_code = \'' . $continent->code . '\' ORDER BY `name` ASC';
             $countries = $db->getObjects($sql);
             $continent->countries = $countries;
         }
@@ -40,7 +40,7 @@ class Region
     public function getContinents()
     {
         $db = Be::getDb();
-        $sql = 'SELECT code, `name`, name_cn FROM `shopfai_region_continent` ORDER BY `ordering` ASC';
+        $sql = 'SELECT code, `name`, name_cn FROM `shop_region_continent` ORDER BY `ordering` ASC';
         $continents = $db->getObjects($sql);
         return $continents;
     }
@@ -53,7 +53,7 @@ class Region
     public function getCountries(string $continentCode = null)
     {
         $db = Be::getDb();
-        $sql = 'SELECT id, continent_code, code, `name`, name_cn, flag FROM `shopfai_region_country`';
+        $sql = 'SELECT id, continent_code, code, `name`, name_cn, flag FROM `shop_region_country`';
         if ($continentCode !== null) {
             $sql .= ' WHERE continent_code = \'' . $continentCode . '\'';
         }
@@ -70,7 +70,7 @@ class Region
     public function getCountryKeyValues()
     {
         $db = Be::getDb();
-        $sql = 'SELECT code, `name_cn` FROM `shopfai_region_country` ORDER BY `name` ASC';
+        $sql = 'SELECT code, `name_cn` FROM `shop_region_country` ORDER BY `name` ASC';
         $keyValues = $db->getKeyValues($sql);
         return $keyValues;
     }
@@ -86,7 +86,7 @@ class Region
     public function getStates(string $countryCode)
     {
         $db = Be::getDb();
-        $sql = 'SELECT id, `name`, name_cn FROM `shopfai_region_state` WHERE  country_code = \'' . $countryCode . '\' ORDER BY `name` ASC';
+        $sql = 'SELECT id, `name`, name_cn FROM `shop_region_state` WHERE  country_code = \'' . $countryCode . '\' ORDER BY `name` ASC';
         $states = $db->getObjects($sql);
         return $states;
     }
@@ -102,7 +102,7 @@ class Region
     public function getStateCnNames(string $countryCode)
     {
         $db = Be::getDb();
-        $sql = 'SELECT `name_cn` FROM `shopfai_region_states` WHERE  country_id = \'' . $countryCode . '\' ORDER BY `name` ASC';
+        $sql = 'SELECT `name_cn` FROM `shop_region_states` WHERE  country_id = \'' . $countryCode . '\' ORDER BY `name` ASC';
         $values = $db->getValues($sql);
         return $values;
     }
@@ -118,7 +118,7 @@ class Region
     public function getStateNames(string $countryCode)
     {
         $db = Be::getDb();
-        $sql = 'SELECT `name` FROM `shopfai_region_states` WHERE  country_id = \'' . $countryCode . '\' ORDER BY `name` ASC';
+        $sql = 'SELECT `name` FROM `shop_region_states` WHERE  country_id = \'' . $countryCode . '\' ORDER BY `name` ASC';
         $values = $db->getValues($sql);
         return $values;
     }

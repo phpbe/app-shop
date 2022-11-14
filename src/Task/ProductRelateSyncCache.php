@@ -1,5 +1,5 @@
 <?php
-namespace Be\App\ShopFai\Task;
+namespace Be\App\Shop\Task;
 
 use Be\Be;
 use Be\Task\TaskInterval;
@@ -33,10 +33,10 @@ class ProductRelateSyncCache extends TaskInterval
         $d1 = date('Y-m-d H:i:s', $t1 - 60);
         $d2 = date('Y-m-d H:i:s', $t2);
 
-        $service = Be::getService('App.ShopFai.Admin.TaskProductRelate');
+        $service = Be::getService('App.Shop.Admin.TaskProductRelate');
 
         $db = Be::getDb();
-        $sql = 'SELECT * FROM shopfai_product_relate WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
+        $sql = 'SELECT * FROM shop_product_relate WHERE is_enable != -1 AND update_time >= ? AND update_time <= ?';
         $relates = $db->getYieldObjects($sql, [$d1, $d2]);
 
         $batch = [];
