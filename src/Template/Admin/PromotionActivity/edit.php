@@ -491,7 +491,7 @@
                                             align="center"
                                             width="80">
                                         <template slot-scope="scope">
-                                            <el-image :src="scope.row.image_small" fit="contain"></el-image>
+                                            <el-image :src="scope.row.image" fit="contain"></el-image>
                                         </template>
                                     </el-table-column>
 

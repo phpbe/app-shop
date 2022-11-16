@@ -112,7 +112,6 @@ class Product
 
             $items[] = (object)[
                 'id' => '',
-                'image' => $image,
                 'sku' => $spu,
                 'barcode' => $spu,
                 'style' => '',
@@ -121,6 +120,17 @@ class Product
                 'weight' => $weight,
                 'weight_unit' => 'g',
                 'stock' => $stock,
+                'images' => [
+                    (object)[
+                        'id' => '',
+                        'product_id' => '',
+                        'url' => $image,
+                        'is_main' => 1,
+                        'ordering' => 0,
+                        'create_time' => $createTime,
+                        'update_time' => $updateTime,
+                    ]
+                ],
             ];
 
             $priceFrom = $price;
@@ -139,7 +149,6 @@ class Product
                 $items[] = (object)[
                     'id' => '',
                     'product_id' => '',
-                    'image' => '',
                     'sku' => $spu . '-' . $size,
                     'barcode' => $spu,
                     'style' => $size,
@@ -149,6 +158,7 @@ class Product
                     'weight' => $weight,
                     'weight_unit' => 'g',
                     'stock' => $stock,
+                    'images' => [],
                 ];
 
                 if ($priceFrom === 0 || $price < $priceFrom) {
@@ -173,10 +183,7 @@ class Product
         $images[] = (object)[
             'id' => '',
             'product_id' => '',
-            'small' => $image,
-            'medium' => $image,
-            'large' => $image,
-            'original' => $image,
+            'url' => $image,
             'is_main' => 1,
             'ordering' => 0,
             'create_time' => $createTime,

@@ -208,7 +208,7 @@ class PromotionActivity extends PromotionDriver
                     ->getObjects();
                 if (count($products) > 0) {
                     foreach ($products as &$product) {
-                        $sql = 'SELECT small FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                        $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                         $image = $db->getValue($sql, [$product->id]);
                         if ($image) {
                             $product->image = $image;
@@ -230,8 +230,8 @@ class PromotionActivity extends PromotionDriver
                     ->where('id', 'IN', $categoryIds)
                     ->getObjects();
                 foreach ($categories as &$category) {
-                    if (!$category->image_small) {
-                        $category->image_small = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image.jpg';
+                    if (!$category->image) {
+                        $category->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image.jpg';
                     }
                 }
                 unset($category);

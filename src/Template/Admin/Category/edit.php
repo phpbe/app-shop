@@ -197,8 +197,8 @@
                             <div class="be-mt-150">封面图片：</div>
                             <div class="be-row be-mt-50">
                                 <div class="be-col-auto">
-                                    <div v-if="formData.image_small !== ''" :key="formData.image_small" class="image">
-                                        <img :src="formData.image_small">
+                                    <div v-if="formData.image !== ''" :key="formData.image" class="image">
+                                        <img :src="formData.image">
                                         <div class="image-actions">
                                             <span class="image-action" @click="imagePreview()"><i class="el-icon-zoom-in"></i></span>
                                             <span class="image-action" @click="imageRemove()"><i class="el-icon-delete"></i></span>
@@ -212,10 +212,7 @@
                                 </div>
                             </div>
                             <?php
-                            $formData['image_small'] = ($this->category ? $this->category->image_small : '');
-                            $formData['image_medium'] = ($this->category ? $this->category->image_medium : '');
-                            $formData['image_large'] = ($this->category ? $this->category->image_large : '');
-                            $formData['image_original'] = ($this->category ? $this->category->image_original : '');
+                            $formData['image'] = ($this->category ? $this->category->image : '');
                             ?>
 
 
@@ -225,7 +222,7 @@
 
                             <el-dialog :visible.sync="imagePreviewVisible" center="true">
                                 <div class="be-ta-center">
-                                    <img style="max-width: 100%;max-height: 400px;" :src="formData.image_small" alt="">
+                                    <img style="max-width: 100%;max-height: 400px;" :src="formData.image" alt="">
                                 </div>
                             </el-dialog>
 
@@ -513,10 +510,7 @@
                 imageSelected: function (files) {
                     if (files.length > 0) {
                         let file = files[0];
-                        this.formData.image_small = file.url;
-                        this.formData.image_medium = file.url;
-                        this.formData.image_large = file.url;
-                        this.formData.image_original = file.url;
+                        this.formData.image = file.url;
 
                         this.imageSelectorVisible = false;
                         this.imageSelectorUrl = "about:blank";
@@ -527,10 +521,7 @@
                 },
                 imageRemove: function () {
                     this.imageFiles = [];
-                    this.formData.image_small = "";
-                    this.formData.image_medium = "";
-                    this.formData.image_large = "";
-                    this.formData.image_original = "";
+                    this.formData.image = "";
                 }
 
                 <?php

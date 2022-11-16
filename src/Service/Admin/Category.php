@@ -136,20 +136,8 @@ class Category
         } while ($urlExist);
         $url = $urlUnique;
 
-        if (!isset($data['image_small']) || !is_string($data['image_small'])) {
-            $data['image_small'] = '';
-        }
-
-        if (!isset($data['image_medium']) || !is_string($data['image_medium'])) {
-            $data['image_medium'] = '';
-        }
-
-        if (!isset($data['image_large']) || !is_string($data['image_large'])) {
-            $data['image_large'] = '';
-        }
-
-        if (!isset($data['image_original']) || !is_string($data['image_original'])) {
-            $data['image_original'] = '';
+        if (!isset($data['image']) || !is_string($data['image'])) {
+            $data['image'] = '';
         }
 
         if (!isset($data['seo_title']) || !is_string($data['seo_title'])) {
@@ -187,10 +175,7 @@ class Category
             $tupleCategory->description = $data['description'];
             $tupleCategory->url = $url;
             $tupleCategory->url_custom = $data['url_custom'];
-            $tupleCategory->image_small = $data['image_small'];
-            $tupleCategory->image_medium = $data['image_medium'];
-            $tupleCategory->image_large = $data['image_large'];
-            $tupleCategory->image_original = $data['image_original'];
+            $tupleCategory->image = $data['image'];
             $tupleCategory->seo_title = $data['seo_title'];
             $tupleCategory->seo_title_custom = $data['seo_title_custom'];
             $tupleCategory->seo_description = $data['seo_description'];
@@ -429,7 +414,7 @@ class Category
                     // 未指定时取表的所有字段
                     'items' => [
                         [
-                            'name' => 'image_small',
+                            'name' => 'image',
                             'label' => '封面图片',
                             'width' => '90',
                             'driver' => TableItemImage::class,
@@ -437,10 +422,10 @@ class Category
                                 'style' => 'max-width: 60px; max-height: 60px'
                             ],
                             'value' => function($row) {
-                                if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                if ($row['imagel'] === '') {
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
                                 }
-                                return $row['image_small'];
+                                return $row['image'];
                             },
                         ],
                         [
@@ -499,7 +484,7 @@ class Category
                     // 未指定时取表的所有字段
                     'items' => [
                         [
-                            'name' => 'image_small',
+                            'name' => 'image',
                             'label' => '封面图片',
                             'width' => '90',
                             'driver' => TableItemImage::class,
@@ -507,10 +492,10 @@ class Category
                                 'style' => 'max-width: 60px; max-height: 60px'
                             ],
                             'value' => function($row) {
-                                if ($row['image_small'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                if ($row['image'] === '') {
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
                                 }
-                                return $row['image_small'];
+                                return $row['image'];
                             },
                         ],
                         [

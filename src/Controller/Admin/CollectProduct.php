@@ -140,7 +140,7 @@ class CollectProduct extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;

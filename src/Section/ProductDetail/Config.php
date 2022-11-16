@@ -14,6 +14,11 @@ class Config
     public int $showDescription = 1;
 
     /**
+     * @BeConfigItem("描述标题", driver = "FormItemInput")
+     */
+    public string $descriptionTitle = 'Description';
+
+    /**
      * @BeConfigItem("是否显示评论", driver = "FormItemSwitch")
      */
     public int $showReviews = 1;
@@ -27,6 +32,8 @@ class Config
      * @BeConfigItem("评论分页大小", driver = "FormItemInputNumberInt")
      */
     public int $reviewPageSize = 10;
+
+
 
     /**
      * @BeConfigItem("宽度",

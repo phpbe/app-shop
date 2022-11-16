@@ -2,12 +2,6 @@
 
 namespace Be\App\Shop\Service\Admin;
 
-use Be\AdminPlugin\Form\Item\FormItemSelect;
-use Be\AdminPlugin\Table\Item\TableItemImage;
-use Be\App\ServiceException;
-use Be\App\Shop\Admin\ShopAdmin;
-use Be\Be;
-use Be\Db\Tuple;
 
 class User
 {

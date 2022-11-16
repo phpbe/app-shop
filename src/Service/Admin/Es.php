@@ -187,13 +187,7 @@ class Es
                         'images' => [
                             'type' => 'nested',
                             'properties' => [
-                                'small' => [
-                                    'type' => 'text'
-                                ],
-                                'medium' => [
-                                    'type' => 'text'
-                                ],
-                                'large' => [
+                                'url' => [
                                     'type' => 'text'
                                 ],
                                 'is_main' => [

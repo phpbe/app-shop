@@ -170,8 +170,7 @@
         }
 
 
-        .relate-icon-image,
-        .item-image {
+        .relate-icon-image {
             display: inline-block;
             width: 60px;
             height: 60px;
@@ -181,26 +180,22 @@
             overflow: hidden;
         }
 
-        .relate-icon-image:hover,
-        .item-image:hover {
+        .relate-icon-image:hover {
             border-color: #409EFF;
         }
 
-        .relate-icon-image-img,
-        .item-image-img {
+        .relate-icon-image-img {
             width: 60px;
             height: 60px;
             line-height: 60px;
             position: relative;
         }
 
-        .relate-icon-image-img img,
-        .item-image-img img {
+        .relate-icon-image-img img {
             vertical-align: middle;
         }
 
-        .relate-icon-image-icon,
-        .item-image-icon {
+        .relate-icon-image-icon {
             font-size: 18px;
             color: #8c939d;
             width: 60px;
@@ -210,12 +205,9 @@
         }
 
         .relate-icon-image:hover .relate-icon-image-icon,
-        .item-image:hover .item-image-icon {
-            color: #409EFF;
-        }
 
-        .relate-icon-image-img-action,
-        .item-image-img-action {
+
+        .relate-icon-image-img-action {
             position: absolute;
             width: 100%;
             height: 20px;
@@ -229,24 +221,51 @@
             background-color: rgba(0,0,0,.5);
             transition: opacity .3s;
         }
-        .relate-icon-image-img:hover .relate-icon-image-img-action,
-        .item-image-img:hover .item-image-img-action {
+        .relate-icon-image-img:hover .relate-icon-image-img-action {
             opacity: 1;
         }
 
-        .item-image-select-images .el-image {
-            width: 100px;
-            height: 100px;
+        .item-images-container {
+            display: inline-block;
             border: 1px dashed #d9d9d9;
             border-radius: 6px;
-            margin-right: 1rem;
-            margin-bottom: 1rem;
+            padding: 3px;
             cursor: pointer;
         }
 
-        .item-image-select-images .el-image:hover {
+        .item-images-container:hover {
             border-color: #409EFF;
         }
+
+        .item-images {
+            min-width: 60px;
+            max-width: 120px;
+            height: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .item-images-icon {
+            font-size: 18px;
+            color: #8c939d;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+        }
+
+        .item-images-container:hover .item-images-icon {
+            color: #409EFF;
+        }
+
+        .item-images .el-image {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border: 1px solid #d9d9d9;
+            background-color: #fff;
+        }
+
     </style>
 </be-head>
 
@@ -516,7 +535,7 @@
                     <draggable v-model="formData.images" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
                         <transition-group>
                             <div v-for="image in formData.images" :key="image.ordering" class="image">
-                                <img :src="image.large" :alt="image.alt">
+                                <img :src="image.url" :alt="image.alt">
                                 <div class="image-move"></div>
                                 <div class="image-actions">
                                     <span class="image-action" @click="imagePreview(image)"><i class="el-icon-zoom-in"></i></span>
@@ -878,17 +897,13 @@
                     <el-table-column
                             v-if="formData.style === 2"
                             label="图片"
-                            align="center"
-                            width="80">
+                            align="center">
                         <template slot-scope="scope">
-                            <div class="item-image">
-                                <div v-if="scope.row.image" class="item-image-img">
-                                    <el-image :src="scope.row.image" fit="contain" @click="itemImageSelect(scope.row)" ></el-image>
-                                    <div class="item-image-img-action">
-                                        <i class="el-icon-delete" @click="itemImageDelete(scope.row)"></i>
-                                    </div>
+                            <div class="item-images-container" @click="itemImagesManage(scope.row)">
+                                <div v-if="scope.row.images.length > 0" class="item-images" :style="'width:' + (scope.row.images.length > 1 ? (scope.row.images.length * 10 + 50) : 60) + 'px'">
+                                    <el-image v-for="(itemImage, itemIndex) in scope.row.images" :key="itemImage.ordering" :src="itemImage.url" fit="contain" :style="'left:' + itemIndex * 10 + 'px;z-index:' + (100 - itemIndex)"></el-image>
                                 </div>
-                                <i v-else class="el-icon-plus item-image-icon" @click="itemImageSelect(scope.row)"></i>
+                                <i v-else class="el-icon-plus item-images-icon"></i>
                             </div>
                         </template>
                     </el-table-column>
@@ -1038,7 +1053,6 @@
                 $defaultStyle1Items = [
                     [
                         'id' => '',
-                        'image' => '',
                         'sku' => '',
                         'barcode' => '',
                         'style' => '',
@@ -1048,6 +1062,7 @@
                         'weight' => '0',
                         'weight_unit' => 'g',
                         'stock' => 0,
+                        'images' => [],
                     ]
                 ];
 
@@ -1085,18 +1100,62 @@
                     $style1Items = $defaultStyle1Items;
                 }
                 ?>
-                <el-dialog :visible.sync="itemImageSelectVisible" title="选择图片" center="true">
-                    <div v-if="formData.images.length > 0" class="item-image-select-images">
-                        <el-image v-for="image in formData.images" :src="image.large" fit="contain" @click="itemImageSelected(image.large)" ></el-image>
-                    </div>
-                    <div v-else>
-                        <el-empty description="请先在主图中上传相关图片"></el-empty>
-                    </div>
-                </el-dialog>
-
             </div>
 
         </el-form>
+
+
+        <el-dialog :visible.sync="itemImageSelectorVisible" class="dialog-image-selector" title="选择款式图像" :width="600" :close-on-click-modal="false">
+            <iframe :src="itemImageSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="itemImageSelectedCancel">取 消</el-button>
+                <el-button type="primary" @click="itemImageSelectedConfirm">确 定</el-button>
+            </div>
+        </el-dialog>
+
+
+        <el-dialog :visible.sync="itemImagePreviewVisible" center="true">
+            <div class="be-ta-center">
+                <img style="max-width: 100%;max-height: 400px;" :src="itemImagePreviewUrl" alt="">
+            </div>
+        </el-dialog>
+
+        <el-dialog :visible.sync="itemImageAltVisible" center="true">
+        </el-dialog>
+
+
+        <el-drawer
+                :visible.sync="drawerItemImages"
+                title="款式图片管理"
+                size="80%"
+                :wrapper-closable="false"
+                :destroy-on-close="true">
+
+            <div class="be-px-150">
+
+                <draggable v-model="currentItemImages" force-fallback="true" animation="100" filter=".image-uploader" handle=".image-move">
+                    <transition-group>
+                        <div v-for="itemImage in currentItemImages" :key="itemImage.ordering" class="image">
+                            <img :src="itemImage.url" :alt="itemImage.alt">
+                            <div class="image-move"></div>
+                            <div class="image-actions">
+                                <span class="image-action" @click="itemImagePreview(itemImage)"><i class="el-icon-zoom-in"></i></span>
+                                <span class="image-action" @click="itemImageRemove(itemImage)"><i class="el-icon-delete"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="image-selector" @click="itemImageSelect" key="99999">
+                            <i class="el-icon-plus"></i>
+                        </div>
+                    </transition-group>
+                </draggable>
+
+                <div class="be-mt-150 be-ta-right">
+                    <el-button size="medium" type="primary" @click="drawerItemImages=false">确定</el-button>
+                </div>
+            </div>
+        </el-drawer>
+
 
         <el-drawer
                 :visible.sync="drawerSeo"
@@ -1262,20 +1321,28 @@
 
                 drawerSeo: false,
 
-                imageFiles: [],
                 imagePreviewUrl: "",
                 imagePreviewVisible: false,
                 imageAltVisible: false,
-
                 imageSelectorVisible: false,
                 imageSelectorUrl: "about:blank",
                 imageSelectedFiles: [],
 
                 currentRelateDetail: null,
 
+                drawerItemImages: false,
+
+                currentItem: false,
+                currentItemImages: [],
+
+                itemImagePreviewUrl: "",
+                itemImagePreviewVisible: false,
+                itemImageAltVisible: false,
+                itemImageSelectorVisible: false,
+                itemImageSelectorUrl: "about:blank",
+                itemImageSelectedFiles: [],
+
                 itemTableColumnStyles: <?php echo json_encode($itemTableColumnStyles); ?>,
-                itemImageSelectVisible: false,
-                itemImageSelectRow: null,
 
                 style1Items: <?php echo json_encode($style1Items); ?>,
                 style2Items: <?php echo json_encode($style2Items); ?>,
@@ -1420,9 +1487,7 @@
                             let ordering = this.formData.images.length + 1;
                             this.formData.images.push({
                                 id : "",
-                                small: file.url,
-                                medium: file.url,
-                                large: file.url,
+                                url: file.url,
                                 name: file.name,
                                 alt: file.title,
                                 ordering: ordering
@@ -1440,7 +1505,7 @@
                 },
                 imagePreview: function (image) {
                     this.imagePreviewVisible = true;
-                    this.imagePreviewUrl = image.large;
+                    this.imagePreviewUrl = image.url;
                 },
                 imageRemove: function (image) {
                     this.formData.images.splice(this.formData.images.indexOf(image), 1);
@@ -1682,7 +1747,6 @@
                         if (!formDataItemFound) {
                             formDataItem = {
                                 id: "",
-                                image: "",
                                 sku: "",
                                 barcode: "",
                                 style: itemStyle,
@@ -1691,7 +1755,8 @@
                                 original_price: "0",
                                 weight: "0",
                                 weight_unit: "g",
-                                stock: "0"
+                                stock: "0",
+                                images: [],
                             };
 
                             len = item.length;
@@ -1721,17 +1786,60 @@
                     }
                     this.formData.items.splice(this.formData.items.indexOf(row), 1);
                 },
-                itemImageSelect: function(itemImageSelectRow) {
-                    this.itemImageSelectVisible = true;
-                    this.itemImageSelectRow = itemImageSelectRow;
+
+                itemImagesManage: function(itemRow) {
+                    this.drawerItemImages = true;
+                    this.currentItem = itemRow;
+                    this.currentItemImages = itemRow.images;
                 },
-                itemImageSelected: function(url) {
-                    this.itemImageSelectRow.image = url;
-                    this.itemImageSelectVisible = false;
+                itemImageSelect: function () {
+                    this.itemImageSelectorVisible = true;
+                    <?php
+                    $imageCallback = base64_encode('parent.itemImageSelected(files);');
+                    $imageSelectorUrl = beAdminUrl('System.Storage.pop', ['filterImage' => 1, 'callback' => $imageCallback]);
+                    ?>
+                    let imageSelectorUrl = "<?php echo $imageSelectorUrl; ?>";
+                    imageSelectorUrl += imageSelectorUrl.indexOf("?") === -1 ? "?" : "&"
+                    imageSelectorUrl += "_=" + Math.random();
+                    this.itemImageSelectorUrl = imageSelectorUrl;
                 },
-                itemImageDelete: function(itemImageSelectRow) {
-                    itemImageSelectRow.image = "";
+
+                itemImageSelected: function (files) {
+                    this.itemImageSelectedFiles = files;
                 },
+                itemImageSelectedConfirm: function () {
+                    if (this.itemImageSelectedFiles.length > 0) {
+                        for (let file of this.itemImageSelectedFiles) {
+                            let ordering = this.currentItem.images.length + 1;
+                            this.currentItem.images.push({
+                                id : "",
+                                url: file.url,
+                                name: file.name,
+                                alt: file.title,
+                                is_main: ordering === 1 ? 1 : 0,
+                                ordering: ordering
+                            });
+                        }
+
+                        console.log(this.currentItem);
+                    }
+                    this.itemImageSelectorVisible = false;
+                    this.itemImageSelectedFiles = [];
+                    this.itemImageSelectorUrl = "about:blank";
+                },
+                itemImageSelectedCancel: function () {
+                    this.itemImageSelectorVisible = false;
+                    this.itemImageSelectedFiles = [];
+                    this.itemImageSelectorUrl = "about:blank";
+                },
+                itemImagePreview: function (itemImage) {
+                    this.itemImagePreviewVisible = true;
+                    this.itemImagePreviewUrl = itemImage.url;
+                },
+                itemImageRemove: function (itemImage) {
+                    this.currentItemImages.splice(this.currentItemImages.indexOf(itemImage), 1);
+                },
+
                 itemTableDoLayout: function() {
                     let _this = this;
                     this.$nextTick(function () {
@@ -1752,6 +1860,10 @@
 
         function imageSelected(files) {
             vueCenter.imageSelected(files);
+        }
+
+        function itemImageSelected(files) {
+            vueCenter.itemImageSelected(files);
         }
 
         function relateIconImageSelected(files) {

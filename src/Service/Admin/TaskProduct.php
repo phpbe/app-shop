@@ -64,7 +64,7 @@ class TaskProduct
                 $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
                 $tags = $db->getValues($sql, [$product->id]);
 
-                $sql = 'SELECT small, medium, large, is_main, `ordering`  FROM shop_product_image WHERE product_id = ? ORDER BY `ordering` ASC';
+                $sql = 'SELECT url, is_main, `ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY `ordering` ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as &$image) {
                     $image->is_main = $image->is_main ? true : false;
@@ -72,13 +72,22 @@ class TaskProduct
                 }
                 unset($image);
 
-                $sql = 'SELECT id, image, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ?';
+                $sql = 'SELECT id, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ?';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as &$item) {
                     $item->price = (float)$item->price;
                     $item->original_price = (float)$item->original_price;
                     $item->weight = (float)$item->weight;
                     $item->stock = (int)$item->stock;
+
+                    $sql = 'SELECT url, is_main, `ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = ? ORDER BY `ordering` ASC';
+                    $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
+                    foreach ($itemImages as &$itemImage) {
+                        $itemImage->is_main = $itemImage->is_main ? true : false;
+                        $itemImage->ordering = (int)$itemImage->ordering;
+                    }
+                    unset($itemImage);
+                    $item->images = $itemImages;
                 }
                 unset($item);
 
@@ -191,7 +200,7 @@ class TaskProduct
                     $product->relate = $relate;
                 }
 
-                $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? ORDER BY ordering ASC';
+                $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as $image) {
                     $image->is_main = (int)$image->is_main;
@@ -226,6 +235,14 @@ class TaskProduct
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as $item) {
                     $item->stock = (int)$item->stock;
+
+                    $itemImages = [];
+                    foreach ($images as $image) {
+                        if ($image->product_item_id === $item->id) {
+                            $itemImages[] = $image;
+                        }
+                    }
+                    $item->images = $itemImages;
                 }
                 $product->items = $items;
 
@@ -259,7 +276,7 @@ class TaskProduct
 
             $images = $db->getObjects('SELECT * FROM shop_product_image WHERE `product_id`=?', [$product->id]);
             foreach ($images as $image) {
-                $remoteImage = trim($image->original);
+                $remoteImage = trim($image->url);
                 if ($remoteImage !== '') {
                     if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
                         $storageImage = false;
@@ -273,43 +290,9 @@ class TaskProduct
 
                             $obj = new \stdClass();
                             $obj->id = $image->id;
-                            $obj->small = $storageImage;
-                            $obj->medium = $storageImage;
-                            $obj->large = $storageImage;
-                            $obj->original = $storageImage;
+                            $obj->url = $storageImage;
                             $obj->update_time = $now;
                             $db->update('shop_product_image', $obj, 'id');
-                        }
-                    }
-                }
-            }
-
-            $product->style = (int) $product->style;
-
-            // 多款式SKU
-            if ($product->style === 2) {
-                $items = $db->getObjects('SELECT * FROM shop_product_item WHERE `product_id`=?', [$product->id]);
-                foreach ($items as $item) {
-                    $remoteImage = trim($item->image);
-                    if ($remoteImage !== '') {
-                        if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
-                            $storageImage = false;
-                            if (isset($imageKeyValues[$remoteImage])) {
-                                $storageImage = $imageKeyValues[$remoteImage];
-                            } else {
-                                try {
-                                    $storageImage = $this->uploadRemoteFile('/products/' . $product->id. '/', $remoteImage);
-                                } catch (\Throwable $t) {
-                                }
-                            }
-
-                            if ($storageImage) {
-                                $obj = new \stdClass();
-                                $obj->id = $item->id;
-                                $obj->image = $storageImage;
-                                $obj->update_time = $now;
-                                $db->update('shop_product_item', $obj, 'id');
-                            }
                         }
                     }
                 }
@@ -333,7 +316,7 @@ class TaskProduct
 
                             if ($storageImage) {
                                 $obj = new \stdClass();
-                                $obj->id = $item->id;
+                                $obj->id = $productRelateDetail->id;
                                 $obj->icon_image = $storageImage;
                                 $obj->update_time = $now;
                                 $db->update('shop_product_relate_detail', $obj, 'id');

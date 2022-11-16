@@ -14,72 +14,16 @@ class Template extends Section
 
     public function display()
     {
+        $request = Be::getRequest();
+        $isMobile = $request->isMobile();
         $wwwUrl = Be::getProperty('App.Shop')->getWwwUrl();
 
-        if (Be::getRequest()->isMobile()) {
-            echo '<script src="' . $wwwUrl . '/lib/swiper/swiper-bundle.min.js"></script>';
-            echo '<link rel="stylesheet" href="' . $wwwUrl . '/lib/swiper/swiper-bundle.min.css">';
-        } else {
-            echo '<script>';
-            echo 'jQuery.browser = {};';
-            echo 'jQuery.browser.msie = false;';
-            echo 'jQuery.browser.version = 0;';
-            echo 'if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {';
-            echo 'jQuery.browser.msie = true;';
-            echo '}';
-            echo '</script>';
-            echo '<script src="' . $wwwUrl . '/lib/jqzoom/jquery.jqzoom-core.pack.js"></script>';
-            echo '<link rel="stylesheet" href="' . $wwwUrl . '/lib/jqzoom/jquery.jqzoom.css">';
+        if (!$isMobile) {
+            echo '<link href="' . $wwwUrl . '/lib/cloud-zoom/cloudzoom.css" type="text/css" rel="stylesheet" />';
+            echo '<script type="text/javascript" src="' . $wwwUrl . '/lib/cloud-zoom/cloudzoom.js"></script>';
         }
+
         echo '<link rel="stylesheet" href="' . $wwwUrl . '/css/product/detail.css">';
-
-        echo '<script>';
-        if (Be::getRequest()->isMobile()) {
-            echo '$(document).ready(function () {';
-            echo 'let swiper = new Swiper("#product-detail-slider", {';
-            echo 'grabCursor: true,';
-            echo 'navigation: {';
-            echo 'nextEl: ".swiper-button-next",';
-            echo 'prevEl: ".swiper-button-prev"';
-            echo '}';
-            echo '});';
-            echo '});';
-        } else {
-            echo '$(document).ready(function () {';
-            echo '$(".jqzoom").jqzoom({';
-            echo 'zoomType: "standard",';
-            echo 'lens: true,';
-            echo 'preloadImages: true,';
-            echo 'alwaysOn: false,';
-            echo 'title: false,';
-            echo 'zoomWidth: 500,';
-            echo 'zoomHeight: 500';
-            echo '});';
-
-            echo '$(".zoom-images .thumbs a").hover(function () {';
-            echo '$(this).trigger("click");';
-            echo '});';
-            echo '});';
-        }
-
-        echo 'let product = ' . json_encode($this->page->product) . ';';
-        $productItemId = '';
-        if ($this->page->product->style === 1) {
-            $productItemId = $this->page->product->items[0]->id;
-        }
-        echo 'let productItemId = "' . $productItemId . '";';
-
-        echo 'let addToCartUrl = "' . beUrl('Shop.Cart.Add') . '";';
-
-        if ($this->config->showDescription === 1) {
-            $this->descriptionJs();
-        }
-        if ($this->config->showReviews === 1) {
-            $this->reviewJs();
-        }
-        echo '</script>';
-        echo '<script src="' . $wwwUrl . '/js//product/detail.js"></script>';
-
 
         echo '<style type="text/css">';
 
@@ -96,109 +40,84 @@ class Template extends Section
             echo $this->getCssPadding('product-detail-reviews');
         }
 
-        if (Be::getRequest()->isMobile()) {
-            echo '.swiper-container {';
-            echo '--swiper-navigation-color: var(--main-color);';
-            echo '}';
-        }
-
         if ($this->config->showDescription === 1) {
             $this->descriptionCss();
         }
         if ($this->config->showReviews === 1) {
             $this->reviewCss();
         }
-        echo '</style>';
+
+        echo '#' . $this->id . ' .swiper-slide img {';
+        echo 'max-width: 100%;';
+        echo '}';
+
+        echo '#' . $this->id . ' .swiper-small {';
+        echo 'padding: 0 60px;';
+        //echo 'overflow: hidden;';
+        echo 'position:relative;';
+        echo '}';
+
+        echo '#' . $this->id . ' .swiper-small .swiper-slide-thumb-active {';
+        echo 'border: var(--major-color) 1px solid;';
+        echo '}';
+
+        echo '#' . $this->id . ' .swiper-small .swiper-button-prev, ';
+        echo '#' . $this->id . ' .swiper-small .swiper-button-next {';
+        echo 'color: var(--major-color);';
+        echo '}';
+
+        echo '.cloudzoom-zoom {';
+        echo 'background-color: #fff;';
+        echo '}';
+
+       echo '</style>';
 
         echo '<div class="product-detail">';
-        echo '<div class="be-container">';
+        if ($this->position === 'middle') echo '<div class="be-container">';
 
-        if (Be::getRequest()->isMobile()) {
-            ?>
-            <div class="be-row">
-                <div class="be-col-24 be-lg-col">
-                    <div class="be-mt-100 swiper-container" id="product-detail-slider">
-                        <div class="swiper-wrapper">
-                            <?php
-                            foreach ($this->page->product->images as $image) {
-                                echo '<div class="swiper-slide"><img src="' . $image->large . '" alt="' . $this->page->product->name . '"></div>';
-                            }
-                            ?>
-                        </div>
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    </div>
-                </div>
-                <div class="be-col-24 be-col-auto-lg">
-                    <div class="be-pl-100 be-mt-100"></div>
-                </div>
-                <div class="be-col-24 be-lg-col">
-                    <?php
-                    $this->summaryRight();
-                    ?>
-                </div>
-            </div>
-            <?php
-        } else {
-            ?>
-            <div class="be-row">
-                <div class="be-col-24 be-col-auto-lg">
-                    <div style="width: 400px;">
-                        <div class="zoom-images">
-                            <?php
-                            $defaultImage = null;
-                            foreach ($this->page->product->images as $image) {
-                                if ($image->is_main) {
-                                    $defaultImage = $image;
-                                    break;
-                                }
-                            }
+        echo '<div class="be-row">';
+        echo '<div class="be-col-24 be-lg-col" style="overflow: hidden;">';
 
-                            if (!$defaultImage && count($this->page->product->images) > 0) {
-                                $defaultImage = $this->page->product->images[0];
-                            }
-                            ?>
-                            <div class="zoom be-fc">
-                                <a href="<?php echo $defaultImage->large; ?>" class="jqzoom" rel='gal1'>
-                                    <img src="<?php echo $defaultImage->medium; ?>"
-                                         alt="<?php echo $this->page->product->name; ?>"
-                                         style="max-width: 100%">
-                                </a>
-                            </div>
-
-                            <div class="be-row thumbs">
-                                <?php
-                                foreach ($this->page->product->images as $image) {
-                                    ?>
-                                    <div class="be-col-4 be-mt-50 be-pr-50">
-                                        <a class="<?php echo $image->is_main ? 'zoomThumbActive' : ''; ?>"
-                                           href='javascript:void(0);'
-                                           rel="{gallery: 'gal1', smallimage: '<?php echo $image->medium; ?>',largeimage: '<?php echo $image->large; ?>'}">
-                                            <img src="<?php echo $image->small; ?>"
-                                                 alt="<?php echo $this->page->product->name; ?>">
-                                        </a>
-                                    </div>
-                                    <?php
-                                }
-                                ?>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="be-col-24 be-col-auto-lg">
-                    <div class="be-pl-100 be-mt-100"></div>
-                </div>
-                <div class="be-col-24 be-lg-col">
-                    <?php
-                    $this->summaryRight();
-                    ?>
-                </div>
-            </div>
-            <?php
+        echo '<div class="swiper-large">';
+        echo '<div class="swiper">';
+        echo '<div class="swiper-wrapper">';
+        foreach ($this->page->product->images as $image) {
+            echo '<div class="swiper-slide">';
+            echo '<img src="' . $image->url . '"';
+            if (!$isMobile) {
+                echo ' class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' . $image->url . '\'"';
+            }
+            echo '>';
+            echo '</div>';
         }
 
         echo '</div>';
+        echo '</div>';
+        echo '</div>';
+
+        echo '<div class="swiper-small">';
+        echo '<div class="swiper">';
+        echo '<div class="swiper-wrapper">';
+        $i = 0;
+        foreach ($this->page->product->images as $image) {
+            echo '<div class="swiper-slide" data-index="'. $i . '"><img src="' . $image->url . '" alt="' . $this->page->product->name . '"></div>';
+            $i++;
+        }
+        echo '</div>';
+        echo '</div>';
+        echo '<div class="swiper-button-prev"></div>';
+        echo '<div class="swiper-button-next"></div>';
+        echo '</div>';
+
+        echo '</div>';
+        echo '<div class="be-col-24 be-lg-col-auto"><div class="be-pl-200 be-mt-200"></div></div>';
+
+        echo '<div class="be-col-24 be-lg-col">';
+        $this->summaryRight();
+        echo '</div>';
+        echo '</div>';
+
+        if ($this->position === 'middle') echo '</div>';
         echo '</div>';
 
         if ($this->config->showDescription === 1) {
@@ -207,6 +126,71 @@ class Template extends Section
         if ($this->config->showReviews === 1) {
             $this->reviews();
         }
+
+        $key = 'App:Shop:swiper';
+        if (!Be::hasContext($key)) {
+            $wwwUrl = Be::getProperty('App.Shop')->getWwwUrl();
+            echo '<link rel="stylesheet" href="' . $wwwUrl . '/lib/swiper/8.3.2/swiper-bundle.min.css">';
+            echo '<script src="' . $wwwUrl . '/lib/swiper/8.3.2/swiper-bundle.min.js"></script>';
+        }
+
+        echo '<script>';
+
+        echo 'let product = ' . json_encode($this->page->product) . ';';
+        $productItemId = '';
+        if ($this->page->product->style === 1) {
+            $productItemId = $this->page->product->items[0]->id;
+        }
+        echo 'let productItemId = "' . $productItemId . '";';
+
+        echo 'let addToCartUrl = "' . beUrl('Shop.Cart.Add') . '";';
+
+        echo 'var swiperSmall = new Swiper("#' . $this->id . ' .swiper-small .swiper", {';
+        echo 'navigation: {';
+        echo 'nextEl: ".swiper-button-next",';
+        echo 'prevEl: ".swiper-button-prev"';
+        echo '},';
+        echo 'watchSlidesVisibility: true,';
+        echo 'spaceBetween: 20,';
+        echo 'slidesPerView: 3,';
+        echo 'breakpoints: {';
+        echo '768: {';
+        echo 'slidesPerView: 4';
+        echo '},';
+        echo '1680: {';
+        echo 'slidesPerView: 5';
+        echo '}';
+        echo '},';
+        echo 'preventClicks: false,';
+        echo 'grabCursor: true';
+        echo '});';
+
+        echo 'var swiperlarge = new Swiper("#' . $this->id . ' .swiper-large .swiper", {';
+        echo 'thumbs: {';
+        echo 'swiper: swiperSmall';
+        echo '},';
+        echo 'grabCursor: true';
+        echo '});';
+
+        // 处理点击过于频繁时失效
+        echo '$(".swiper-small .swiper-slide").click(function(){';
+        echo 'swiperlarge.slideTo($(this).data("index"));';
+        echo '});';
+
+        if ($this->config->showDescription === 1) {
+            $this->descriptionJs();
+        }
+        if ($this->config->showReviews === 1) {
+            $this->reviewJs();
+        }
+
+        if (!$isMobile) {
+            echo 'CloudZoom.quickStart();';
+        }
+
+        echo '</script>';
+        echo '<script src="' . $wwwUrl . '/js//product/detail.js"></script>';
+
     }
 
 
@@ -525,8 +509,8 @@ class Template extends Section
                 if (isset($review->images) && count($review->images) > 0) {
                     echo '<div class="product-detail-review-images">';
                     foreach ($review->images as $reviewImage) {
-                        echo '<a class="light-box-image" data-lightbox="roadtrip" href="' . $reviewImage->large . '" target="_blank">';
-                        echo '<img src="' . $reviewImage->small . '" />';
+                        echo '<a class="light-box-image" data-lightbox="roadtrip" href="' . $reviewImage->url . '" target="_blank">';
+                        echo '<img src="' . $reviewImage->url . '" />';
                         echo '</a>';
                     }
                     echo '</div>';

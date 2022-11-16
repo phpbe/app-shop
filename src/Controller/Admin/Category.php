@@ -130,7 +130,7 @@ class Category extends Auth
                             'width' => '50',
                         ],
                         [
-                            'name' => 'image_small',
+                            'name' => 'image',
                             'label' => '封面图片',
                             'width' => '90',
                             'driver' => TableItemImage::class,
@@ -138,10 +138,10 @@ class Category extends Auth
                                 'style' => 'max-width: 60px; max-height: 60px'
                             ],
                             'value' => function($row) {
-                                if ($row['image_small'] === '') {
+                                if ($row['image'] === '') {
                                     return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
-                                return $row['image_small'];
+                                return $row['image'];
                             },
                         ],
                         [
@@ -235,14 +235,14 @@ class Category extends Auth
                             'label' => 'ID',
                         ],
                         [
-                            'name' => 'image_small',
+                            'name' => 'image',
                             'label' => '封面图片',
                             'driver' => DetailItemImage::class,
                             'value' => function($row) {
-                                if ($row['image_small'] === '') {
+                                if ($row['image'] === '') {
                                     return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
                                 }
-                                return $row['image_small'];
+                                return $row['image'];
                             },
                             'ui' => [
                                 'style' => 'max-width: 128px;',
@@ -542,7 +542,7 @@ class Category extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
@@ -666,7 +666,7 @@ class Category extends Auth
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT large FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;

@@ -87,29 +87,21 @@ class UserProductReview
     private function getReviewProduct($productId) {
         $product = Be::getService('App.Shop.Product')->getProduct($productId);
 
-        $imageSmall = '';
-        $imageMedium = '';
-        $imageLarge = '';
+        $imageUrl = '';
         foreach ($product->images as $image) {
             if ($image->is_main) {
-                $imageSmall = $image->small;
-                $imageMedium = $image->medium;
-                $imageLarge = $image->large;
+                $imageUrl = $image->url;
                 break;
             }
         }
-        if (!$imageSmall && count($product->images) > 0) {
-            $imageSmall = $product->images[0]->small;
-            $imageMedium = $product->images[0]->medium;
-            $imageLarge = $product->images[0]->large;
+        if (!$imageUrl && count($product->images) > 0) {
+            $imageUrl = $product->images[0]->url;
         }
 
         return [
             'id' => $product->id,
             'name' => $product->name,
-            'image_small' => $imageSmall,
-            'image_medium' => $imageMedium,
-            'image_large' => $imageLarge,
+            'image' => $imageUrl,
             'price' => $product->price,
             'url' =>  beUrl('Shop.Product.detail', ['id' => $product->id]),
         ];

@@ -185,10 +185,7 @@ class Section
                 $defaultImage = (object)[
                     'id' => '',
                     'product_id' => $product->id,
-                    'small' => $nnImage,
-                    'medium' => $nnImage,
-                    'large' => $nnImage,
-                    'original' => $nnImage,
+                    'url' => $nnImage,
                     'is_main' => 1,
                     'ordering' => 0,
                 ];
@@ -203,9 +200,9 @@ class Section
             }
             $html .= '>';
             if ($defaultImage) {
-                $html .= '<img src="' . $defaultImage->medium . '" class="' . $class . '-product-image-1" />';
+                $html .= '<img src="' . $defaultImage->url . '" class="' . $class . '-product-image-1" />';
                 if ($section->config->hoverEffect == 'toggleImage' && $hoverImage) {
-                    $html .= '<img src="' . $hoverImage->medium . '" class="' . $class . '-product-image-2" />';
+                    $html .= '<img src="' . $hoverImage->url . '" class="' . $class . '-product-image-2" />';
                 }
             }
 
@@ -427,10 +424,7 @@ class Section
                 $defaultImage = (object)[
                     'id' => '',
                     'product_id' => $product->id,
-                    'small' => $nnImage,
-                    'medium' => $nnImage,
-                    'large' => $nnImage,
-                    'original' => $nnImage,
+                    'url' => $nnImage,
                     'is_main' => 1,
                     'ordering' => 0,
                 ];
@@ -445,9 +439,9 @@ class Section
             }
             $html .= '>';
             if ($defaultImage) {
-                $html .= '<img src="' . $defaultImage->medium . '" class="' . $class . '-product-image-1" />';
+                $html .= '<img src="' . $defaultImage->url . '" class="' . $class . '-product-image-1" />';
                 if ($section->config->hoverEffect == 'toggleImage' && $hoverImage) {
-                    $html .= '<img src="' . $hoverImage->medium . '" class="' . $class . '-product-image-2" />';
+                    $html .= '<img src="' . $hoverImage->url . '" class="' . $class . '-product-image-2" />';
                 }
             }
 

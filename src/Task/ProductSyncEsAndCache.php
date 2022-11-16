@@ -16,14 +16,15 @@ class ProductSyncEsAndCache extends TaskInterval
     // 每 10 分钟执行一次
     protected $schedule = '* * * * *';
 
-    // 默认断点
-    protected $breakpoint = '2021-05-01 00:00:00';
-
     // 时间间隔：1天
     protected $step = 86400;
 
     public function execute()
     {
+        if (!$this->breakpoint) {
+            $this->breakpoint = date('Y-m-d h:i:s', time() - $this->step);
+        }
+
         $t0 = time();
         $t1 = strtotime($this->breakpoint);
         $t2 = $t1 + $this->step;

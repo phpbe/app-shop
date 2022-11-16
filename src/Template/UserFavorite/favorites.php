@@ -26,7 +26,7 @@
                 <div class="be-row be-mt-100">
                     <div style="width: 6rem;" class="be-table-image">
                         <a href="<?php echo $product->url; ?>">
-                            <img src="<?php echo $product->image_small; ?>" alt="<?php echo $product->name; ?>">
+                            <img src="<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
                         </a>
                     </div>
                     <div class="be-col">
@@ -82,7 +82,7 @@
                     <tr>
                         <td class="be-table-image">
                             <a href="<?php echo $product->url; ?>" target="_blank">
-                                <img src="<?php echo $product->image_small; ?>" alt="<?php echo $product->name; ?>">
+                                <img src="<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
                             </a>
                         </td>
                         <td class="be-ta-left">

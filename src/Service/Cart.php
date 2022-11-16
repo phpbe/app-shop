@@ -193,19 +193,28 @@ class Cart
             throw new ServiceException('Product (#' . $product->name . ') item (#' . $cartProduct->product_item_id . ') does not exist！');
         }
 
-        $image = '';
-        if ($productItem->image) {
-            $image = $productItem->image;
-        } else {
-            foreach ($product->images as $image) {
+        $imageUrl = '';
+        if (count($productItem->images) > 0) {
+            foreach ($productItem->images as $image) {
                 if ($image->is_main === 1) {
-                    $image = $image->large;
+                    $imageUrl = $image->url;
                     break;
                 }
             }
 
-            if (!$image && count($product->images) > 0) {
-                $image = $product->images[0]->large;
+            $imageUrl = $product->$productItem[0]->url;
+        }
+
+        if (!$imageUrl && count($product->images) > 0) {
+            foreach ($product->images as $image) {
+                if ($image->is_main === 1) {
+                    $imageUrl = $image->url;
+                    break;
+                }
+            }
+
+            if (!$imageUrl) {
+                $imageUrl = $product->images[0]->url;
             }
         }
 
@@ -220,7 +229,7 @@ class Cart
             'name' => $product->name,
             'spu' => $product->spu,
 
-            'image' => $image,
+            'image' => $imageUrl,
 
             'sku' => $productItem->sku,
             'style' => $productItem->style,

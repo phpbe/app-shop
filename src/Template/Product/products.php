@@ -183,10 +183,7 @@
             $defaultImage = (object)[
                 'id' => '',
                 'product_id' => $product->id,
-                'small' => $nnImage,
-                'medium' => $nnImage,
-                'large' => $nnImage,
-                'original' => $nnImage,
+                'url' => $nnImage,
                 'is_main' => 1,
                 'ordering' => 0,
             ];
@@ -201,9 +198,9 @@
         }
         echo '>';
         if ($defaultImage) {
-            echo '<img src="' . $defaultImage->medium . '" class="shop-product-image-1" />';
+            echo '<img src="' . $defaultImage->url . '" class="shop-product-image-1" />';
             if ($this->pageConfig->hoverEffect == 'toggleImage' && $hoverImage) {
-                echo '<img src="' . $hoverImage->medium . '" class="shop-product-image-2" />';
+                echo '<img src="' . $hoverImage->url . '" class="shop-product-image-2" />';
             }
         }
 

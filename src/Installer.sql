@@ -4,10 +4,7 @@ CREATE TABLE `shop_category` (
 `description` varchar(500) NOT NULL DEFAULT '' COMMENT '描述',
 `url` varchar(200) NOT NULL COMMENT '网址',
 `url_custom` tinyint(4) NOT NULL DEFAULT '0' COMMENT '网址是否启用自定义',
-`image_small` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 小',
-`image_medium` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 中',
-`image_large` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 大',
-`image_original` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 原始',
+`image` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 小',
 `seo_title` varchar(120) NOT NULL DEFAULT '' COMMENT 'SEO标题',
 `seo_title_custom` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'SEO标题是否启用自定义',
 `seo_description` varchar(500) NOT NULL DEFAULT '' COMMENT 'SEO描述',
@@ -258,15 +255,14 @@ CREATE TABLE `shop_product_category` (
 CREATE TABLE `shop_product_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
-`small` varchar(200) NOT NULL DEFAULT '' COMMENT '小',
-`medium` varchar(200) NOT NULL DEFAULT '' COMMENT '中',
-`large` varchar(200) NOT NULL DEFAULT '' COMMENT '大',
-`original` varchar(200) NOT NULL DEFAULT '' COMMENT '原始',
+`product_item_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品子项ID',
+`url` varchar(200) NOT NULL DEFAULT '' COMMENT '网址',
 `is_main` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否主图',
 `ordering` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图像';
+
 
 CREATE TABLE `shop_product_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2157,7 +2153,7 @@ ADD KEY `category_id` (`category_id`) USING BTREE;
 
 ALTER TABLE `shop_product_image`
 ADD PRIMARY KEY (`id`),
-ADD KEY `goods_id` (`product_id`,`is_main`);
+ADD KEY `product_id` (`product_id`,`product_item_id`,`is_main`) USING BTREE;
 
 ALTER TABLE `shop_product_item`
 ADD PRIMARY KEY (`id`),

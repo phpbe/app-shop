@@ -224,9 +224,7 @@ class Api
                 foreach ($images as $image) {
                     $imagesData[] = [
                         'id' => '',
-                        'small' => $image,
-                        'medium' => $image,
-                        'large' => $image,
+                        'url' => $image,
                     ];
                 }
                 $data['images'] = $imagesData;

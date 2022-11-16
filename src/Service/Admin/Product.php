@@ -444,10 +444,8 @@ class Product
                     foreach ($data['images'] as $image) {
                         $tupleProductImage = Be::getTuple('shop_product_image');
                         $tupleProductImage->product_id = $tupleProduct->id;
-                        $tupleProductImage->small = $image['small'];
-                        $tupleProductImage->medium = $image['medium'];
-                        $tupleProductImage->large = $image['large'];
-                        $tupleProductImage->original = $image['large'];
+                        $tupleProductImage->product_item_id = '';
+                        $tupleProductImage->url = $image['url'];
                         if ($ordering === 0) {
                             $tupleProductImage->is_main = 1;
                         } else {
@@ -470,11 +468,13 @@ class Product
                     if (count($keepIds) > 0) {
                         Be::getTable('shop_product_image')
                             ->where('product_id', $productId)
+                            ->where('product_item_id', '')
                             ->where('id', 'NOT IN', $keepIds)
                             ->delete();
                     } else {
                         Be::getTable('shop_product_image')
                             ->where('product_id', $productId)
+                            ->where('product_item_id', '')
                             ->delete();
                     }
 
@@ -486,6 +486,7 @@ class Product
                                 $tupleProductImage->loadBy([
                                     'id' => $image['id'],
                                     'product_id' => $tupleProduct->id,
+                                    'product_item_id' => '',
                                 ]);
                             } catch (\Throwable $t) {
                                 throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的图像（# ' . $image['id'] . '）不存在！');
@@ -493,10 +494,8 @@ class Product
                         }
 
                         $tupleProductImage->product_id = $tupleProduct->id;
-                        $tupleProductImage->small = $image['small'];
-                        $tupleProductImage->medium = $image['medium'];
-                        $tupleProductImage->large = $image['large'];
-                        $tupleProductImage->original = $image['large'];
+                        $tupleProductImage->product_item_id = '';
+                        $tupleProductImage->url = $image['url'];
                         if ($ordering === 0) {
                             $tupleProductImage->is_main = 1;
                         } else {
@@ -766,13 +765,6 @@ class Product
                 foreach ($items as $item) {
                     $tupleProductItem = Be::getTuple('shop_product_item');
                     $tupleProductItem->product_id = $tupleProduct->id;
-
-                    if ($style === 2) {
-                        $tupleProductItem->image = $item['image'] ?? '';
-                    } else {
-                        $tupleProductItem->image = '';
-                    }
-
                     $tupleProductItem->sku = $item['sku'] ?? '';
                     $tupleProductItem->barcode = $item['barcode'] ?? '';
                     $tupleProductItem->style = $item['style'] ?? '';
@@ -785,6 +777,31 @@ class Product
                     $tupleProductItem->create_time = $now;
                     $tupleProductItem->update_time = $now;
                     $tupleProductItem->insert();
+
+                    // ------------------------------------------------------------------------------------------------- 款式图像处理
+                    if ($style === 2) {
+                        if (isset($item['images']) && is_array($item['images']) && count($item['images']) > 0) {
+                            $ordering = 0;
+                            foreach ($item['images'] as $image) {
+                                $tupleProductImage = Be::getTuple('shop_product_image');
+                                $tupleProductImage->product_id = $tupleProduct->id;
+                                $tupleProductImage->product_item_id = $tupleProductItem->id;
+                                $tupleProductImage->url = $image['url'];
+                                if ($ordering === 0) {
+                                    $tupleProductImage->is_main = 1;
+                                } else {
+                                    $tupleProductImage->is_main = 0;
+                                }
+                                $tupleProductImage->ordering = $ordering;
+                                $tupleProductImage->create_time = $now;
+                                $tupleProductImage->update_time = $now;
+                                $tupleProductImage->insert();
+                                $ordering++;
+                            }
+                        }
+                    }
+                    // ================================================================================================= 款式图像处理
+
                 }
             } else {
                 $keepIds = [];
@@ -799,9 +816,19 @@ class Product
                         ->where('product_id', $productId)
                         ->where('id', 'NOT IN', $keepIds)
                         ->delete();
+
+                    Be::getTable('shop_product_image')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', 'NOT IN', $keepIds)
+                        ->delete();
                 } else {
                     Be::getTable('shop_product_item')
                         ->where('product_id', $productId)
+                        ->delete();
+
+                    Be::getTable('shop_product_image')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', '!=', '')
                         ->delete();
                 }
 
@@ -817,13 +844,6 @@ class Product
                     }
 
                     $tupleProductItem->product_id = $tupleProduct->id;
-
-                    if ($style === 2) {
-                        $tupleProductItem->image = $item['image'] ?? '';
-                    } else {
-                        $tupleProductItem->image = '';
-                    }
-
                     $tupleProductItem->sku = $item['sku'] ?? '';
                     $tupleProductItem->barcode = $item['barcode'] ?? '';
                     $tupleProductItem->style = $item['style'] ?? '';
@@ -840,6 +860,67 @@ class Product
 
                     $tupleProductItem->update_time = $now;
                     $tupleProductItem->save();
+
+                    // ------------------------------------------------------------------------------------------------- 款式图像处理
+                    if ($style === 2) {
+                        if (isset($item['images']) && is_array($item['images']) && count($item['images']) > 0) {
+                            $keepIds = [];
+                            foreach ($item['images'] as $image) {
+                                if (isset($image['id']) && $image['id'] !== '') {
+                                    $keepIds[] = $image['id'];
+                                }
+                            }
+
+                            if (count($keepIds) > 0) {
+                                Be::getTable('shop_product_image')
+                                    ->where('product_id', $productId)
+                                    ->where('product_item_id', $tupleProductItem->id)
+                                    ->where('id', 'NOT IN', $keepIds)
+                                    ->delete();
+                            } else {
+                                Be::getTable('shop_product_image')
+                                    ->where('product_id', $productId)
+                                    ->where('product_item_id', $tupleProductItem->id)
+                                    ->delete();
+                            }
+
+                            $ordering = 0;
+                            foreach ($item['images'] as $image) {
+                                $tupleProductImage = Be::getTuple('shop_product_image');
+                                if (isset($image['id']) && $image['id'] !== '') {
+                                    try {
+                                        $tupleProductImage->loadBy([
+                                            'id' => $image['id'],
+                                            'product_id' => $tupleProduct->id,
+                                            'product_item_id' => $tupleProductItem->id,
+                                        ]);
+                                    } catch (\Throwable $t) {
+                                        throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的款式图像（# ' . $image['id'] . '）不存在！');
+                                    }
+                                }
+
+                                $tupleProductImage->product_id = $tupleProduct->id;
+                                $tupleProductImage->product_item_id = $tupleProductItem->id;
+                                $tupleProductImage->url = $image['url'];
+                                if ($ordering === 0) {
+                                    $tupleProductImage->is_main = 1;
+                                } else {
+                                    $tupleProductImage->is_main = 0;
+                                }
+                                $tupleProductImage->ordering = $ordering;
+
+                                if (!isset($image['id']) || $image['id'] === '') {
+                                    $tupleProductImage->create_time = $now;
+                                }
+
+                                $tupleProductImage->update_time = $now;
+                                $tupleProductImage->save();
+                                $ordering++;
+                            }
+                        }
+                    }
+                    // ================================================================================================= 款式图像处理
+
                 }
             }
 
@@ -1027,12 +1108,13 @@ class Product
         }
 
         if (isset($with['images'])) {
-            $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? ORDER BY ordering ASC';
+            $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
             $images = $db->getObjects($sql, [$productId]);
-            foreach ($images as $image) {
+            foreach ($images as &$image) {
                 $image->is_main = (int)$image->is_main;
                 $image->ordering = (int)$image->ordering;
             }
+            unset($image);
             $product->images = $images;
         }
 
@@ -1070,6 +1152,15 @@ class Product
             $items = $db->getObjects($sql, [$productId]);
             foreach ($items as $item) {
                 $item->stock = (int)$item->stock;
+
+                $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';
+                $itemImages = $db->getObjects($sql, [$productId, $item->id]);
+                foreach ($itemImages as &$itemImage) {
+                    $itemImage->is_main = (int)$itemImage->is_main;
+                    $itemImage->ordering = (int)$itemImage->ordering;
+                }
+                unset($itemImage);
+                $item->images = $itemImages;
             }
             $product->items = $items;
         }
@@ -1133,7 +1224,7 @@ class Product
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT small FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
@@ -1226,7 +1317,7 @@ class Product
                             'width' => '90',
                             'driver' => TableItemImage::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT small FROM shop_product_image WHERE product_id = ? AND is_main = 1';
+                                $sql = 'SELECT url FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' AND is_main = 1';
                                 $image = Be::getDb()->getValue($sql, [$row['id']]);
                                 if ($image) {
                                     return $image;
