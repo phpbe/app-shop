@@ -16,7 +16,6 @@
   ],
   "require": {
     "be/be": "~2.6",
-    "be/theme-shop": "dev-main",
     "geoip2/geoip2": "*"
   },
   "autoload": {
