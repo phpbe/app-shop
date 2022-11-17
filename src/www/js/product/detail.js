@@ -293,7 +293,7 @@ function updateStyles() {
             CloudZoom.quickStart();
         }
 
-        $(".swiper-small .swiper-slide").on("click", function(){
+        $(".swiper-small .swiper-slide").hover(function(){
             swiperlarge.slideTo($(this).data("index"));
         });
     }

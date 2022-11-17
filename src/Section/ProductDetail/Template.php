@@ -180,7 +180,7 @@ class Template extends Section
         echo '});';
 
         // 处理点击过于频繁时失效
-        echo '$(".swiper-small .swiper-slide").on("click", function(){';
+        echo '$(".swiper-small .swiper-slide").hover(function(){';
         echo 'swiperlarge.slideTo($(this).data("index"));';
         echo '});';
 
