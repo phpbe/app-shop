@@ -8,13 +8,10 @@ use Be\Task\TaskException;
 use GeoIp2\Database\Reader;
 
 /**
- * @BeTask("统计 - 购物车队列")
+ * @BeTask("统计 - 购物车队列", schedule="4,24,44 * * * *")
  */
 class StaticsCart extends Task
 {
-
-    // 每 10 分钟执行一次
-    protected $schedule = '*/10 * * * *';
 
     protected $timeout = 300;
 

@@ -7,13 +7,10 @@ use Be\Task\TaskInterval;
 /**
  * 间隔一段时间晨，定时执行 订单同步到ES
  *
- * @BeTask("订单同步到ES")
+ * @BeTask("订单同步到ES", schedule="1,21,41 * * * *")
  */
 class OrderSyncEs extends TaskInterval
 {
-
-    // 每 10 分钟执行一次
-    protected $schedule = '* * * * *';
 
     // 时间间隔：1天
     protected $step = 86400;

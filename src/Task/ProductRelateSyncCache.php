@@ -5,13 +5,10 @@ use Be\Be;
 use Be\Task\TaskInterval;
 
 /**
- * @BeTask("商品关联增量同步到缓存")
+ * @BeTask("商品关联增量同步到缓存", schedule="2,22,42 * * * *")
  */
 class ProductRelateSyncCache extends TaskInterval
 {
-
-    // 每 10 分钟执行一次
-    protected $schedule = '* * * * *';
 
     // 时间间隔：1天
     protected $step = 86400;

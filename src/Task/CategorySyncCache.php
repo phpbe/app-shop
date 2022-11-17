@@ -5,13 +5,10 @@ use Be\Be;
 use Be\Task\TaskInterval;
 
 /**
- * @BeTask("分类增量同步到缓存")
+ * @BeTask("分类增量同步到缓存", schedule="0,20,40 * * * *")
  */
 class CategorySyncCache extends TaskInterval
 {
-
-    // 每 10 分钟执行一次
-    protected $schedule = '* * * * *';
 
     // 时间间隔：1天
     protected $step = 86400;

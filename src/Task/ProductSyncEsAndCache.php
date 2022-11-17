@@ -8,13 +8,10 @@ use Be\Task\TaskInterval;
 /**
  * 间隔一段时间晨，定时执行 商品同步到ES和缓存
  *
- * @BeTask("商品境量同步到ES和缓存")
+ * @BeTask("商品境量同步到ES和缓存", schedule="3,23,43 * * * *")
  */
 class ProductSyncEsAndCache extends TaskInterval
 {
-
-    // 每 10 分钟执行一次
-    protected $schedule = '* * * * *';
 
     // 时间间隔：1天
     protected $step = 86400;
