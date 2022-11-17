@@ -273,8 +273,11 @@ function updateStyles() {
     }
 
     if (newSwiperImagesType !== swiperImagesType) {
+        swiperImagesType = newSwiperImagesType;
+
         swiperSmall.removeAllSlides();
         swiperlarge.removeAllSlides();
+
         let swiperImage;
         for (let i in swiperImages) {
             swiperImage = swiperImages[i];
@@ -286,13 +289,13 @@ function updateStyles() {
             }
         }
 
-        $(".swiper-small .swiper-slide").on("click", function(){
-            swiperlarge.slideTo($(this).data("index"));
-        });
-
         if (!isMobile) {
             CloudZoom.quickStart();
         }
+
+        $(".swiper-small .swiper-slide").on("click", function(){
+            swiperlarge.slideTo($(this).data("index"));
+        });
     }
     // ================================================================================================================= 更新轮播图
 }
