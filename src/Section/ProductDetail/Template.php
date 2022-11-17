@@ -19,8 +19,8 @@ class Template extends Section
         $wwwUrl = Be::getProperty('App.Shop')->getWwwUrl();
 
         if (!$isMobile) {
-            echo '<link href="' . $wwwUrl . '/lib/cloud-zoom/cloudzoom.css" type="text/css" rel="stylesheet" />';
-            echo '<script type="text/javascript" src="' . $wwwUrl . '/lib/cloud-zoom/cloudzoom.js"></script>';
+            echo '<link href="' . $wwwUrl . '/lib/cloudzoom/cloudzoom.css" type="text/css" rel="stylesheet" />';
+            echo '<script type="text/javascript" src="' . $wwwUrl . '/lib/cloudzoom/cloudzoom.js"></script>';
         }
 
         echo '<link rel="stylesheet" href="' . $wwwUrl . '/css/product/detail.css">';
