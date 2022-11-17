@@ -236,12 +236,13 @@ class TaskProduct
                 foreach ($items as $item) {
                     $item->stock = (int)$item->stock;
 
-                    $itemImages = [];
-                    foreach ($images as $image) {
-                        if ($image->product_item_id === $item->id) {
-                            $itemImages[] = $image;
-                        }
+                    $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';
+                    $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
+                    foreach ($itemImages as &$itemImage) {
+                        $itemImage->is_main = (int)$itemImage->is_main;
+                        $itemImage->ordering = (int)$itemImage->ordering;
                     }
+                    unset($itemImage);
                     $item->images = $itemImages;
                 }
                 $product->items = $items;

@@ -1,5 +1,6 @@
 
 let filterStyle = [];
+let swiperImagesType = 'product';
 
 function toggleStyle(e, styleId, styleValueIndex) {
     let $e = $(e);
@@ -100,7 +101,7 @@ function updateStyles() {
     let originalPrice;
     let price;
 
-    // 价格范围
+    // ----------------------------------------------------------------------------------------------------------------- 价格范围
     if (matchedItems.length === 1) {
         originalPrice = matchedItems[0].original_price;
         price = matchedItems[0].price;
@@ -166,6 +167,7 @@ function updateStyles() {
         $originalPrice.html("").hide();
     }
     $("#product-detail-price-range").html("$" + priceRange);
+    // ================================================================================================================= 价格范围
 
     // 购买，加入购物车按钮是否禁用
     if (matchedItems.length === 1) {
@@ -176,14 +178,15 @@ function updateStyles() {
         $("#product-detail-add-to-cart").prop("disabled", true);
     }
 
-    // 更新款式按钮是否可点击
+    // ----------------------------------------------------------------------------------------------------------------- 更新款式按钮是否可点击
     let available;
     let styleValue;
+    let styleMatchedItems;
     for (let style of product.styles) {
         for (let styleValueIndex in style.values) {
 
             // 获取排除当前款式时，匹配上的产品子项列表
-            matchedItems = [];
+            styleMatchedItems = [];
             match = true;
             for (let item of product.items) {
                 match = true;
@@ -223,14 +226,14 @@ function updateStyles() {
                 }
 
                 if (match) {
-                    matchedItems.push(item);
+                    styleMatchedItems.push(item);
                 }
             }
 
             styleValue = style.values[styleValueIndex];
             available = false;
-            if (matchedItems.length > 0) {
-                for (let item of matchedItems) {
+            if (styleMatchedItems.length > 0) {
+                for (let item of styleMatchedItems) {
                     for (let x of item.style_json) {
                         if (x.name === style.name && x.value === styleValue) {
                             available = true;
@@ -254,6 +257,44 @@ function updateStyles() {
             }
         }
     }
+    // ================================================================================================================= 更新款式按钮是否可点击
+
+
+
+    // ----------------------------------------------------------------------------------------------------------------- 更新轮播图
+    let newSwiperImagesType = 'product';
+    let swiperImages = product.images;
+    if (matchedItems.length === 1) {
+        let matchedItem = matchedItems[0];
+        if (matchedItem.images.length > 0) {
+            newSwiperImagesType = 'product-item:' + matchedItem.id;
+            swiperImages = matchedItem.images;
+        }
+    }
+
+    if (newSwiperImagesType !== swiperImagesType) {
+        swiperSmall.removeAllSlides();
+        swiperlarge.removeAllSlides();
+        let swiperImage;
+        for (let i in swiperImages) {
+            swiperImage = swiperImages[i];
+            swiperSmall.appendSlide('<div class="swiper-slide" data-index="' + i + '"><img src="' + swiperImage.url + '" alt=""></div>');
+            if (isMobile) {
+                swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt=""></div>');
+            } else {
+                swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt="" class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' + swiperImage.url + '\'"></div>');
+            }
+        }
+
+        $(".swiper-small .swiper-slide").on("click", function(){
+            swiperlarge.slideTo($(this).data("index"));
+        });
+
+        if (!isMobile) {
+            CloudZoom.quickStart();
+        }
+    }
+    // ================================================================================================================= 更新轮播图
 }
 
 $(document).ready(function () {

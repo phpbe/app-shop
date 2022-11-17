@@ -70,13 +70,18 @@ class Template extends Section
         echo 'background-color: #fff;';
         echo '}';
 
+        echo '.cloudzoom-lens {';
+        echo 'border: 1px solid #999;';
+        echo '}';
+
        echo '</style>';
 
         echo '<div class="product-detail">';
         if ($this->position === 'middle') echo '<div class="be-container">';
 
         echo '<div class="be-row">';
-        echo '<div class="be-col-24 be-lg-col" style="overflow: hidden;">';
+        echo '<div class="be-col-24 be-lg-col-auto">';
+        echo '<div style="max-width:450px; margin: 0 auto;">';
 
         echo '<div class="swiper-large">';
         echo '<div class="swiper">';
@@ -90,12 +95,11 @@ class Template extends Section
             echo '>';
             echo '</div>';
         }
-
         echo '</div>';
         echo '</div>';
         echo '</div>';
 
-        echo '<div class="swiper-small">';
+        echo '<div class="swiper-small be-mt-100">';
         echo '<div class="swiper">';
         echo '<div class="swiper-wrapper">';
         $i = 0;
@@ -109,6 +113,7 @@ class Template extends Section
         echo '<div class="swiper-button-next"></div>';
         echo '</div>';
 
+        echo '</div>';
         echo '</div>';
         echo '<div class="be-col-24 be-lg-col-auto"><div class="be-pl-200 be-mt-200"></div></div>';
 
@@ -135,6 +140,8 @@ class Template extends Section
         }
 
         echo '<script>';
+
+        echo 'let isMobile = ' . ($isMobile ? 'true' : 'false') . ';';
 
         echo 'let product = ' . json_encode($this->page->product) . ';';
         $productItemId = '';
@@ -173,7 +180,7 @@ class Template extends Section
         echo '});';
 
         // 处理点击过于频繁时失效
-        echo '$(".swiper-small .swiper-slide").click(function(){';
+        echo '$(".swiper-small .swiper-slide").on("click", function(){';
         echo 'swiperlarge.slideTo($(this).data("index"));';
         echo '});';
 
@@ -189,7 +196,7 @@ class Template extends Section
         }
 
         echo '</script>';
-        echo '<script src="' . $wwwUrl . '/js//product/detail.js"></script>';
+        echo '<script src="' . $wwwUrl . '/js//product/detail.js?v=20221117"></script>';
 
     }
 
