@@ -483,7 +483,7 @@ class PromotionActivity extends PromotionDriver
         }
 
         if ($promotionActivity->scope_product === 'all') {
-            return Be::getService('App.Shop.Product')->filter([
+            return Be::getService('App.Shop.Product')->search('', [
                 'pageSize' => $pageSize,
                 'page' => $page,
             ]);
@@ -491,7 +491,7 @@ class PromotionActivity extends PromotionDriver
             $promotionActivityProductIds = Be::getTable('shop_promotion_activity_scope_product')
                 ->where('promotion_activity_id', $promotionActivity->id)
                  ->getValues('product_id');
-            return Be::getService('App.Shop.Product')->filter([
+            return Be::getService('App.Shop.Product')->search('', [
                 'productIds' => $promotionActivityProductIds,
                 'pageSize' => $pageSize,
                 'page' => $page,
@@ -500,7 +500,7 @@ class PromotionActivity extends PromotionDriver
             $promotionActivityCategoryIds = Be::getTable('shop_promotion_activity_scope_category')
                 ->where('promotion_activity_id', $promotionActivity->id)
                 ->getValues('category_id');
-            return Be::getService('App.Shop.Product')->filter([
+            return Be::getService('App.Shop.Product')->search('', [
                 'categoryIds' => $promotionActivityCategoryIds,
                 'pageSize' => $pageSize,
                 'page' => $page,

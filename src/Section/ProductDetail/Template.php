@@ -55,6 +55,7 @@ class Template extends Section
         echo 'padding: 0 60px;';
         //echo 'overflow: hidden;';
         echo 'position:relative;';
+        echo '--swiper-navigation-size: 20px;';
         echo '}';
 
         echo '#' . $this->id . ' .swiper-small .swiper-slide-thumb-active {';
@@ -157,9 +158,10 @@ class Template extends Section
         echo 'nextEl: ".swiper-button-next",';
         echo 'prevEl: ".swiper-button-prev"';
         echo '},';
-        echo 'watchSlidesVisibility: true,';
+
         echo 'spaceBetween: 20,';
         echo 'slidesPerView: 3,';
+
         echo 'breakpoints: {';
         echo '768: {';
         echo 'slidesPerView: 4';
@@ -167,16 +169,14 @@ class Template extends Section
         echo '1680: {';
         echo 'slidesPerView: 5';
         echo '}';
-        echo '},';
-        echo 'preventClicks: false,';
-        echo 'grabCursor: true';
+        echo '}';
+
         echo '});';
 
         echo 'var swiperlarge = new Swiper("#' . $this->id . ' .swiper-large .swiper", {';
         echo 'thumbs: {';
         echo 'swiper: swiperSmall';
-        echo '},';
-        echo 'grabCursor: true';
+        echo '}';
         echo '});';
 
         // 处理点击过于频繁时失效

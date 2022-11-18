@@ -819,6 +819,7 @@ class Product
 
                     Be::getTable('shop_product_image')
                         ->where('product_id', $productId)
+                        ->where('product_item_id', '!=', '')
                         ->where('product_item_id', 'NOT IN', $keepIds)
                         ->delete();
                 } else {
