@@ -204,8 +204,9 @@
             text-align: center;
         }
 
-        .relate-icon-image:hover .relate-icon-image-icon,
-
+        .relate-icon-image:hover .relate-icon-image-icon {
+            color: #409EFF;
+        }
 
         .relate-icon-image-img-action {
             position: absolute;
@@ -221,9 +222,11 @@
             background-color: rgba(0,0,0,.5);
             transition: opacity .3s;
         }
+
         .relate-icon-image-img:hover .relate-icon-image-img-action {
             opacity: 1;
         }
+
 
         .item-images-container {
             display: inline-block;
