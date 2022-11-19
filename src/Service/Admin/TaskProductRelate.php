@@ -39,8 +39,8 @@ class TaskProductRelate
             if ($relate->is_delete === 1) {
                 $cache->delete($key);
             } else {
-                $sql = 'SELECT * FROM shop_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
-                $relate->details = $db->getObjects($sql, [$relate->id]);
+                $sql = 'SELECT * FROM shop_product_relate_item WHERE relate_id = ? ORDER BY ordering ASC';
+                $relate->items = $db->getObjects($sql, [$relate->id]);
                 $keyValues[$key] = $relate;
             }
         }

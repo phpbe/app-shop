@@ -54,14 +54,14 @@ class TaskProduct
                 ];
             } else {
                 $categories = [];
-                $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
+                $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ? ORDER BY ordering ASC';
                 $categoryIds = $db->getValues($sql, [$product->id]);
                 if (count($categoryIds) > 0) {
                     $sql = 'SELECT id, `name` FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
                     $categories = $db->getObjects($sql);
                 }
 
-                $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
+                $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ? ORDER BY ordering ASC';
                 $tags = $db->getValues($sql, [$product->id]);
 
                 $sql = 'SELECT url, is_main, `ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY `ordering` ASC';
@@ -72,7 +72,7 @@ class TaskProduct
                 }
                 unset($image);
 
-                $sql = 'SELECT id, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ?';
+                $sql = 'SELECT id, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as &$item) {
                     $item->price = (float)$item->price;
@@ -187,15 +187,15 @@ class TaskProduct
                     $sql = 'SELECT * FROM shop_product_relate WHERE id = ?';
                     $relate = $db->getObject($sql, [$product->relate_id]);
 
-                    $sql = 'SELECT * FROM shop_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
-                    $details = $db->getObjects($sql, [$product->relate_id]);
-                    foreach ($details as &$detail) {
+                    $sql = 'SELECT * FROM shop_product_relate_item WHERE relate_id = ? ORDER BY ordering ASC';
+                    $relateItems = $db->getObjects($sql, [$product->relate_id]);
+                    foreach ($relateItems as &$relateItem) {
                         $sql = 'SELECT `name` FROM shop_product WHERE id = ?';
-                        $detail->product_name = $db->getValue($sql, [$detail->product_id]);
+                        $relateItem->product_name = $db->getValue($sql, [$relateItem->product_id]);
                     }
-                    unset($detail);
+                    unset($relateItem);
 
-                    $relate->details = $details;
+                    $relate->items = $relateItems;
 
                     $product->relate = $relate;
                 }
@@ -300,7 +300,7 @@ class TaskProduct
             }
 
             if ($product->relate_id !== '') {
-                $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_detail WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
+                $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_item WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
                 if ($productRelateDetail) {
                     $remoteImage = trim($productRelateDetail->icon_image);
                     if ($remoteImage !== '') {
@@ -320,7 +320,7 @@ class TaskProduct
                                 $obj->id = $productRelateDetail->id;
                                 $obj->icon_image = $storageImage;
                                 $obj->update_time = $now;
-                                $db->update('shop_product_relate_detail', $obj, 'id');
+                                $db->update('shop_product_relate_item', $obj, 'id');
                             }
                         }
                     }

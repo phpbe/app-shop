@@ -130,12 +130,12 @@ class CollectProduct
 
                 // 如查商品有设置关联，删除商品关联
                 if ($tupleProduct->relate_id !== '') {
-                    Be::getTable('shop_product_relate_detail')
+                    Be::getTable('shop_product_relate_item')
                         ->where('relate_id', $tupleProduct->relate_id)
                         ->where('product_id', $productId)
                         ->delete();
 
-                    if (Be::getTable('shop_product_relate_detail')
+                    if (Be::getTable('shop_product_relate_item')
                             ->where('relate_id', $tupleProduct->relate_id)
                             ->count() === 0) {
 

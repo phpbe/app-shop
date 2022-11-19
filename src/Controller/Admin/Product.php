@@ -549,14 +549,14 @@ class Product extends Auth
                     $tupleRelate->load($row['relate_id']);
                     $relate = $tupleRelate->toArray();
 
-                    $tableRelateDetail = Be::getTable('shop_product_relate_detail');
-                    $tableRelateDetail->where('relate_id', $row['relate_id']);
-                    $details = $tableRelateDetail->getArrays('product_id, value, icon_image, icon_color');
-                    foreach ($details as &$detail) {
-                        $detail['product_name'] = $db->getValue('SELECT `name` FROM shop_product WHERE id=?', [$detail['product_id']]);
+                    $tableRelateItem = Be::getTable('shop_product_relate_item');
+                    $tableRelateItem->where('relate_id', $row['relate_id']);
+                    $relateItems = $tableRelateItem->getArrays('product_id, value, icon_image, icon_color');
+                    foreach ($relateItems as &$relateItem) {
+                        $relateItem['product_name'] = $db->getValue('SELECT `name` FROM shop_product WHERE id=?', [$relateItem['product_id']]);
                     }
-                    unset($detail);
-                    $relate['details'] = $details;
+                    unset($relateItem);
+                    $relate['items'] = $relateItems;
                 }
 
                 $formattedRow = [

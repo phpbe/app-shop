@@ -201,34 +201,34 @@ class Product
                 $data['relate']['icon_type'] = 'text';
             }
 
-            if (!isset($data['relate']['details']) || !is_array($data['relate']['details'])) {
+            if (!isset($data['relate']['items']) || !is_array($data['relate']['items'])) {
                 throw new ServiceException('商品关联明细数据缺失！');
             }
 
             $i = 1;
-            foreach ($data['relate']['details'] as &$detail) {
-                if (!isset($detail['id']) || !is_string($detail['id'])) {
-                    $detail['id'] = '';
+            foreach ($data['relate']['items'] as &$relateItem) {
+                if (!isset($relateItem['id']) || !is_string($relateItem['id'])) {
+                    $relateItem['id'] = '';
                 }
 
-                if (!isset($detail['product_id']) || !is_string($detail['product_id'])) {
+                if (!isset($relateItem['product_id']) || !is_string($relateItem['product_id'])) {
                     throw new ServiceException('商品关联第' . $i . '项的商品ID缺失！');
                 }
 
-                if (!isset($detail['value']) || !is_string($detail['value'])) {
+                if (!isset($relateItem['value']) || !is_string($relateItem['value'])) {
                     throw new ServiceException('商品关联第' . $i . '项的值缺失！');
                 }
 
-                if (!isset($detail['icon_image']) || !is_string($detail['icon_image'])) {
-                    $detail['icon_image'] = '';
+                if (!isset($relateItem['icon_image']) || !is_string($relateItem['icon_image'])) {
+                    $relateItem['icon_image'] = '';
                 }
 
-                if (!isset($detail['icon_color']) || !is_string($detail['icon_color'])) {
-                    $detail['icon_color'] = '';
+                if (!isset($relateItem['icon_color']) || !is_string($relateItem['icon_color'])) {
+                    $relateItem['icon_color'] = '';
                 }
                 $i++;
             }
-            unset($detail);
+            unset($relateItem);
         }
 
         $style = isset($data['style']) ? ((int)$data['style']) : 1;
@@ -241,17 +241,48 @@ class Product
                 throw new ServiceException('多款式数据缺失！');
             }
 
-            $validStyles = 0;
             $styles = $data['styles'];
-            foreach ($styles as $s) {
-                if (!isset($s['name']) || !$s['name']) continue;
-                if (!isset($s['values']) || !is_array($s['values']) || count($s['values']) === 0) continue;
-                $validStyles++;
-            }
+            $i = 1;
+            foreach ($styles as &$s) {
+                if (!isset($s['name']) || !$s['name']) {
+                    throw new ServiceException('款式组 ' . $i . ' 的款式名称缺失！');
+                }
 
-            if ($validStyles === 0) {
-                throw new ServiceException('请配置多款式！');
+                if (!isset($s['icon_type']) || !is_string($s['icon_type'])) {
+                    $s['icon_type'] = 'text';
+                }
+
+                if (!in_array($s['icon_type'], ['text', 'image', 'color'])) {
+                    $s['icon_type'] = 'text';
+                }
+
+                if (!isset($s['items']) || !is_array($s['items']) || count($s['items']) === 0)  {
+                    throw new ServiceException('款式组 ' . $i . ' 未配置款式子项！');
+                }
+
+                $j = 1;
+                foreach ($s['items'] as &$styleItem) {
+                    if (!isset($styleItem['id']) || !is_string($styleItem['id'])) {
+                        $styleItem['id'] = '';
+                    }
+
+                    if (!isset($styleItem['value']) || !is_string($styleItem['value'])) {
+                        throw new ServiceException('款式组 ' . $i . ' 第 ' . $j . ' 个款式子项的值缺失！');
+                    }
+
+                    if (!isset($styleItem['icon_image']) || !is_string($styleItem['icon_image'])) {
+                        $styleItem['icon_image'] = '';
+                    }
+
+                    if (!isset($styleItem['icon_color']) || !is_string($styleItem['icon_color'])) {
+                        $styleItem['icon_color'] = '';
+                    }
+                    $j++;
+                }
+                unset($styleItem);
+                $i++;
             }
+            unset($s);
         }
 
         if (!isset($data['items']) || !is_array($data['items']) || count($data['items']) === 0) {
@@ -355,11 +386,14 @@ class Product
 
             if (isset($data['category_ids']) && is_array($data['category_ids']) && count($data['category_ids']) > 0) {
                 if ($isNew) {
+                    $ordering = 1;
                     foreach ($data['category_ids'] as $category_id) {
                         $tupleProductCategory = Be::getTuple('shop_product_category');
                         $tupleProductCategory->product_id = $tupleProduct->id;
                         $tupleProductCategory->category_id = $category_id;
+                        $tupleProductCategory->ordering = $ordering;
                         $tupleProductCategory->insert();
+                        $ordering++;
                     }
                 } else {
                     $existCategoryIds = Be::getTable('shop_product_category')
@@ -384,12 +418,26 @@ class Product
                     } else {
                         $newCategoryIds = $data['category_ids'];
                     }
+
                     if (count($newCategoryIds) > 0) {
-                        foreach ($newCategoryIds as $category_id) {
+                        $ordering = 1;
+                        foreach ($data['category_ids'] as $category_id) {
                             $tupleProductCategory = Be::getTuple('shop_product_category');
-                            $tupleProductCategory->product_id = $tupleProduct->id;
-                            $tupleProductCategory->category_id = $category_id;
-                            $tupleProductCategory->insert();
+                            if (in_array($category_id, $existCategoryIds)) {
+                                $tupleProductCategory->loadBy([
+                                    'product_id' => $tupleProduct->id,
+                                    'category_id' => $category_id,
+                                ]);
+                                $tupleProductCategory->ordering = $ordering;
+                                $tupleProductCategory->update();
+                            } else {
+                                $tupleProductCategory = Be::getTuple('shop_product_tag');
+                                $tupleProductCategory->product_id = $tupleProduct->id;
+                                $tupleProductCategory->category_id = $category_id;
+                                $tupleProductCategory->ordering = $ordering;
+                                $tupleProductCategory->insert();
+                            }
+                            $ordering++;
                         }
                     }
                 }
@@ -398,11 +446,14 @@ class Product
             // 标签
             if (isset($data['tags']) && is_array($data['tags']) && count($data['tags']) > 0) {
                 if ($isNew) {
+                    $ordering = 1;
                     foreach ($data['tags'] as $tag) {
                         $tupleProductTag = Be::getTuple('shop_product_tag');
                         $tupleProductTag->product_id = $tupleProduct->id;
                         $tupleProductTag->tag = $tag;
+                        $tupleProductTag->ordering = $ordering;
                         $tupleProductTag->insert();
+                        $ordering++;
                     }
                 } else {
                     $existTags = Be::getTable('shop_product_tag')
@@ -427,12 +478,26 @@ class Product
                     } else {
                         $newTags = $data['tags'];
                     }
+
                     if (count($newTags) > 0) {
-                        foreach ($newTags as $newTag) {
+                        $ordering = 1;
+                        foreach ($data['tags'] as $tag) {
                             $tupleProductTag = Be::getTuple('shop_product_tag');
-                            $tupleProductTag->product_id = $tupleProduct->id;
-                            $tupleProductTag->tag = $newTag;
-                            $tupleProductTag->insert();
+                            if (in_array($tag, $existTags)) {
+                                $tupleProductTag->loadBy([
+                                    'product_id' => $tupleProduct->id,
+                                    'tag' => $tag,
+                                ]);
+                                $tupleProductTag->ordering = $ordering;
+                                $tupleProductTag->update();
+                            } else {
+                                $tupleProductTag = Be::getTuple('shop_product_tag');
+                                $tupleProductTag->product_id = $tupleProduct->id;
+                                $tupleProductTag->tag = $tag;
+                                $tupleProductTag->ordering = $ordering;
+                                $tupleProductTag->insert();
+                            }
+                            $ordering++;
                         }
                     }
                 }
@@ -440,7 +505,7 @@ class Product
 
             if (isset($data['images']) && is_array($data['images']) && count($data['images']) > 0) {
                 if ($isNew) {
-                    $ordering = 0;
+                    $ordering = 1;
                     foreach ($data['images'] as $image) {
                         $tupleProductImage = Be::getTuple('shop_product_image');
                         $tupleProductImage->product_id = $tupleProduct->id;
@@ -548,63 +613,63 @@ class Product
                     // 删除旧的移除的关联商品
 
                     $keepIds = [];
-                    foreach ($data['relate']['details'] as $detail) {
-                        if (isset($detail['id']) && $detail['id'] !== '') {
-                            $keepIds[] = $detail['id'];
+                    foreach ($data['relate']['items'] as $relateItem) {
+                        if (isset($relateItem['id']) && $relateItem['id'] !== '') {
+                            $keepIds[] = $relateItem['id'];
                         }
                     }
 
-                    $productRelateDetails = Be::getTable('shop_product_relate_detail')
+                    $productRelateItems = Be::getTable('shop_product_relate_item')
                         ->where('relate_id', $tupleProductRelate->id)
                         ->getObjects();
 
-                    foreach ($productRelateDetails as $productRelateDetail) {
+                    foreach ($productRelateItems as $productRelateItem) {
                         $tDelete = true;
                         if (count($keepIds) > 0) {
-                            $tDelete = !in_array($productRelateDetail->id, $keepIds);
+                            $tDelete = !in_array($productRelateItem->id, $keepIds);
                         }
 
                         if ($tDelete) {
                             // 删除商品的关联
                             $tProduct = Be::getTuple('shop_product');
-                            $tProduct->load($productRelateDetail->product_id);
+                            $tProduct->load($productRelateItem->product_id);
                             $tProduct->relate_id = '';
                             $tProduct->update_time = $now;
                             $tProduct->update();
 
-                            Be::getTable('shop_product_relate_detail')
-                                ->delete($productRelateDetail->id);
+                            Be::getTable('shop_product_relate_item')
+                                ->delete($productRelateItem->id);
                         }
                     }
                 }
 
-                $relateDetailOrdering = 0;
-                foreach ($data['relate']['details'] as $detail) {
+                $relateItemOrdering = 0;
+                foreach ($data['relate']['items'] as $relateItem) {
 
-                    if ($detail['id'] === '') {
+                    if ($relateItem['id'] === '') {
 
                         // 检查该商品是否已有旧关联记录
                         $hasRelate = false;
-                        $tupleProductRelateDetail = Be::getTuple('shop_product_relate_detail');
+                        $tupleProductRelateItem = Be::getTuple('shop_product_relate_item');
                         try {
-                            $tupleProductRelateDetail->loadBy('product_id', $detail['product_id']);
+                            $tupleProductRelateItem->loadBy('product_id', $relateItem['product_id']);
                             $hasRelate = true;
                         } catch (\Throwable $t) {
                         }
 
                         // 已有旧关联记录
                         if ($hasRelate) {
-                            $relateId = $tupleProductRelateDetail->relate_id;
+                            $relateId = $tupleProductRelateItem->relate_id;
 
                             // 删除旧关联明细
-                            $tupleProductRelateDetail->delete();
+                            $tupleProductRelateItem->delete();
 
                             $relateUpdate = [
                                 'update_time' => $now,
                             ];
 
                             // 如果关联明细已全部删除，则删除关联本身
-                            if (Be::getTable('shop_product_relate_detail')
+                            if (Be::getTable('shop_product_relate_item')
                                     ->where('relate_id', $relateId)
                                     ->count() === 0) {
                                 $relateUpdate['is_delete'] = 1;
@@ -616,45 +681,45 @@ class Product
                         }
                     }
 
-                    $tupleProductRelateDetail = Be::getTuple('shop_product_relate_detail');
+                    $tupleProductRelateItem = Be::getTuple('shop_product_relate_item');
 
-                    $isNewProductRelateDetail = true;
-                    if ($detail['id'] !== '') {
-                        $tupleProductRelateDetail->load($detail['id']);
-                        $isNewProductRelateDetail = false;
+                    $isNewProductRelateItem = true;
+                    if ($relateItem['id'] !== '') {
+                        $tupleProductRelateItem->load($relateItem['id']);
+                        $isNewProductRelateItem = false;
                     } else {
-                        $tupleProductRelateDetail->relate_id = $tupleProductRelate->id;
+                        $tupleProductRelateItem->relate_id = $tupleProductRelate->id;
 
                         // 商品ID为空时，表示当前新增的商品
-                        if ($detail['product_id'] === '') {
-                            $tupleProductRelateDetail->product_id = $tupleProduct->id;
+                        if ($relateItem['product_id'] === '') {
+                            $tupleProductRelateItem->product_id = $tupleProduct->id;
                         } else {
-                            $tupleProductRelateDetail->product_id = $detail['product_id'];
+                            $tupleProductRelateItem->product_id = $relateItem['product_id'];
                         }
                     }
 
-                    $tupleProductRelateDetail->value = $detail['value'];
-                    $tupleProductRelateDetail->icon_image = $detail['icon_image'];
-                    $tupleProductRelateDetail->icon_color = $detail['icon_color'];
-                    $tupleProductRelateDetail->ordering = $relateDetailOrdering;
+                    $tupleProductRelateItem->value = $relateItem['value'];
+                    $tupleProductRelateItem->icon_image = $relateItem['icon_image'];
+                    $tupleProductRelateItem->icon_color = $relateItem['icon_color'];
+                    $tupleProductRelateItem->ordering = $relateItemOrdering;
 
-                    if ($isNewProductRelateDetail) {
-                        $tupleProductRelateDetail->insert();
+                    if ($isNewProductRelateItem) {
+                        $tupleProductRelateItem->insert();
                     } else {
-                        $tupleProductRelateDetail->update();
+                        $tupleProductRelateItem->update();
                     }
 
                     // 非当前商品，则更新关联ID
-                    if ($detail['product_id'] !== '' && $detail['product_id'] !== $tupleProduct->id) {
+                    if ($relateItem['product_id'] !== '' && $relateItem['product_id'] !== $tupleProduct->id) {
                         // 桔记商品的关联
                         $tProduct = Be::getTuple('shop_product');
-                        $tProduct->load($detail['product_id']);
+                        $tProduct->load($relateItem['product_id']);
                         $tProduct->relate_id = $tupleProductRelate->id;
                         $tProduct->update_time = $now;
                         $tProduct->update();
                     }
 
-                    $relateDetailOrdering++;
+                    $relateItemOrdering++;
                 }
 
                 $tupleProduct->relate_id = $tupleProductRelate->id;
@@ -664,25 +729,25 @@ class Product
 
                     // 删除该商品的 关联记录
                     $hasRelate = false;
-                    $tupleProductRelateDetail = Be::getTuple('shop_product_relate_detail');
+                    $tupleProductRelateItem = Be::getTuple('shop_product_relate_item');
                     try {
-                        $tupleProductRelateDetail->loadBy('product_id', $tupleProduct->id);
+                        $tupleProductRelateItem->loadBy('product_id', $tupleProduct->id);
                         $hasRelate = true;
                     } catch (\Throwable $t) {
                     }
 
                     if ($hasRelate) {
-                        $relateId = $tupleProductRelateDetail->relate_id;
+                        $relateId = $tupleProductRelateItem->relate_id;
 
                         // 删除关联明细
-                        $tupleProductRelateDetail->delete();
+                        $tupleProductRelateItem->delete();
 
                         $relateUpdate = [
                             'update_time' => $now,
                         ];
 
                         // 如果关联明细已全部删除，则删除关联本身
-                        if (Be::getTable('shop_product_relate_detail')
+                        if (Be::getTable('shop_product_relate_item')
                                 ->where('relate_id', $relateId)
                                 ->count() === 0) {
                             $relateUpdate['is_delete'] = 1;
@@ -701,6 +766,15 @@ class Product
             if ($style === 1) {
                 if (!$isNew) {
                     // 删除旧数据
+                    $productStyleIds = Be::getTable('shop_product_style')
+                        ->where('product_id', $productId)
+                        ->getValues('id');
+                    if (count($productStyleIds) > 0) {
+                        Be::getTable('shop_product_style_item')
+                            ->where('product_style_id', 'IN', $productStyleIds)
+                            ->delete();
+                    }
+
                     Be::getTable('shop_product_style')
                         ->where('product_id', $productId)
                         ->delete();
@@ -708,42 +782,72 @@ class Product
             } elseif ($style === 2) {
                 if ($isNew) {
                     $styles = $data['styles'];
+
+                    $styleOrdering = 1;
                     foreach ($styles as $s) {
-                        if (!isset($s['name']) || !$s['name']) continue;
-                        if (!isset($s['values']) || !is_array($s['values']) || count($s['values']) === 0) continue;
                         $tupleProductStyle = Be::getTuple('shop_product_style');
                         $tupleProductStyle->product_id = $tupleProduct->id;
                         $tupleProductStyle->name = $s['name'];
-                        $tupleProductStyle->values = json_encode($s['values']);
+                        $tupleProductStyle->icon_type = $s['icon_type'];
+                        $tupleProductStyle->ordering = $styleOrdering;
                         $tupleProductStyle->insert();
+
+                        $styleItemOrdering = 1;
+                        foreach ($s['items'] as $styleItem) {
+                            $tupleProductStyleItem = Be::getTuple('shop_product_style_item');
+                            $tupleProductStyleItem->product_style_id = $tupleProductStyle->id;
+                            $tupleProductStyleItem->value = $styleItem['value'];
+                            $tupleProductStyleItem->icon_image = $styleItem['icon_image'];
+                            $tupleProductStyleItem->icon_color = $styleItem['icon_color'];
+                            $tupleProductStyleItem->ordering = $styleItemOrdering;
+                            $tupleProductStyleItem->insert();
+                            $styleItemOrdering++;
+                        }
+                        $styleOrdering++;
                     }
                 } else {
                     $styles = $data['styles'];
 
                     $keepIds = [];
                     foreach ($styles as $s) {
-                        if (!isset($s['name']) || !$s['name']) continue;
-                        if (!isset($s['values']) || !is_array($s['values']) || count($s['values']) === 0) continue;
                         if (isset($s['id']) && $s['id'] !== '') {
                             $keepIds[] = $s['id'];
                         }
                     }
 
                     if (count($keepIds) > 0) {
+                        $productStyleIds = Be::getTable('shop_product_style')
+                            ->where('product_id', $productId)
+                            ->where('id', 'NOT IN', $keepIds)
+                            ->getValues('id');
+                        if (count($productStyleIds) > 0) {
+                            Be::getTable('shop_product_style_item')
+                                ->where('product_style_id', 'IN', $productStyleIds)
+                                ->delete();
+                        }
+
                         Be::getTable('shop_product_style')
                             ->where('product_id', $productId)
                             ->where('id', 'NOT IN', $keepIds)
                             ->delete();
                     } else {
+                        // 删除旧数据
+                        $productStyleIds = Be::getTable('shop_product_style')
+                            ->where('product_id', $productId)
+                            ->getValues('id');
+                        if (count($productStyleIds) > 0) {
+                            Be::getTable('shop_product_style_item')
+                                ->where('product_style_id', 'IN', $productStyleIds)
+                                ->delete();
+                        }
+
                         Be::getTable('shop_product_style')
                             ->where('product_id', $productId)
                             ->delete();
                     }
 
+                    $styleOrdering = 1;
                     foreach ($styles as $s) {
-                        if (!isset($s['name']) || !$s['name']) continue;
-                        if (!isset($s['values']) || !is_array($s['values']) || count($s['values']) === 0) continue;
-
                         $tupleProductStyle = Be::getTuple('shop_product_style');
                         if (isset($s['id']) && $s['id'] !== '') {
                             try {
@@ -755,13 +859,56 @@ class Product
 
                         $tupleProductStyle->product_id = $tupleProduct->id;
                         $tupleProductStyle->name = $s['name'];
-                        $tupleProductStyle->values = json_encode($s['values']);
+                        $tupleProductStyle->icon_type = $s['icon_type'];
+                        $tupleProductStyle->ordering = $styleOrdering;
                         $tupleProductStyle->save();
+
+                        $keepIds = [];
+                        foreach ($s['items'] as $styleItem) {
+                            if (isset($styleItem['id']) && $styleItem['id'] !== '') {
+                                $keepIds[] = $styleItem['id'];
+                            }
+                        }
+
+                        if (count($keepIds) > 0) {
+                            Be::getTable('shop_product_style_item')
+                                ->where('product_style_id', '=', $tupleProductStyle->id)
+                                ->where('id', 'NOT IN', $keepIds)
+                                ->delete();
+                        } else {
+                            Be::getTable('shop_product_style_item')
+                                ->where('product_style_id', '=', $tupleProductStyle->id)
+                                ->delete();
+                        }
+
+                        $styleItemOrdering = 1;
+                        foreach ($s['items'] as $styleItem) {
+                            $tupleProductStyleItem = Be::getTuple('shop_product_style_item');
+
+                            if (isset($styleItem['id']) && $styleItem['id'] !== '') {
+                                try {
+                                    $tupleProductStyleItem->load($styleItem['id']);
+                                } catch (\Throwable $t) {
+                                    throw new ServiceException('款式组 ' . $styleOrdering . ' 下的款式子项（# ' . $styleItem['id'] . '）不存在！');
+                                }
+                            }
+
+                            $tupleProductStyleItem->product_style_id = $tupleProductStyle->id;
+                            $tupleProductStyleItem->value = $styleItem['value'];
+                            $tupleProductStyleItem->icon_image = $styleItem['icon_image'];
+                            $tupleProductStyleItem->icon_color = $styleItem['icon_color'];
+                            $tupleProductStyleItem->ordering = $styleItemOrdering;
+                            $tupleProductStyleItem->save();
+                            $styleItemOrdering++;
+                        }
+                        $styleOrdering++;
                     }
                 }
             }
 
             if ($isNew) {
+
+                $productItemOrdering = 1;
                 foreach ($items as $item) {
                     $tupleProductItem = Be::getTuple('shop_product_item');
                     $tupleProductItem->product_id = $tupleProduct->id;
@@ -774,6 +921,7 @@ class Product
                     $tupleProductItem->weight = $item['weight'] ?? '0';
                     $tupleProductItem->weight_unit = $item['weight_unit'] ?? '';
                     $tupleProductItem->stock = $item['stock'] ?? 0;
+                    $tupleProductItem->ordering = $productItemOrdering;
                     $tupleProductItem->create_time = $now;
                     $tupleProductItem->update_time = $now;
                     $tupleProductItem->insert();
@@ -802,6 +950,7 @@ class Product
                     }
                     // ================================================================================================= 款式图像处理
 
+                    $productItemOrdering++;
                 }
             } else {
                 $keepIds = [];
@@ -833,6 +982,7 @@ class Product
                         ->delete();
                 }
 
+                $productItemOrdering = 1;
                 foreach ($items as $item) {
                     $tupleProductItem = Be::getTuple('shop_product_item');
 
@@ -854,6 +1004,7 @@ class Product
                     $tupleProductItem->weight = $item['weight'] ?? '0';
                     $tupleProductItem->weight_unit = $item['weight_unit'] ?? '';
                     $tupleProductItem->stock = $item['stock'] ?? 0;
+                    $tupleProductItem->ordering = $productItemOrdering;
 
                     if (!isset($item['id']) || $item['id'] === '') {
                         $tupleProductItem->create_time = $now;
@@ -921,7 +1072,7 @@ class Product
                         }
                     }
                     // ================================================================================================= 款式图像处理
-
+                    $productItemOrdering++;
                 }
             }
 
@@ -983,7 +1134,7 @@ class Product
 
                 // 如查商品有设置关联，删除商品关联
                 if ($tupleProduct->relate_id !== '') {
-                    Be::getTable('shop_product_relate_detail')
+                    Be::getTable('shop_product_relate_item')
                         ->where('relate_id', $tupleProduct->relate_id)
                         ->where('product_id', $productId)
                         ->delete();
@@ -993,7 +1144,7 @@ class Product
                     ];
 
                     // 如果关联明细已全部删除，则删除关联本身
-                    if (Be::getTable('shop_product_relate_detail')
+                    if (Be::getTable('shop_product_relate_item')
                             ->where('relate_id', $tupleProduct->relate_id)
                             ->count() === 0) {
                         $relateUpdate['is_delete'] = 1;
@@ -1029,9 +1180,19 @@ class Product
                     ->delete();
 
                 // 删除商品款式
-                Be::getTable('shop_product_style')
+                $styleIds = Be::getTable('shop_product_style')
                     ->where('product_id', $productId)
-                    ->delete();
+                    ->getValues('id');
+
+                if (count($styleIds) > 0) {
+                    Be::getTable('shop_product_style_item')
+                        ->where('product_style_id', 'IN', $styleIds)
+                        ->delete();
+
+                    Be::getTable('shop_product_style')
+                        ->where('product_id', $productId)
+                        ->delete();
+                }
 
                 // 删除商品子项
                 Be::getTable('shop_product_item')
@@ -1094,15 +1255,15 @@ class Product
                 $sql = 'SELECT * FROM shop_product_relate WHERE id = ?';
                 $relate = $db->getObject($sql, [$product->relate_id]);
 
-                $sql = 'SELECT * FROM shop_product_relate_detail WHERE relate_id = ? ORDER BY ordering ASC';
-                $details = $db->getObjects($sql, [$product->relate_id]);
-                foreach ($details as &$detail) {
+                $sql = 'SELECT * FROM shop_product_relate_item WHERE relate_id = ? ORDER BY ordering ASC';
+                $relateItems = $db->getObjects($sql, [$product->relate_id]);
+                foreach ($relateItems as &$relateItem) {
                     $sql = 'SELECT `name` FROM shop_product WHERE id = ?';
-                    $detail->product_name = $db->getValue($sql, [$detail->product_id]);
+                    $relateItem->product_name = $db->getValue($sql, [$relateItem->product_id]);
                 }
-                unset($detail);
+                unset($relateItem);
 
-                $relate->details = $details;
+                $relate->items = $relateItems;
 
                 $product->relate = $relate;
             }
@@ -1120,7 +1281,7 @@ class Product
         }
 
         if (isset($with['categories'])) {
-            $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
+            $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ? ORDER BY ordering ASC';
             $categoryIds = $db->getValues($sql, [$productId]);
             if (count($categoryIds) > 0) {
                 $product->categoryIds = $categoryIds;
@@ -1138,18 +1299,25 @@ class Product
         }
 
         if (isset($with['tags'])) {
-            $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
+            $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ? ORDER BY ordering ASC';
             $product->tags = $db->getValues($sql, [$productId]);
         }
 
         if (isset($with['styles'])) {
-            $sql = 'SELECT * FROM shop_product_style WHERE product_id = ?';
+            $sql = 'SELECT * FROM shop_product_style WHERE product_id = ? ORDER BY ordering ASC';
             $styles = $db->getObjects($sql, [$productId]);
+
+            foreach ($styles as &$style) {
+                $sql = 'SELECT * FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
+                $style->items = $db->getObjects($sql, [$style->id]);
+            }
+            unset($style);
+
             $product->styles = $styles;
         }
 
         if (isset($with['items'])) {
-            $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';
+            $sql = 'SELECT * FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
             $items = $db->getObjects($sql, [$productId]);
             foreach ($items as $item) {
                 $item->stock = (int)$item->stock;

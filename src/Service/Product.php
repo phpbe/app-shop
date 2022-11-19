@@ -255,21 +255,18 @@ class Product
                 $cache = Be::getCache();
                 $productRelate = $cache->get($key);
                 if ($productRelate) {
-                    $productRelate = json_decode($productRelate);
-                    if ($productRelate) {
-                        foreach ($productRelate->details as &$detail) {
-                            $detail->url = beUrl('Shop.Product.detail', ['id' => $detail->product_id]);
-                            if ($detail->product_id === $product->id) {
-                                $detail->self = 1;
-                                $productRelate->value = $detail->value;
-                            } else {
-                                $detail->self = 0;
-                            }
+                    foreach ($productRelate->items as &$relateItem) {
+                        $relateItem->url = beUrl('Shop.Product.detail', ['id' => $relateItem->product_id]);
+                        if ($relateItem->product_id === $product->id) {
+                            $relateItem->self = 1;
+                            $productRelate->value = $relateItem->value;
+                        } else {
+                            $relateItem->self = 0;
                         }
-                        unset($detail);
-
-                        $product->relate = $productRelate;
                     }
+                    unset($relateItem);
+
+                    $product->relate = $productRelate;
                 }
             }
         }
@@ -329,7 +326,6 @@ class Product
 
         // 最近浏览的商品名称存入 redis，有效期 30 天
         $cache->set($historyKey, $history, 86400 * 30);
-
 
         // 点击量 使用REDIS 存放
         $hits = $product->hits;

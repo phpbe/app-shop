@@ -260,7 +260,7 @@ class ApiCollect
                         'id' => '',
                         'name' => $relateName,
                         'icon_type' => $iconType,
-                        'details' => [[
+                        'items' => [[
                             'id' => '',
                             'product_id' => '',
                             'value' => $relateValue,
@@ -276,26 +276,26 @@ class ApiCollect
                         throw new ServiceException('商品关联唯一值（relate_key=' . $relateKey . '）对应的历史商品关联（#' . $relateId . '）不存在！');
                     }
 
-                    $details = Be::getTable('shop_product_relate_detail')
+                    $relateItems = Be::getTable('shop_product_relate_item')
                         ->where('relate_id', $relateId)
                         ->getArrays();
 
                     $isProductRelatedDetailExist = false;
                     if ($collectProductExist) {
-                        foreach ($details as &$detail) {
-                            if ($detail['product_id'] === $tupleCollectProduct->product_id) {
-                                $detail['value'] = $relateValue;
-                                $detail['icon_image'] = $relateIconImage;
-                                $detail['icon_color'] = $relateIconColor;
+                        foreach ($relateItems as &$relateItem) {
+                            if ($relateItem['product_id'] === $tupleCollectProduct->product_id) {
+                                $relateItem['value'] = $relateValue;
+                                $relateItem['icon_image'] = $relateIconImage;
+                                $relateItem['icon_color'] = $relateIconColor;
                                 $isProductRelatedDetailExist = true;
                                 break;
                             }
                         }
-                        unset($detail);
+                        unset($relateItem);
                     }
 
                     if (!$isProductRelatedDetailExist) {
-                        $details[] = [
+                        $relateItems[] = [
                             'id' => '',
                             'product_id' => $collectProductExist ? $tupleCollectProduct->product_id : '',
                             'value' => $relateValue,
@@ -308,7 +308,7 @@ class ApiCollect
                         'id' => $relateId,
                         'name' => $tProductRelate->name,
                         'icon_type' => $tProductRelate->icon_type,
-                        'details' => $details,
+                        'items' => $relateItems,
                     ];
                 }
             }

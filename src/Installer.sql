@@ -249,7 +249,8 @@ CREATE TABLE `shop_product` (
 CREATE TABLE `shop_product_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
-`category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
+`category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID',
+`ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
 
 CREATE TABLE `shop_product_image` (
@@ -263,11 +264,9 @@ CREATE TABLE `shop_product_image` (
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图像';
 
-
 CREATE TABLE `shop_product_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商吕ID',
-`image` varchar(200) NOT NULL DEFAULT '' COMMENT '图像',
 `sku` varchar(60) NOT NULL DEFAULT '' COMMENT 'SKU',
 `barcode` varchar(60) NOT NULL DEFAULT '' COMMENT '条码',
 `style` varchar(120) NOT NULL DEFAULT '' COMMENT '款式',
@@ -277,6 +276,7 @@ CREATE TABLE `shop_product_item` (
 `weight` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '重量',
 `weight_unit` varchar(3) NOT NULL DEFAULT 'kg' COMMENT '重量单位（kg/g/lb/oz）',
 `stock` int(11) NOT NULL DEFAULT '0' COMMENT '库存',
+`ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品子项';
@@ -284,22 +284,22 @@ CREATE TABLE `shop_product_item` (
 CREATE TABLE `shop_product_relate` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '关联的名称',
-`icon_type` varchar(10) NOT NULL DEFAULT '' COMMENT '关联的图标类型',
+`icon_type` varchar(10) NOT NULL DEFAULT 'text' COMMENT '关联的图标类型',
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用',
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联';
 
-CREATE TABLE `shop_product_relate_detail` (
+CREATE TABLE `shop_product_relate_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
-`relate_id` varchar(36) NOT NULL DEFAULT '' COMMENT '关联ID',
+`relate_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品关联ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `value` varchar(120) NOT NULL DEFAULT '' COMMENT '关联属性的值',
 `icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联明细';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联子项';
 
 CREATE TABLE `shop_product_review` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -325,13 +325,24 @@ CREATE TABLE `shop_product_style` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '款式名称',
-`values` varchar(600) NOT NULL DEFAULT '' COMMENT '款式值'
+`icon_type` varchar(10) NOT NULL DEFAULT 'text' COMMENT '款式图标类型',
+`ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品款式';
+
+CREATE TABLE `shop_product_style_item` (
+`id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
+`product_style_id` varchar(36) NOT NULL DEFAULT '' COMMENT '款式ID',
+`value` varchar(60) NOT NULL DEFAULT '' COMMENT '关联属性的值',
+`icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
+`icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
+`ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联明细';
 
 CREATE TABLE `shop_product_tag` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
-`tag` varchar(60) NOT NULL DEFAULT '' COMMENT '标签'
+`tag` varchar(60) NOT NULL DEFAULT '' COMMENT '标签',
+`ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
 
 CREATE TABLE `shop_promotion_activity` (
@@ -2164,7 +2175,7 @@ ALTER TABLE `shop_product_relate`
 ADD PRIMARY KEY (`id`),
 ADD KEY `update_time` (`update_time`);
 
-ALTER TABLE `shop_product_relate_detail`
+ALTER TABLE `shop_product_relate_item`
 ADD PRIMARY KEY (`id`),
 ADD UNIQUE KEY `relate_id` (`relate_id`,`product_id`),
 ADD UNIQUE KEY `product_id` (`product_id`);
@@ -2181,6 +2192,10 @@ ADD KEY `goods_review_id` (`product_review_id`);
 ALTER TABLE `shop_product_style`
 ADD PRIMARY KEY (`id`),
 ADD KEY `product_id` (`product_id`);
+
+ALTER TABLE `shop_product_style_item`
+ADD PRIMARY KEY (`id`),
+ADD KEY `product_style_id` (`product_style_id`);
 
 ALTER TABLE `shop_product_tag`
 ADD PRIMARY KEY (`id`),

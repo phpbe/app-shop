@@ -89,7 +89,7 @@
                     header-align="left"
                     v-if="formData.related === '1'">
                 <template slot-scope="scope">
-                    已有关联（{{scope.row.relate.details.length}}个商品）
+                    已有关联（{{scope.row.relate.items.length}}个商品）
                 </template>
             </el-table-column>
 
@@ -179,11 +179,11 @@
                         if (p.relate_id !== ""){
                             relate_name = p.relate.name;
                             relate_icon_type = p.relate.icon_type;
-                            for (let d of p.relate.details) {
-                                if (d.product_id === p.id) {
-                                    relate_value = d.value;
-                                    relate_icon_image = d.icon_image;
-                                    relate_icon_color = d.icon_color;
+                            for (let relateItem of p.relate.items) {
+                                if (relateItem.product_id === p.id) {
+                                    relate_value = relateItem.value;
+                                    relate_icon_image = relateItem.icon_image;
+                                    relate_icon_color = relateItem.icon_color;
                                     break;
                                 }
                             }

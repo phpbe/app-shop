@@ -4,272 +4,7 @@
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/sortable/sortable.min.js"></script>
     <script src="<?php echo $wwwUrl; ?>/lib/vuedraggable/vuedraggable.umd.min.js"></script>
-
-    <style>
-        .el-form-item {
-            margin-bottom: inherit;
-        }
-
-        .el-form-item__content {
-            line-height: inherit;
-        }
-
-        .el-tooltip {
-            cursor: pointer;
-        }
-
-        .el-tooltip:hover {
-            color: #409EFF;
-        }
-
-        .dialog-image-selector .el-dialog__body {
-            padding: 0;
-        }
-
-        .image, .image-selector {
-            display: inline-block;
-            width: 148px;
-            height: 148px;
-            margin: 0 8px 8px 0;
-            border: 1px dashed #c0ccda;
-            border-radius: 6px;
-            overflow: hidden;
-            line-height: 148px;
-            position: relative;
-            text-align: center;
-        }
-
-        .image-selector {
-            cursor: pointer;
-        }
-        .image-selector:hover {
-            border-color: #409eff;
-        }
-
-        .image-selector i {
-            font-size: 28px;
-            color: #8c939d;
-        }
-
-        .image img {
-            max-width: 100%;
-            vertical-align: middle;
-        }
-
-        .image .image-move {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 32px;
-            cursor: move;
-        }
-
-        .image .image-actions {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: 32px;
-            line-height: 32px;
-            background-color: rgba(0, 0, 0, 0.5);
-            text-align: center;
-            cursor: default;
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        .image:hover .image-actions {
-            opacity: 1;
-        }
-
-        .image .image-action {
-            color: #ddd;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-
-
-        .relate-details-header {
-            color: #666;
-            background-color: #EBEEF5;
-            height: 3rem;
-            line-height: 3rem;
-            margin-bottom: .5rem;
-        }
-
-        .relate-details {
-
-        }
-
-        .relate-details .el-form-item {
-            margin-bottom: 0;
-        }
-
-        .relate-details .el-form-item.is-error {
-            margin-bottom: 1rem;
-        }
-
-        .relate-detail {
-            background-color: #fff;
-            border-bottom: #EBEEF5 1px solid;
-            padding-top: .5rem;
-            padding-bottom: .5rem;
-            margin-bottom: 2px;
-        }
-
-        .relate-detail-col-drag-icon {
-            width: 60px;
-            text-align: center;
-        }
-
-        .relate-detail-drag-icon {
-            color: #ccc;
-            font-size: 20px;
-            padding-top: .25rem;
-            padding-right: 1rem;
-            cursor: move;
-        }
-
-        .relate-detail-drag-icon:hover {
-            color: #409EFF;
-        }
-
-        .relate-detail-col-op {
-            width: 80px;
-            text-align: center;
-        }
-
-        .relate-detail-col-product {
-        }
-
-        .relate-detail-col-value {
-        }
-
-        .relate-detail-col-icon-image {
-            width: 120px;
-            text-align: center;
-        }
-
-        .relate-detail-col-icon-color {
-            width: 120px;
-            text-align: center;
-        }
-
-        .relate-detail-ghost {
-            border: #ccc 1px dashed !important;
-            background-color: #fafafa !important;
-        }
-
-        .relate-detail-chosen {
-        }
-
-        .relate-detail-drag {
-        }
-
-
-        .relate-icon-image {
-            display: inline-block;
-            width: 60px;
-            height: 60px;
-            border: 1px dashed #d9d9d9;
-            border-radius: 6px;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .relate-icon-image:hover {
-            border-color: #409EFF;
-        }
-
-        .relate-icon-image-img {
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            position: relative;
-        }
-
-        .relate-icon-image-img img {
-            vertical-align: middle;
-        }
-
-        .relate-icon-image-icon {
-            font-size: 18px;
-            color: #8c939d;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            text-align: center;
-        }
-
-        .relate-icon-image:hover .relate-icon-image-icon {
-            color: #409EFF;
-        }
-
-        .relate-icon-image-img-action {
-            position: absolute;
-            width: 100%;
-            height: 20px;
-            line-height: 20px;
-            left: 0;
-            bottom: 0;
-            z-index: 9;
-            text-align: center;
-            color: #fff;
-            opacity: 0;
-            background-color: rgba(0,0,0,.5);
-            transition: opacity .3s;
-        }
-
-        .relate-icon-image-img:hover .relate-icon-image-img-action {
-            opacity: 1;
-        }
-
-
-        .item-images-container {
-            display: inline-block;
-            border: 1px dashed #d9d9d9;
-            border-radius: 6px;
-            padding: 3px;
-            cursor: pointer;
-        }
-
-        .item-images-container:hover {
-            border-color: #409EFF;
-        }
-
-        .item-images {
-            min-width: 60px;
-            max-width: 120px;
-            height: 60px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .item-images-icon {
-            font-size: 18px;
-            color: #8c939d;
-            width: 60px;
-            height: 60px;
-            line-height: 60px;
-            text-align: center;
-        }
-
-        .item-images-container:hover .item-images-icon {
-            color: #409EFF;
-        }
-
-        .item-images .el-image {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border: 1px solid #d9d9d9;
-            background-color: #fff;
-        }
-
-    </style>
+    <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/product/css/edit.css" />
 </be-head>
 
 
@@ -604,8 +339,8 @@
                     $relate->icon_type = 'text';
                 }
 
-                if (!isset($relate->details) || !is_array($relate->details) || count($relate->details) === 0) {
-                    $relate->details = [[
+                if (!isset($relate->items) || !is_array($relate->items) || count($relate->items) === 0) {
+                    $relate->items = [[
                         'id' => '',
                         'product_id' => $this->product ? $this->product->id : '',
                         'product_name' => $this->product ? $this->product->name : '当前商品',
@@ -616,10 +351,10 @@
                     ]];
                 } else {
                     if ($this->product) {
-                        foreach ($relate->details as &$detail) {
-                            $detail->self = $detail->product_id === $this->product->id ? 1 : 0;
+                        foreach ($relate->items as &$relateItem) {
+                            $relateItem->self = $relateItem->product_id === $this->product->id ? 1 : 0;
                         }
-                        unset($detail);
+                        unset($relateItem);
                     }
                 }
 
@@ -653,73 +388,73 @@
 
                     <div class="be-mt-100">
 
-                        <div class="be-row relate-details-header">
+                        <div class="be-row relate-items-header">
                             <div class="be-col-auto">
-                                <div class="relate-detail-col-drag-icon"></div>
+                                <div class="relate-item-col-drag-icon"></div>
                             </div>
                             <div class="be-col-auto">
-                                <div class="relate-detail-col-op be-fw-bold">
+                                <div class="relate-item-col-op be-fw-bold">
                                     操作
                                 </div>
                             </div>
                             <div class="be-col">
-                                <div class="relate-detail-col-product be-fw-bold">
+                                <div class="relate-item-col-product be-fw-bold">
                                     商品
                                 </div>
                             </div>
                             <div class="be-col">
-                                <div class="relate-detail-col-value be-fw-bold">
+                                <div class="relate-item-col-value be-fw-bold">
                                     关联属性的值
                                 </div>
                             </div>
                             <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
-                                <div class="relate-detail-col-icon-image be-fw-bold">
+                                <div class="relate-item-col-icon-image be-fw-bold">
                                     图标：图片
                                 </div>
                             </div>
                             <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
-                                <div class="relate-detail-col-icon-color be-fw-bold">
-                                    图标：图片
+                                <div class="relate-item-col-icon-color be-fw-bold">
+                                    图标：颜色
                                 </div>
                             </div>
                         </div>
 
-                        <div class="relate-details">
+                        <div class="relate-items">
                             <draggable
-                                    v-model="formData.relate.details"
-                                    ghost-class="relate-detail-ghost"
-                                    chosen-class="relate-detail-chosen"
-                                    drag-class="relate-detail-drag"
-                                    handle=".relate-detail-drag-icon"
+                                    v-model="formData.relate.items"
+                                    ghost-class="relate-item-ghost"
+                                    chosen-class="relate-item-chosen"
+                                    drag-class="relate-item-drag"
+                                    handle=".relate-item-drag-icon"
                                     force-fallback="true"
                                     animation="100">
                                 <transition-group>
-                                    <div class="be-row relate-detail" v-for="relateDetail, relateDetailIndex in formData.relate.details" :key="relateDetail.id">
+                                    <div class="be-row relate-item" v-for="relateItem, relateItemIndex in formData.relate.items" :key="relateItem.id">
                                         <div class="be-col-auto">
-                                            <div class="relate-detail-col-drag-icon">
-                                                <div class="relate-detail-drag-icon">
+                                            <div class="relate-item-col-drag-icon">
+                                                <div class="relate-item-drag-icon">
                                                     <i class="el-icon-rank"></i>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="be-col-auto">
-                                            <div class="relate-detail-col-op">
-                                                <el-button type="text" icon="el-icon-delete" @click="relateDelete(relateDetail)" :disabled="relateDetail.self===1"></el-button>
+                                            <div class="relate-item-col-op">
+                                                <el-button type="text" icon="el-icon-delete" @click="relateDelete(relateItem)" :disabled="relateItem.self===1"></el-button>
                                             </div>
                                         </div>
 
                                         <div class="be-col">
-                                            <div class="relate-detail-col-product be-lh-250">
-                                                {{relateDetail.product_name}}<el-tag v-if="relateDetail.self === 1" size="mini" class="be-ml-100">当前商品</el-tag>
+                                            <div class="relate-item-col-product be-lh-250">
+                                                {{relateItem.product_name}}<el-tag v-if="relateItem.self === 1" size="mini" class="be-ml-100">当前商品</el-tag>
                                             </div>
                                         </div>
                                         <div class="be-col">
-                                            <div class="relate-detail-col-value">
-                                                <el-form-item :prop="'relate.details['+relateDetailIndex+'].value'" :rules="[{required: true, message: '请输入关联属性的值', trigger: 'change' }]">
+                                            <div class="relate-item-col-value">
+                                                <el-form-item :prop="'relate.items['+relateItemIndex+'].value'" :rules="[{required: true, message: '请输入关联属性的值', trigger: 'change' }]">
                                                     <el-input
                                                             type="text"
                                                             placeholder="请输入关联属性的值"
-                                                            v-model = "relateDetail.value"
+                                                            v-model = "relateItem.value"
                                                             size="medium"
                                                             maxlength="200" style="min-width: 300px;">
                                                     </el-input>
@@ -727,23 +462,23 @@
                                             </div>
                                         </div>
                                         <div class="be-col-auto" v-if="formData.relate.icon_type === 'image'">
-                                            <div class="relate-detail-col-icon-image">
+                                            <div class="relate-item-col-icon-image">
 
                                                 <div class="relate-icon-image">
-                                                    <div v-if="relateDetail.icon_image" class="relate-icon-image-img">
-                                                        <el-image :src="relateDetail.icon_image" fit="contain" @click="relateIconImageSelect(relateDetail)"></el-image>
+                                                    <div v-if="relateItem.icon_image" class="relate-icon-image-img">
+                                                        <el-image :src="relateItem.icon_image" fit="contain" @click="relateIconImageSelect(relateItem)"></el-image>
                                                         <div class="relate-icon-image-img-action">
-                                                            <i class="el-icon-delete" @click="relateIconImageDelete(relateDetail)"></i>
+                                                            <i class="el-icon-delete" @click="relateIconImageDelete(relateItem)"></i>
                                                         </div>
                                                     </div>
-                                                    <i v-else class="el-icon-plus relate-icon-image-icon" @click="relateIconImageSelect(relateDetail)"></i>
+                                                    <i v-else class="el-icon-plus relate-icon-image-icon" @click="relateIconImageSelect(relateItem)"></i>
                                                 </div>
 
                                             </div>
                                         </div>
                                         <div class="be-col-auto" v-if="formData.relate.icon_type === 'color'">
-                                            <div class="relate-detail-col-icon-color">
-                                                <el-color-picker v-model="relateDetail.icon_color"></el-color-picker>
+                                            <div class="relate-item-col-icon-color">
+                                                <el-color-picker v-model="relateItem.icon_color"></el-color-picker>
                                             </div>
                                         </div>
                                     </div>
@@ -768,8 +503,8 @@
                 </div>
 
                 <div class="be-mt-150">
-                    <el-radio v-model.number="formData.style" :label="1" @change="toggleStyle(1)">单一款式</el-radio>
-                    <el-radio v-model.number="formData.style" :label="2" @change="toggleStyle(2)">多款式</el-radio>
+                    <el-radio v-model.number="formData.style" :label="1" @change="styleToggle(1)">单一款式</el-radio>
+                    <el-radio v-model.number="formData.style" :label="2" @change="styleToggle(2)">多款式</el-radio>
                 </div>
                 <?php
                 $formData['style'] = ($this->product ? $this->product->style : 1);
@@ -797,73 +532,169 @@
                     {{formData.style === 1 ? "单一款式" : "多款式"}}
                 </div>
 
-                <div class="be-mt-100" v-if="formData.style === 2">
-                    <div class="be-row be-mt-100" v-for="style, styleIndex in formData.styles">
-                        <div class="be-col-auto">
-                            <el-input
-                                    type="text"
-                                    placeholder="款式名称"
-                                    v-model="style.name"
-                                    size="medium"
-                                    maxlength="60"
-                                    @change="styleNameChange">
-                            </el-input>
-                        </div>
-                        <div class="be-col">
-                            <div class="be-px-100">
-                                <el-select
-                                        style="width:100%;"
-                                        v-model="style.values"
-                                        multiple
-                                        filterable
-                                        allow-create
-                                        default-first-option
-                                        remote
-                                        :remote-method="styleValueRemote"
-                                        size="medium"
-                                        placeholder="款式值（按回车确认）"
-                                        @change="((val)=>{styleValueChange(val, styleIndex)}) ">
-                                </el-select>
+                <div v-if="formData.style === 2">
 
+
+                    <div class="be-b-ddd be-mt-50 be-mb-200" v-for="style, styleIndex in formData.styles">
+                        <div class="be-row">
+                            <div class="be-col-auto" style="background-color: var(--major-color-9);">
+                                <div class="be-px-100 be-py-150">
+                                    <div class="be-ta-center be-fs-110">款式组 {{styleIndex + 1}}</div>
+                                    <div class="be-mt-200">
+                                        <el-button class="be-ml-100" size="mini" icon="el-icon-delete" type="danger" @click="styleDelete(style)" :disabled="formData.styles.length < 2">删除</el-button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="be-col">
+                                <div class="be-p-100">
+                                    <div class="be-row">
+                                        <div class="be-col-auto be-lh-250">款式名称：<span class="be-c-red">*</span></div>
+                                        <div class="be-col be-pl-100">
+                                            <el-form-item :prop="'styles['+styleIndex+'].name'" :rules="[{required: true, message: '请输入款式名称', trigger: 'change' }]">
+                                                <el-input
+                                                        type="text"
+                                                        placeholder="请输入款式名称（如：Color）"
+                                                        v-model = "style.name"
+                                                        size="medium"
+                                                        maxlength="60"
+                                                        @change="styleNameChange">
+                                                </el-input>
+                                            </el-form-item>
+                                        </div>
+                                        <div class="be-col-auto be-pl-200 be-lh-250">
+                                            款式图标类型：
+                                        </div>
+                                        <div class="be-col be-pl-100 be-lh-250">
+                                            <el-radio v-model="style.icon_type" label="text">文本</el-radio>
+                                            <el-radio v-model="style.icon_type" label="image">图片</el-radio>
+                                            <el-radio v-model="style.icon_type" label="color">色块</el-radio>
+                                        </div>
+                                    </div>
+
+                                    <div class="be-mt-100">
+
+                                        <div class="be-row style-items-header">
+                                            <div class="be-col-auto">
+                                                <div class="style-item-col-drag-icon"></div>
+                                            </div>
+                                            <div class="be-col-auto">
+                                                <div class="style-item-col-op be-fw-bold">
+                                                    操作
+                                                </div>
+                                            </div>
+                                            <div class="be-col">
+                                                <div class="style-item-col-value be-fw-bold">
+                                                    款式子项的值
+                                                </div>
+                                            </div>
+                                            <div class="be-col-auto" v-if="style.icon_type === 'image'">
+                                                <div class="style-item-col-icon-image be-fw-bold">
+                                                    图标：图片
+                                                </div>
+                                            </div>
+                                            <div class="be-col-auto" v-if="style.icon_type === 'color'">
+                                                <div class="style-item-col-icon-color be-fw-bold">
+                                                    图标：颜色
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="style-items">
+                                            <draggable
+                                                    v-model="style.items"
+                                                    ghost-class="style-item-ghost"
+                                                    chosen-class="style-item-chosen"
+                                                    drag-class="style-item-drag"
+                                                    handle=".style-item-drag-icon"
+                                                    force-fallback="true"
+                                                    animation="100">
+                                                <transition-group>
+                                                    <div class="be-row style-item" v-for="styleItem,styleItemIndex in style.items" :key="styleItem.id">
+                                                        <div class="be-col-auto">
+                                                            <div class="style-item-col-drag-icon">
+                                                                <div class="style-item-drag-icon">
+                                                                    <i class="el-icon-rank"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="be-col-auto">
+                                                            <div class="style-item-col-op">
+                                                                <el-button type="text" icon="el-icon-delete" @click="styleItemDelete(style, styleItem)"></el-button>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="be-col">
+                                                            <div class="style-item-col-value">
+                                                                <el-form-item :prop="'styles['+styleIndex+'].items['+styleItemIndex+'].value'" :rules="[{required: true, message: '请输入款式子项的值', trigger: 'change' }]">
+                                                                    <el-input
+                                                                            type="text"
+                                                                            placeholder="请输入款式子项的值"
+                                                                            v-model = "styleItem.value"
+                                                                            size="medium"
+                                                                            maxlength="60"
+                                                                            @change="((val)=>{styleItemChange(val, styleIndex)})">
+                                                                    </el-input>
+                                                                </el-form-item>
+                                                            </div>
+                                                        </div>
+                                                        <div class="be-col-auto" v-if="style.icon_type === 'image'">
+                                                            <div class="style-item-col-icon-image">
+
+                                                                <div class="style-icon-image">
+                                                                    <div v-if="styleItem.icon_image" class="style-icon-image-img">
+                                                                        <el-image :src="styleItem.icon_image" fit="contain" @click="relateIconImageSelect(styleItem)"></el-image>
+                                                                        <div class="style-icon-image-img-action">
+                                                                            <i class="el-icon-delete" @click="relateIconImageDelete(styleItem)"></i>
+                                                                        </div>
+                                                                    </div>
+                                                                    <i v-else class="el-icon-plus style-icon-image-icon" @click="relateIconImageSelect(styleItem)"></i>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <div class="be-col-auto" v-if="style.icon_type === 'color'">
+                                                            <div class="style-item-col-icon-color">
+                                                                <el-color-picker v-model="styleItem.icon_color"></el-color-picker>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </transition-group>
+                                            </draggable>
+                                        </div>
+
+                                        <div class="be-mt-50">
+                                            <el-button size="mini" icon="el-icon-plus" @click="styleAddItem(style)">添加款式子项</el-button>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-                        <div class="be-col-auto">
-                            <el-button :disabled="styleIndex === 0" type="text" icon="el-icon-delete" @click="removeStyle(style)"></el-button>
-                        </div>
+
                     </div>
 
                     <div class="be-mt-100">
-                        <el-button size="medium" icon="el-icon-plus" @click="addStyle()">添加商品款式</el-button>
+                        <el-button size="medium" icon="el-icon-plus" @click="styleAdd()">添加商品款式</el-button>
                     </div>
                 </div>
                 <?php
-                if ($this->product) {
-                    if ($this->product->style === 1) {
-                        $formData['styles'] = [
-                            [
-                                'id' => '',
-                                'name' => '',
-                                'values' => []
-                            ]
-                        ];
-                    } elseif ($this->product->style === 2) {
-                        $styles = [];
-                        foreach ($this->product->styles as $style) {
-                            $styles[] = [
-                                'id' => $style->id,
-                                'name' => $style->name,
-                                'values' => json_decode($style->values, true),
-                            ];
-                        }
-                        $formData['styles'] = $styles;
-                    }
+                if ($this->product && $this->product->style === 2) {
+                    $formData['styles'] = $this->product->styles;
                 } else {
                     $formData['styles'] = [
-                        [
+                        (object)[
                             'id' => '',
                             'name' => '',
-                            'values' => []
-                        ]
+                            'icon_type' => 'text',
+                            'items' => [
+                                (object) [
+                                    'id' => '',
+                                    'value' => '',
+                                    'icon_image' => '',
+                                    'icon_color' => '',
+                                ],
+                            ],
+                        ],
                     ];
                 }
                 ?>
@@ -906,7 +737,7 @@
                                 <div v-if="scope.row.images.length > 0" class="item-images" :style="'width:' + (scope.row.images.length > 1 ? (scope.row.images.length * 10 + 50) : 60) + 'px'">
                                     <el-image v-for="(itemImage, itemIndex) in scope.row.images" :key="itemImage.ordering" :src="itemImage.url" fit="contain" :style="'left:' + itemIndex * 10 + 'px;z-index:' + (100 - itemIndex)"></el-image>
                                 </div>
-                                <i v-else class="el-icon-plus item-images-icon"></i>
+                                <i v-else class="el-icon-setting item-images-icon"></i>
                             </div>
                         </template>
                     </el-table-column>
@@ -1291,12 +1122,11 @@
     if ($this->product) {
         if ($this->product->style === 2) {
             foreach ($this->product->styles as $style) {
-                $values = json_decode($style->values, true);
                 $filters = [];
-                foreach ($values as $value) {
+                foreach ($style->items as $styleItem) {
                     $filters[] = [
-                        'text' => $value,
-                        'value' => $value,
+                        'text' => $styleItem->value,
+                        'value' => $styleItem->value,
                     ];
                 }
 
@@ -1331,7 +1161,7 @@
                 imageSelectorUrl: "about:blank",
                 imageSelectedFiles: [],
 
-                currentRelateDetail: null,
+                currentrelateItem: null,
 
                 drawerItemImages: false,
 
@@ -1422,9 +1252,9 @@
                         len = this.formData.name.length;
                     }
 
-                    for(let detail of this.formData.relate.details) {
-                        if (detail.self === 1) {
-                            detail.product_name = this.formData.name;
+                    for(let item of this.formData.relate.items) {
+                        if (item.self === 1) {
+                            item.product_name = this.formData.name;
                             break;
                         }
                     }
@@ -1515,11 +1345,10 @@
                 },
 
 
-                toggleRelate: function (relate) {
-
+                relateToggle: function (relate) {
                 },
                 relateIconImageSelect: function(row) {
-                    this.currentRelateDetail = row;
+                    this.currentrelateItem = row;
 
                     <?php
                     $imageCallback = base64_encode('parent.relateIconImageSelected(files);');
@@ -1529,19 +1358,19 @@
                 },
                 relateIconImageSelected: function(files) {
                     let file = files[0];
-                    this.currentRelateDetail.icon_image = file.url
+                    this.currentrelateItem.icon_image = file.url
                     be.closeDrawer();
                 },
                 relateIconImageDelete: function(row) {
                     row.icon_image = ""
                 },
                 relateDelete: function(row) {
-                    this.formData.relate.details.splice(this.formData.relate.details.indexOf(row), 1);
+                    this.formData.relate.items.splice(this.formData.relate.items.indexOf(row), 1);
                 },
                 relateAdd: function() {
                     let excludeProductIds = [];
-                    for(let detail of this.formData.relate.details) {
-                        excludeProductIds.push(detail.product_id)
+                    for(let item of this.formData.relate.items) {
+                        excludeProductIds.push(item.product_id)
                     }
                     let url = "<?php echo beAdminUrl('Shop.Product.relate'); ?>";
                     url +=  url.indexOf("?") === -1 ? "?" : "&";
@@ -1551,7 +1380,7 @@
                 },
                 relateAdded:function (products) {
                     for(let product of products) {
-                        this.formData.relate.details.push({
+                        this.formData.relate.items.push({
                             id: "",
                             product_id: product.product_id,
                             product_name: product.product_name,
@@ -1565,7 +1394,7 @@
                     be.closeDrawer();
                 },
 
-                toggleStyle: function (style) {
+                styleToggle: function (style) {
                     if (style === 1) {
                         this.style2Items = this.formData.items;
                         this.formData.items = this.style1Items;
@@ -1574,14 +1403,34 @@
                         this.formData.items = this.style2Items;
                     }
                 },
-                addStyle: function () {
+                styleAdd: function () {
                     this.formData.styles.push({
                         id : "",
                         name: "",
-                        values: []
+                        icon_type: "text",
+                        items: [
+                            {
+                                id: "",
+                                value: "",
+                                icon_image: "",
+                                icon_color: ""
+                            }
+                        ]
                     });
                 },
-                removeStyle: function (style) {
+                styleAddItem: function (style) {
+                    style.items.push({
+                        id: "",
+                        value: "",
+                        icon_image: "",
+                        icon_color: ""
+                    });
+                },
+                styleItemDelete(style, styleItem) {
+                    style.items.splice(style.items.indexOf(styleItem), 1);
+                    this.updateItems();
+                },
+                styleDelete(style) {
                     this.formData.styles.splice(this.formData.styles.indexOf(style), 1);
                     this.updateItems();
                 },
@@ -1590,34 +1439,31 @@
                         this.updateItems();
                     }
                 },
-                styleValueChange: function(value, styleIndex) {
+                styleItemChange: function(value, styleIndex) {
                     if (value) {
                         let styleLen = this.formData.styles.length;
-                        let style, styleValueLen;
+                        let style, styleItemLen;
                         let n = 1;
 
                         for (let i=0; i<styleLen; i++) {
                             style = this.formData.styles[i];
                             if (!style.name) continue;
 
-                            styleValueLen = style.values.length;
-                            if (!styleValueLen) continue;
+                            styleItemLen = style.items.length;
+                            if (!styleItemLen) continue;
 
-                            n = n * styleValueLen;
+                            n = n * styleItemLen;
                         }
 
                         if (n > 300) {
                             this.$message.warning("抱歉，所有属性/款式项最大数量为300个！");
-                            this.formData.styles[styleIndex].values.pop();
+                            this.formData.styles[styleIndex].items.pop();
                             return;
                         }
 
                         this.updateItems();
                     }
                 },
-                styleValueRemote: function () {
-                },
-
 
 
                 updateItems: function () {
@@ -1626,8 +1472,8 @@
                     }
 
                     let styleLen = this.formData.styles.length;
-                    let style, styleValue, item;
-                    let itemLen, styleValueLen;
+                    let style, styleItem, item;
+                    let itemLen, styleItemLen;
                     let i,j,k;
 
                     let items = [];
@@ -1641,14 +1487,14 @@
                         style = this.formData.styles[i];
                         if (!style.name) continue;
 
-                        styleValueLen = style.values.length;
-                        if (!styleValueLen) continue;
+                        styleItemLen = style.items.length;
+                        if (!styleItemLen) continue;
 
                         filters = [];
-                        for(let x in style.values) {
+                        for(let x in style.items) {
                             filters.push({
-                                text: style.values[x],
-                                value: style.values[x]
+                                text: style.items[x].value,
+                                value: style.items[x].value
                             });
                         }
 
@@ -1669,28 +1515,28 @@
                         style = this.formData.styles[i];
                         if (!style.name) continue;
 
-                        styleValueLen = style.values.length;
-                        if (!styleValueLen) continue;
+                        styleItemLen = style.items.length;
+                        if (!styleItemLen) continue;
 
                         itemLen = items.length;
                         if (!itemLen) {
-                            for (k=0; k<styleValueLen; k++) {
-                                styleValue = style.values[k];
+                            for (k=0; k<styleItemLen; k++) {
+                                styleItem = style.items[k];
                                 items.push([{
                                     name: style.name,
-                                    value: styleValue
+                                    value: styleItem.value
                                 }]);
                             }
                         } else {
                             newItems = [];
                             for (j=0; j<itemLen; j++) {
                                 item = items[j];
-                                for (k=0; k<styleValueLen; k++) {
-                                    styleValue = style.values[k];
+                                for (k=0; k<styleItemLen; k++) {
+                                    styleItem = style.items[k];
                                     let tmpItem = clone(item);
                                     tmpItem.push({
                                         name: style.name,
-                                        value: styleValue
+                                        value: styleItem.value
                                     });
                                     newItems.push(tmpItem);
                                 }

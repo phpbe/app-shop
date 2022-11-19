@@ -105,7 +105,7 @@ class Template extends Section
         echo '<div class="swiper-wrapper">';
         $i = 0;
         foreach ($this->page->product->images as $image) {
-            echo '<div class="swiper-slide" data-index="'. $i . '"><img src="' . $image->url . '" alt="' . $this->page->product->name . '"></div>';
+            echo '<div class="swiper-slide" data-index="'. $i . '"><img src="' . $image->url . '" alt=""></div>';
             $i++;
         }
         echo '</div>';
@@ -258,27 +258,27 @@ class Template extends Section
             echo '</div>';
 
             echo '<div class="be-row be-mt-100">';
-            foreach ($product->relate->details as $detail) {
+            foreach ($product->relate->items as $relateItem) {
                 echo '<div class="be-col-auto be-pr-100">';
 
                 echo '<a class="style-icon-link style-icon-link-' . $product->relate->icon_type;
-                if ($detail->self) {
+                if ($relateItem->self) {
                     echo ' style-icon-link-current" href="javascript:void(0);"';
                 } else {
-                    echo '" href="' . $detail->url . '"';
+                    echo '" href="' . $relateItem->url . '"';
                 }
-                echo ' title="' . $detail->value . '">';
+                echo ' title="' . $relateItem->value . '">';
 
                 if ($product->relate->icon_type === 'text') {
                     echo '<span class="style-icon style-icon-text">';
-                    echo $detail->value;
+                    echo $relateItem->value;
                     echo '</span>';
                 } elseif ($product->relate->icon_type === 'image') {
                     echo '<span class="style-icon style-icon-image">';
-                    echo '<img src="' . $detail->icon_image . '" alt="' . $detail->value . '">';
+                    echo '<img src="' . $relateItem->icon_image . '" alt="' . $relateItem->value . '">';
                     echo '</span>';
                 } else {
-                    echo '<span class="style-icon style-icon-color" style="background-color:' . $detail->icon_color . '"></span>';
+                    echo '<span class="style-icon style-icon-color" style="background-color:' . $relateItem->icon_color . '"></span>';
                 }
 
                 echo '</a>';
