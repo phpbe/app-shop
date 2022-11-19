@@ -898,9 +898,6 @@ class Payment extends Auth
             ],
 
             'detail' => [
-
-                'theme' => 'ShopAdmin',
-
                 'form' => [
                     'items' => [
                         [

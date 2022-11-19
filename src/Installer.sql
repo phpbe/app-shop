@@ -343,7 +343,7 @@ CREATE TABLE `shop_product_tag` (
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `tag` varchar(60) NOT NULL DEFAULT '' COMMENT '标签',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品标签';
 
 CREATE TABLE `shop_promotion_activity` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',

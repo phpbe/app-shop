@@ -582,7 +582,7 @@ class Product extends Auth
 
             $response->set('excludeIds', $request->get('exclude_product_ids', ''));
 
-            $response->display('App.ShopAdmin.Product.relate', 'Blank');
+            $response->display(null, 'Blank');
         }
     }
 

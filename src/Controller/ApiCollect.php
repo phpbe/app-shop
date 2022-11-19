@@ -318,7 +318,7 @@ class ApiCollect
                 $categories = explode('|', $categories);
                 $categoryIds = [];
 
-                $serviceCategory = Be::getService('App.ShopAdmin.Category');
+                $serviceCategory = Be::getService('App.Shop.Admin.Category');
                 foreach ($categories as $categoryName) {
                     $categoryName = trim($categoryName);
                     if (!$categoryName || strlen($categoryName) > 120) {
