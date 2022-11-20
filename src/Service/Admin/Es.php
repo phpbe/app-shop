@@ -204,9 +204,6 @@ class Es
                                 'id' => [
                                     'type' => 'keyword'
                                 ],
-                                'image' => [
-                                    'type' => 'keyword'
-                                ],
                                 'sku' => [
                                     'type' => 'keyword'
                                 ],
@@ -230,7 +227,21 @@ class Es
                                 ],
                                 'stock' => [
                                     'type' => 'integer'
-                                ]
+                                ],
+                                'images' => [
+                                    'type' => 'nested',
+                                    'properties' => [
+                                        'url' => [
+                                            'type' => 'text'
+                                        ],
+                                        'is_main' => [
+                                            'type' => 'boolean'
+                                        ],
+                                        'ordering' => [
+                                            'type' => 'integer'
+                                        ]
+                                    ]
+                                ],
                             ]
                         ]
                     ]
