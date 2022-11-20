@@ -72,6 +72,25 @@ class TaskProduct
                 }
                 unset($image);
 
+                $styles = [];
+                if (isset($with['styles'])) {
+                    $sql = 'SELECT name,icon_type,ordering FROM shop_product_style WHERE product_id = ? ORDER BY ordering ASC';
+                    $styles = $db->getObjects($sql, [$product->id]);
+
+                    foreach ($styles as &$style) {
+                        $style->ordering = (int)$style->ordering;
+
+                        $sql = 'SELECT value, icon_image, icon_color, ordering FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
+                        $styleItems = $db->getObjects($sql, [$style->id]);
+                        foreach ($styleItems as &$styleItem) {
+                            $styleItem->ordering = (int)$styleItem->ordering;
+                        }
+                        unset($styleItem);
+                        $style->items = $styleItems;
+                    }
+                    unset($style);
+                }
+
                 $sql = 'SELECT id, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as &$item) {
@@ -101,6 +120,7 @@ class TaskProduct
                     'brand' => $product->brand,
                     'tags' => $tags,
                     'style' => (int)$product->style,
+                    'styles' => $styles,
                     'stock_tracking' => (int)$product->stock_tracking,
                     'stock_out_action' => (int)$product->stock_out_action,
                     'ordering' => (int)$product->ordering,

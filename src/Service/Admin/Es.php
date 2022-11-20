@@ -134,6 +134,37 @@ class Es
                         'style' => [
                             'type' => 'integer'
                         ],
+                        'styles' => [
+                            'type' => 'nested',
+                            'properties' => [
+                                'name' => [
+                                    'type' => 'keyword'
+                                ],
+                                'icon_type' => [
+                                    'type' => 'keyword'
+                                ],
+                                'ordering' => [
+                                    'type' => 'integer'
+                                ],
+                                'items' => [
+                                    'type' => 'nested',
+                                    'properties' => [
+                                        'value' => [
+                                            'type' => 'keyword'
+                                        ],
+                                        'icon_image' => [
+                                            'type' => 'keyword'
+                                        ],
+                                        'icon_color' => [
+                                            'type' => 'keyword'
+                                        ],
+                                        'ordering' => [
+                                            'type' => 'integer'
+                                        ]
+                                    ],
+                                ],
+                            ],
+                        ],
                         'stock_tracking' => [
                             'type' => 'integer'
                         ],
