@@ -34,7 +34,7 @@ function updateStyles() {
         if (filterStyleValueIndex !== -1) {
             for (let style of product.styles) {
                 if (style.id === filterStyleId) {
-                    $("#product-detail-style-value-" + filterStyleId).html(style.values[filterStyleValueIndex]);
+                    $("#product-detail-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
                     break;
                 }
             }
@@ -66,7 +66,7 @@ function updateStyles() {
 
                 if (currentStyle) {
                     currentStyleName = currentStyle.name;
-                    currentStyleValue = currentStyle.values[filterStyleValueIndex];
+                    currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
                     for (let x of item.style_json) {
                         if (x.name === currentStyleName) {
                             if (x.value !== currentStyleValue) {
@@ -183,7 +183,7 @@ function updateStyles() {
     let styleValue;
     let styleMatchedItems;
     for (let style of product.styles) {
-        for (let styleValueIndex in style.values) {
+        for (let styleValueIndex in style.items) {
 
             // 获取排除当前款式时，匹配上的产品子项列表
             styleMatchedItems = [];
@@ -210,7 +210,7 @@ function updateStyles() {
 
                         if (currentStyle) {
                             currentStyleName = currentStyle.name;
-                            currentStyleValue = currentStyle.values[filterStyleValueIndex];
+                            currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
                             for (let x of item.style_json) {
                                 if (x.name === currentStyleName) {
                                     if (x.value !== currentStyleValue) {
@@ -230,7 +230,7 @@ function updateStyles() {
                 }
             }
 
-            styleValue = style.values[styleValueIndex];
+            styleValue = style.items[styleValueIndex].value;
             available = false;
             if (styleMatchedItems.length > 0) {
                 for (let item of styleMatchedItems) {

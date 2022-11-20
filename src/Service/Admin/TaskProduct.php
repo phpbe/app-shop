@@ -229,6 +229,14 @@ class TaskProduct
 
                 $sql = 'SELECT * FROM shop_product_style WHERE product_id = ?';
                 $styles = $db->getObjects($sql, [$product->id]);
+
+                foreach ($styles as &$style) {
+                    $sql = 'SELECT * FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
+                    $styleItems = $db->getObjects($sql, [$style->id]);
+                    $style->items = $styleItems;
+                }
+                unset($style);
+
                 $product->styles = $styles;
 
                 $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';

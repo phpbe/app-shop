@@ -273,13 +273,6 @@ class Product
 
         if (isset($with['style']) && $with['style']) {
             if ($product->style === 2) {
-                if (isset($product->styles) && is_array($product->styles) && count($product->styles) > 0) {
-                    foreach ($product->styles as &$style) {
-                        $style->values = json_decode($style->values);
-                    }
-                    unset($style);
-                }
-
                 if (isset($product->items) && is_array($product->items) && count($product->items) > 0) {
                     foreach ($product->items as &$item) {
                         $item->style_json = json_decode($item->style_json);

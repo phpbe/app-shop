@@ -196,7 +196,7 @@ class Template extends Section
         }
 
         echo '</script>';
-        echo '<script src="' . $wwwUrl . '/js//product/detail.js?v=20221117"></script>';
+        echo '<script src="' . $wwwUrl . '/js//product/detail.js?v=20221120"></script>';
 
     }
 
@@ -297,12 +297,34 @@ class Template extends Section
                     echo '</div>';
 
                     echo '<div class="be-row be-mt-100" id="product-detail-style-' . $style->id . '">';
+                    /*
                     foreach ($style->values as $styleValueIndex => $styleValue) {
                         echo '<div class="be-col-auto be-pr-100">';
                         echo '<a class="style-icon-link style-icon-link-text" href="javascript:void(0);" onclick="toggleStyle(this, \'' . $style->id . '\',' . $styleValueIndex . ')" title="' . $styleValue . '">';
                         echo '<span class="style-icon style-icon-text">';
                         echo $styleValue;
                         echo '</span>';
+                        echo '</a>';
+                        echo '</div>';
+                    }
+                    */
+                    foreach ($style->items as $styleItemIndex => $styleItem) {
+                        echo '<div class="be-col-auto be-pr-100">';
+
+
+                        echo '<a class="style-icon-link style-icon-link-' . $style->icon_type . '" href="javascript:void(0);" onclick="toggleStyle(this, \'' . $style->id . '\',' . $styleItemIndex . ')" title="' . $styleItem->value . '">';
+
+                        if ($style->icon_type === 'text') {
+                            echo '<span class="style-icon style-icon-text">';
+                            echo $styleItem->value;
+                            echo '</span>';
+                        } elseif ($style->icon_type === 'image') {
+                            echo '<span class="style-icon style-icon-image">';
+                            echo '<img src="' . $styleItem->icon_image . '" alt="' . $styleItem->value . '">';
+                            echo '</span>';
+                        } else {
+                            echo '<span class="style-icon style-icon-color" style="background-color:' . $styleItem->icon_color . '"></span>';
+                        }
                         echo '</a>';
                         echo '</div>';
                     }
