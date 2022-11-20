@@ -422,7 +422,7 @@ class Category
                                 'style' => 'max-width: 60px; max-height: 60px'
                             ],
                             'value' => function($row) {
-                                if ($row['imagel'] === '') {
+                                if ($row['image'] === '') {
                                     return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
                                 }
                                 return $row['image'];
