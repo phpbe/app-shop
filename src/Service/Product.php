@@ -1098,13 +1098,14 @@ class Product
         if ($product->style === 2) {
             if (is_array($product->styles) && count($product->styles) > 0) {
                 foreach ($product->styles as $s) {
+                    $obj = (object)$s;
                     $styleItems = [];
-                    foreach ($s->items as $styleItem) {
+                    foreach ($obj->items as $styleItem) {
                         $styleItems[] = (object)$styleItem;
                     }
-                    $s->items = $styleItems;
+                    $obj->items = $styleItems;
 
-                    $styles[] = (object)$s;
+                    $styles[] = $obj;
                 }
             }
         }
@@ -1113,14 +1114,13 @@ class Product
         $items = [];
         if (is_array($product->items) && count($product->items) > 0) {
             foreach ($product->items as $item) {
-
+                $obj = (object)$item;
                 $images = [];
-                foreach ($item->images as $image) {
+                foreach ($obj->images as $image) {
                     $images[] = (object)$image;
                 }
-                $item->images = $images;
-
-                $items[] = (object)$item;
+                $obj->images = $images;
+                $items[] = $obj;
             }
         }
         $product->items = $items;
