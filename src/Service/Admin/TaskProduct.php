@@ -64,7 +64,7 @@ class TaskProduct
                 $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ? ORDER BY ordering ASC';
                 $tags = $db->getValues($sql, [$product->id]);
 
-                $sql = 'SELECT id,url,is_main,ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY `ordering` ASC';
+                $sql = 'SELECT id,url,is_main,ordering FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as &$image) {
                     $image->is_main = $image->is_main ? true : false;
@@ -109,7 +109,7 @@ class TaskProduct
                     $item->weight = (float)$item->weight;
                     $item->stock = (int)$item->stock;
 
-                    $sql = 'SELECT id,url,is_main, ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = ? ORDER BY `ordering` ASC';
+                    $sql = 'SELECT id,url,is_main,ordering FROM shop_product_image WHERE product_id = ? AND product_item_id = ? ORDER BY ordering ASC';
                     $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
                     foreach ($itemImages as &$itemImage) {
                         $itemImage->is_main = $itemImage->is_main ? true : false;
@@ -323,7 +323,7 @@ class TaskProduct
 
             $imageKeyValues = [];
 
-            $images = $db->getObjects('SELECT * FROM shop_product_image WHERE `product_id`=?', [$product->id]);
+            $images = $db->getObjects('SELECT * FROM shop_product_image WHERE product_id=?', [$product->id]);
             foreach ($images as $image) {
                 $remoteImage = trim($image->url);
                 if ($remoteImage !== '') {
@@ -375,11 +375,11 @@ class TaskProduct
                 }
             }
 
-            $db->query('UPDATE shop_product SET download_remote=2, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
+            $db->query('UPDATE shop_product SET download_remote=2, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE id=\'' . $product->id . '\'');
 
         } catch (\Throwable $t) {
             Be::getLog()->error($t);
-            $db->query('UPDATE shop_product SET download_remote=-1, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE `id`=\'' . $product->id . '\'');
+            $db->query('UPDATE shop_product SET download_remote=-1, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE id=\'' . $product->id . '\'');
             throw new ServiceException('导入采集的商品下载远程图像时发生异常！');
         }
 
