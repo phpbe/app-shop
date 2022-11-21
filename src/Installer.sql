@@ -2191,7 +2191,7 @@ ADD KEY `goods_review_id` (`product_review_id`);
 
 ALTER TABLE `shop_product_style`
 ADD PRIMARY KEY (`id`),
-ADD KEY `product_id` (`product_id`);
+ADD UNIQUE KEY `product_id` (`product_id`,`name`) USING BTREE;
 
 ALTER TABLE `shop_product_style_item`
 ADD PRIMARY KEY (`id`),

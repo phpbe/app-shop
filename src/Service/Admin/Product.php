@@ -1320,6 +1320,16 @@ class Product
             $sql = 'SELECT * FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
             $items = $db->getObjects($sql, [$productId]);
             foreach ($items as $item) {
+
+                $styleJson = null;
+                if ($item->style_json) {
+                    $styleJson = json_decode($item->style_json, true);
+                }
+                if (!$styleJson) {
+                    $styleJson = [];
+                }
+                $item->style_json = $styleJson;
+
                 $item->stock = (int)$item->stock;
 
                 $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';

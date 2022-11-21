@@ -64,7 +64,7 @@ class TaskProduct
                 $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ? ORDER BY ordering ASC';
                 $tags = $db->getValues($sql, [$product->id]);
 
-                $sql = 'SELECT url, is_main, `ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY `ordering` ASC';
+                $sql = 'SELECT id,url,is_main,ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY `ordering` ASC';
                 $images = $db->getObjects($sql, [$product->id]);
                 foreach ($images as &$image) {
                     $image->is_main = $image->is_main ? true : false;
@@ -74,13 +74,13 @@ class TaskProduct
 
                 $styles = [];
                 if (isset($with['styles'])) {
-                    $sql = 'SELECT name,icon_type,ordering FROM shop_product_style WHERE product_id = ? ORDER BY ordering ASC';
+                    $sql = 'SELECT id,name,icon_type,ordering FROM shop_product_style WHERE product_id = ? ORDER BY ordering ASC';
                     $styles = $db->getObjects($sql, [$product->id]);
 
                     foreach ($styles as &$style) {
                         $style->ordering = (int)$style->ordering;
 
-                        $sql = 'SELECT value, icon_image, icon_color, ordering FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
+                        $sql = 'SELECT id,value,icon_image,icon_color,ordering FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
                         $styleItems = $db->getObjects($sql, [$style->id]);
                         foreach ($styleItems as &$styleItem) {
                             $styleItem->ordering = (int)$styleItem->ordering;
@@ -91,15 +91,25 @@ class TaskProduct
                     unset($style);
                 }
 
-                $sql = 'SELECT id, sku, barcode, style, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
+                $sql = 'SELECT id, sku, barcode, style, style_json, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as &$item) {
+
+                    $styleJson = null;
+                    if ($item->style_json) {
+                        $styleJson = json_decode($item->style_json, true);
+                    }
+                    if (!$styleJson) {
+                        $styleJson = [];
+                    }
+                    $item->style_json = $styleJson;
+
                     $item->price = (float)$item->price;
                     $item->original_price = (float)$item->original_price;
                     $item->weight = (float)$item->weight;
                     $item->stock = (int)$item->stock;
 
-                    $sql = 'SELECT url, is_main, `ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = ? ORDER BY `ordering` ASC';
+                    $sql = 'SELECT id,url,is_main, ordering` FROM shop_product_image WHERE product_id = ? AND product_item_id = ? ORDER BY `ordering` ASC';
                     $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
                     foreach ($itemImages as &$itemImage) {
                         $itemImage->is_main = $itemImage->is_main ? true : false;
@@ -262,6 +272,16 @@ class TaskProduct
                 $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';
                 $items = $db->getObjects($sql, [$product->id]);
                 foreach ($items as $item) {
+
+                    $styleJson = null;
+                    if ($item->style_json) {
+                        $styleJson = json_decode($item->style_json, true);
+                    }
+                    if (!$styleJson) {
+                        $styleJson = [];
+                    }
+                    $item->style_json = $styleJson;
+
                     $item->stock = (int)$item->stock;
 
                     $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';

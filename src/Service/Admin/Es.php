@@ -137,6 +137,9 @@ class Es
                         'styles' => [
                             'type' => 'nested',
                             'properties' => [
+                                'id' => [
+                                    'type' => 'keyword'
+                                ],
                                 'name' => [
                                     'type' => 'keyword'
                                 ],
@@ -149,6 +152,9 @@ class Es
                                 'items' => [
                                     'type' => 'nested',
                                     'properties' => [
+                                        'id' => [
+                                            'type' => 'keyword'
+                                        ],
                                         'value' => [
                                             'type' => 'keyword'
                                         ],
@@ -218,6 +224,9 @@ class Es
                         'images' => [
                             'type' => 'nested',
                             'properties' => [
+                                'id' => [
+                                    'type' => 'keyword'
+                                ],
                                 'url' => [
                                     'type' => 'text'
                                 ],
@@ -243,6 +252,17 @@ class Es
                                 ],
                                 'style' => [
                                     'type' => 'keyword'
+                                ],
+                                'style_json' => [
+                                    'type' => 'nested',
+                                    'properties' => [
+                                        'name' => [
+                                            'type' => 'keyword'
+                                        ],
+                                        'value' => [
+                                            'type' => 'keyword'
+                                        ],
+                                    ]
                                 ],
                                 'price' => [
                                     'type' => 'float'

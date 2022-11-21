@@ -909,21 +909,17 @@
                     } elseif ($this->product->style === 2) {
                         $items = $this->product->items;
                         foreach ($items as &$Item) {
-                            $styleJson = null;
-                            if ($Item->style_json) {
-                                $styleJson = json_decode($Item->style_json, true);
-                            }
-
-                            if (is_array($styleJson)) {$Item->style_json = $styleJson;
-                                foreach ($styleJson as $style) {
+                            if (is_array($Item->style_json)) {
+                                foreach ($Item->style_json as $style) {
                                     $styleField = 'style_field_' . $style['name'];
-                                    $Item ->$styleField = $style['value'];
+                                    $Item->$styleField = $style['value'];
                                 }
                             } else {
                                 $Item->style_json = [];
                             }
                         }
                         unset($Item);
+
                         $formData['items'] = $items;
                         $style2Items = $items;
 
