@@ -1094,9 +1094,32 @@ class Product
         }
         $product->images = $images;
 
+        $styles = [];
+        if ($product->style === 2) {
+            if (is_array($product->styles) && count($product->styles) > 0) {
+                foreach ($product->styles as $s) {
+                    $styleItems = [];
+                    foreach ($s->items as $styleItem) {
+                        $styleItems[] = (object)$styleItem;
+                    }
+                    $s->items = $styleItems;
+
+                    $styles[] = (object)$s;
+                }
+            }
+        }
+        $product->styles = $styles;
+
         $items = [];
         if (is_array($product->items) && count($product->items) > 0) {
             foreach ($product->items as $item) {
+
+                $images = [];
+                foreach ($item->images as $image) {
+                    $images[] = (object)$image;
+                }
+                $item->images = $images;
+
                 $items[] = (object)$item;
             }
         }

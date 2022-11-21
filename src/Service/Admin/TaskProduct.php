@@ -73,7 +73,7 @@ class TaskProduct
                 unset($image);
 
                 $styles = [];
-                if (isset($with['styles'])) {
+                if ($product->style === '2') {
                     $sql = 'SELECT id,name,icon_type,ordering FROM shop_product_style WHERE product_id = ? ORDER BY ordering ASC';
                     $styles = $db->getObjects($sql, [$product->id]);
 
