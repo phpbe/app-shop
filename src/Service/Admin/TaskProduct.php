@@ -246,8 +246,14 @@ class TaskProduct
                     $sql = 'SELECT * FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
                     $categories = $db->getObjects($sql);
                     foreach ($categories as &$category) {
+                        $category->url_custom = (int)$category->url_custom;
+                        $category->seo_title_custom = (int)$category->seo_title_custom;
+                        $category->seo_description_custom = (int)$category->seo_description_custom;
                         $category->ordering = (int)$category->ordering;
+                        $category->is_enable = (int)$category->is_enable;
+                        $category->is_delete = (int)$category->is_delete;
                     }
+
                     unset($category);
                     $product->categories = $categories;
                 } else {
