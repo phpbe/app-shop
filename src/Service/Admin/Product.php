@@ -431,7 +431,7 @@ class Product
                                 $tupleProductCategory->ordering = $ordering;
                                 $tupleProductCategory->update();
                             } else {
-                                $tupleProductCategory = Be::getTuple('shop_product_tag');
+                                $tupleProductCategory = Be::getTuple('shop_product_category');
                                 $tupleProductCategory->product_id = $tupleProduct->id;
                                 $tupleProductCategory->category_id = $category_id;
                                 $tupleProductCategory->ordering = $ordering;
