@@ -511,7 +511,7 @@ class Product
                         $tupleProductImage->product_id = $tupleProduct->id;
                         $tupleProductImage->product_item_id = '';
                         $tupleProductImage->url = $image['url'];
-                        if ($ordering === 0) {
+                        if ($ordering === 1) {
                             $tupleProductImage->is_main = 1;
                         } else {
                             $tupleProductImage->is_main = 0;
@@ -543,7 +543,7 @@ class Product
                             ->delete();
                     }
 
-                    $ordering = 0;
+                    $ordering = 1;
                     foreach ($data['images'] as $image) {
                         $tupleProductImage = Be::getTuple('shop_product_image');
                         if (isset($image['id']) && $image['id'] !== '') {
@@ -561,7 +561,7 @@ class Product
                         $tupleProductImage->product_id = $tupleProduct->id;
                         $tupleProductImage->product_item_id = '';
                         $tupleProductImage->url = $image['url'];
-                        if ($ordering === 0) {
+                        if ($ordering === 1) {
                             $tupleProductImage->is_main = 1;
                         } else {
                             $tupleProductImage->is_main = 0;
@@ -929,13 +929,13 @@ class Product
                     // ------------------------------------------------------------------------------------------------- 款式图像处理
                     if ($style === 2) {
                         if (isset($item['images']) && is_array($item['images']) && count($item['images']) > 0) {
-                            $ordering = 0;
+                            $ordering = 1;
                             foreach ($item['images'] as $image) {
                                 $tupleProductImage = Be::getTuple('shop_product_image');
                                 $tupleProductImage->product_id = $tupleProduct->id;
                                 $tupleProductImage->product_item_id = $tupleProductItem->id;
                                 $tupleProductImage->url = $image['url'];
-                                if ($ordering === 0) {
+                                if ($ordering === 1) {
                                     $tupleProductImage->is_main = 1;
                                 } else {
                                     $tupleProductImage->is_main = 0;
@@ -1036,7 +1036,7 @@ class Product
                                     ->delete();
                             }
 
-                            $ordering = 0;
+                            $ordering = 1;
                             foreach ($item['images'] as $image) {
                                 $tupleProductImage = Be::getTuple('shop_product_image');
                                 if (isset($image['id']) && $image['id'] !== '') {
@@ -1054,7 +1054,7 @@ class Product
                                 $tupleProductImage->product_id = $tupleProduct->id;
                                 $tupleProductImage->product_item_id = $tupleProductItem->id;
                                 $tupleProductImage->url = $image['url'];
-                                if ($ordering === 0) {
+                                if ($ordering === 1) {
                                     $tupleProductImage->is_main = 1;
                                 } else {
                                     $tupleProductImage->is_main = 0;
