@@ -243,11 +243,12 @@ class TaskProduct
                 if (count($categoryIds) > 0) {
                     $product->category_ids = $categoryIds;
 
-                    $sql = 'SELECT * FROM shop_category WHERE id IN (?)';
-                    $categories = $db->getObjects($sql, ['\'' . implode('\',\'', $categoryIds) . '\'']);
-                    foreach ($categories as $category) {
+                    $sql = 'SELECT * FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
+                    $categories = $db->getObjects($sql);
+                    foreach ($categories as &$category) {
                         $category->ordering = (int)$category->ordering;
                     }
+                    unset($category);
                     $product->categories = $categories;
                 } else {
                     $product->category_ids = [];
