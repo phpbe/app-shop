@@ -115,144 +115,142 @@
     ?>
 
     <div id="app" v-cloak>
-        <div class="be-p-150">
-            <el-form ref="formRef" :model="formData" class="be-mb-400">
-                <?php
-                $formData['id'] = ($this->category ? $this->category->id : '');
-                ?>
+        <el-form ref="formRef" :model="formData" class="be-mb-400">
+            <?php
+            $formData['id'] = ($this->category ? $this->category->id : '');
+            ?>
 
-                <div class="be-row">
-                    <div class="be-col-24 be-md-col-18">
-                         <div class="be-p-150 be-bc-fff">
-                            <div><span class="be-c-red">*</span> 分类名称：</div>
-                            <el-form-item class="be-mt-50" prop="name" :rules="[{required: true, message: '请输入分类名称', trigger: 'change' }]">
-                                <el-input
-                                        type="text"
-                                        placeholder="请输入分类名称"
-                                        v-model = "formData.name"
-                                        size="medium"
-                                        maxlength="120"
-                                        show-word-limit
-                                        @change="nameChange">
-                                </el-input>
-                            </el-form-item>
-                            <?php $formData['name'] = ($this->category ? $this->category->name : ''); ?>
+            <div class="be-row">
+                <div class="be-col-24 be-md-col-18">
+                     <div class="be-p-150 be-bc-fff">
+                        <div><span class="be-c-red">*</span> 分类名称：</div>
+                        <el-form-item class="be-mt-50" prop="name" :rules="[{required: true, message: '请输入分类名称', trigger: 'change' }]">
+                            <el-input
+                                    type="text"
+                                    placeholder="请输入分类名称"
+                                    v-model = "formData.name"
+                                    size="medium"
+                                    maxlength="120"
+                                    show-word-limit
+                                    @change="nameChange">
+                            </el-input>
+                        </el-form-item>
+                        <?php $formData['name'] = ($this->category ? $this->category->name : ''); ?>
 
-                            <div class="be-mt-100">分类描述：</div>
-                            <?php
+                        <div class="be-mt-100">分类描述：</div>
+                        <?php
 
-                            $fileCallback = base64_encode('parent.window.befile.selectedFiles = files;');
-                            $imageCallback = base64_encode('parent.window.beimage.selectedFiles = files;');
+                        $fileCallback = base64_encode('parent.window.befile.selectedFiles = files;');
+                        $imageCallback = base64_encode('parent.window.beimage.selectedFiles = files;');
 
-                            $driver = new \Be\AdminPlugin\Form\Item\FormItemTinymce([
-                                'name' => 'description',
-                                'ui' => [
-                                    'form-item' => [
-                                        'class' => 'be-mt-50'
-                                    ],
-                                    '@change' => 'seoUpdate',
+                        $driver = new \Be\AdminPlugin\Form\Item\FormItemTinymce([
+                            'name' => 'description',
+                            'ui' => [
+                                'form-item' => [
+                                    'class' => 'be-mt-50'
                                 ],
-                                'layout' => 'simple',
-                            ]);
-                            echo $driver->getHtml();
+                                '@change' => 'seoUpdate',
+                            ],
+                            'layout' => 'simple',
+                        ]);
+                        echo $driver->getHtml();
 
-                            $formData['description'] = ($this->category ? $this->category->description : '');
+                        $formData['description'] = ($this->category ? $this->category->description : '');
 
-                            $uiItems->add($driver);
-                            ?>
-
-                        </div>
-                    </div>
-
-
-                    <div class="be-col-24 be-md-col-6 be-pl-150">
-
-                         <div class="be-p-150 be-bc-fff">
-
-                            <div class="be-row">
-                                <div class="be-col">是否启用：</div>
-                                <div class="be-col-auto">
-                                    <el-form-item prop="is_enable">
-                                        <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
-                                    </el-form-item>
-                                </div>
-                            </div>
-                            <?php $formData['is_enable'] = ($this->category ? $this->category->is_enable : 0); ?>
-
-
-                            <div class="be-row be-mt-200">
-                                <div class="be-col be-lh-250">排序：</div>
-                                <div class="be-col-auto">
-                                    <el-form-item prop="ordering">
-                                        <el-input-number
-                                                v-model = "formData.ordering"
-                                                size="medium">
-                                        </el-input-number>
-                                    </el-form-item>
-                                </div>
-                            </div>
-                            <?php $formData['ordering'] = ($this->category ? $this->category->ordering : ''); ?>
-
-
-                            <div class="be-mt-150">封面图片：</div>
-                            <div class="be-row be-mt-50">
-                                <div class="be-col-auto">
-                                    <div v-if="formData.image !== ''" :key="formData.image" class="image">
-                                        <img :src="formData.image">
-                                        <div class="image-actions">
-                                            <span class="image-action" @click="imagePreview()"><i class="el-icon-zoom-in"></i></span>
-                                            <span class="image-action" @click="imageRemove()"><i class="el-icon-delete"></i></span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="be-col-auto">
-                                    <div class="image-selector" @click="imageSelect" key="99999">
-                                        <i class="el-icon-plus"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <?php
-                            $formData['image'] = ($this->category ? $this->category->image : '');
-                            ?>
-
-
-                            <el-dialog :visible.sync="imageSelectorVisible" class="dialog-image-selector" title="选择主图" :width="600" :close-on-click-modal="false">
-                                <iframe :src="imageSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
-                            </el-dialog>
-
-                            <el-dialog :visible.sync="imagePreviewVisible" center="true">
-                                <div class="be-ta-center">
-                                    <img style="max-width: 100%;max-height: 400px;" :src="formData.image" alt="">
-                                </div>
-                            </el-dialog>
-
-                            <el-dialog :visible.sync="imageAltVisible" center="true">
-                            </el-dialog>
-                        </div>
-
-                        <div class="be-p-150 be-bc-fff be-mt-200">
-                            <div class="be-row">
-                                <div class="be-col">
-                                    <div class="be-fs-110">
-                                        SEO（搜索引擎优化）
-                                    </div>
-                                </div>
-                                <div class="be-col-auto">
-                                    <el-link type="primary" @click="drawerSeo=true">编辑</el-link>
-                                </div>
-                            </div>
-                            
-                            <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configCategory->urlPrefix; ?>/{{formData.url}}<?php echo $this->configCategory->urlSuffix; ?></div>
-                            <div class="be-mt-100">{{formData.seo_title}}</div>
-                            <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
-                        </div>
+                        $uiItems->add($driver);
+                        ?>
 
                     </div>
                 </div>
 
 
-            </el-form>
-        </div>
+                <div class="be-col-24 be-md-col-6 be-pl-150">
+
+                     <div class="be-p-150 be-bc-fff">
+
+                        <div class="be-row">
+                            <div class="be-col">是否启用：</div>
+                            <div class="be-col-auto">
+                                <el-form-item prop="is_enable">
+                                    <el-switch v-model.number="formData.is_enable" :active-value="1" :inactive-value="0" size="medium"></el-switch>
+                                </el-form-item>
+                            </div>
+                        </div>
+                        <?php $formData['is_enable'] = ($this->category ? $this->category->is_enable : 0); ?>
+
+
+                        <div class="be-row be-mt-200">
+                            <div class="be-col be-lh-250">排序：</div>
+                            <div class="be-col-auto">
+                                <el-form-item prop="ordering">
+                                    <el-input-number
+                                            v-model = "formData.ordering"
+                                            size="medium">
+                                    </el-input-number>
+                                </el-form-item>
+                            </div>
+                        </div>
+                        <?php $formData['ordering'] = ($this->category ? $this->category->ordering : ''); ?>
+
+
+                        <div class="be-mt-150">封面图片：</div>
+                        <div class="be-row be-mt-50">
+                            <div class="be-col-auto">
+                                <div v-if="formData.image !== ''" :key="formData.image" class="image">
+                                    <img :src="formData.image">
+                                    <div class="image-actions">
+                                        <span class="image-action" @click="imagePreview()"><i class="el-icon-zoom-in"></i></span>
+                                        <span class="image-action" @click="imageRemove()"><i class="el-icon-delete"></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="be-col-auto">
+                                <div class="image-selector" @click="imageSelect" key="99999">
+                                    <i class="el-icon-plus"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        $formData['image'] = ($this->category ? $this->category->image : '');
+                        ?>
+
+
+                        <el-dialog :visible.sync="imageSelectorVisible" class="dialog-image-selector" title="选择主图" :width="600" :close-on-click-modal="false">
+                            <iframe :src="imageSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
+                        </el-dialog>
+
+                        <el-dialog :visible.sync="imagePreviewVisible" center="true">
+                            <div class="be-ta-center">
+                                <img style="max-width: 100%;max-height: 400px;" :src="formData.image" alt="">
+                            </div>
+                        </el-dialog>
+
+                        <el-dialog :visible.sync="imageAltVisible" center="true">
+                        </el-dialog>
+                    </div>
+
+                    <div class="be-p-150 be-bc-fff be-mt-200">
+                        <div class="be-row">
+                            <div class="be-col">
+                                <div class="be-fs-110">
+                                    SEO（搜索引擎优化）
+                                </div>
+                            </div>
+                            <div class="be-col-auto">
+                                <el-link type="primary" @click="drawerSeo=true">编辑</el-link>
+                            </div>
+                        </div>
+
+                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configCategory->urlPrefix; ?>/{{formData.url}}<?php echo $this->configCategory->urlSuffix; ?></div>
+                        <div class="be-mt-100">{{formData.seo_title}}</div>
+                        <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </el-form>
 
         <el-drawer
                 :visible.sync="drawerSeo"
