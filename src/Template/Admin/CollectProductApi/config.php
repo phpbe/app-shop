@@ -23,7 +23,7 @@
                 <div class="be-col-auto">接口网址：</div>
                 <div class="be-col-auto be-px-100">
                     <el-tag>
-                        <?php echo beUrl('Shop.Api.CollectProduct', ['token' => $this->config->token]); ?>
+                        <?php echo beUrl('Shop.ApiCollect.Product', ['token' => $this->config->token]); ?>
                     </el-tag>
                 </div>
 
@@ -83,13 +83,11 @@
                         "required" : 1,
                         "description" : "商品名称，200个字符以内"
                     },
-                    /*
                     {
                         "name" : "summary",
                         "required" : 0,
                         "description" : "摘要，500个字符以内"
                     },
-                     */
                     {
                         "name" : "description",
                         "required" : 0,
