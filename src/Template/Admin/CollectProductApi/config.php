@@ -205,7 +205,7 @@
                 copyUrl: function () {
                     let _this = this;
                     let input = document.createElement('input');
-                    input.value = "<?php echo beUrl('Shop.Api.CollectProduct', ['token' => $this->config->token]); ?>";
+                    input.value = "<?php echo beUrl('Shop.ApiCollect.product', ['token' => $this->config->token]); ?>";
                     document.body.appendChild(input);
                     input.select();
                     try {
