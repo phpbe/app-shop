@@ -529,7 +529,7 @@ class Product
         if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
             $pageSize = $params['pageSize'];
         } else {
-            $pageSize = 15;
+            $pageSize = 12;
         }
 
         if ($pageSize > 200) {

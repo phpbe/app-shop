@@ -33,22 +33,6 @@ class Category extends Base
         $response->set('metaKeywords', $category->seo_keywords);
         $response->set('pageTitle', $category->name);
 
-        $orderBy = $request->get('order_by', 'common');
-        $orderByDir = $request->get('order_by_dir', 'desc');
-        $response->set('orderBy', $orderBy);
-        $response->set('orderByDir', $orderByDir);
-
-        $page = $request->get('page', 1);
-
-        $result = Be::getService('App.Shop.Product')->search('', [
-            'categoryId' => $categoryId,
-            'orderBy' => $orderBy,
-            'orderByDir' => $orderByDir,
-            'page' => $page,
-        ]);
-
-        $response->set('result', $result);
-
         $response->display();
     }
 

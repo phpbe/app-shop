@@ -15,6 +15,15 @@ class Config
     public $enable = 1;
 
     /**
+     * @BeConfigItem("分页大小?",
+     *     description = "控制每页展示多少条记录",
+     *     driver = "FormItemInputNumberInt",
+     *     ui="return [':min' => 1, ':max' => 1000];"
+     * )
+     */
+    public $pageSize = 4;
+
+    /**
      * @BeConfigItem("展示多少列?",
      *     description = "仅对电脑端有效",
      *     driver = "FormItemSlider",

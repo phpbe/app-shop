@@ -520,7 +520,7 @@ class Section
 
             $paginationUrl .= strpos($paginationUrl, '?') === false ? '?' : '&';
 
-            $html = '<nav class="be-mt-300">';
+            $html .= '<nav class="be-mt-300">';
             $html .= '<ul class="be-pagination" style="justify-content: center;">';
             $html .= '<li>';
             if ($page > 1) {
