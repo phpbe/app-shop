@@ -349,7 +349,7 @@ class Category
     public function deleteProduct(string $categoryId, array $productIds)
     {
         try {
-            Be::getTuple('shop_category',)
+            Be::getTuple('shop_category')
                 ->loadBy([
                     'id' => $categoryId,
                     'is_delete' => 0

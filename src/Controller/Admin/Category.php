@@ -514,7 +514,7 @@ class Category extends Auth
                     'items' => [
                         [
                             'label' => '批量从此分类中移除',
-                            'task' => 'fieldEdit',
+                            'url' => beAdminUrl('Shop.Category.deleteProduct', ['id' => $categoryId]),
                             'target' => 'ajax',
                             'confirm' => '确认要从此分类中移除吗？',
                             'postData' => [
