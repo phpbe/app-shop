@@ -21,7 +21,7 @@ class Config
      *     ui="return [':min' => 1, ':max' => 1000];"
      * )
      */
-    public $pageSize = 4;
+    public $pageSize = 12;
 
     /**
      * @BeConfigItem("展示多少列?",

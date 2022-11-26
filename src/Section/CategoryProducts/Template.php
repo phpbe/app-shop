@@ -19,13 +19,9 @@ class Template extends Section
         }
 
         $request = Be::getRequest();
-        $response = Be::getResponse();
 
         $orderBy = $request->get('order_by', 'common');
         $orderByDir = $request->get('order_by_dir', 'desc');
-        $response->set('orderBy', $orderBy);
-        $response->set('orderByDir', $orderByDir);
-
         $pageSize = $this->config->pageSize;
         $page = $request->get('page', 1);
 
