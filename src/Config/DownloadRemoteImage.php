@@ -22,7 +22,7 @@ class DownloadRemoteImage
      *     keyValues = "return ['id' => '商品ID', 'url' => '伪静态网址', 'spu' => 'SPU'];")
      * )
      */
-    public string $dirname = 'name';
+    public string $dirname = 'url';
 
     /**
      * @BeConfigItem("文件命名",
