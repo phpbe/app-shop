@@ -16,10 +16,10 @@ class DownloadRemoteImage
     public string $rootPath = '/shop/product/auto-download/';
 
     /**
-     * @BeConfigItem("文件夹命名",,
+     * @BeConfigItem("商品文件夹命名",,
      *     description="转小写，移除特殊字符",
      *     driver="FormItemSelect",
-     *     keyValues = "return ['id' => '商品ID', 'url' => '伪静态网址', 'spu' => 'SPU'];")
+     *     keyValues = "return ['id' => '商品ID', 'url' => '伪静态网址', 'spu' => 'SPU', 'none' => '不创建'];")
      * )
      */
     public string $dirname = 'url';

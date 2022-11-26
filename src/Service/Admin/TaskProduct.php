@@ -547,7 +547,8 @@ class TaskProduct
             };
 
             $storage = Be::getStorage();
-            $object = $configDownloadRemoteImage->rootPath . $dirName . '/' . $fileName;
+            $object = $configDownloadRemoteImage->rootPath . ($dirName !== '' ? ($dirName . '/') : '') . $fileName;
+
             if ($storage->isFileExist($object)) {
                 $url = $storage->getFileUrl($object);
             } else {
