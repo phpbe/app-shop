@@ -72,7 +72,7 @@ class CollectProduct
                 }
 
                 $tupleProduct->is_enable = 0;
-                $tupleProduct->download_remote = 1;
+                $tupleProduct->download_remote_image = 1;
                 $tupleProduct->update_time = $now;
                 $tupleProduct->update();
 
