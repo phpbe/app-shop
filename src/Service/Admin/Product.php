@@ -335,6 +335,16 @@ class Product
             $data['collect_product_id'] = '';
         }
 
+        if (!isset($data['download_remote_image']) || !is_numeric($data['download_remote_image'])) {
+            $data['download_remote_image'] = 1;
+        } else {
+            $data['download_remote_image'] = (int)$data['download_remote_image'];
+        }
+
+        if ($data['download_remote_image'] !== 0) {
+            $data['download_remote_image'] = 1;
+        }
+
         if (!isset($data['is_enable']) || !is_numeric($data['is_enable'])) {
             $data['is_enable'] = 0;
         } else {
@@ -374,6 +384,7 @@ class Product
             if (isset($data['relate']['id']) && $data['relate']['id'] !== '') {
                 $tupleProduct->relate_id = $data['relate']['id'];
             }
+            $tupleProduct->download_remote_image = $data['download_remote_image'];
             $tupleProduct->is_enable = $data['is_enable'];
             $tupleProduct->is_delete = 0;
             $tupleProduct->update_time = $now;

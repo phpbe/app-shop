@@ -239,7 +239,7 @@ CREATE TABLE `shop_product` (
 `rating_count` int(11) NOT NULL DEFAULT '0' COMMENT '评分次数',
 `rating_avg` decimal(2,1) NOT NULL DEFAULT '0.0' COMMENT '平均评分',
 `collect_product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '采集商品ID',
-`download_remote` tinyint(4) NOT NULL DEFAULT '0' COMMENT '异步下载商品中引用的远程资源（0-不处理/1-下载/2-已下载完成/-1-处理失败）',
+`download_remote_image` TINYINT(4) NOT NULL DEFAULT '0' COMMENT '是否下载远程图片（0-不下载/1-下载/2-已下载完成/-1-下载失败） ',
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用',
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

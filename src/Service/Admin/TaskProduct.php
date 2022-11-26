@@ -317,104 +317,157 @@ class TaskProduct
      * @param object $product
      * @return void
      */
-    public function downloadRemoteFile(object $product)
+    public function downloadRemoteImages(object $product)
     {
         $storage = Be::getStorage();
         $storageRootUrl = $storage->getRootUrl();
         $storageRootUrlLen = strlen($storageRootUrl);
 
+        $hasChange = false;
+        $updateObj = new \stdClass();
+        $updateObj->id = $product->id;
+
         $db = Be::getDb();
         $now = date('Y-m-d H:i:s');
 
-        try {
+        $imageKeyValues = [];
 
-            $imageKeyValues = [];
+        $images = $db->getObjects('SELECT * FROM shop_product_image WHERE product_id=?', [$product->id]);
+        foreach ($images as $image) {
+            $remoteImage = trim($image->url);
+            if ($remoteImage !== '') {
+                if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
+                    $storageImage = false;
+                    try {
+                        $storageImage = $this->downloadRemoteImage($product, $remoteImage, true);
+                    } catch (\Throwable $t) {
+                        Be::getLog()->error($t);
+                    }
 
-            $images = $db->getObjects('SELECT * FROM shop_product_image WHERE product_id=?', [$product->id]);
-            foreach ($images as $image) {
-                $remoteImage = trim($image->url);
+                    if ($storageImage) {
+                        $imageKeyValues[$image->original] = $storageImage;
+
+                        $obj = new \stdClass();
+                        $obj->id = $image->id;
+                        $obj->url = $storageImage;
+                        $obj->update_time = $now;
+                        $db->update('shop_product_image', $obj, 'id');
+
+                        $hasChange = true;
+                    }
+                }
+            }
+        }
+
+        if ($product->relate_id !== '') {
+            $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_item WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
+            if ($productRelateDetail) {
+                $remoteImage = trim($productRelateDetail->icon_image);
                 if ($remoteImage !== '') {
                     if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
                         $storageImage = false;
-                        try {
-                            $storageImage = $this->uploadRemoteFile('/products/' . $product->id. '/', $remoteImage);
-                        } catch (\Throwable $t) {
+                        if (isset($imageKeyValues[$remoteImage])) {
+                            $storageImage = $imageKeyValues[$remoteImage];
+                        } else {
+                            try {
+                                $storageImage = $this->downloadRemoteImage($product, $remoteImage, true);
+                            } catch (\Throwable $t) {
+                                Be::getLog()->error($t);
+                            }
                         }
 
                         if ($storageImage) {
-                            $imageKeyValues[$image->original] = $storageImage;
-
                             $obj = new \stdClass();
-                            $obj->id = $image->id;
-                            $obj->url = $storageImage;
+                            $obj->id = $productRelateDetail->id;
+                            $obj->icon_image = $storageImage;
                             $obj->update_time = $now;
-                            $db->update('shop_product_image', $obj, 'id');
+                            $db->update('shop_product_relate_item', $obj, 'id');
+
+                            $hasChange = true;
                         }
                     }
                 }
             }
-
-            if ($product->relate_id !== '') {
-                $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_item WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
-                if ($productRelateDetail) {
-                    $remoteImage = trim($productRelateDetail->icon_image);
-                    if ($remoteImage !== '') {
-                        if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
-                            $storageImage = false;
-                            if (isset($imageKeyValues[$remoteImage])) {
-                                $storageImage = $imageKeyValues[$remoteImage];
-                            } else {
-                                try {
-                                    $storageImage = $this->uploadRemoteFile('/products/' . $product->id. '/', $remoteImage);
-                                } catch (\Throwable $t) {
-                                }
-                            }
-
-                            if ($storageImage) {
-                                $obj = new \stdClass();
-                                $obj->id = $productRelateDetail->id;
-                                $obj->icon_image = $storageImage;
-                                $obj->update_time = $now;
-                                $db->update('shop_product_relate_item', $obj, 'id');
-                            }
-                        }
-                    }
-                }
-            }
-
-            $db->query('UPDATE shop_product SET download_remote=2, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE id=\'' . $product->id . '\'');
-
-        } catch (\Throwable $t) {
-            Be::getLog()->error($t);
-            $db->query('UPDATE shop_product SET download_remote=-1, update_time=\'' . date('Y-m-d H:i:s') . '\' WHERE id=\'' . $product->id . '\'');
-            throw new ServiceException('导入采集的商品下载远程图像时发生异常！');
         }
 
+
+        $descriptionHasChange = false;
+        $descriptionImages = [];
+
+        $configSystem = Be::getConfig('App.System.System');
+        $reg = '/ src=\"([^\"]*\.(' . implode('|', $configSystem->allowUploadImageTypes) . ')[^\"]*)\"/is';
+        if (preg_match_all($reg, $product->description, $descriptionImages)) {
+            $i = 0;
+            foreach ($descriptionImages[1] as $descriptionImage) {
+                $descriptionImage = trim($descriptionImage);
+                if ($descriptionImage !== '') {
+                    if (strlen($descriptionImage) < $storageRootUrlLen || substr($descriptionImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
+                        $storageImage = false;
+                        if (isset($imageKeyValues[$descriptionImage])) {
+                            $storageImage = $imageKeyValues[$descriptionImage];
+                        } else {
+                            try {
+                                $storageImage = $this->downloadRemoteImage($product, $descriptionImage, true);
+                            } catch (\Throwable $t) {
+                                Be::getLog()->error($t);
+                            }
+                        }
+
+                        if ($storageImage) {
+                            $imageKeyValues[$descriptionImage] = $storageImage;
+
+                            $replaceFrom = $descriptionImages[0][$i];
+                            $replaceTo = str_replace($descriptionImage, $storageImage, $replaceFrom);
+                            $product->description = str_replace($replaceFrom, $replaceTo, $product->description);
+                            $descriptionHasChange = true;
+                        }
+                    }
+                }
+
+                $i++;
+            }
+
+            if ($descriptionHasChange) {
+                $updateObj->description = $product->description;
+                $hasChange = true;
+            }
+        }
+
+        if ($hasChange) {
+            $updateObj->download_remote_image = 2;
+            $updateObj->update_time = date('Y-m-d H:i:s');
+            Be::getDb()->update('shop_product', $updateObj, 'id');
+        }
     }
 
     /**
-     * 上传远程文件
+     * 下载远程文件
      *
-     * @param string $dir 目录
-     * @param string $remoteFile 远端文件
+     * @param object $product 商品
+     * @param string $remoteImage 远端文件
      * @return string 上传成功的CDN网址
      * @throws \Be\Runtime\RuntimeException
      */
-    public function uploadRemoteFile(string $dir, string $remoteFile, bool $image = false): string
+    public function downloadRemoteImage(object $product, string $remoteImage): string
     {
-        // 示例：https://cdn.shopify.com/s/files/1/0139/8942/products/Womens-Zamora-Jogger-Scrub-Pant_martiniolive-4.jpg
-        $remoteFile = trim($remoteFile);
+        $configDownloadRemoteImage = Be::getConfig('App.Shop.DownloadRemoteImage');
 
-        $name = substr($remoteFile, strrpos($remoteFile, '/') + 1);
+        // 示例：https://cdn.shopify.com/s/files/1/0139/8942/products/Womens-Zamora-Jogger-Scrub-Pant_martiniolive-4.jpg
+        $remoteImage = trim($remoteImage);
+
+        $name = substr($remoteImage, strrpos($remoteImage, '/') + 1);
         $name = trim($name);
 
-        $defaultExt = strrchr($name, '.');
-        if ($defaultExt && strlen($defaultExt) > 1) {
-            $defaultExt = substr($defaultExt, 1);
-            $defaultExt = strtolower($defaultExt);
-            $defaultExt = trim($defaultExt);
+        $originalExt = strrchr($name, '.');
+        if ($originalExt && strlen($originalExt) > 1) {
+            $originalExt = substr($originalExt, 1);
+            $originalExt = strtolower($originalExt);
+            $originalExt = trim($originalExt);
+
+            $originalName = substr($name, 0, strrpos($name, '.'));
         } else {
-            $defaultExt = '';
+            $originalExt = '';
+            $originalName = $name;
         }
 
         $tmpDir = Be::getRuntime()->getRootPath() . '/data/tmp/';
@@ -430,19 +483,21 @@ class TaskProduct
         do {
             $n++;
             try {
-                $fileData = Curl::get($remoteFile);
+                $fileData = Curl::get($remoteImage);
                 $success = true;
             } catch (\Throwable $t) {
-                if (Be::getRuntime()->isSwooleMode()) {
-                    \Swoole\Coroutine::sleep(rand(1, 3));
-                } else {
-                    sleep(rand(1, 3));
+                if ($configDownloadRemoteImage->retryIntervalMin > 0 || $configDownloadRemoteImage->retryIntervalMax) {
+                    if (Be::getRuntime()->isSwooleMode()) {
+                        \Swoole\Coroutine::sleep(rand($configDownloadRemoteImage->retryIntervalMin, $configDownloadRemoteImage->retryIntervalMax));
+                    } else {
+                        sleep(rand($configDownloadRemoteImage->retryIntervalMin, $configDownloadRemoteImage->retryIntervalMax));
+                    }
                 }
             }
-        } while ($success === false && $n < 3);
+        } while ($success === false && $n < $configDownloadRemoteImage->retryTimes);
 
         if (!$success) {
-            throw new ServiceException('获取远程文件（' . $remoteFile . '）失败！');
+            throw new ServiceException('获取远程文件（' . $remoteImage . '）失败！');
         }
 
         file_put_contents($tmpFile, $fileData);
@@ -456,39 +511,43 @@ class TaskProduct
                 throw new ServiceException('您上传的文件尺寸已超过最大限制：' . $maxSize . '！');
             }
 
-            $ext = Mime::detectExt($tmpFile, $defaultExt);
+            $ext = Mime::detectExt($tmpFile, $originalExt);
 
-            $configSystem = Be::getConfig('App.System.System');
-            if ($image) {
-                if (!in_array($ext, $configSystem->allowUploadImageTypes)) {
-                    throw new ServiceException('禁止上传的图像类型：' . $ext . '！');
-                }
-            } else {
-                if (!in_array($ext, $configSystem->allowUploadFileTypes)) {
-                    throw new ServiceException('禁止上传的文件类型：' . $ext . '！');
-                }
+            if (!in_array($ext, $configSystem->allowUploadImageTypes)) {
+                throw new ServiceException('禁止上传的图像类型：' . $ext . '！');
             }
 
-            $configCollectProductApi = Be::getConfig('App.Shop.CollectProductApi');
+            $dirName = '';
+            switch ($configDownloadRemoteImage->dirname) {
+                case 'id':
+                    $dirName = $product->id;
+                    break;
+                case 'url':
+                    $dirName = $product->url;
+                    break;
+                case 'spu':
+                    $dirName = strtolower($product->spu);
+                    break;
+            };
 
-            $newName = null;
-            switch ($configCollectProductApi->downloadRemoteFileRename) {
-                case 'orginal':
-                    $newName = $name;
+            $fileName = '';
+            switch ($configDownloadRemoteImage->fileName) {
+                case 'original':
+                    $fileName = $originalName . '.' . $ext;
                     break;
                 case 'md5':
-                    $newName = md5_file($tmpFile) . '.' . $ext;
+                    $fileName = md5_file($tmpFile) . '.' . $ext;
                     break;
                 case 'sha1':
-                    $newName = sha1_file($tmpFile) . '.' . $ext;
+                    $fileName = sha1_file($tmpFile) . '.' . $ext;
                     break;
                 case 'timestamp':
-                    $newName = uniqid(date('Ymdhis') . '-' . rand(1, 999999) . '-', true) . '.' . $ext;
+                    $fileName = uniqid(date('Ymdhis') . '-' . rand(1, 999999) . '-', true) . '.' . $ext;
                     break;
-            }
+            };
 
             $storage = Be::getStorage();
-            $object = $dir . $newName;
+            $object = $configDownloadRemoteImage->rootPath . $dirName . '/' . $fileName;
             if ($storage->isFileExist($object)) {
                 $url = $storage->getFileUrl($object);
             } else {
@@ -509,6 +568,14 @@ class TaskProduct
             unlink($tmpFile);
         }
 
+        if ($configDownloadRemoteImage->intervalMin > 0 || $configDownloadRemoteImage->intervalMax) {
+            if (Be::getRuntime()->isSwooleMode()) {
+                \Swoole\Coroutine::sleep(rand($configDownloadRemoteImage->intervalMin, $configDownloadRemoteImage->intervalMax));
+            } else {
+                sleep(rand($configDownloadRemoteImage->intervalMin, $configDownloadRemoteImage->intervalMax));
+            }
+        }
+        
         return $url;
     }
 }
