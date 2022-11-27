@@ -17,8 +17,8 @@ class Installer extends \Be\App\Installer
 	{
         $db = Be::getDb();
         $tableNames = $db->getTableNames();
-        if (in_array('shop_', $tableNames)) {
-            if (in_array('shop_', $tableNames)) {
+        if (in_array('shop_category', $tableNames)) {
+            if (in_array('shop_user_token', $tableNames)) {
                 return;
             } else {
                 throw new RuntimeException('剑测到部分数据表已存在，请检查数据库！');
