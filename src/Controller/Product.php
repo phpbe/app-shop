@@ -9,6 +9,7 @@ class Product extends Base
 
     /**
      *
+     * @BeMenu("商品详情", picker="return \Be\Be::getService('App.Shop.Admin.Product')->getProductMenuPicker()")
      * @BeRoute("\Be\Be::getService('App.Shop.Product')->getProductUrl($params)")
      */
     public function detail()
