@@ -141,7 +141,20 @@
                         }
                         ?>
 
-                        <div class="be-mt-150">
+                         <div class="be-row be-mt-200">
+                             <div class="be-col be-lh-250">排序：</div>
+                             <div class="be-col-auto">
+                                 <el-form-item prop="ordering">
+                                     <el-input-number
+                                             v-model = "formData.ordering"
+                                             size="medium">
+                                     </el-input-number>
+                                 </el-form-item>
+                             </div>
+                         </div>
+                         <?php $formData['ordering'] = ($this->product ? $this->product->ordering : 0); ?>
+
+                         <div class="be-mt-150">
                             SPU：
                             <el-tooltip effect="dark" content="标准化产品单元，如：属性值、特性相同的商品可以称为一个 SPU" placement="top">
                                 <i class="el-icon-fa fa-question-circle-o"></i>

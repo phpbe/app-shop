@@ -497,6 +497,8 @@ class Product
 
             $orderBy = null;
             switch ($params['orderBy']) {
+                case 'ordering':
+                    $orderBy = 'ordering';
                 case 'sales_volume':
                     $orderBy = 'sales_volume';
                     break;

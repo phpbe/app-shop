@@ -190,8 +190,7 @@
                                 </el-form-item>
                             </div>
                         </div>
-                        <?php $formData['ordering'] = ($this->category ? $this->category->ordering : ''); ?>
-
+                        <?php $formData['ordering'] = ($this->category ? $this->category->ordering : 0); ?>
 
                         <div class="be-mt-150">封面图片：</div>
                         <div class="be-row be-mt-50">
