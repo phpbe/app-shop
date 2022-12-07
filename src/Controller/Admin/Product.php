@@ -263,6 +263,12 @@ class Product extends Auth
                             },
                         ],
                         [
+                            'name' => 'ordering',
+                            'label' => '排序',
+                            'width' => '120',
+                            'sortable' => true,
+                        ],
+                        [
                             'name' => 'is_enable',
                             'label' => '上架',
                             'driver' => TableItemSwitch::class,
