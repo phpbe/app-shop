@@ -345,6 +345,12 @@ class Product
             $data['download_remote_image'] = 1;
         }
 
+        if (!isset($data['ordering']) || !is_numeric($data['ordering'])) {
+            $data['ordering'] = 0;
+        } else {
+            $data['ordering'] = (int)$data['ordering'];
+        }
+
         if (!isset($data['is_enable']) || !is_numeric($data['is_enable'])) {
             $data['is_enable'] = 0;
         } else {
@@ -385,6 +391,7 @@ class Product
                 $tupleProduct->relate_id = $data['relate']['id'];
             }
             $tupleProduct->download_remote_image = $data['download_remote_image'];
+            $tupleProduct->ordering = $data['ordering'];
             $tupleProduct->is_enable = $data['is_enable'];
             $tupleProduct->is_delete = 0;
             $tupleProduct->update_time = $now;

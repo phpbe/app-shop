@@ -160,12 +160,14 @@ class Category
             $data['seo_keywords'] = '';
         }
 
-        if (!isset($data['is_enable']) || $data['is_enable'] !== 1) {
-            $data['is_enable'] = 0;
-        }
-
         if (!isset($data['ordering']) || !is_numeric($data['ordering'])) {
             $data['ordering'] = 0;
+        } else {
+            $data['ordering'] = (int)$data['ordering'];
+        }
+
+        if (!isset($data['is_enable']) || $data['is_enable'] !== 1) {
+            $data['is_enable'] = 0;
         }
 
         $db->startTransaction();
