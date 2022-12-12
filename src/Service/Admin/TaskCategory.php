@@ -17,7 +17,7 @@ class TaskCategory
     {
         if (count($categories) === 0) return;
 
-        $redis = Be::getCache();
+        $cache = Be::getCache();
 
         $keyValues = [];
         foreach ($categories as $category) {
@@ -27,7 +27,7 @@ class TaskCategory
             $key = 'Shop:Category:' . $category->id;
 
             if ($category->is_delete === 1) {
-                $redis->delete($key);
+                $cache->delete($key);
             } else {
 
                 $category->url_custom = (int)$category->url_custom;
@@ -41,7 +41,7 @@ class TaskCategory
         }
 
         if (count($keyValues) > 0) {
-            $redis->setMany($keyValues);
+            $cache->setMany($keyValues);
         }
     }
 
