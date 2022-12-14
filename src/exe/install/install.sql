@@ -15,7 +15,7 @@ CREATE TABLE `shop_category` (
 `is_delete` int(11) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='分类';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='分类';
 
 CREATE TABLE `shop_collect_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -25,7 +25,7 @@ CREATE TABLE `shop_collect_product` (
 `relate_id` varchar(36) NOT NULL COMMENT '关联ID',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品采集';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品采集';
 
 CREATE TABLE `shop_order` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -52,7 +52,7 @@ CREATE TABLE `shop_order` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单';
 
 CREATE TABLE `shop_order_billing_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -71,7 +71,7 @@ CREATE TABLE `shop_order_billing_address` (
 `mobile` varchar(30) NOT NULL DEFAULT '' COMMENT '手机',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单账单地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单账单地址';
 
 CREATE TABLE `shop_order_cancel` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -79,7 +79,7 @@ CREATE TABLE `shop_order_cancel` (
 `reason` varchar(200) NOT NULL DEFAULT '' COMMENT '取消原因',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单取消记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单取消记录';
 
 CREATE TABLE `shop_order_contact` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -89,7 +89,7 @@ CREATE TABLE `shop_order_contact` (
 `image` varchar(200) NOT NULL DEFAULT '' COMMENT '图像',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单联系记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单联系记录';
 
 CREATE TABLE `shop_order_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -107,7 +107,7 @@ CREATE TABLE `shop_order_product` (
 `style` varchar(120) NOT NULL DEFAULT '' COMMENT '商品子项款式',
 `weight` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '重量',
 `weight_unit` varchar(3) NOT NULL DEFAULT 'kg' COMMENT '重量单位（kg/g/lb/oz）'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单商品';
 
 CREATE TABLE `shop_order_promotion` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -116,7 +116,7 @@ CREATE TABLE `shop_order_promotion` (
 `promotion_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠ID',
 `discount_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '优惠金额',
 `promotion_details` json NOT NULL COMMENT '优惠明细'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单优惠信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单优惠信息';
 
 CREATE TABLE `shop_order_shipping_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -135,7 +135,7 @@ CREATE TABLE `shop_order_shipping_address` (
 `mobile` varchar(30) NOT NULL DEFAULT '' COMMENT '手机',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单收货地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单收货地址';
 
 CREATE TABLE `shop_payment` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -146,7 +146,7 @@ CREATE TABLE `shop_payment` (
 `is_enable` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否启用',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='支付方式';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='支付方式';
 
 INSERT INTO `shop_payment` (`id`, `name`, `label`, `logo`, `description`, `is_enable`, `create_time`, `update_time`) VALUES
 ('309ae563-76a5-11ec-8e56-0242ac180064', 'paypal', 'Paypal', 'paypal.svg', '通过绑定 PayPal 个人账号或者 PayPal 商户账号接受 PayPal 付款。您可以在<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_login-run\" target=\"_blank\">PayPal账户管理页</a>管理您的账户', 1, '2022-08-01 08:52:49', '2022-08-02 15:01:18'),
@@ -157,7 +157,7 @@ CREATE TABLE `shop_payment_cod` (
 `description` varchar(120) NOT NULL DEFAULT '' COMMENT '描述',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='货到付款 收款信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='货到付款 收款信息';
 
 CREATE TABLE `shop_payment_log` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -172,7 +172,7 @@ CREATE TABLE `shop_payment_log` (
 `complete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否成功',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收款日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='收款日志';
 
 CREATE TABLE `shop_payment_paypal` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -182,7 +182,7 @@ CREATE TABLE `shop_payment_paypal` (
 `is_enable` tinyint(11) NOT NULL DEFAULT '1' COMMENT '是否启用',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal 收款信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='paypal 收款信息';
 
 CREATE TABLE `shop_payment_paypal_order` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -198,7 +198,7 @@ CREATE TABLE `shop_payment_paypal_order` (
 `paypal_payer_country_code` varchar(10) NOT NULL DEFAULT '' COMMENT '买家 国家编码',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal 收款订单';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='paypal 收款订单';
 
 CREATE TABLE `shop_payment_paypal_token` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -207,7 +207,7 @@ CREATE TABLE `shop_payment_paypal_token` (
 `expire_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '超时时间',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='paypal token';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='paypal token';
 
 CREATE TABLE `shop_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -244,14 +244,14 @@ CREATE TABLE `shop_product` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品';
 
 CREATE TABLE `shop_product_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品分类';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品分类';
 
 CREATE TABLE `shop_product_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -262,7 +262,7 @@ CREATE TABLE `shop_product_image` (
 `ordering` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品图像';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品图像';
 
 CREATE TABLE `shop_product_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -279,7 +279,7 @@ CREATE TABLE `shop_product_item` (
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品子项';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品子项';
 
 CREATE TABLE `shop_product_relate` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -289,7 +289,7 @@ CREATE TABLE `shop_product_relate` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品关联';
 
 CREATE TABLE `shop_product_relate_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -299,7 +299,7 @@ CREATE TABLE `shop_product_relate_item` (
 `icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联子项';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品关联子项';
 
 CREATE TABLE `shop_product_review` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -312,14 +312,14 @@ CREATE TABLE `shop_product_review` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除	',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品评论';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品评论';
 
 CREATE TABLE `shop_product_review_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_review_id` varchar(36) NOT NULL DEFAULT '',
 `small` varchar(200) NOT NULL DEFAULT '' COMMENT '小图',
 `large` varchar(200) NOT NULL DEFAULT '' COMMENT '大图'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品评论图像';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品评论图像';
 
 CREATE TABLE `shop_product_style` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()',
@@ -327,7 +327,7 @@ CREATE TABLE `shop_product_style` (
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '款式名称',
 `icon_type` varchar(10) NOT NULL DEFAULT 'text' COMMENT '款式图标类型',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品款式';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品款式';
 
 CREATE TABLE `shop_product_style_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -336,14 +336,14 @@ CREATE TABLE `shop_product_style_item` (
 `icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品关联明细';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品关联明细';
 
 CREATE TABLE `shop_product_tag` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `tag` varchar(60) NOT NULL DEFAULT '' COMMENT '标签',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商品标签';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品标签';
 
 CREATE TABLE `shop_promotion_activity` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -367,14 +367,14 @@ CREATE TABLE `shop_promotion_activity` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='满减活动';
 
 CREATE TABLE `shop_promotion_activity_change` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `details` text NOT NULL COMMENT '变更明细',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动修改记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='满减活动修改记录';
 
 CREATE TABLE `shop_promotion_activity_discount` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -384,19 +384,19 @@ CREATE TABLE `shop_promotion_activity_discount` (
 `discount_percent` tinyint(4) NOT NULL DEFAULT '0' COMMENT '减免折扣',
 `discount_amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '减免金额',
 `ordering` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动梯度优惠数据';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='满减活动梯度优惠数据';
 
 CREATE TABLE `shop_promotion_activity_scope_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动适用分类';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='满减活动适用分类';
 
 CREATE TABLE `shop_promotion_activity_scope_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_activity_id` varchar(36) NOT NULL DEFAULT '' COMMENT '满减活动ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='满减活动适用商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='满减活动适用商品';
 
 CREATE TABLE `shop_promotion_coupon` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -420,32 +420,32 @@ CREATE TABLE `shop_promotion_coupon` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券';
 
 CREATE TABLE `shop_promotion_coupon_change` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `details` text NOT NULL COMMENT '变更明细',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券修改记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券修改记录';
 
 CREATE TABLE `shop_promotion_coupon_scope_category` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `category_id` varchar(36) NOT NULL DEFAULT '' COMMENT '分类ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用分类';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券适用分类';
 
 CREATE TABLE `shop_promotion_coupon_scope_product` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用商品';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券适用商品';
 
 CREATE TABLE `shop_promotion_coupon_scope_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `promotion_coupon_id` varchar(36) NOT NULL DEFAULT '' COMMENT '优惠券ID',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '客户ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券适用客户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券适用客户';
 
 CREATE TABLE `shop_promotion_coupon_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -456,7 +456,7 @@ CREATE TABLE `shop_promotion_coupon_user` (
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否有效',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '领取时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='优惠券领取的客户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券领取的客户';
 
 CREATE TABLE `shop_region_continent` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -464,7 +464,7 @@ CREATE TABLE `shop_region_continent` (
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '名称',
 `name_cn` varchar(120) NOT NULL DEFAULT '' COMMENT '中文名称',
 `ordering` tinyint(4) NOT NULL DEFAULT '0' COMMENT '排序'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ShopLine 区域采集';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='ShopLine 区域采集';
 
 INSERT INTO `shop_region_continent` (`id`, `code`, `name`, `name_cn`, `ordering`) VALUES
 ('418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'Africa', '非洲', 4),
@@ -484,7 +484,7 @@ CREATE TABLE `shop_region_country` (
 `name_cn` varchar(120) NOT NULL DEFAULT '' COMMENT '中文名称',
 `flag` varchar(30) NOT NULL DEFAULT '' COMMENT '国旗',
 `state_count` int(11) NOT NULL DEFAULT '0' COMMENT '该国省／州的个数'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域 - 国家';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='区域 - 国家';
 
 INSERT INTO `shop_region_country` (`id`, `continent_id`, `continent_code`, `code`, `name`, `name_cn`, `flag`, `state_count`) VALUES
 ('41c73f09-7b65-11ec-8c1a-0242ac180065', '418063fe-7b65-11ec-8c1a-0242ac180065', 'AF', 'EG', 'Egypt', '埃及', 'eg.png', 29),
@@ -741,7 +741,7 @@ CREATE TABLE `shop_region_state` (
 `country_code` varchar(2) NOT NULL DEFAULT '' COMMENT '所属国家编码',
 `name` varchar(120) NOT NULL DEFAULT '' COMMENT '名称',
 `name_cn` varchar(120) NOT NULL DEFAULT '' COMMENT '中文名称'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='区域 - 州';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='区域 - 州';
 
 INSERT INTO `shop_region_state` (`id`, `country_id`, `country_code`, `name`, `name_cn`) VALUES
 ('46fd23f0-7b65-11ec-8c1a-0242ac180065', '41c73f09-7b65-11ec-8c1a-0242ac180065', 'EG', '6th of October', '十月六日省'),
@@ -1952,7 +1952,7 @@ CREATE TABLE `shop_shipping` (
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '方案名称',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费方案';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='运费方案';
 
 CREATE TABLE `shop_shipping_plan` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -1979,7 +1979,7 @@ CREATE TABLE `shop_shipping_plan` (
 `shipping_fee_additional_weight_unit` varchar(5) NOT NULL DEFAULT 'g' COMMENT '续重重量单位',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 方案';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='运费 - 方案';
 
 CREATE TABLE `shop_shipping_region` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -1989,7 +1989,7 @@ CREATE TABLE `shop_shipping_region` (
 `assign_state` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否指定州（0:不指定，即全部 / 1:自定义）',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 配送区域';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='运费 - 配送区域';
 
 CREATE TABLE `shop_shipping_region_state` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -1999,7 +1999,7 @@ CREATE TABLE `shop_shipping_region_state` (
 `state_name` varchar(120) NOT NULL DEFAULT '' COMMENT '州/省份 名称',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='运费 - 配送区域';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='运费 - 配送区域';
 
 CREATE TABLE `shop_user` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2020,7 +2020,7 @@ CREATE TABLE `shop_user` (
 `is_delete` tinyint(3) UNSIGNED NOT NULL DEFAULT '0' COMMENT '是否已删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='用户';
 
 CREATE TABLE `shop_user_billing_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2039,7 +2039,7 @@ CREATE TABLE `shop_user_billing_address` (
 `mobile` varchar(30) NOT NULL DEFAULT '' COMMENT '电话',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户账单地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='用户账单地址';
 
 CREATE TABLE `shop_user_favorite` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2049,7 +2049,7 @@ CREATE TABLE `shop_user_favorite` (
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否删除',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收货地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='用户收货地址';
 
 CREATE TABLE `shop_user_shipping_address` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2069,7 +2069,7 @@ CREATE TABLE `shop_user_shipping_address` (
 `is_default` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否默认',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户收货地址';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='用户收货地址';
 
 CREATE TABLE `shop_user_token` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
@@ -2081,7 +2081,7 @@ CREATE TABLE `shop_user_token` (
 `this_login_ip` varchar(15) NOT NULL DEFAULT '' COMMENT '本次登录IP',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户身份识别 token';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='用户身份识别 token';
 
 
 ALTER TABLE `shop_category`
