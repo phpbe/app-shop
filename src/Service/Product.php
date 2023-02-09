@@ -106,7 +106,7 @@ class Product
         if ($style === 1) {
 
             $price = number_format(rand(10, 100), 2, '.', '');
-            $originalPrice = bcmul($price,  '1.2',  2);
+            $originalPrice = bcmul($price, '1.2', 2);
             $weight = rand(100, 1000);
             $stock = rand(100, 1000);
 
@@ -142,7 +142,7 @@ class Product
             foreach (['S', 'M', 'L'] as $size) {
 
                 $price = number_format(rand(10, 100), 2, '.', '');
-                $originalPrice = bcmul($price,  '1.2',  2);
+                $originalPrice = bcmul($price, '1.2', 2);
                 $weight = rand(1000, 100000) / 1000;
                 $stock = rand(100, 1000);
 
@@ -220,7 +220,6 @@ class Product
             'images' => $images,
         ];
     }
-
 
 
     /**
@@ -497,23 +496,22 @@ class Product
 
             $orderBy = null;
             switch ($params['orderBy']) {
-                case 'ordering':
-                    $orderBy = 'ordering';
-                    break;
-                case 'sales_volume':
-                    $orderBy = 'sales_volume';
-                    break;
-                case 'hits':
-                    $orderBy = 'hits';
-                    break;
                 case 'price':
                     $orderBy = $orderByDir === 'asc' ? 'price_from' : 'price_to';
                     break;
+
+                case 'spu':
+                case 'name':
+                case 'brand':
+                case 'ordering':
+                case 'sales_volume':
+                case 'hits':
+                case 'rating_sum':
+                case 'rating_count':
+                case 'rating_avg':
                 case 'create_time':
-                    $orderBy = 'create_time';
-                    break;
                 case 'update_time':
-                    $orderBy = 'update_time';
+                    $orderBy = $params['orderBy'];
                     break;
             }
 
