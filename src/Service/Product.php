@@ -501,7 +501,6 @@ class Product
                     break;
 
                 case 'spu':
-                case 'name':
                 case 'brand':
                 case 'ordering':
                 case 'sales_volume':
