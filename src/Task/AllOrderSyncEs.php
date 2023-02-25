@@ -14,6 +14,11 @@ class AllOrderSyncEs extends Task
 
     public function execute()
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return;
+        }
+
         $service = Be::getService('App.Shop.Admin.TaskOrder');
 
         $db = Be::getDb();

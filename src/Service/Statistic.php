@@ -20,6 +20,11 @@ class Statistic
      */
     public function visit()
     {
+        $configSystemRedis = Be::getConfig('App.System.Redis');
+        if ($configSystemRedis->enable === 0) {
+            return;
+        }
+
         $request = Be::getRequest();
 
         $productId = '';
@@ -57,6 +62,11 @@ class Statistic
      */
     public function cart($productId, $productItemId)
     {
+        $configSystemRedis = Be::getConfig('App.System.Redis');
+        if ($configSystemRedis->enable === 0) {
+            return;
+        }
+
         $my = Be::getUser();
 
         $now = date('Y-m-d H:i:s');

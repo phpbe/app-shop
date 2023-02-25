@@ -27,7 +27,7 @@ class User
      *     driver="FormItemSelect",
      *     keyValues = "return ['redis' => 'Redis 存储', 'db' => '数据库存储'];")
      */
-    public $favoriteDrive = 'redis';
+    public $favoriteDrive = 'db';
 
 
 }

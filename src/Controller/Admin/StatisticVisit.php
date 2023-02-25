@@ -25,6 +25,18 @@ class StatisticVisit extends Auth
         $request = Be::getRequest();
         $response = Be::getResponse();
 
+        $configSystemRedis = Be::getConfig('App.System.Redis');
+        if ($configSystemRedis->enable === 0) {
+            $response->error('Redis尚未启用，此功能不哥用！');
+            return;
+        }
+
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            $response->error('ES尚未启用，此功能不哥用！');
+            return;
+        }
+
         $configStore = Be::getConfig('App.Shop.Store');
         $response->set('configStore', $configStore);
 

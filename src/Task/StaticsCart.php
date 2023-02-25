@@ -21,6 +21,16 @@ class StaticsCart extends Task
      */
     public function execute()
     {
+        $configSystemRedis = Be::getConfig('App.System.Redis');
+        if ($configSystemRedis->enable === 0) {
+            return;
+        }
+
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return;
+        }
+
         $redis = Be::getRedis();
         $es = Be::getEs();
 

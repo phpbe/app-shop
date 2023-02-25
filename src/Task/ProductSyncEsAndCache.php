@@ -31,6 +31,8 @@ class ProductSyncEsAndCache extends TaskInterval
             $t2 = $t0;
         }
 
+        $configSystemEs = Be::getConfig('App.System.Es');
+
         $d1 = date('Y-m-d H:i:s', $t1 - 60);
         $d2 = date('Y-m-d H:i:s', $t2);
 
@@ -47,7 +49,10 @@ class ProductSyncEsAndCache extends TaskInterval
 
             $i++;
             if ($i >= 100) {
-                $service->syncEs($batch);
+                if ($configSystemEs->enable === 1) {
+                    $service->syncEs($batch);
+                }
+
                 $service->syncCache($batch);
 
                 $batch = [];
@@ -56,7 +61,10 @@ class ProductSyncEsAndCache extends TaskInterval
         }
 
         if ($i > 0) {
-            $service->syncEs($batch);
+            if ($configSystemEs->enable === 1) {
+                $service->syncEs($batch);
+            }
+
             $service->syncCache($batch);
         }
 

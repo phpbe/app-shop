@@ -14,6 +14,11 @@ class FlushProductEs extends Task
 
     public function execute()
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return;
+        }
+
         $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $query = [

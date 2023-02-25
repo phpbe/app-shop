@@ -345,6 +345,11 @@ class Product
      */
     public function search(string $keywords, array $params = [], array $with = []): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return $this->searchFromDb($keywords, $params, $with);
+        }
+
         $config = Be::getConfig('App.Shop.Es');
         $cache = Be::getCache();
         $es = Be::getEs();
@@ -608,6 +613,169 @@ class Product
     }
 
     /**
+     * 按关銉词搜索 从数据库中搜索
+     *
+     * @param string $keywords 关銉词
+     * @param array $params
+     * @param array $with 返回的数据控制
+     * @return array
+     */
+    public function searchFromDb(string $keywords, array $params = [], array $with = []): array
+    {
+        $tableProduct = Be::getTable('shop_product');
+        $tableProduct->where('is_enable', 1);
+        $tableProduct->where('is_delete', 0);
+
+        if ($keywords !== '') {
+            $condition = [];
+            $condition[] = ['name', 'like', '%' . $keywords . '%'];
+            $condition[] = 'OR';
+            $condition[] = ['spu', '=', $keywords];
+
+            $tableProductItem = Be::getTable('shop_product_item');
+            $tableProductItem->where('sku', $keywords);
+            $productIds = $tableProductItem->getValues('product_id');
+            if (count($productIds) > 0) {
+                $condition[] = 'OR';
+                $condition[] = ['id', 'in', $productIds];
+            }
+            $tableProduct->condition($condition);
+        }
+
+        if (isset($params['productIds']) && $params['productIds']) {
+            $tableProduct->where('id', 'in', $params['productIds']);
+        }
+
+        if (isset($params['categoryId']) && $params['categoryId']) {
+            $tableProductCategory = Be::getTable('shop_product_category');
+            $tableProductCategory->where('category_id', $params['categoryId']);
+            $productIds = $tableProductCategory->getValues('product_id');
+            if (count($productIds) > 0) {
+                $tableProduct->where('id', 'in', $params['productIds']);
+            }
+        } elseif (isset($params['categoryIds']) && is_array($params['categoryIds']) && count($params['categoryIds']) > 0) {
+            $tableProductCategory = Be::getTable('shop_product_category');
+            $tableProductCategory->where('category_id', 'in', $params['categoryIds']);
+            $productIds = $tableProductCategory->getValues('product_id');
+            if (count($productIds) > 0) {
+                $tableProduct->where('id', 'in', $params['productIds']);
+            }
+        }
+
+        if (isset($params['brand']) && $params['brand']) {
+            $tableProduct->where('brand', $params['brand']);
+        }
+
+        if (isset($params['priceRange']) && $params['priceRange']) {
+            $priceRange = explode('-', $params['priceRange']);
+            if (count($priceRange) === 2) {
+                $tableProduct->where('price_from', '>=', $priceRange[0]);
+                $tableProduct->where('brand', '<=', $priceRange[1]);
+            }
+        }
+
+        if (isset($params['orderBy']) && $params['orderBy'] && $params['orderBy'] != 'common') {
+            $orderByDir = 'desc';
+            if (isset($params['orderByDir']) && in_array($params['orderByDir'], ['asc', 'desc'])) {
+                $orderByDir = $params['orderByDir'];
+            }
+
+            $orderBy = null;
+            switch ($params['orderBy']) {
+                case 'price':
+                    $orderBy = $orderByDir === 'asc' ? 'price_from' : 'price_to';
+                    break;
+
+                case 'spu':
+                case 'brand':
+                case 'ordering':
+                case 'sales_volume':
+                case 'hits':
+                case 'rating_sum':
+                case 'rating_count':
+                case 'rating_avg':
+                case 'create_time':
+                case 'update_time':
+                    $orderBy = $params['orderBy'];
+                    break;
+            }
+
+            if ($orderBy) {
+                $tableProduct->orderBy($orderBy, $orderByDir);
+            }
+        }
+
+        // 分页
+        $pageSize = null;
+        if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
+            $pageSize = $params['pageSize'];
+        } else {
+            $pageSize = 12;
+        }
+
+        if ($pageSize > 200) {
+            $pageSize = 200;
+        }
+
+        $page = null;
+        if (isset($params['page']) && is_numeric($params['page']) && $params['page'] > 0) {
+            $page = $params['page'];
+        } else {
+            $page = 1;
+        }
+
+        $total = $tableProduct->count();
+
+        $minPrice = null;
+        $maxPrice = null;
+        if (isset($with['priceStep']) && $with['priceStep']) {
+            $minPrice = $tableProduct->min('price_from');
+            $maxPrice = $tableProduct->min('price_to');
+        }
+
+        $tableProduct->limit($pageSize);
+        $tableProduct->offset(($page - 1) * $pageSize);
+
+        $productIds = $tableProduct->getValues('id');
+        $rows = $this->getProducts($productIds);
+
+        $return = [
+            'total' => $total,
+            'pageSize' => $pageSize,
+            'page' => $page,
+            'rows' => $rows,
+        ];
+
+        if (isset($with['priceStep']) && $with['priceStep'] && is_numeric($with['priceStep'])) {
+            $n = (int)$with['priceStep'];
+            if ($n > 1) {
+                $min = $minPrice;
+                if ($minPrice < 100) {
+                    $min = 0;
+                }
+
+                $priceSteps = [];
+                $steps = $maxPrice - $min;
+                if ($steps > 100 && $total > $n) {
+                    $step = ceil($steps / $n);
+                    for ($i = 0; $i <= $maxPrice; $i += $step) {
+                        $r1 = $i;
+                        $r2 = $i + $step;
+                        if ($r2 > $maxPrice) {
+                            $r2 = $maxPrice;
+                        }
+
+                        $priceSteps[] = $r1 . '-' . $r2;
+                    }
+                }
+                $return['priceSteps'] = $priceSteps;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * 跟据商品名称，获取相似商品
      *
      * @param string $productId 商品ID
@@ -617,6 +785,11 @@ class Product
      */
     public function getSimilarProducts(string $productId, string $productName, int $n = 12): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return $this->getSimilarProductsFromDb($productId, $productName, $n);
+        }
+
         $config = Be::getConfig('App.Shop.Es');
         $query = [
             'index' => $config->indexProduct,
@@ -667,6 +840,26 @@ class Product
     }
 
     /**
+     * 跟据商品名称，获取相似商品
+     *
+     * @param string $productId 商品ID
+     * @param string $productName 商品名称
+     * @param int $n
+     * @return array
+     */
+    public function getSimilarProductsFromDb(string $productId, string $productName, int $n = 12): array
+    {
+        $productIds = Be::getTable('shop_product')
+            ->where('is_enable', 1)
+            ->where('is_delete', 0)
+            ->where('name', 'like', '%' . $productName . '%')
+            ->where('id', '<>', $productId)
+            ->limit($n)
+            ->getValues('id');
+        return $this->getProducts($productIds);
+    }
+
+    /**
      * 获取按指定排序的前N个商品
      *
      * @param int $n
@@ -677,6 +870,11 @@ class Product
      */
     public function getTopProducts(int $n, string $orderBy, string $orderByDir = 'desc'): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return $this->getTopProductsFromDb($n, $orderBy, $orderByDir);
+        }
+
         $config = Be::getConfig('App.Shop.Es');
         $query = [
             'index' => $config->indexProduct,
@@ -722,6 +920,26 @@ class Product
     }
 
     /**
+     * 获取按指定排序的前N个商品
+     *
+     * @param int $n
+     * @param string $orderBy
+     * @param string $orderByDir
+     * @return array
+     * @throws \Be\Runtime\RuntimeException
+     */
+    public function getTopProductsFromDb(int $n, string $orderBy, string $orderByDir = 'desc'): array
+    {
+        $productIds = Be::getTable('shop_product')
+            ->where('is_enable', 1)
+            ->where('is_delete', 0)
+            ->orderBy($orderBy, $orderByDir)
+            ->limit($n)
+            ->getValues('id');
+        return $this->getProducts($productIds);
+    }
+
+    /**
      * 最新产品
      *
      * @param int $n 结果数量
@@ -762,6 +980,11 @@ class Product
      */
     public function getTopSearchProducts(int $n = 10): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return [];
+        }
+
         $config = Be::getConfig('App.Shop.Es');
 
         $keywords = $this->getTopSearchKeywords(5);
@@ -822,6 +1045,11 @@ class Product
      */
     public function getGuessYouLikeProducts(int $n = 40, string $excludeProductId = null): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return [];
+        }
+
         $my = Be::getUser();
         $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
@@ -902,6 +1130,11 @@ class Product
      */
     public function getCategoryTopSearchProducts(string $categoryId, int $n = 10): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return [];
+        }
+
         $subCategoryIds = Be::getService('App.Shop.Category')->getSubCategoryIds($categoryId);
         if (!$subCategoryIds) return [];
 
@@ -981,6 +1214,11 @@ class Product
      */
     public function getCategoryGuessYouLikeProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return [];
+        }
+
         $my = Be::getUser();
         $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
@@ -1136,6 +1374,11 @@ class Product
      */
     public function getTopSearchKeywords(int $n = 6): array
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return [];
+        }
+
         $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $query = [

@@ -17,6 +17,11 @@ class OrderSyncEs extends TaskInterval
 
     public function execute()
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
+        if ($configSystemEs->enable === 0) {
+            return;
+        }
+
         if (!$this->breakpoint) {
             $this->breakpoint = date('Y-m-d h:i:s', time() - $this->step);
         }

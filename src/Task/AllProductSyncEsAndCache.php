@@ -14,6 +14,7 @@ class AllProductSyncEsAndCache extends Task
 
     public function execute()
     {
+        $configSystemEs = Be::getConfig('App.System.Es');
         $service = Be::getService('App.Shop.Admin.TaskProduct');
 
         $db = Be::getDb();
@@ -27,7 +28,9 @@ class AllProductSyncEsAndCache extends Task
 
             $i++;
             if ($i >= 100) {
-                $service->syncEs($batch);
+                if ($configSystemEs->enable === 1) {
+                    $service->syncEs($batch);
+                }
                 $service->syncCache($batch);
 
                 $batch = [];
@@ -36,7 +39,9 @@ class AllProductSyncEsAndCache extends Task
         }
 
         if ($i > 0) {
-            $service->syncEs($batch);
+            if ($configSystemEs->enable === 1) {
+                $service->syncEs($batch);
+            }
             $service->syncCache($batch);
         }
     }
