@@ -53,7 +53,7 @@ class Payment
     {
         $payment = $this->getPayment($paymentId);
 
-        if (Be::getTable('shop_payment_store')
+        if (Be::getTable('shop_payment')
                 ->where('payment_id', $paymentId)
                 ->where('is_enable', 1)
                 ->count() === 0) {
@@ -106,7 +106,7 @@ class Payment
      */
     public function getStorePaymentsByShippingPlanId(string $shippingPlanId): array
     {
-        $paymentIds = Be::getTable('shop_payment_store')
+        $paymentIds = Be::getTable('shop_payment')
             ->where('is_enable', 1)
             ->getValues('payment_id');
 

@@ -83,14 +83,17 @@ class Category
      * 获取分类伪静态页网址
      *
      * @param array $params
-     * @return string
+     * @return array
      * @throws ServiceException
      */
-    public function getCategoryUrl(array $params = []): string
+    public function getCategoryUrl(array $params = []): array
     {
         $category = $this->getCategory($params['id']);
+        $params1 = ['id' => $params['id']];
+        unset($params['id']);
+
         $config = Be::getConfig('App.Shop.Category');
-        return '/' . $config->urlPrefix . '/' . $category->url . $config->urlSuffix;
+        return [$config->urlPrefix . $category->url . $config->urlSuffix, $params1, $params];
     }
 
 

@@ -512,13 +512,18 @@ class PromotionActivity extends PromotionDriver
      * 获取满减活动伪静态页网址
      *
      * @param array $params
-     * @return string
+     * @return array
      * @throws ServiceException
      */
-    public function getPromotionActivityUrl(array $params = []): string
+    public function getPromotionActivityUrl(array $params = []): array
     {
         $promotionActivity = $this->getPromotionActivity($params['id']);
-        return '/activity/' . $promotionActivity->url;
+
+        $params1 = ['id' => $params['id']];
+        unset($params['id']);
+
+        $config = Be::getConfig('App.Shop.PromotionActivity');
+        return [$config->urlPrefix . $promotionActivity->url . $config->urlSuffix, $params1, $params];
     }
 
 }

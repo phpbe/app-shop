@@ -1422,19 +1422,23 @@ class Product
      * 获取商品伪静态页网址
      *
      * @param array $params
-     * @return string
+     * @return array
      * @throws ServiceException
      */
-    public function getProductUrl(array $params = []): string
+    public function getProductUrl(array $params = []): array
     {
-        $config = Be::getConfig('App.Shop.Product');
-
         $product = $this->getProduct($params['id']);
+
+        $params1 = ['id' => $params['id']];
+        unset($params['id']);
+
+        $config = Be::getConfig('App.Shop.Product');
         if (!$product) {
-            return '/' . $config->urlPrefix . '/null';
+            return [$config->urlPrefix . 'null' . $config->urlSuffix, $params1, $params];
         }
 
-        return '/' . $config->urlPrefix . '/' . $product->url . $config->urlSuffix;
+        return [$config->urlPrefix . $product->url . $config->urlSuffix, $params1, $params];
+
     }
 
 }
