@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "be/be": "~2.7",
+    "be/be": "~2.7.0",
     "be/theme-shop": "*",
     "geoip2/geoip2": "*"
   },
