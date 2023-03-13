@@ -73,7 +73,7 @@
 
         <?php if (count($this->shippingAddresses) < 10) { ?>
             <div class="be-mt-150">
-                <a href="<?php echo beUrl('Shop.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-main be-btn-lg be-w-100">
+                <a href="<?php echo beUrl('Shop.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-major be-btn-lg be-w-100">
                     <i class="user-address-add"></i> Add a new address
                 </a>
             </div>
@@ -109,7 +109,7 @@
         } else {
             ?>
             <div class="be-mt-150">
-                <a href="<?php echo beUrl('Shop.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-main be-btn-lg be-w-100">
+                <a href="<?php echo beUrl('Shop.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-major be-btn-lg be-w-100">
                     <i class="user-address-add"></i> Add a new address
                 </a>
             </div>
@@ -201,7 +201,7 @@
 
                     <?php if (count($this->shippingAddresses) < 10) { ?>
                     <div class="be-mt-150">
-                        <a href="<?php echo beUrl('Shop.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-main be-btn-lg">
+                        <a href="<?php echo beUrl('Shop.UserAddress.editShippingAddress'); ?>" class="be-btn be-btn-major be-btn-lg">
                             <i class="user-address-add"></i> Add a new address
                         </a>
                     </div>
@@ -252,7 +252,7 @@
                     } else {
                         ?>
                         <div class="be-mt-150">
-                            <a href="<?php echo beUrl('Shop.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-main be-btn-lg">
+                            <a href="<?php echo beUrl('Shop.UserAddress.editBillingAddress'); ?>" class="be-btn be-btn-major be-btn-lg">
                                 <i class="user-address-add"></i> Add a new address
                             </a>
                         </div>

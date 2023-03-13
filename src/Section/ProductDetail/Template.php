@@ -344,7 +344,7 @@ class Template extends Section
 
         echo '<div class="be-row be-mt-200">';
         echo '<div class="be-col-12 be-lg-col-6 be-pr-100">';
-        echo '<input type="button" class="be-btn be-btn-main be-btn-lg be-btn-round be-w-100 buy-now" id="product-detail-buy-now" value="Buy Now">';
+        echo '<input type="button" class="be-btn be-btn-major be-btn-lg be-btn-round be-w-100 buy-now" id="product-detail-buy-now" value="Buy Now">';
         echo '</div>';
         echo '<div class="be-col-12 be-lg-col-6 be-pl-100">';
         echo '<input type="button" class="be-btn be-btn-lg be-btn-round be-w-100 add-to-cart" id="product-detail-add-to-cart" value="Add to Cart">';

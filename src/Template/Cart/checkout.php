@@ -177,7 +177,7 @@
                     </div>
 
                     <div class="be-mt-150 be-pr-200">
-                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-lh-200 be-mt-50" id="cart-checkout-submit" value="Place Your Order">
+                        <input type="submit" class="be-btn be-btn-major be-btn-lg be-lh-200 be-mt-50" id="cart-checkout-submit" value="Place Your Order">
                         <a href="<?php echo beUrl('Shop.Cart.index'); ?>" class="be-d-inline-block be-lh-300 be-va-middle be-ml-100 be-mt-50">Return to cart</a>
                     </div>
 

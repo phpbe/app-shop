@@ -32,7 +32,7 @@
 
                 <div class="be-row">
                     <div class="be-col-24 be-md-col-11">
-                        <button type="submit" class="be-btn be-btn-main be-btn-lg be-mt-150 be-w-100">Login</button>
+                        <button type="submit" class="be-btn be-btn-major be-btn-lg be-mt-150 be-w-100">Login</button>
                     </div>
                     <div class="be-col-0 be-md-col-2">
                     </div>

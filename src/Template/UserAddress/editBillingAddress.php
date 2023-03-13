@@ -108,7 +108,7 @@
 
         <div class="be-row">
             <div class="be-col-24 be-md-col-11 be-lg-col-6 be-mt-150">
-                <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
+                <input type="submit" class="be-btn be-btn-major be-btn-lg be-w-100" value="Save">
             </div>
             <div class="be-col-0 be-md-col-2 be-lg-col-1"></div>
             <div class="be-col-24 be-md-col-11 be-lg-col-6 be-mt-150">

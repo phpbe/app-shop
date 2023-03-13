@@ -126,7 +126,7 @@
                         </div>
 
                         <div class="be-mt-200 be-ta-right">
-                            <input type="submit" class="be-btn be-btn-main be-btn-lg" value="Check out now" />
+                            <input type="submit" class="be-btn be-btn-major be-btn-lg" value="Check out now" />
                         </div>
                     </div>
                 </div>

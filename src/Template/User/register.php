@@ -46,7 +46,7 @@
 
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12">
-                        <button type="submit" class="be-btn be-btn-main be-btn-lg be-w-100">Create</button>
+                        <button type="submit" class="be-btn be-btn-major be-btn-lg be-w-100">Create</button>
                     </div>
                 </div>
 

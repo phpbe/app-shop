@@ -144,7 +144,7 @@ class PromotionCoupon extends PromotionDriver
 
             $template .= '<div class="be-col-auto">';
             $template .= '<div class="be-ta-center be-c-666">' . $promotionCoupon->code . '</div>';
-            $template .= '<div class="be-ta-center be-mt-50"><input type="button" class="be-btn be-btn-main be-btn-round be-btn-sm" value="APPLY"></div>';
+            $template .= '<div class="be-ta-center be-mt-50"><input type="button" class="be-btn be-btn-major be-btn-round be-btn-sm" value="APPLY"></div>';
             $template .= '</div>';
 
             $template .= '</div>';

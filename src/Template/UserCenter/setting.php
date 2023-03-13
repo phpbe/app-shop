@@ -50,7 +50,7 @@
 
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12 be-lg-col-6">
-                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-major be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
             </form>
@@ -74,7 +74,7 @@
                 </div>
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12 be-lg-col-6">
-                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-major be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
             </form>
@@ -102,7 +102,7 @@
 
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12 be-lg-col-6">
-                        <input type="submit" class="be-btn be-btn-main be-btn-lg be-w-100" value="Save">
+                        <input type="submit" class="be-btn be-btn-major be-btn-lg be-w-100" value="Save">
                     </div>
                 </div>
 
