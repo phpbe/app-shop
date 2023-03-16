@@ -52,11 +52,7 @@ class Payment
     public function getStorePayment(string $paymentId, string $paymentItemId = ''): object
     {
         $payment = $this->getPayment($paymentId);
-
-        if (Be::getTable('shop_payment')
-                ->where('payment_id', $paymentId)
-                ->where('is_enable', 1)
-                ->count() === 0) {
+        if ($payment->is_enable === 0) {
             throw new ServiceException('Current store does support payment (' . $payment->label . ') !');
         }
 
@@ -108,7 +104,7 @@ class Payment
     {
         $paymentIds = Be::getTable('shop_payment')
             ->where('is_enable', 1)
-            ->getValues('payment_id');
+            ->getValues('id');
 
         $payments = [];
         if ($paymentIds) {
@@ -156,7 +152,7 @@ class Payment
     {
         $paymentIds = Be::getTable('shop_payment')
             ->where('is_enable', 1)
-            ->getValues('payment_id');
+            ->getValues('id');
 
         $payments = [];
         if ($paymentIds) {
