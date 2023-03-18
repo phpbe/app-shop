@@ -241,9 +241,8 @@ class Product
                 throw new ServiceException('多款式数据缺失！');
             }
 
-            $styles = $data['styles'];
             $i = 1;
-            foreach ($styles as &$s) {
+            foreach ($data['styles'] as &$s) {
                 if (!isset($s['name']) || !$s['name']) {
                     throw new ServiceException('款式组 ' . $i . ' 的款式名称缺失！');
                 }

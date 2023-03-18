@@ -145,6 +145,7 @@ class ApiCollect
                     if (count($tmpItems) > 0) {
                         $styles[] = [
                             'name' => $styleName,
+                            'icon_type' => 'text',
                             'items' => $tmpItems,
                         ];
                     }
