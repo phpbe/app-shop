@@ -129,19 +129,23 @@ class ApiCollect
                     }
 
                     $styleValues = explode('|', $styleValue);
-                    $newStyleValues = [];
+
+                    $tmpItems = [];
                     foreach ($styleValues as $v) {
                         $v = trim($v);
                         if (!$v) {
                             continue;
                         }
-                        $newStyleValues[] = $v;
+
+                        $tmpItems[] = [
+                            'value' => $v
+                        ];
                     }
 
-                    if (count($newStyleValues) > 0) {
+                    if (count($tmpItems) > 0) {
                         $styles[] = [
                             'name' => $styleName,
-                            'values' => $newStyleValues,
+                            'items' => $tmpItems,
                         ];
                     }
                 }
@@ -155,20 +159,20 @@ class ApiCollect
                 foreach ($styles as $tmpStyle) {
                     $styleItemsCount = count($styleItems);
                     if ($styleItemsCount === 0) {
-                        foreach ($tmpStyle['values'] as $tmpStyleValue) {
+                        foreach ($tmpStyle['items'] as $tmpItem) {
                             $styleItems[] = [[
                                 'name' => $tmpStyle['name'],
-                                'value' => $tmpStyleValue,
+                                'value' => $tmpItem['value'],
                             ]];
                         }
                     } else {
                         $newStyleItems = [];
                         foreach ($styleItems as $styleItem) {
-                            foreach ($tmpStyle['values'] as $tmpStyleValue) {
+                            foreach ($tmpStyle['items'] as $tmpItem) {
                                 $tmpStyleItem = $styleItem;
                                 $tmpStyleItem[] = [
                                     'name' => $tmpStyle['name'],
-                                    'value' => $tmpStyleValue,
+                                    'value' => $tmpItem['value'],
                                 ];
 
                                 $newStyleItems[] = $tmpStyleItem;
