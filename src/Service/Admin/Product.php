@@ -65,6 +65,11 @@ class Product
         if (!isset($data['name']) || !is_string($data['name'])) {
             throw new ServiceException('商品名称未填写！');
         }
+        $data['name'] = trim($data['name']);
+        if ($data['name'] === '') {
+            throw new ServiceException('商品名称未填写！');
+        }
+
         $name = $data['name'];
 
         if (!isset($data['summary']) || !is_string($data['summary'])) {

@@ -116,8 +116,8 @@ class ApiCollect
             $data['name'] = $request->post('name', '');
             $data['summary'] = $request->post('summary', '');
             $data['description'] = $request->post('description', '', 'html');
-
             $data['spu'] = $request->post('spu', '');
+            $data['brand'] = $request->post('brand', '');
 
             $styles = [];
             if ($style && is_array($style) && count($style) > 0) {

@@ -94,6 +94,11 @@
                         "description" : "描述"
                     },
                     {
+                        "name" : "spu",
+                        "required" : 0,
+                        "description" : "SPU"
+                    },
+                    {
                         "name" : "images",
                         "required" : 0,
                         "description" : "主图网址，多个主图用 \"|\" 分隔开"
