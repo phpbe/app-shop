@@ -2,6 +2,7 @@
 
 namespace Be\App\Shop\Controller\Admin;
 
+use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemToggleIcon;
 use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
 use Be\AdminPlugin\Table\Item\TableItemImage;
@@ -26,6 +27,8 @@ class CollectProduct extends Auth
     public function products()
     {
         $configStore = Be::getConfig('App.Shop.Store');
+
+        $categoryKeyValues = Be::getService('App.Shop.Admin.Category')->getCategoryKeyValues();
 
         Be::getAdminPlugin('Curd')->setting([
             'label' => '采集的商品',
@@ -61,6 +64,25 @@ class CollectProduct extends Auth
 
                 'form' => [
                     'items' => [
+                        [
+                            'name' => 'category_id',
+                            'label' => '分类',
+                            'driver' => FormItemSelect::class,
+                            'keyValues' => $categoryKeyValues,
+                            'buildSql' => function ($dbName, $formData) {
+                                if (isset($formData['category_id']) && $formData['category_id']) {
+                                    $productIds = Be::getTable('shop_product_category', $dbName)
+                                        ->where('category_id', $formData['category_id'])
+                                        ->getValues('product_id');
+                                    if (count($productIds) > 0) {
+                                        return ['id', 'IN', $productIds];
+                                    } else {
+                                        return ['id', '=', ''];
+                                    }
+                                }
+                                return '';
+                            },
+                        ],
                         [
                             'name' => 'name',
                             'label' => '名称',
