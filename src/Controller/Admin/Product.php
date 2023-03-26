@@ -2,6 +2,7 @@
 
 namespace Be\App\Shop\Controller\Admin;
 
+use Be\AdminPlugin\Table\Item\TableItemCustom;
 use Be\AdminPlugin\Toolbar\Item\ToolbarItemDropDown;
 use Be\App\ControllerException;
 use Be\AdminPlugin\Table\Item\TableItemImage;
@@ -219,28 +220,32 @@ class Product extends Auth
                         ],
                         [
                             'name' => 'price_from',
-                            'label' => '单价（' . $configStore->currencySymbol . '）',
+                            'label' => '价格（' . $configStore->currencySymbol . '）',
                             'width' => '150',
                             'sortable' => true,
+                            'driver' => TableItemCustom::class,
                             'value' => function ($row) {
+
+                                $price = '';
                                 if ($row['price_from'] === $row['price_to']) {
-                                    return $row['price_from'];
+                                    $price = $row['price_from'];
                                 } else {
-                                    return $row['price_from'] . '~' . $row['price_to'];
+                                    $price = $row['price_from'] . '~' . $row['price_to'];
                                 }
-                            },
-                        ],
-                        [
-                            'name' => 'original_price_from',
-                            'label' => '原价（' . $configStore->currencySymbol . '）',
-                            'width' => '150',
-                            'sortable' => true,
-                            'value' => function ($row) {
+
+                                $originalPrice= '';
                                 if ($row['original_price_from'] === $row['original_price_to']) {
-                                    return $row['original_price_from'];
+                                    $originalPrice = $row['original_price_from'];
                                 } else {
-                                    return $row['original_price_from'] . '~' . $row['original_price_to'];
+                                    $originalPrice = $row['original_price_from'] . '~' . $row['original_price_to'];
                                 }
+
+                                if ($originalPrice !== '' && $price !== $originalPrice) {
+                                    $price .= '<br>';
+                                    $price .= '<span style="text-decoration:line-through;">' . $originalPrice . '</span>';
+                                }
+
+                                return $price;
                             },
                         ],
                         [
@@ -266,6 +271,12 @@ class Product extends Auth
                             'name' => 'ordering',
                             'label' => '排序',
                             'width' => '120',
+                            'sortable' => true,
+                        ],
+                        [
+                            'name' => 'update_time',
+                            'label' => '更新时间',
+                            'width' => '180',
                             'sortable' => true,
                         ],
                         [
