@@ -2,7 +2,7 @@
 namespace Be\App\Shop\Config;
 
 /**
- * @BeConfig("API接口")
+ * @--BeConfig("API接口")
  */
 class Api
 {

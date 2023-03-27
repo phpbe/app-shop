@@ -75,32 +75,32 @@
                 tableData: [
                     {
                         "name" : "unique_key",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->uniqueKeyRequired; ?>,
                         "description" : "唯一值，有传值时可用于去重，可取采集的网址，标题、SKU等，未传值时不校验是否复复导入，200个字符以内"
                     },
                     {
                         "name" : "name",
-                        "required" : 1,
+                        "required" : <?php echo $this->config->nameRequired; ?>,
                         "description" : "商品名称，200个字符以内"
                     },
                     {
                         "name" : "summary",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->summaryRequired; ?>,
                         "description" : "摘要，500个字符以内"
                     },
                     {
                         "name" : "description",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->descriptionRequired; ?>,
                         "description" : "描述"
                     },
                     {
                         "name" : "spu",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->spuRequired; ?>,
                         "description" : "SPU"
                     },
                     {
                         "name" : "images",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->imagesRequired; ?>,
                         "description" : "主图网址，多个主图用 \"|\" 分隔开"
                     },
                     {
@@ -115,7 +115,7 @@
                     },
                     {
                         "name" : "brand",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->brandRequired; ?>,
                         "description" : "品牌，60个字符以内"
                     },
                     {
@@ -160,7 +160,7 @@
                     },
                     {
                         "name" : "price",
-                        "required" : 0,
+                        "required" : <?php echo $this->config->priceRequired; ?>,
                         "description" : "价格，2位小数，例：123.45，默认值：0.00"
                     },
                     {

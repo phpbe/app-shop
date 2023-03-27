@@ -38,6 +38,9 @@ class ApiCollect
             }
 
             $uniqueKey = $request->post('unique_key', '');
+            if ($collectProductApiConfig->uniqueKeyRequired && $uniqueKey === '') {
+                throw new ServiceException('唯一值（unique_key）为必填项！');
+            }
 
             $data = [];
 
@@ -114,12 +117,37 @@ class ApiCollect
             $data['collect_product_id'] = $tupleCollectProduct->id;
 
             $data['name'] = $request->post('name', '');
+            if ($collectProductApiConfig->nameRequired && $data['name'] === '') {
+                throw new ServiceException('名称（name）为必填项！');
+            }
+
             $data['summary'] = $request->post('summary', '');
+            if ($collectProductApiConfig->summaryRequired && $data['summary'] === '') {
+                throw new ServiceException('摘要（summary）为必填项！');
+            }
+
             $data['description'] = $request->post('description', '', 'html');
+            if ($collectProductApiConfig->descriptionRequired && $data['description'] === '') {
+                throw new ServiceException('描述（description）为必填项！');
+            }
+
             $data['spu'] = $request->post('spu', '');
+            if ($collectProductApiConfig->spuRequired && $data['spu'] === '') {
+                throw new ServiceException('SPU（spu）为必填项！');
+            }
+
             $data['brand'] = $request->post('brand', '');
+            if ($collectProductApiConfig->brandRequired && !$data['brand']) {
+                throw new ServiceException('品牌（brand）为必填项！');
+            }
+
             if (is_array($data['brand'])) {
                 $data['brand'] = implode('', $data['brand']);
+            }
+
+            $price = $request->post('price', '');
+            if ($collectProductApiConfig->priceRequired && $price === '') {
+                throw new ServiceException('单价（price）为必填项！');
             }
 
             $styles = [];
@@ -226,6 +254,10 @@ class ApiCollect
             }
 
             $images = $request->post('images', '');
+            if ($collectProductApiConfig->imagesRequired && $images === '') {
+                throw new ServiceException('主图（images）为必填项！');
+            }
+
             if ($images) {
                 $images = explode('|', $images);
                 $imagesData = [];
