@@ -207,10 +207,11 @@ class Product extends Auth
                         [
                             'name' => 'name',
                             'label' => '商品名称',
-                            'driver' => TableItemLink::class,
+                            'driver' => TableItemCustom::class,
                             'align' => 'left',
-                            'url' => beAdminUrl('Shop.Product.edit'),
-                            'target' => 'self',
+                            'value' => function($row) {
+                                return '<a class="el-link el-link--primary is-underline" href="' . beAdminUrl('Shop.Product.edit', ['id' => $row['id']]) .'">' . $row['name'] . '</a>';
+                            }
                         ],
                         [
                             'name' => 'spu',
