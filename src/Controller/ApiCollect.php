@@ -127,7 +127,7 @@ class ApiCollect
                 foreach ($style as $styleName => $styleValue) {
                     $styleName = trim($styleName);
                     $styleValue = trim($styleValue);
-                    if (!$styleName | !$styleValue) {
+                    if (!$styleName || !$styleValue) {
                         continue;
                     }
 
