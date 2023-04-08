@@ -8,6 +8,14 @@ class Es
 {
 
     /**
+     * @BeConfigItem("是否启用ES搜索引擎",
+     *     description="启用后，商品变更将同步到ES搜索引擎，检索相关的功能将由ES接管",
+     *     driver="FormItemSwitch"
+     * )
+     */
+    public int $enable = 0;
+
+    /**
      * @BeConfigItem("商品索引", driver="FormItemInput")
      */
     public string $indexProduct = 'shop.product';

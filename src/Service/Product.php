@@ -346,11 +346,11 @@ class Product
     public function search(string $keywords, array $params = [], array $with = []): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return $this->searchFromDb($keywords, $params, $with);
         }
 
-        $config = Be::getConfig('App.Shop.Es');
         $cache = Be::getCache();
         $es = Be::getEs();
 
@@ -360,7 +360,7 @@ class Product
             $counterKey = 'Shop:ProductSearchHistory';
             $counter = (int)$cache->get($counterKey);
             $query = [
-                'index' => $config->indexProductSearchHistory,
+                'index' => $configEs->indexProductSearchHistory,
                 'id' => $counter,
                 'body' => [
                     'keyword' => $keywords,
@@ -378,7 +378,7 @@ class Product
         }
 
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'query' => [
                     'bool' => [
@@ -786,13 +786,13 @@ class Product
     public function getSimilarProducts(string $productId, string $productName, int $n = 12): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return $this->getSimilarProductsFromDb($productId, $productName, $n);
         }
 
-        $config = Be::getConfig('App.Shop.Es');
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -871,13 +871,13 @@ class Product
     public function getTopProducts(int $n, string $orderBy, string $orderByDir = 'desc'): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return $this->getTopProductsFromDb($n, $orderBy, $orderByDir);
         }
 
-        $config = Be::getConfig('App.Shop.Es');
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -981,11 +981,10 @@ class Product
     public function getTopSearchProducts(int $n = 10): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return [];
         }
-
-        $config = Be::getConfig('App.Shop.Es');
 
         $keywords = $this->getTopSearchKeywords(5);
         if (!$keywords) {
@@ -993,7 +992,7 @@ class Product
         }
 
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -1046,12 +1045,12 @@ class Product
     public function getGuessYouLikeProducts(int $n = 40, string $excludeProductId = null): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return [];
         }
 
         $my = Be::getUser();
-        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $cache = Be::getCache();
 
@@ -1072,7 +1071,7 @@ class Product
         }
 
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -1131,7 +1130,8 @@ class Product
     public function getCategoryTopSearchProducts(string $categoryId, int $n = 10): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return [];
         }
 
@@ -1143,9 +1143,8 @@ class Product
             return [];
         }
 
-        $config = Be::getConfig('App.Shop.Es');
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -1215,12 +1214,12 @@ class Product
     public function getCategoryGuessYouLikeProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return [];
         }
 
         $my = Be::getUser();
-        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $cache = Be::getCache();
 
@@ -1241,7 +1240,7 @@ class Product
         }
 
         $query = [
-            'index' => $config->indexProduct,
+            'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
                 'query' => [
@@ -1375,14 +1374,14 @@ class Product
     public function getTopSearchKeywords(int $n = 6): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
-        if ($configSystemEs->enable === 0) {
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return [];
         }
 
-        $config = Be::getConfig('App.Shop.Es');
         $es = Be::getEs();
         $query = [
-            'index' => $config->indexProductSearchHistory,
+            'index' => $configEs->indexProductSearchHistory,
             'body' => [
                 'size' => 0,
                 'query' => [

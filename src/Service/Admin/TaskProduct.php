@@ -25,7 +25,11 @@ class TaskProduct
     {
         if (count($products) === 0) return;
 
-        $config = Be::getConfig('App.Shop.Es');
+        $configSystemEs = Be::getConfig('App.System.Es');
+        $configEs = Be::getConfig('App.Shop.Es');
+        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
+            return;
+        }
 
         $db = Be::getDb();
 
@@ -40,7 +44,7 @@ class TaskProduct
 
             $batch[] = [
                 'index' => [
-                    '_index' => $config->indexProduct,
+                    '_index' => $configEs->indexProduct,
                     '_id' => $product->id,
                 ]
             ];
