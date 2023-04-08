@@ -113,11 +113,14 @@ class TaskProduct
                     $item->weight = (float)$item->weight;
                     $item->stock = (int)$item->stock;
 
-                    $sql = 'SELECT url FROM shop_product_image WHERE is_main=1 AND product_id = ? AND product_item_id = ?';
-                    $item->image = $db->getValue($sql, [$product->id, $item->id]);
-                    if (!$item->image) {
-                        $item->image = '';
+                    $sql = 'SELECT id,url,is_main,ordering FROM shop_product_image WHERE is_main = 1 AND  product_id = ? AND product_item_id = ? ORDER BY ordering ASC';
+                    $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
+                    foreach ($itemImages as &$itemImage) {
+                        $itemImage->is_main = $itemImage->is_main ? true : false;
+                        $itemImage->ordering = (int)$itemImage->ordering;
                     }
+                    unset($itemImage);
+                    $item->images = $itemImages;
                 }
                 unset($item);
 
