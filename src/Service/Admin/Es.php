@@ -279,6 +279,10 @@ class Es
                                 'stock' => [
                                     'type' => 'integer'
                                 ],
+                                'image' => [
+                                    'type' => 'keyword'
+                                ],
+                                /*
                                 'images' => [
                                     'type' => 'nested',
                                     'properties' => [
@@ -293,6 +297,7 @@ class Es
                                         ]
                                     ]
                                 ],
+                                */
                             ]
                         ]
                     ]
