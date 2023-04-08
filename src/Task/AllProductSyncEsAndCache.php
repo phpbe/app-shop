@@ -7,7 +7,7 @@ use Be\Task\Task;
 /**
  * 商品全量量同步到ES和缓存
  *
- * @BeTask("商品全量量同步到ES和缓存")
+ * @BeTask("商品全量同步到ES和缓存")
  */
 class AllProductSyncEsAndCache extends Task
 {

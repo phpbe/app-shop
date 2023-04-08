@@ -26,8 +26,6 @@ class Section
         $html = '';
         $html .= '<style type="text/css">';
 
-        $html .= Be::getService('App.Shop.Ui')->getProductGlobalCss();
-
         $html .= $section->getCssBackgroundColor($class);
         $html .= $section->getCssPadding($class);
         $html .= $section->getCssMargin($class);
@@ -300,8 +298,6 @@ class Section
 
         $html = '';
         $html .= '<style type="text/css">';
-
-        $html .= Be::getService('App.Shop.Ui')->getProductGlobalCss();
 
         $html .= $section->getCssBackgroundColor($class);
         $html .= $section->getCssPadding($class);

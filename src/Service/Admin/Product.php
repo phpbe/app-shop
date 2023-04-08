@@ -42,6 +42,7 @@ class Product
             $data['spu'] = '';
         }
 
+        /*
         if ($data['spu'] !== '') {
             $exist = null;
             if ($isNew) {
@@ -61,6 +62,7 @@ class Product
                 throw new ServiceException('SPU（' . $data['spu'] . '）已存在！');
             }
         }
+        */
 
         if (!isset($data['name']) || !is_string($data['name'])) {
             throw new ServiceException('商品名称未填写！');
