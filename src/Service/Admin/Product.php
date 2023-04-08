@@ -42,27 +42,29 @@ class Product
             $data['spu'] = '';
         }
 
-        /*
-        if ($data['spu'] !== '') {
-            $exist = null;
-            if ($isNew) {
-                $exist = Be::getTable('shop_product')
-                        ->where('is_delete', 0)
-                        ->where('spu', $data['spu'])
-                        ->getValue('COUNT(*)') > 0;
-            } else {
-                $exist = Be::getTable('shop_product')
-                        ->where('is_delete', 0)
-                        ->where('spu', $data['spu'])
-                        ->where('id', '!=', $productId)
-                        ->getValue('COUNT(*)') > 0;
-            }
 
-            if ($exist) {
-                throw new ServiceException('SPU（' . $data['spu'] . '）已存在！');
+        $configProduct = Be::getConfig('App.Shop.Product');
+        if ($data['spu'] !== '') {
+            if ($configProduct->spuUnique === 1) {
+                $exist = null;
+                if ($isNew) {
+                    $exist = Be::getTable('shop_product')
+                            ->where('is_delete', 0)
+                            ->where('spu', $data['spu'])
+                            ->getValue('COUNT(*)') > 0;
+                } else {
+                    $exist = Be::getTable('shop_product')
+                            ->where('is_delete', 0)
+                            ->where('spu', $data['spu'])
+                            ->where('id', '!=', $productId)
+                            ->getValue('COUNT(*)') > 0;
+                }
+
+                if ($exist) {
+                    throw new ServiceException('SPU（' . $data['spu'] . '）已存在！');
+                }
             }
         }
-        */
 
         if (!isset($data['name']) || !is_string($data['name'])) {
             throw new ServiceException('商品名称未填写！');

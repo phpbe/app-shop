@@ -12,10 +12,19 @@ class Product
      */
     public string $urlPrefix = '/products/';
 
-
     /**
      * @BeConfigItem("网址后缀（如.html）", driver="FormItemInput")
      */
     public string $urlSuffix = '';
+
+    /**
+     * @BeConfigItem("SPU唯一", driver="FormItemSwitch")
+     */
+    public int $spuUnique = 0;
+
+    /**
+     * @BeConfigItem("SKU唯一", driver="FormItemSwitch")
+     */
+    public int $skuUnique = 0;
 
 }
