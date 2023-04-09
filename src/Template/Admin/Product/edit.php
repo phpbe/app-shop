@@ -4,7 +4,8 @@
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/sortable/sortable.min.js"></script>
     <script src="<?php echo $wwwUrl; ?>/lib/vuedraggable/vuedraggable.umd.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/product/css/edit.css" />
+    <script src="<?php echo $wwwUrl; ?>/admin/js/pinyin.js"></script>
+    <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/css/product/edit.css" />
 </be-head>
 
 
@@ -19,7 +20,8 @@
             <div class="be-col-auto">
                 <div style="padding: .75rem 2rem 0 0;">
                     <el-button size="medium" :disabled="loading" @click="vueCenter.cancel();">取消</el-button>
-                    <el-button size="medium" type="primary" :disabled="loading" @click="vueCenter.save();">保存</el-button>
+                    <el-button type="success" size="medium" :disabled="loading" @click="vueCenter.save('stay');">仅保存</el-button>
+                    <el-button type="primary" size="medium" :disabled="loading" @click="vueCenter.save('');">保存并返回</el-button>
                 </div>
             </div>
         </div>
@@ -276,7 +278,7 @@
                             </div>
                         </div>
 
-                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configProduct->urlPrefix; ?>/{{formData.url}}<?php echo $this->configProduct->urlSuffix; ?></div>
+                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl . $this->configProduct->urlPrefix; ?>{{formData.url}}<?php echo $this->configProduct->urlSuffix; ?></div>
                         <div class="be-mt-100">{{formData.seo_title}}</div>
                         <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
 
@@ -1092,7 +1094,7 @@
                         maxlength="200"
                         show-word-limit
                         :disabled="formData.url_custom === 0">
-                    <template slot="prepend"><?php echo $rootUrl; ?>/<?php echo $this->configProduct->urlPrefix; ?>/</template>
+                    <template slot="prepend"><?php echo $rootUrl . $this->configProduct->urlPrefix; ?></template>
                     <?php if ($this->configProduct->urlSuffix) { ?>
                         <template slot="append"><?php echo $this->configProduct->urlSuffix; ?></template>
                     <?php } ?>
@@ -1202,7 +1204,7 @@
                 ?>
             },
             methods: {
-                save: function () {
+                save: function (command) {
                     let _this = this;
                     this.$refs["formRef"].validate(function (valid) {
                         if (valid) {
@@ -1218,10 +1220,15 @@
                                     var responseData = response.data;
                                     if (responseData.success) {
                                         _this.$message.success(responseData.message);
-                                        setTimeout(function () {
-                                            window.onbeforeunload = null;
-                                            window.location.href = responseData.redirectUrl;
-                                        }, 1000);
+
+                                        if (command === 'stay') {
+                                            _this.formData.id = responseData.product.id;
+                                        } else {
+                                            setTimeout(function () {
+                                                window.onbeforeunload = null;
+                                                window.location.href = responseData.redirectUrl;
+                                            }, 1000);
+                                        }
                                     } else {
                                         if (responseData.message) {
                                             _this.$message.error(responseData.message);
@@ -1310,6 +1317,17 @@
 
                         while (url.indexOf('--') >= 0) {
                             url = url.replace('--', '-');
+                        }
+
+                        if (this.formData.name.length > 0 && (url === '' || url === '-')) {
+                            url = this.formData.name.toLowerCase();
+                            url = Pinyin.convert(url, "-");
+                            if (url.length > 150) {
+                                url = Pinyin.convert(title, "-", true);
+                                if (url.length > 150) {
+                                    url = Pinyin.convert(title, "", true);
+                                }
+                            }
                         }
 
                         this.formData.url = url;

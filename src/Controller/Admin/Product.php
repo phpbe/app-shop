@@ -370,9 +370,10 @@ class Product extends Auth
 
         if ($request->isAjax()) {
             try {
-                Be::getService('App.Shop.Admin.Product')->edit($request->json('formData'));
+                $product = Be::getService('App.Shop.Admin.Product')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '新建商品成功！');
+                $response->set('product', $product);
                 $response->set('redirectUrl', beAdminUrl('Shop.Product.products'));
                 $response->json();
             } catch (\Throwable $t) {
@@ -413,9 +414,10 @@ class Product extends Auth
         $response = Be::getResponse();
         if ($request->isAjax()) {
             try {
-                Be::getService('App.Shop.Admin.Product')->edit($request->json('formData'));
+                $product = Be::getService('App.Shop.Admin.Product')->edit($request->json('formData'));
                 $response->set('success', true);
                 $response->set('message', '编辑商品成功！');
+                $response->set('product', $product);
                 $response->set('redirectUrl', beAdminUrl('Shop.Product.products'));
                 $response->json();
             } catch (\Throwable $t) {

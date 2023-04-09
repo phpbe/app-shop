@@ -3,7 +3,7 @@
     $wwwUrl = \Be\Be::getProperty('App.Shop')->getWwwUrl();
     ?>
     <script src="<?php echo $wwwUrl; ?>/lib/echarts/5.3.2/echarts.min.js"></script>
-    <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/statistic-sales/css/conversion-rate.css" />
+    <link type="text/css" rel="stylesheet" href="<?php echo $wwwUrl; ?>/admin/css/statistic-sales/conversion-rate.css" />
 </be-head>
 
 

@@ -6,7 +6,6 @@ use Be\AdminPlugin\Form\Item\FormItemSelect;
 use Be\AdminPlugin\Table\Item\TableItemImage;
 use Be\App\ServiceException;
 use Be\Be;
-use Be\Db\Tuple;
 
 class Product
 {
@@ -15,10 +14,10 @@ class Product
      * 编辑商品
      *
      * @param array $data 商品数据
-     * @return Tuple
+     * @return object
      * @throws \Throwable
      */
-    public function edit(array $data): Tuple
+    public function edit(array $data): object
     {
         $db = Be::getDb();
 
@@ -1115,7 +1114,7 @@ class Product
             throw new ServiceException(($isNew ? '新建' : '编辑') . '商品发生异常！');
         }
 
-        return $tupleProduct;
+        return $tupleProduct->toObject();
     }
 
     /**

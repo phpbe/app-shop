@@ -13,6 +13,7 @@ class Product
      * 从REDIS 获取商品数据
      *
      * @param string $productId 商品ID
+     * @param array $with 跟随返回数据
      * @return object
      * @throws ServiceException|\Be\Runtime\RuntimeException
      */
@@ -24,21 +25,158 @@ class Product
         } else {
             $cache = Be::getCache();
             $product = $cache->get($key);
+            if ($product === false) {
+                try {
+                    $product = $this->getProductFromDb($productId);
+                } catch (\Throwable $t) {
+                    $product = '-1';
+                }
 
-            if (!$product) {
-                //throw new ServiceException('Product #' . $productId . ' does not exists！');
+                $configCache = Be::getConfig('App.Shop.Cache');
+                $cache->set($key, $product, $configCache->product);
             }
 
             Be::setContext($key, $product);
         }
 
-        if ($product) {
-            $product = $this->formatProduct($product, $with);
+        if ($product === '-1') {
+            throw new ServiceException('Product #' . $productId . ' does not exists！');
         }
+
+        $product = $this->formatProduct($product, $with);
 
         return $product;
     }
 
+    /**
+     * 获取文章
+     *
+     * @param string $productId 商品ID
+     * @param array $with 跟随返回数据
+     * @return object 文章对象
+     * @throws ServiceException
+     */
+    public function getProductFromDb(string $productId, array $with = []): object
+    {
+        $db = Be::getDb();
+
+        $sql = 'SELECT * FROM `shop_product` WHERE id=?';
+        $product = $db->getObject($sql, [$productId]);
+        if (!$product) {
+            throw new ServiceException('Product #' . $productId . ' does not exists！');
+        }
+
+        $product->is_enable = (int)$product->is_enable;
+        $product->is_delete = (int)$product->is_delete;
+
+        if ($product->is_enable !== 1 || $product->is_delete !== 0) {
+            throw new ServiceException('Product #' . $productId . ' does not exists！');
+        }
+
+        $product->url_custom = (int)$product->url_custom;
+        $product->seo_title_custom = (int)$product->seo_title_custom;
+        $product->seo_description_custom = (int)$product->seo_description_custom;
+        $product->style = (int)$product->style;
+        $product->stock_tracking = (int)$product->stock_tracking;
+        $product->stock_out_action = (int)$product->stock_out_action;
+        $product->ordering = (int)$product->ordering;
+        $product->hits = (int)$product->hits;
+        $product->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;
+        $product->rating_sum = (int)$product->rating_sum;
+        $product->rating_count = (int)$product->rating_count;
+        $product->is_enable = (int)$product->is_enable;
+
+        if ($product->relate_id !== '') {
+            $sql = 'SELECT * FROM shop_product_relate WHERE id = ?';
+            $relate = $db->getObject($sql, [$product->relate_id]);
+
+            $sql = 'SELECT * FROM shop_product_relate_item WHERE relate_id = ? ORDER BY ordering ASC';
+            $relateItems = $db->getObjects($sql, [$product->relate_id]);
+            foreach ($relateItems as &$relateItem) {
+                $sql = 'SELECT `name` FROM shop_product WHERE id = ?';
+                $relateItem->product_name = $db->getValue($sql, [$relateItem->product_id]);
+            }
+            unset($relateItem);
+
+            $relate->items = $relateItems;
+
+            $product->relate = $relate;
+        }
+
+        $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
+        $images = $db->getObjects($sql, [$product->id]);
+        foreach ($images as $image) {
+            $image->is_main = (int)$image->is_main;
+            $image->ordering = (int)$image->ordering;
+        }
+        $product->images = $images;
+
+        $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
+        $categoryIds = $db->getValues($sql, [$product->id]);
+        if (count($categoryIds) > 0) {
+            $product->category_ids = $categoryIds;
+
+            $sql = 'SELECT * FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
+            $categories = $db->getObjects($sql);
+            foreach ($categories as &$category) {
+                $category->url_custom = (int)$category->url_custom;
+                $category->seo_title_custom = (int)$category->seo_title_custom;
+                $category->seo_description_custom = (int)$category->seo_description_custom;
+                $category->ordering = (int)$category->ordering;
+                $category->is_enable = (int)$category->is_enable;
+                $category->is_delete = (int)$category->is_delete;
+            }
+
+            unset($category);
+            $product->categories = $categories;
+        } else {
+            $product->category_ids = [];
+            $product->categories = [];
+        }
+
+        $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
+        $product->tags = $db->getValues($sql, [$product->id]);
+
+        $sql = 'SELECT * FROM shop_product_style WHERE product_id = ?';
+        $styles = $db->getObjects($sql, [$product->id]);
+
+        foreach ($styles as &$style) {
+            $sql = 'SELECT * FROM shop_product_style_item WHERE product_style_id = ? ORDER BY ordering ASC';
+            $styleItems = $db->getObjects($sql, [$style->id]);
+            $style->items = $styleItems;
+        }
+        unset($style);
+
+        $product->styles = $styles;
+
+        $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';
+        $items = $db->getObjects($sql, [$product->id]);
+        foreach ($items as $item) {
+
+            $styleJson = null;
+            if ($item->style_json) {
+                $styleJson = json_decode($item->style_json, true);
+            }
+            if (!$styleJson) {
+                $styleJson = [];
+            }
+            $item->style_json = $styleJson;
+
+            $item->stock = (int)$item->stock;
+
+            $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';
+            $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
+            foreach ($itemImages as &$itemImage) {
+                $itemImage->is_main = (int)$itemImage->is_main;
+                $itemImage->ordering = (int)$itemImage->ordering;
+            }
+            unset($itemImage);
+            $item->images = $itemImages;
+        }
+        $product->items = $items;
+
+        return $product;
+    }
 
     /**
      * 从REDIS 获取多个商品数据
@@ -49,6 +187,7 @@ class Product
      */
     public function getProducts(array $productIds = [], array $with = []): array
     {
+        $configCache = Be::getConfig('App.Shop.Cache');
         $cache = Be::getCache();
 
         $keys = [];
@@ -58,21 +197,54 @@ class Product
 
         $products = $cache->getMany($keys);
 
-        $decodedProducts = [];
-        $i = 0;
+        $noProducts = true;
         foreach ($products as $product) {
-            if (!$product) {
-                throw new ServiceException('Product #' . $keys[$i] . ' does not exists！');
+            if ($product) {
+                $noProducts = false;
             }
-
-            $product = $this->formatProduct($product, $with);
-
-            $decodedProducts[] = $product;
-
-            $i++;
         }
 
-        return $decodedProducts;
+        if ($noProducts) {
+
+            $newProducts = [];
+            foreach ($productIds as $productId) {
+
+                $key = 'Shop:Product:' . $productId;
+                try {
+                    $product = $this->getProductFromDb($productId);
+                } catch (\Throwable $t) {
+                    $product = '-1';
+                }
+
+                $cache->set($key, $product, $configCache->product);
+
+                if ($product === '-1') {
+                    throw new ServiceException('Product #' . $productId . ' does not exists！');
+                }
+
+                $product = $this->formatProduct($product, $with);
+
+                $newProducts[] = $product;
+            }
+
+        } else {
+
+            $newProducts = [];
+            $i = 0;
+            foreach ($products as $product) {
+                if ($product === false || $product === '-1') {
+                    throw new ServiceException('Product #' . $productIds[$i] . ' does not exists！');
+                }
+
+                $product = $this->formatProduct($product, $with);
+
+                $newProducts[] = $product;
+
+                $i++;
+            }
+        }
+
+        return $newProducts;
     }
 
     /**
@@ -791,6 +963,13 @@ class Product
             return $this->getSimilarProductsFromDb($productId, $productName, $n);
         }
 
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:SimilarProducts:' . $productId . ':' . $n;
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
@@ -831,12 +1010,15 @@ class Product
             return [];
         }
 
-        $return = [];
+        $result = [];
         foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
+            $result[] = $this->formatEsProduct($x['_source']);
         }
 
-        return $return;
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $result, $configCache->products);
+
+        return $result;
     }
 
     /**
@@ -849,14 +1031,32 @@ class Product
      */
     public function getSimilarProductsFromDb(string $productId, string $productName, int $n = 12): array
     {
-        $productIds = Be::getTable('shop_product')
-            ->where('is_enable', 1)
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:SimilarProductsFromDb:' . $productId . ':' . $n;
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
+        $tableProduct = Be::getTable('shop_product');
+        $tableProduct->where('is_enable', 1)
             ->where('is_delete', 0)
-            ->where('name', 'like', '%' . $productName . '%')
-            ->where('id', '<>', $productId)
-            ->limit($n)
-            ->getValues('id');
-        return $this->getProducts($productIds);
+            ->where('id', '!=', $productId);
+
+        if ($productName !== '') {
+            $tableProduct->where('name', 'like', '%' . $productName . '%');
+        }
+
+        $tableProduct->limit($n);
+
+        $productIds = $tableProduct->getValues('id');
+
+        $result = $this->getProducts($productIds);
+
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $result, $configCache->products);
+
+        return $result;
     }
 
     /**
@@ -874,6 +1074,13 @@ class Product
         $configEs = Be::getConfig('App.Shop.Es');
         if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
             return $this->getTopProductsFromDb($n, $orderBy, $orderByDir);
+        }
+
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:TopProducts:' . $n . ':' . $orderBy . ':' . $orderByDir;
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
         }
 
         $query = [
@@ -907,14 +1114,15 @@ class Product
         $es = Be::getEs();
         $results = $es->search($query);
 
-        if (!isset($results['hits']['hits'])) {
-            return [];
+        $return = [];
+        if (isset($results['hits']['hits'])) {
+            foreach ($results['hits']['hits'] as $x) {
+                $return[] = $this->formatEsProduct($x['_source']);
+            }
         }
 
-        $return = [];
-        foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
-        }
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $return, $configCache->products);
 
         return $return;
     }
@@ -930,13 +1138,25 @@ class Product
      */
     public function getTopProductsFromDb(int $n, string $orderBy, string $orderByDir = 'desc'): array
     {
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:TopProductsFromDb:' . $n . ':' . $orderBy . ':' . $orderByDir;
+        $result = $cache->get($cacheKey);
+        if ($result !== false) {
+            return $result;
+        }
+
         $productIds = Be::getTable('shop_product')
             ->where('is_enable', 1)
             ->where('is_delete', 0)
             ->orderBy($orderBy, $orderByDir)
             ->limit($n)
             ->getValues('id');
-        return $this->getProducts($productIds);
+        $result = $this->getProducts($productIds);
+
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $result, $configCache->products);
+
+        return $result;
     }
 
     /**
@@ -991,6 +1211,13 @@ class Product
             return [];
         }
 
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:TopSearchProducts:' . $n;
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
@@ -1022,14 +1249,15 @@ class Product
         $es = Be::getEs();
         $results = $es->search($query);
 
-        if (!isset($results['hits']['hits'])) {
-            return [];
+        $return = [];
+        if (isset($results['hits']['hits'])) {
+            foreach ($results['hits']['hits'] as $x) {
+                $return[] = $this->formatEsProduct($x['_source']);
+            }
         }
 
-        $return = [];
-        foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
-        }
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $return, $configCache->products);
 
         return $return;
     }
@@ -1135,12 +1363,21 @@ class Product
             return [];
         }
 
+        /*
         $subCategoryIds = Be::getService('App.Shop.Category')->getSubCategoryIds($categoryId);
         if (!$subCategoryIds) return [];
+        */
 
         $keywords = $this->getTopSearchKeywords(10);
         if (!$keywords) {
             return [];
+        }
+
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:CategoryTopSearchProducts:' . $categoryId . ':' . $n;
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
         }
 
         $query = [
@@ -1190,14 +1427,15 @@ class Product
         $es = Be::getEs();
         $results = $es->search($query);
 
-        if (!isset($results['hits']['hits'])) {
-            return [];
+        $return = [];
+        if (isset($results['hits']['hits'])) {
+            foreach ($results['hits']['hits'] as $x) {
+                $return[] = $this->formatEsProduct($x['_source']);
+            }
         }
 
-        $return = [];
-        foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
-        }
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $return, $configCache->products);
 
         return $return;
     }
@@ -1379,6 +1617,13 @@ class Product
             return [];
         }
 
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:TopSearchKeywords';
+        $topSearchKeywords = $cache->get($cacheKey);
+        if ($topSearchKeywords) {
+            return $topSearchKeywords;
+        }
+        
         $es = Be::getEs();
         $query = [
             'index' => $configEs->indexProductSearchHistory,
@@ -1413,6 +1658,10 @@ class Product
                 $hotKeywords[] = $v['key'];
             }
         }
+
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $hotKeywords, $configCache->topKeywords);
+
         return $hotKeywords;
     }
 
@@ -1437,7 +1686,45 @@ class Product
         }
 
         return [$config->urlPrefix . $product->url . $config->urlSuffix, $params1, $params];
+    }
 
+    /**
+     * 获取标签
+     *
+     * @param int $n
+     * @return array
+     */
+    public function getTopTags(int $n): array
+    {
+        $cache = Be::getCache();
+
+        $key = 'Shop:TopTags:' . $n;
+        $tags = $cache->get($key);
+        if ($tags === false) {
+            try {
+                $tags = $this->getTopTagsFromDb($n);
+            } catch (\Throwable $t) {
+                $tags = [];
+            }
+
+            $configCache = Be::getConfig('App.Shop.Cache');
+            $cache->set($key, $tags, $configCache->tag);
+        }
+
+        return $tags;
+    }
+
+    /**
+     * 从数据库获取标签
+     *
+     * @param int $n
+     * @return array
+     */
+    public function getTopTagsFromDb(int $n): array
+    {
+        $db = Be::getDb();
+        $sql = 'SELECT tag FROM (SELECT tag, COUNT(*) AS cnt FROM `shop_product_tag` GROUP BY tag) t ORDER BY cnt DESC LIMIT ' . $n;
+        return $db->getValues($sql);
     }
 
 }
