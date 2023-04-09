@@ -252,10 +252,11 @@ class Product extends Auth
                         [
                             'name' => 'stock',
                             'label' => '库存',
-                            'width' => '160',
+                            'width' => '120',
+                            'driver' => TableItemCustom::class,
                             'value' => function ($row) {
                                 if ($row['stock_tracking'] === '0') {
-                                    return '未跟踪库存';
+                                    return '未跟踪';
                                 } else {
                                     if ($row['style'] === '1') {
                                         $sql = 'SELECT SUM(stock) AS total, COUNT(*) AS n FROM shop_product_item WHERE product_id = ?';
@@ -263,7 +264,7 @@ class Product extends Auth
                                     } else {
                                         $sql = 'SELECT SUM(stock) AS total, COUNT(*) AS n FROM shop_product_item WHERE product_id = ?';
                                         $result = Be::getDb()->getArray($sql, [$row['id']]);
-                                        return $result['n'] . '款，共 ' . $result['total'] . ' 件';
+                                        return $result['n'] . ' 款<br>>共 ' . $result['total'] . ' 件';
                                     }
                                 }
                             },
