@@ -21,11 +21,6 @@ class Es
                          'value' => $configEs->indexProduct,
                      ],
                      [
-                         'name' => 'productHistory',
-                         'label' => '商品访问记录索引',
-                         'value' => $configEs->indexProductHistory,
-                     ],
-                     [
                          'name' => 'productSearchHistory',
                          'label' => '商品搜索记录索引',
                          'value' => $configEs->indexProductSearchHistory,
@@ -299,15 +294,6 @@ class Es
                 ];
                 break;
 
-            case 'productHistory':
-                $mapping = [
-                    'properties' => [
-                        'keyword' => [
-                            'type' => 'keyword',
-                        ],
-                    ]
-                ];
-                break;
             case 'productSearchHistory':
                 $mapping = [
                     'properties' => [
