@@ -25,7 +25,7 @@ class Category extends Auth
     /**
      * 商品分类
      *
-     * @BeMenu("商品分类", icon="el-icon-folder", ordering="3.2")
+     * @BeMenu("商品分类", icon="bi-folder2", ordering="3.2")
      * @BePermission("商品分类", ordering="3.2")
      */
     public function categories()

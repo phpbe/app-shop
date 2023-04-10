@@ -1117,6 +1117,83 @@ class Product
         return $tupleProduct->toObject();
     }
 
+
+    /**
+     * 批量设置商品分类
+     *
+     * @param array $products 多个商品
+     */
+    public function batchSetCategories(array $products)
+    {
+        if (count($products) === 0) return;
+
+        $db = Be::getDb();
+
+        $now = date('Y-m-d H:i:s');
+        foreach ($products as $product) {
+
+            $tupleProduct = Be::getTuple('shop_product');
+            try {
+                $tupleProduct->loadBy([
+                    'id' => $product['id'],
+                ]);
+            } catch (\Throwable $t) {
+                throw new ServiceException('商品（# ' . $product['id'] . '）不存在！');
+            }
+
+
+            $db->startTransaction();
+            try {
+
+                if (isset($product['categoryIds']) && is_array($product['categoryIds'])) {
+                    $existCategoryIds = Be::getTable('shop_product_category')
+                        ->where('product_id', $product['id'])
+                        ->getValues('category_id');
+
+                    // 需要删除的分类
+                    if (count($existCategoryIds) > 0) {
+                        $removeCategoryIds = array_diff($existCategoryIds, $product['categoryIds']);
+                        if (count($removeCategoryIds) > 0) {
+                            Be::getTable('shop_product_category')
+                                ->where('product_id', $product['id'])
+                                ->where('category_id', 'IN', $removeCategoryIds)
+                                ->delete();
+                        }
+                    }
+
+                    // 新增的分类
+                    $newCategoryIds = null;
+                    if (count($existCategoryIds) > 0) {
+                        $newCategoryIds = array_diff($product['categoryIds'], $existCategoryIds);
+                    } else {
+                        $newCategoryIds = $product['categoryIds'];
+                    }
+                    if (count($newCategoryIds) > 0) {
+                        foreach ($newCategoryIds as $category_id) {
+                            $tupleProductCategory = Be::getTuple('shop_product_category');
+                            $tupleProductCategory->product_id = $tupleProduct->id;
+                            $tupleProductCategory->category_id = $category_id;
+                            $tupleProductCategory->insert();
+                        }
+                    }
+                }
+
+                $tupleProduct->update_time = $now;
+                $tupleProduct->update();
+
+                $db->commit();
+
+            } catch (\Throwable $t) {
+                $db->rollback();
+                Be::getLog()->error($t);
+
+                throw new ServiceException('批量设置商品分类发生异常！');
+            }
+        }
+    }
+
+
+
     /**
      * 删除商品
      *

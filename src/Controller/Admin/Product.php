@@ -140,7 +140,7 @@ class Product extends Auth
                 'tableToolbar' => [
                     'items' => [
                         [
-                            'label' => '批量上架',
+                            'label' => '上架',
                             'task' => 'fieldEdit',
                             'postData' => [
                                 'field' => 'is_enable',
@@ -154,7 +154,7 @@ class Product extends Auth
                             ]
                         ],
                         [
-                            'label' => '批量下架',
+                            'label' => '下架',
                             'task' => 'fieldEdit',
                             'postData' => [
                                 'field' => 'is_enable',
@@ -168,7 +168,7 @@ class Product extends Auth
                             ]
                         ],
                         [
-                            'label' => '批量删除',
+                            'label' => '删除',
                             'url' => beAdminUrl('Shop.Product.delete'),
                             'target' => 'ajax',
                             'confirm' => '确认要删除吗？',
@@ -179,6 +179,19 @@ class Product extends Auth
                             'ui' => [
                                 'icon' => 'el-icon-delete',
                                 'type' => 'danger'
+                            ]
+                        ],
+                        [
+                            'label' => '分类',
+                            'url' => beAdminUrl('Shop.Product.batchSetCategories'),
+                            'target' => 'drawer',
+                            'drawer' => [
+                                'title' => '批量设置分类',
+                                'width' => '80%',
+                            ],
+                            'ui' => [
+                                'icon' => 'el-icon-bi bi-folder2',
+                                'type' => 'primary'
                             ]
                         ],
                     ]
@@ -217,8 +230,8 @@ class Product extends Auth
                             'label' => '商品名称',
                             'driver' => TableItemCustom::class,
                             'align' => 'left',
-                            'value' => function($row) {
-                                return '<a class="el-link el-link--primary is-underline" href="' . beAdminUrl('Shop.Product.edit', ['id' => $row['id']]) .'">' . $row['name'] . '</a>';
+                            'value' => function ($row) {
+                                return '<a class="el-link el-link--primary is-underline" href="' . beAdminUrl('Shop.Product.edit', ['id' => $row['id']]) . '">' . $row['name'] . '</a>';
                             }
                         ],
                         [
@@ -242,7 +255,7 @@ class Product extends Auth
                                     $price = $row['price_from'] . '~' . $row['price_to'];
                                 }
 
-                                $originalPrice= '';
+                                $originalPrice = '';
                                 if ($row['original_price_from'] === $row['original_price_to']) {
                                     $originalPrice = $row['original_price_from'];
                                 } else {
@@ -614,6 +627,73 @@ class Product extends Auth
             $response->display(null, 'Blank');
         }
     }
+
+    /**
+     * 批量设置商品分类
+     *
+     * @BePermission("编辑")
+     */
+    public function batchSetCategories()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $data = $request->post('data', '', '');
+        $data = json_decode($data, true);
+
+        $products = [];
+        if (isset($data['row'])) {
+            $products[] = $data['row'];
+        } elseif (isset($data['selectedRows'])) {
+            $products = $data['selectedRows'];
+        }
+
+        if (count($products) === 0) {
+            $response->error('您未选择商品！');
+            return;
+        }
+
+        $response->set('title', '批量设置分类');
+
+        $tmpProducts = [];
+        foreach ($products as $product) {
+            $tmpProducts[] = Be::getService('App.Shop.Admin.Product')->getProduct($product['id'], [
+                'categories' => 1,
+            ]);
+        }
+
+        $response->set('products', $tmpProducts);
+
+        $categoryKeyValues = Be::getService('App.Shop.Admin.Category')->getCategoryKeyValues();
+        $response->set('categoryKeyValues', $categoryKeyValues);
+
+        $response->display(null, 'Blank');
+    }
+
+    /**
+     * 批量设置商品分类 - 保存
+     *
+     * @BePermission("编辑")
+     */
+    public function batchSetCategoriesSave()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        try {
+            $formData = $request->json('formData');
+            $products = $formData['products'];
+            Be::getService('App.Shop.Admin.Product')->batchSetCategories($products);
+            $response->set('success', true);
+            $response->set('message', '批量设置分类成功！');
+            $response->json();
+        } catch (\Throwable $t) {
+            $response->set('success', false);
+            $response->set('message', $t->getMessage());
+            $response->json();
+        }
+    }
+
 
     /**
      * 预览
