@@ -343,7 +343,7 @@ class TaskProduct
                 if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
                     $storageImage = false;
                     try {
-                        $storageImage = $this->downloadRemoteImage($product, $remoteImage, true);
+                        $storageImage = $this->downloadRemoteImage($product, $remoteImage);
                     } catch (\Throwable $t) {
                         Be::getLog()->error($t);
                     }
@@ -374,7 +374,7 @@ class TaskProduct
                             $storageImage = $imageKeyValues[$remoteImage];
                         } else {
                             try {
-                                $storageImage = $this->downloadRemoteImage($product, $remoteImage, true);
+                                $storageImage = $this->downloadRemoteImage($product, $remoteImage);
                             } catch (\Throwable $t) {
                                 Be::getLog()->error($t);
                             }
@@ -411,7 +411,7 @@ class TaskProduct
                             $storageImage = $imageKeyValues[$descriptionImage];
                         } else {
                             try {
-                                $storageImage = $this->downloadRemoteImage($product, $descriptionImage, true);
+                                $storageImage = $this->downloadRemoteImage($product, $descriptionImage);
                             } catch (\Throwable $t) {
                                 Be::getLog()->error($t);
                             }

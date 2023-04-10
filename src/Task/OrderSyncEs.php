@@ -7,7 +7,7 @@ use Be\Task\TaskInterval;
 /**
  * 间隔一段时间晨，定时执行 订单同步到ES
  *
- * @BeTask("订单同步到ES", schedule="1,21,41 * * * *")
+ * @BeTask("订单同步到ES", schedule="30 * * * *")
  */
 class OrderSyncEs extends TaskInterval
 {

@@ -5,7 +5,7 @@ use Be\Be;
 use Be\Task\TaskInterval;
 
 /**
- * @BeTask("商品关联增量同步到缓存", schedule="2,22,42 * * * *")
+ * @BeTask("商品关联增量同步到缓存", schedule="25 * * * *")
  */
 class ProductRelateSyncCache extends TaskInterval
 {

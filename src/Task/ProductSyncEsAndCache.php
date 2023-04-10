@@ -8,7 +8,7 @@ use Be\Task\TaskInterval;
 /**
  * 间隔一段时间晨，定时执行 商品同步到ES和缓存
  *
- * @BeTask("商品境量同步到ES和缓存", schedule="3,23,43 * * * *")
+ * @BeTask("商品境量同步到ES和缓存", schedule="20 * * * *")
  */
 class ProductSyncEsAndCache extends TaskInterval
 {
