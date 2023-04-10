@@ -41,6 +41,9 @@ class DownloadRemoteImage extends TaskInterval
         $products = $db->getYieldObjects($sql, [$d1, $d2]);
         foreach ($products as $product) {
             $service->downloadRemoteImages($product);
+
+            $this->taskLog->update_time = date('Y-m-d h:i:s');
+            $this->updateTaskLog();
         }
 
         $this->breakpoint = $d2;
