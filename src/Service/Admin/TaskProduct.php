@@ -332,7 +332,6 @@ class TaskProduct
         $updateObj->id = $product->id;
 
         $db = Be::getDb();
-        $now = date('Y-m-d H:i:s');
 
         $imageKeyValues = [];
 
@@ -354,7 +353,7 @@ class TaskProduct
                         $obj = new \stdClass();
                         $obj->id = $image->id;
                         $obj->url = $storageImage;
-                        $obj->update_time = $now;
+                        $obj->update_time = date('Y-m-d H:i:s');
                         $db->update('shop_product_image', $obj, 'id');
 
                         $hasChange = true;
@@ -384,7 +383,7 @@ class TaskProduct
                             $obj = new \stdClass();
                             $obj->id = $productRelateDetail->id;
                             $obj->icon_image = $storageImage;
-                            $obj->update_time = $now;
+                            $obj->update_time = date('Y-m-d H:i:s');
                             $db->update('shop_product_relate_item', $obj, 'id');
 
                             $hasChange = true;

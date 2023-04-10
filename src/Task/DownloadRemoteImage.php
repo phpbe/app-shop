@@ -7,7 +7,7 @@ use Be\Task\TaskInterval;
 /**
  * 自动下载远程图片
  *
- * @BeTask("自动下载远程图片", schedule="50 * * * *")
+ * @BeTask("自动下载远程图片", schedule="50 3 * * *")
  */
 class DownloadRemoteImage extends TaskInterval
 {
@@ -18,7 +18,7 @@ class DownloadRemoteImage extends TaskInterval
     protected $step = 86400;
 
     // 超时时间
-    protected $timeout = 1800;
+    protected $timeout = 3600;
 
     public function execute()
     {
