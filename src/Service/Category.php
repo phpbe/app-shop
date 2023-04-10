@@ -27,7 +27,9 @@ class Category
             $table->where('is_enable', 1);
             $table->orderBy('ordering', 'ASC');
             $categories = $table->getObjects();
-            $cache->set($key, $categories, 600);
+
+            $configCache = Be::getConfig('App.Shop.Cache');
+            $cache->set($key, $categories, $configCache->categories);
         }
 
         if ($n > 0 && $n < count($categories)) {
@@ -52,10 +54,40 @@ class Category
         $category = $cache->get($key);
 
         if (!$category) {
+            try {
+                $category = $this->getCategoryFromDb($categoryId);
+            } catch (\Throwable $t) {
+                $category = '-1';
+            }
+
+            $configCache = Be::getConfig('App.Shop.Cache');
+            $cache->set($key, $category, $configCache->category);
+        }
+
+        if ($category === '-1') {
             throw new ServiceException('Category #' . $categoryId . ' does not exists！');
         }
 
         return $category;
+    }
+
+
+    /**
+     * 获取分类
+     *
+     * @param string $pageId 页面ID
+     * @return object 分类对象
+     */
+    public function getCategoryFromDb(string $categoryId): object
+    {
+        $tupleCategory = Be::getTuple('shop_category');
+        try {
+            $tupleCategory->load($categoryId);
+        } catch (\Throwable $t) {
+            throw new ServiceException('Category #' . $categoryId . ' does not exists！');
+        }
+
+        return $tupleCategory->toObject();
     }
 
     /**
