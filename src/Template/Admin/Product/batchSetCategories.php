@@ -56,6 +56,7 @@
                         <el-select
                                 v-model="categoryId"
                                 placeholder="请选择分类"
+                                filterable
                                 size="medium">
                             <?php
                             foreach ($this->categoryKeyValues as $key => $val) {
