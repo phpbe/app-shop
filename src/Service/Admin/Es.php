@@ -513,6 +513,10 @@ class Es
             ]
         ];
 
+        if ($indexName === 'product') {
+            $params['body']['settings']['index.mapping.nested_objects.limit'] = 60000;
+        }
+
         $es->indices()->create($params);
     }
 
