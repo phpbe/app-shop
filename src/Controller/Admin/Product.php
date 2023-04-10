@@ -81,6 +81,14 @@ class Product extends Auth
                             'name' => 'name',
                             'label' => '名称',
                         ],
+                        [
+                            'name' => 'spu',
+                            'label' => 'SPU',
+                        ],
+                        [
+                            'name' => 'brand',
+                            'label' => '品牌',
+                        ],
                     ],
                 ],
 
