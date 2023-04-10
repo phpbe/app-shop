@@ -339,7 +339,7 @@ class TaskProduct
         foreach ($images as $image) {
             $remoteImage = trim($image->url);
             if ($remoteImage !== '') {
-                if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
+                if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
                     $storageImage = false;
                     try {
                         $storageImage = $this->downloadRemoteImage($product, $remoteImage);
@@ -367,7 +367,7 @@ class TaskProduct
             if ($productRelateDetail) {
                 $remoteImage = trim($productRelateDetail->icon_image);
                 if ($remoteImage !== '') {
-                    if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, $storageRootUrlLen) !== $storageRootUrl) {
+                    if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
                         $storageImage = false;
                         if (isset($imageKeyValues[$remoteImage])) {
                             $storageImage = $imageKeyValues[$remoteImage];
