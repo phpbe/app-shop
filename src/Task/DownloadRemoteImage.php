@@ -7,7 +7,7 @@ use Be\Task\TaskInterval;
 /**
  * 自动下载远程图片
  *
- * @BeTask("自动下载远程图片", timeout="3600", schedule="50 3 * * *")
+ * @BeTask("自动下载远程图片", timeout="3600", schedule="50 3,9,15,21 * * *")
  */
 class DownloadRemoteImage extends TaskInterval
 {
@@ -16,7 +16,7 @@ class DownloadRemoteImage extends TaskInterval
 
     // 时间间隔：1天
     protected $step = 86400;
-    
+
     public function execute()
     {
         if (!$this->breakpoint) {
