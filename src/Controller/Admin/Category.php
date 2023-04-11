@@ -161,7 +161,7 @@ class Category extends Auth
                             'width' => '120',
                             'driver' => TableItemLink::class,
                             'value' => function ($row) {
-                                $sql = 'SELECT COUNT(*) FROM shop_product_category WHERE category_id = ?';
+                                $sql = 'SELECT COUNT(*) FROM shop_product WHERE is_delete=0 AND id IN (SELECT product_id FROM shop_product_category WHERE category_id = ?)';
                                 $count = Be::getDb()->getValue($sql, [$row['id']]);
                                 return $count;
                             },
