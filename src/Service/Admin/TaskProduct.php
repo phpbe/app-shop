@@ -341,14 +341,24 @@ class TaskProduct
             if ($remoteImage !== '') {
                 if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
                     $storageImage = false;
-                    try {
-                        $storageImage = $this->downloadRemoteImage($product, $remoteImage);
-                    } catch (\Throwable $t) {
-                        Be::getLog()->error($t);
+
+                    if (isset($imageKeyValues[$remoteImage])) {
+                        $storageImage = $imageKeyValues[$remoteImage];
+                    } else {
+                        try {
+                            $storageImage = $this->downloadRemoteImage($product, $remoteImage);
+                        } catch (\Throwable $t) {
+                            Be::getLog()->error($t);
+                        }
+
+                        if ($storageImage) {
+                            $imageKeyValues[$image->url] = $storageImage;
+                        }
                     }
 
+
                     if ($storageImage) {
-                        $imageKeyValues[$image->original] = $storageImage;
+                        $imageKeyValues[$image->url] = $storageImage;
 
                         $obj = new \stdClass();
                         $obj->id = $image->id;
