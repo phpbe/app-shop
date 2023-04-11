@@ -23,7 +23,7 @@ class Store
     public string $currencySymbol = '$';
 
     /**
-     * @BeConfigItem("时区", description="支持的时区列表：https://www.phpbe.com/app-shop/doc/timezones", driver="FormItemInput")
+     * @BeConfigItem("时区", description="支持的时区列表：https://www.phpbe.com/doc/help/v2/timezones", driver="FormItemInput")
      */
     public string $timezone = 'Asia/Shanghai';
 
