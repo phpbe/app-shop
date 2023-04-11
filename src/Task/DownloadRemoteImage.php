@@ -42,7 +42,7 @@ class DownloadRemoteImage extends TaskInterval
         foreach ($products as $product) {
             $service->downloadRemoteImages($product);
 
-            $this->taskLog->update_time = date('Y-m-d h:i:s');
+            $this->taskLog->update_time = date('Y-m-d H:i:s');
             $this->updateTaskLog();
         }
 
