@@ -27,4 +27,9 @@ class Product
      */
     public int $skuUnique = 0;
 
+    /**
+     * @BeConfigItem("图像默认宽高比", driver = "FormItemInput")
+     */
+    public string $imageAspectRatio = '5/8';
+
 }
