@@ -66,25 +66,9 @@ class Product
             throw new ServiceException('Product #' . $productId . ' does not exists！');
         }
 
-        $product->is_enable = (int)$product->is_enable;
-        $product->is_delete = (int)$product->is_delete;
-
-        if ($product->is_enable !== 1 || $product->is_delete !== 0) {
+        if ($product->is_enable !== '1' || $product->is_delete !== '0') {
             throw new ServiceException('Product #' . $productId . ' does not exists！');
         }
-
-        $product->url_custom = (int)$product->url_custom;
-        $product->seo_title_custom = (int)$product->seo_title_custom;
-        $product->seo_description_custom = (int)$product->seo_description_custom;
-        $product->style = (int)$product->style;
-        $product->stock_tracking = (int)$product->stock_tracking;
-        $product->stock_out_action = (int)$product->stock_out_action;
-        $product->ordering = (int)$product->ordering;
-        $product->hits = (int)$product->hits;
-        $product->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;
-        $product->rating_sum = (int)$product->rating_sum;
-        $product->rating_count = (int)$product->rating_count;
-        $product->is_enable = (int)$product->is_enable;
 
         if ($product->relate_id !== '') {
             $sql = 'SELECT * FROM shop_product_relate WHERE id = ?';
@@ -103,36 +87,23 @@ class Product
             $product->relate = $relate;
         }
 
-        $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
+        $sql = 'SELECT url, is_main FROM shop_product_image WHERE product_id = ? AND product_item_id = \'\' ORDER BY ordering ASC';
         $images = $db->getObjects($sql, [$product->id]);
         foreach ($images as $image) {
             $image->is_main = (int)$image->is_main;
-            $image->ordering = (int)$image->ordering;
         }
         $product->images = $images;
 
+        $categories = [];
         $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ?';
         $categoryIds = $db->getValues($sql, [$product->id]);
         if (count($categoryIds) > 0) {
-            $product->category_ids = $categoryIds;
-
-            $sql = 'SELECT * FROM shop_category WHERE id IN (\'' . implode('\',\'', $categoryIds) . '\')';
+            $sql = 'SELECT id, name FROM shop_category WHERE is_enable=1 AND is_delete=0 AND id IN (\'' . implode('\',\'', $categoryIds) . '\') ORDER BY ordering ASC';
             $categories = $db->getObjects($sql);
-            foreach ($categories as &$category) {
-                $category->url_custom = (int)$category->url_custom;
-                $category->seo_title_custom = (int)$category->seo_title_custom;
-                $category->seo_description_custom = (int)$category->seo_description_custom;
-                $category->ordering = (int)$category->ordering;
-                $category->is_enable = (int)$category->is_enable;
-                $category->is_delete = (int)$category->is_delete;
-            }
-
-            unset($category);
-            $product->categories = $categories;
-        } else {
-            $product->category_ids = [];
-            $product->categories = [];
         }
+        $product->categories = $categories;
+        $product->category_ids = array_column($categories, 'id');
+
 
         $sql = 'SELECT tag FROM shop_product_tag WHERE product_id = ?';
         $product->tags = $db->getValues($sql, [$product->id]);
@@ -149,10 +120,9 @@ class Product
 
         $product->styles = $styles;
 
-        $sql = 'SELECT * FROM shop_product_item WHERE product_id = ?';
+        $sql = 'SELECT id, sku, barcode, style, style_json, price, original_price, weight, weight_unit, stock FROM shop_product_item WHERE product_id = ? ORDER BY ordering ASC';
         $items = $db->getObjects($sql, [$product->id]);
         foreach ($items as $item) {
-
             $styleJson = null;
             if ($item->style_json) {
                 $styleJson = json_decode($item->style_json, true);
@@ -164,18 +134,56 @@ class Product
 
             $item->stock = (int)$item->stock;
 
-            $sql = 'SELECT * FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';
+            $sql = 'SELECT url, is_main FROM shop_product_image WHERE product_id = ? AND  product_item_id = ? ORDER BY ordering ASC';
             $itemImages = $db->getObjects($sql, [$product->id, $item->id]);
             foreach ($itemImages as &$itemImage) {
                 $itemImage->is_main = (int)$itemImage->is_main;
-                $itemImage->ordering = (int)$itemImage->ordering;
             }
             unset($itemImage);
             $item->images = $itemImages;
         }
         $product->items = $items;
 
-        return $product;
+        $newProduct = new \stdClass();
+        $newProduct->id = $product->id;
+        $newProduct->spu = $product->spu;
+        $newProduct->name = $product->name;
+        $newProduct->summary = $product->summary;
+        $newProduct->description = $product->description;
+        $newProduct->url = $product->url;
+        //$newProduct->url_custom = (int)$product->url_custom;
+        $newProduct->seo_title = $product->seo_title;
+        //$newProduct->seo_title_custom = (int)$product->seo_title_custom;
+        $newProduct->seo_description = $product->seo_description;
+        //$newProduct->seo_description_custom = (int)$product->seo_description_custom;
+        $newProduct->seo_keywords = $product->seo_keywords;
+        $newProduct->brand = $product->brand;
+        $newProduct->relate_id = $product->relate_id;
+        $newProduct->style = (int)$product->style;
+        $newProduct->stock_tracking = (int)$product->stock_tracking;
+        $newProduct->stock_out_action = (int)$product->stock_out_action;
+        //$newProduct->ordering = (int)$product->ordering;
+        $newProduct->hits = (int)$product->hits;
+        $newProduct->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;
+        $newProduct->price_from = $product->price_from;
+        $newProduct->price_to = $product->price_to;
+        $newProduct->original_price_from = $product->original_price_from;
+        $newProduct->original_price_to = $product->original_price_to;
+        $newProduct->rating_sum = (int)$product->rating_sum;
+        $newProduct->rating_count = (int)$product->rating_count;
+        $newProduct->rating_avg = $product->rating_avg;
+
+        if ($newProduct->relate_id !== '') {
+            $newProduct->relate = $product->relate;
+        }
+        $newProduct->images = $product->images;
+        $newProduct->categories = $product->categories;
+        $newProduct->category_ids = $product->category_ids;
+        $newProduct->tags = $product->tags;
+        $newProduct->styles = $product->styles;
+        $newProduct->items = $product->items;
+
+        return $newProduct;
     }
 
     /**
@@ -295,12 +303,8 @@ class Product
                 'images' => [
                     (object)[
                         'id' => '',
-                        'product_id' => '',
                         'url' => $image,
                         'is_main' => 1,
-                        'ordering' => 0,
-                        'create_time' => $createTime,
-                        'update_time' => $updateTime,
                     ]
                 ],
             ];
@@ -320,7 +324,6 @@ class Product
 
                 $items[] = (object)[
                     'id' => '',
-                    'product_id' => '',
                     'sku' => $spu . '-' . $size,
                     'barcode' => $spu,
                     'style' => $size,
@@ -354,12 +357,8 @@ class Product
         $images = [];
         $images[] = (object)[
             'id' => '',
-            'product_id' => '',
             'url' => $image,
             'is_main' => 1,
-            'ordering' => 0,
-            'create_time' => $createTime,
-            'update_time' => $updateTime,
         ];
 
         return (object)[
@@ -384,10 +383,6 @@ class Product
             'rating_sum' => $ratingSum,
             'rating_count' => $ratingCount,
             'rating_avg' => $ratingAvg,
-            'is_enable' => 1,
-            'is_delete' => 0,
-            'create_time' => $createTime,
-            'update_time' => $updateTime,
             'items' => $items,
             'images' => $images,
         ];
@@ -554,18 +549,6 @@ class Product
             'body' => [
                 'query' => [
                     'bool' => [
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
-                        ]
                     ]
                 ]
             ]
@@ -685,8 +668,7 @@ class Product
                 case 'rating_sum':
                 case 'rating_count':
                 case 'rating_avg':
-                case 'create_time':
-                case 'update_time':
+                case 'publish_time':
                     $orderBy = $params['orderBy'];
                     break;
             }
@@ -866,8 +848,7 @@ class Product
                 case 'rating_sum':
                 case 'rating_count':
                 case 'rating_avg':
-                case 'create_time':
-                case 'update_time':
+                case 'publish_time':
                     $orderBy = $params['orderBy'];
                     break;
             }
@@ -986,18 +967,6 @@ class Product
                                 'name' => $productName
                             ]
                         ],
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
-                        ]
                     ]
                 ]
             ]
@@ -1087,22 +1056,6 @@ class Product
             'index' => $configEs->indexProduct,
             'body' => [
                 'size' => $n,
-                'query' => [
-                    'bool' => [
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
-                        ]
-                    ]
-                ],
                 'sort' => [
                     $orderBy => [
                         'order' => $orderByDir
@@ -1229,18 +1182,6 @@ class Product
                                 'name' => implode(', ', $keywords)
                             ]
                         ],
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
-                        ]
                     ]
                 ]
             ]
@@ -1309,18 +1250,6 @@ class Product
                                 'name' => implode(',', $keywords)
                             ]
                         ],
-                        'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
-                        ]
                     ]
                 ]
             ]
@@ -1392,16 +1321,6 @@ class Product
                             ],
                         ],
                         'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
                             [
                                 'nested' => [
                                     'path' => 'categories',
@@ -1489,16 +1408,6 @@ class Product
                             ],
                         ],
                         'filter' => [
-                            [
-                                'term' => [
-                                    'is_enable' => true,
-                                ],
-                            ],
-                            [
-                                'term' => [
-                                    'is_delete' => false,
-                                ],
-                            ],
                             [
                                 'nested' => [
                                     'path' => 'categories',

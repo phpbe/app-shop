@@ -159,9 +159,6 @@ class Es
                                         'icon_color' => [
                                             'type' => 'keyword'
                                         ],
-                                        'ordering' => [
-                                            'type' => 'integer'
-                                        ]
                                     ],
                                 ],
                             ],
@@ -202,34 +199,14 @@ class Es
                         'rating_avg' => [
                             'type' => 'float'
                         ],
-                        'is_enable' => [
-                            'type' => 'boolean'
-                        ],
-                        'is_delete' => [
-                            'type' => 'boolean'
-                        ],
-                        'create_time' => [
-                            'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
-                        ],
-                        'update_time' => [
-                            'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
-                        ],
                         'images' => [
                             'type' => 'nested',
                             'properties' => [
-                                'id' => [
-                                    'type' => 'keyword'
-                                ],
                                 'url' => [
                                     'type' => 'text'
                                 ],
                                 'is_main' => [
                                     'type' => 'boolean'
-                                ],
-                                'ordering' => [
-                                    'type' => 'integer'
                                 ]
                             ]
                         ],
@@ -282,9 +259,6 @@ class Es
                                         ],
                                         'is_main' => [
                                             'type' => 'boolean'
-                                        ],
-                                        'ordering' => [
-                                            'type' => 'integer'
                                         ]
                                     ]
                                 ],
