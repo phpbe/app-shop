@@ -7,7 +7,7 @@ use Be\Task\Task;
 /**
  * 自动下载远程图片
  *
- * @BeTask("自动下载远程图片", timeout="1800", schedule="50 * * * *")
+ * @BeTask("自动下载远程图片", timeout="3500", schedule="50 * * * *")
  */
 class DownloadRemoteImage extends Task
 {
@@ -18,7 +18,7 @@ class DownloadRemoteImage extends Task
     public function execute()
     {
         $timeout = $this->timeout;
-        if ($timeout <= 0) {
+        if ($timeout < 60) {
             $timeout = 60;
         }
 
