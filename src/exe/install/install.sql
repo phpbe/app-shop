@@ -227,6 +227,7 @@ CREATE TABLE `shop_product` (
 `style` tinyint(4) NOT NULL DEFAULT '1' COMMENT '款式',
 `stock_tracking` tinyint(4) NOT NULL DEFAULT '0' COMMENT '跟踪库存',
 `stock_out_action` tinyint(4) NOT NULL DEFAULT '1' COMMENT '库存为0时操作',
+`publish_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上架时间',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
 `hits` int(11) NOT NULL DEFAULT '0' COMMENT '点击量',
 `sales_volume_base` int(11) NOT NULL DEFAULT '0' COMMENT '站外销量',

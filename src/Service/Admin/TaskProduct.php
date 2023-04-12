@@ -125,6 +125,7 @@ class TaskProduct
                     'styles' => $styles,
                     'stock_tracking' => (int)$product->stock_tracking,
                     'stock_out_action' => (int)$product->stock_out_action,
+                    'publish_time' => $product->publish_time,
                     'ordering' => (int)$product->ordering,
                     'hits' => (int)$product->hits,
                     'sales_volume' => (int)$product->sales_volume_base + (int)$product->sales_volume,
@@ -280,6 +281,7 @@ class TaskProduct
                 $newProduct->style = (int)$product->style;
                 $newProduct->stock_tracking = (int)$product->stock_tracking;
                 $newProduct->stock_out_action = (int)$product->stock_out_action;
+                $newProduct->publish_time = $product->publish_time;
                 //$newProduct->ordering = (int)$product->ordering;
                 $newProduct->hits = (int)$product->hits;
                 $newProduct->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;

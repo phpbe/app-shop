@@ -169,6 +169,10 @@ class Es
                         'stock_out_action' => [
                             'type' => 'integer'
                         ],
+                        'publish_time' => [
+                            'type' => 'date',
+                            'format' => "yyyy-MM-dd HH:mm:ss"
+                        ],
                         'ordering' => [
                             'type' => 'integer'
                         ],

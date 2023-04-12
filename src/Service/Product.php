@@ -162,6 +162,7 @@ class Product
         $newProduct->style = (int)$product->style;
         $newProduct->stock_tracking = (int)$product->stock_tracking;
         $newProduct->stock_out_action = (int)$product->stock_out_action;
+        $newProduct->publish_time = $product->publish_time;
         //$newProduct->ordering = (int)$product->ordering;
         $newProduct->hits = (int)$product->hits;
         $newProduct->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;
@@ -546,18 +547,22 @@ class Product
 
         $query = [
             'index' => $configEs->indexProduct,
-            'body' => [
-                'query' => [
-                    'bool' => [
-                    ]
-                ]
-            ]
+            'body' => []
         ];
 
         if ($keywords === '') {
             $query['body']['min_score'] = 0;
         } else {
             $query['body']['min_score'] = 0.01;
+
+            if (!isset($query['body']['query'])) {
+                $query['body']['query']= [];
+            }
+
+            if (!isset($query['body']['query']['bool'])) {
+                $query['body']['query']['bool'] = [];
+            }
+
             $query['body']['query']['bool']['should'] = [
                 [
                     'match' => [
@@ -584,10 +589,35 @@ class Product
         }
 
         if (isset($params['productIds']) && $params['productIds']) {
+            if (!isset($query['body']['query'])) {
+                $query['body']['query']= [];
+            }
+
+            if (!isset($query['body']['query']['bool'])) {
+                $query['body']['query']['bool'] = [];
+            }
+
+            if (!isset($query['body']['query']['bool']['filter'])) {
+                $query['body']['query']['bool']['filter'] = [];
+            }
+
             $query['body']['query']['bool']['filter'][] = ['terms' => ['id' => $params['productIds']]];
         }
 
         if (isset($params['categoryId']) && $params['categoryId']) {
+
+            if (!isset($query['body']['query'])) {
+                $query['body']['query']= [];
+            }
+
+            if (!isset($query['body']['query']['bool'])) {
+                $query['body']['query']['bool'] = [];
+            }
+
+            if (!isset($query['body']['query']['bool']['filter'])) {
+                $query['body']['query']['bool']['filter'] = [];
+            }
+
             $query['body']['query']['bool']['filter'][] = [
                 'nested' => [
                     'path' => 'categories',
@@ -605,6 +635,18 @@ class Product
                 ]
             ];
         } elseif (isset($params['categoryIds']) && is_array($params['categoryIds']) && count($params['categoryIds']) > 0) {
+            if (!isset($query['body']['query'])) {
+                $query['body']['query']= [];
+            }
+
+            if (!isset($query['body']['query']['bool'])) {
+                $query['body']['query']['bool'] = [];
+            }
+
+            if (!isset($query['body']['query']['bool']['filter'])) {
+                $query['body']['query']['bool']['filter'] = [];
+            }
+
             $query['body']['query']['bool']['filter'][] = [
                 'nested' => [
                     'path' => 'categories',
@@ -624,12 +666,36 @@ class Product
         }
 
         if (isset($params['brand']) && $params['brand']) {
+            if (!isset($query['body']['query'])) {
+                $query['body']['query']= [];
+            }
+
+            if (!isset($query['body']['query']['bool'])) {
+                $query['body']['query']['bool'] = [];
+            }
+
+            if (!isset($query['body']['query']['bool']['filter'])) {
+                $query['body']['query']['bool']['filter'] = [];
+            }
+
             $query['body']['query']['bool']['filter'][] = ['term' => ['brand' => $params['brand']]];
         }
 
         if (isset($params['priceRange']) && $params['priceRange']) {
             $priceRange = explode('-', $params['priceRange']);
             if (count($priceRange) === 2) {
+                if (!isset($query['body']['query'])) {
+                    $query['body']['query']= [];
+                }
+
+                if (!isset($query['body']['query']['bool'])) {
+                    $query['body']['query']['bool'] = [];
+                }
+
+                if (!isset($query['body']['query']['bool']['filter'])) {
+                    $query['body']['query']['bool']['filter'] = [];
+                }
+
                 $query['body']['query']['bool']['filter'][] = [
                     'range' => [
                         'price_from' => [
@@ -1120,7 +1186,7 @@ class Product
      */
     public function getLatestProducts(int $n = 10): array
     {
-        return $this->getTopProducts($n, 'create_time', 'desc');
+        return $this->getTopProducts($n, 'publish_time', 'desc');
     }
 
     /**
