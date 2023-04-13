@@ -19,10 +19,10 @@ class DownloadRemoteImage
      * @BeConfigItem("商品文件夹命名",,
      *     description="转小写，移除特殊字符",
      *     driver="FormItemSelect",
-     *     keyValues = "return ['id' => '商品ID', 'url' => '伪静态网址', 'spu' => 'SPU', 'none' => '不创建'];")
+     *     keyValues = "return ['id' => '商品ID', 'spu' => 'SPU', 'none' => '不创建'];")
      * )
      */
-    public string $dirname = 'url';
+    public string $dirname = 'spu';
 
     /**
      * @BeConfigItem("文件命名",
@@ -31,7 +31,7 @@ class DownloadRemoteImage
      *     keyValues = "return ['original' => '原始名称', 'md5' => '文件哈希（md5）', 'sha1' => '文件哈希（sha1）', 'timestamp' => '时间戳命名'];")
      * )
      */
-    public string $fileName = 'md5';
+    public string $fileName = 'sha1';
 
     /**
      * @BeConfigItem("下载间隔最小值（秒）",
