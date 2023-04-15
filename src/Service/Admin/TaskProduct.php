@@ -373,9 +373,9 @@ class TaskProduct
         }
 
         if ($product->relate_id !== '') {
-            $productRelateDetail = $db->getObject('SELECT * FROM shop_product_relate_item WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
-            if ($productRelateDetail) {
-                $remoteImage = trim($productRelateDetail->icon_image);
+            $productRelateItem = $db->getObject('SELECT * FROM shop_product_relate_item WHERE relate_id=? AND product_id=?', [$product->relate_id, $product->id]);
+            if ($productRelateItem) {
+                $remoteImage = trim($productRelateItem->icon_image);
                 if ($remoteImage !== '') {
                     if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
                         $storageImage = false;
@@ -391,13 +391,56 @@ class TaskProduct
 
                         if ($storageImage) {
                             $obj = new \stdClass();
-                            $obj->id = $productRelateDetail->id;
+                            $obj->id = $productRelateItem->id;
                             $obj->icon_image = $storageImage;
                             $obj->update_time = date('Y-m-d H:i:s');
                             $db->update('shop_product_relate_item', $obj, 'id');
 
                             $hasChange = true;
                         }
+                    }
+                }
+            }
+        }
+
+
+        if ($product->style === '2') {
+
+            $productStyles = $db->getObjects('SELECT * FROM shop_product_style WHERE product_id=?', [$product->id]);
+            if (count($productStyles) > 0) {
+                foreach ($productStyles as $productStyle) {
+                    if ($productStyle->icon_type === 'image') {
+
+                        $productStyleItems = $db->getObjects('SELECT * FROM shop_product_style_item WHERE product_style_id=?', [$productStyle->id]);
+                        if (count($productStyleItems) > 0) {
+                            foreach ($productStyleItems as $productStyleItem) {
+                                $remoteImage = trim($productStyleItem->icon_image);
+                                if ($remoteImage !== '') {
+                                    if (strlen($remoteImage) < $storageRootUrlLen || substr($remoteImage, 0, $storageRootUrlLen) !== $storageRootUrl) {
+                                        $storageImage = false;
+                                        if (isset($imageKeyValues[$remoteImage])) {
+                                            $storageImage = $imageKeyValues[$remoteImage];
+                                        } else {
+                                            try {
+                                                $storageImage = $this->downloadRemoteImage($product, $remoteImage);
+                                            } catch (\Throwable $t) {
+                                                Be::getLog()->error($t);
+                                            }
+                                        }
+
+                                        if ($storageImage) {
+                                            $obj = new \stdClass();
+                                            $obj->id = $productStyleItem->id;
+                                            $obj->icon_image = $storageImage;
+                                            $db->update('shop_product_style_item', $obj, 'id');
+
+                                            $hasChange = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
             }
