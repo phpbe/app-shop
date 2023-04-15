@@ -4,7 +4,7 @@ CREATE TABLE `shop_category` (
 `description` varchar(500) NOT NULL DEFAULT '' COMMENT '描述',
 `url` varchar(200) NOT NULL COMMENT '网址',
 `url_custom` tinyint(4) NOT NULL DEFAULT '0' COMMENT '网址是否启用自定义',
-`image` varchar(200) NOT NULL DEFAULT '' COMMENT '封面图片 - 小',
+`image` varchar(300) NOT NULL DEFAULT '' COMMENT '封面图片 - 小',
 `seo_title` varchar(120) NOT NULL DEFAULT '' COMMENT 'SEO标题',
 `seo_title_custom` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'SEO标题是否启用自定义',
 `seo_description` varchar(500) NOT NULL DEFAULT '' COMMENT 'SEO描述',
@@ -86,7 +86,7 @@ CREATE TABLE `shop_order_contact` (
 `order_id` varchar(36) NOT NULL DEFAULT '' COMMENT '订单ID',
 `publisher` varchar(10) NOT NULL DEFAULT '' COMMENT '发布人：customer//system',
 `content` varchar(200) NOT NULL DEFAULT '' COMMENT '内容',
-`image` varchar(200) NOT NULL DEFAULT '' COMMENT '图像',
+`image` varchar(300) NOT NULL DEFAULT '' COMMENT '图像',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单联系记录';
@@ -102,7 +102,7 @@ CREATE TABLE `shop_order_product` (
 `amount` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '金额小计',
 `name` varchar(200) NOT NULL DEFAULT '' COMMENT '商品名称',
 `spu` varchar(60) NOT NULL DEFAULT '' COMMENT 'SPU',
-`image` varchar(200) NOT NULL DEFAULT '' COMMENT '商品主图',
+`image` varchar(300) NOT NULL DEFAULT '' COMMENT '商品主图',
 `sku` varchar(60) NOT NULL DEFAULT '' COMMENT 'SKU',
 `style` varchar(120) NOT NULL DEFAULT '' COMMENT '商品子项款式',
 `weight` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '重量',
@@ -258,7 +258,7 @@ CREATE TABLE `shop_product_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `product_item_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品子项ID',
-`url` varchar(200) NOT NULL DEFAULT '' COMMENT '网址',
+`url` varchar(300) NOT NULL DEFAULT '' COMMENT '网址',
 `is_main` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否主图',
 `ordering` int(11) NOT NULL DEFAULT '1' COMMENT '排序',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -297,7 +297,7 @@ CREATE TABLE `shop_product_relate_item` (
 `relate_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品关联ID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
 `value` varchar(120) NOT NULL DEFAULT '' COMMENT '关联属性的值',
-`icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
+`icon_image` varchar(300) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品关联子项';
@@ -318,8 +318,8 @@ CREATE TABLE `shop_product_review` (
 CREATE TABLE `shop_product_review_image` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_review_id` varchar(36) NOT NULL DEFAULT '',
-`small` varchar(200) NOT NULL DEFAULT '' COMMENT '小图',
-`large` varchar(200) NOT NULL DEFAULT '' COMMENT '大图'
+`small` varchar(300) NOT NULL DEFAULT '' COMMENT '小图',
+`large` varchar(300) NOT NULL DEFAULT '' COMMENT '大图'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品评论图像';
 
 CREATE TABLE `shop_product_style` (
@@ -334,7 +334,7 @@ CREATE TABLE `shop_product_style_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_style_id` varchar(36) NOT NULL DEFAULT '' COMMENT '款式ID',
 `value` varchar(60) NOT NULL DEFAULT '' COMMENT '关联属性的值',
-`icon_image` varchar(120) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
+`icon_image` varchar(300) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='商品关联明细';
