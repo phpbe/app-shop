@@ -270,7 +270,7 @@ CREATE TABLE `shop_product_item` (
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商吕ID',
 `sku` varchar(60) NOT NULL DEFAULT '' COMMENT 'SKU',
 `barcode` varchar(60) NOT NULL DEFAULT '' COMMENT '条码',
-`style` varchar(120) NOT NULL DEFAULT '' COMMENT '款式',
+`style` varchar(300) NOT NULL DEFAULT '' COMMENT '款式',
 `style_json` text NOT NULL COMMENT '款式明细JSON',
 `price` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '价格',
 `original_price` decimal(12,2) NOT NULL DEFAULT '0.00' COMMENT '原价',
@@ -333,7 +333,7 @@ CREATE TABLE `shop_product_style` (
 CREATE TABLE `shop_product_style_item` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_style_id` varchar(36) NOT NULL DEFAULT '' COMMENT '款式ID',
-`value` varchar(60) NOT NULL DEFAULT '' COMMENT '关联属性的值',
+`value` varchar(120) NOT NULL DEFAULT '' COMMENT '关联属性的值',
 `icon_image` varchar(300) NOT NULL DEFAULT '' COMMENT '图标 - 图像',
 `icon_color` varchar(10) NOT NULL DEFAULT '' COMMENT '图标 - 色块',
 `ordering` int(11) NOT NULL DEFAULT '0' COMMENT '排序'
