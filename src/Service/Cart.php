@@ -3,6 +3,7 @@
 namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
+use Be\App\System\Config\Db;
 use Be\Be;
 
 class Cart
@@ -24,32 +25,32 @@ class Cart
         $cache = Be::getCache();
         $key = 'Shop:Cart:' . $my->id;
         $carts = $cache->get($key);
-        if (is_array($carts) && count($carts) > 0) {
-            $removeCarts = [];
-            foreach ($carts as $cart) {
-                try {
-                    $cartProducts[] = $this->loadProductDetails($cart);
-                } catch (\Throwable $t) {
-                    $removeCarts[] = $cart;
-                    continue;
-                }
-            }
-
-            if (count($removeCarts) > 0) {
-                $newCarts = array_diff($carts, $removeCarts);
-                if (count($newCarts) > 0) {
-                    $cache->set($key, $newCarts);
-                } else {
-                    $cache->delete($key);
-                }
-            }
-
-            if (count($cartProducts) > 0) {
-                // 游客购物车保留 60 天， 注册用户 180 天， 有访问时自动延期，超时未访问网站将清除
-                $expire = $my->isGuest() ? 60 * 86400 : 180 * 86400;
-                $cache->setExpire($key, $expire);
+        if (!is_array($carts)) {
+            if ($my->isGuest()) {
+                $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+                $carts = Be::getDb()->getObjects($sql, [$my->token]);
+            } else {
+                $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+                $carts = Be::getDb()->getObjects($sql, [$my->id]);
             }
         }
+
+        $removeCarts = [];
+        foreach ($carts as $cart) {
+            try {
+                $cartProducts[] = $this->loadProductDetails($cart);
+            } catch (\Throwable $t) {
+                $removeCarts[] = $cart;
+                continue;
+            }
+        }
+
+        if (count($removeCarts) > 0) {
+            $carts = array_diff($carts, $removeCarts);
+        }
+
+        $configCart = Be::getConfig('App.Shop.Cart');
+        $cache->set($key, $carts, $configCart->cacheExpireDays * 86400);
 
         return $cartProducts;
     }
@@ -232,39 +233,74 @@ class Cart
     public function add(string $productId, string $productItemId, int $quantity = 1): int
     {
         $my = Be::getUser();
-        $cache = Be::getCache();
+        $db = Be::getDb();
+        $configCart = Be::getConfig('App.Shop.Cart');
 
-        $key = 'Shop:Cart:' . $my->id;
-        $carts = $cache->get($key);
-        if (!is_array($carts)) {
-            $carts = [];
+        if ($my->isGuest()) {
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->token]);
+            $userId = '';
+        } else {
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->id]);
+            $userId = $my->id;
         }
 
-        $exist = false;
+        $cacheCarts = [];
         foreach ($carts as $cart) {
             if ($cart->product_item_id === $productItemId) {
+
                 $cart->quantity += $quantity;
-                $exist = true;
+
                 $quantity = $cart->quantity;
-                break;
+
+                $exist = true;
+
+                if ($quantity <= 0) {
+                    $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                    break;
+                }
+
+                $db->update('shop_cart', [
+                    'id' => $cart->id,
+                    'quantity' => $cart->quantity,
+                    'update_time' => date('Y-m-d H:i:s'),
+                ]);
             }
+
+            $cacheCarts[] = (object)[
+                'product_id' => $cart->product_id,
+                'product_item_id' => $cart->product_item_id,
+                'quantity' => $cart->quantity,
+            ];
         }
 
-        if (!$exist) {
-            $carts[] = (object)[
+        if (!$exist && $quantity > 0) {
+            if (count($cacheCarts) + 1 > $configCart->maxItems) {
+                throw new ServiceException('You can max add ' . $configCart->maxItems . ' items to the cart！');
+            }
+
+            $db->insert('shop_cart', [
+                'id' => $db->uuid(),
+                'user_id' => $userId,
+                'user_token' => $my->token,
+                'product_id' => $cart->product_id,
+                'product_item_id' => $cart->product_item_id,
+                'quantity' => $quantity,
+                'create_time' => date('Y-m-d H:i:s'),
+                'update_time' => date('Y-m-d H:i:s'),
+            ]);
+
+            $cacheCarts[] = (object)[
                 'product_id' => $productId,
                 'product_item_id' => $productItemId,
                 'quantity' => $quantity,
             ];
         }
 
-        if (count($carts) > 99) {
-            throw new ServiceException('You can max add 100 items to the cart！');
-        }
-
-        // 游客购物车保留 60 天， 注册用户 180 天， 有访问时自动延期，超时未访问网站将清除
-        $expire = $my->isGuest() ? 60 * 86400 : 180 * 86400;
-        $cache->set($key, $carts, $expire);
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:Cart:' . $my->id;
+        $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
         return $quantity;
     }
@@ -280,41 +316,46 @@ class Cart
     public function change(string $productId, string $productItemId, int $quantity = 1): int
     {
         $my = Be::getUser();
-        $cache = Be::getCache();
+        $db = Be::getDb();
 
-        $key = 'Shop:Cart:' . $my->id;
-        $carts = $cache->get($key);
-        if (!is_array($carts)) {
-            $carts = [];
+        if ($my->isGuest()) {
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->token]);
+        } else {
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->id]);
         }
 
-        $newCarts = [];
-        $exist = false;
+        $cacheCarts = [];
         foreach ($carts as $cart) {
             if ($cart->product_item_id === $productItemId) {
-                $exist = true;
-
-                if ($quantity > 0) {
-                    $cart->quantity = $quantity;
-                    $newCarts[] = $cart;
+                if ($quantity <= 0) {
+                    $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                    break;
                 }
-                break;
+
+                $cart->quantity = $quantity;
+
+                $db->update('shop_cart', [
+                    'id' => $cart->id,
+                    'quantity' => $cart->quantity,
+                    'update_time' => date('Y-m-d H:i:s'),
+                ]);
+
+                $quantity = $cart->quantity;
             }
 
-            $newCarts[] = $cart;
-        }
-
-        if (!$exist && $quantity > 0) {
-            $newCarts[] = (object)[
-                'product_id' => $productId,
-                'product_item_id' => $productItemId,
-                'quantity' => $quantity,
+            $cacheCarts[] = (object)[
+                'product_id' => $cart->product_id,
+                'product_item_id' => $cart->product_item_id,
+                'quantity' => $cart->quantity,
             ];
         }
 
-        // 游客购物车保留 60 天， 注册用户 180 天， 有访问时自动延期，超时未访问网站将清除
-        $expire = $my->isGuest() ? 60 * 86400 : 180 * 86400;
-        $cache->set($key, $newCarts, $expire);
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:Cart:' . $my->id;
+        $configCart = Be::getConfig('App.Shop.Cart');
+        $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
         return $quantity;
     }
@@ -329,28 +370,34 @@ class Cart
     public function remove(string $productId, string $productItemId): bool
     {
         $my = Be::getUser();
-        $cache = Be::getCache();
+        $db = Be::getDb();
 
-        $key = 'Shop:Cart:' . $my->id;
-        $carts = $cache->get($key);
-        if (!is_array($carts)) {
-            $carts = [];
-        }
-
-        $newCarts = [];
-        foreach ($carts as $cart) {
-            if ($cart->product_item_id !== $productItemId) {
-                $newCarts[] = $cart;
-            }
-        }
-
-        if (count($newCarts) > 0) {
-            // 游客购物车保留 60 天， 注册用户 180 天， 有访问时自动延期，超时未访问网站将清除
-            $expire = $my->isGuest() ? 60 * 86400 : 180 * 86400;
-            $cache->set($key, $newCarts, $expire);
+        if ($my->isGuest()) {
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->token]);
         } else {
-            $cache->delete($key);
+            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $carts = Be::getDb()->getObjects($sql, [$my->id]);
         }
+
+        $cacheCarts = [];
+        foreach ($carts as $cart) {
+            if ($cart->product_item_id === $productItemId) {
+                $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                break;
+            }
+
+            $cacheCarts[] = (object)[
+                'product_id' => $cart->product_id,
+                'product_item_id' => $cart->product_item_id,
+                'quantity' => $cart->quantity,
+            ];
+        }
+
+        $cache = Be::getCache();
+        $cacheKey = 'Shop:Cart:' . $my->id;
+        $configCart = Be::getConfig('App.Shop.Cart');
+        $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
         return true;
     }
@@ -365,8 +412,6 @@ class Cart
     public function checkout(array $cart): object
     {
         $my = Be::getUser();
-
-        $cache = Be::getCache();
         $db = Be::getDb();
 
         if (!isset($cart['from']) || !is_string($cart['from'])) {
@@ -628,19 +673,20 @@ class Cart
                 $tupleOrderPromotion->insert();
             }
 
-            $db->commit();
-
             // 清除购物车中的商品
             if ($cart['from'] === 'cart') {
 
-                $key = 'Shop:Cart:' . $my->id;
-                $carts = $cache->get($key);
-                if (!is_array($carts)) {
-                    $carts = [];
+                if ($my->isGuest()) {
+                    $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+                    $carts = Be::getDb()->getObjects($sql, [$my->token]);
+                } else {
+                    $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+                    $carts = Be::getDb()->getObjects($sql, [$my->id]);
                 }
 
-                $newCarts = [];
+                $cacheCarts = [];
                 foreach ($carts as $cart) {
+
                     $exist = false;
                     foreach ($cart['products'] as $product) {
                         if ($cart->product_item_id === $product->product_item_id) {
@@ -649,19 +695,26 @@ class Cart
                         }
                     }
 
-                    if (!$exist) {
-                        $newCarts[] = $cart;
+                    if ($exist) {
+                        $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                        break;
                     }
+
+                    $cacheCarts[] = (object)[
+                        'product_id' => $cart->product_id,
+                        'product_item_id' => $cart->product_item_id,
+                        'quantity' => $cart->quantity,
+                    ];
                 }
 
-                if (count($newCarts) > 0) {
-                    // 游客购物车保留 60 天， 注册用户 180 天， 有访问时自动延期，超时未访问网站将清除
-                    $expire = $my->isGuest() ? 60 * 86400 : 180 * 86400;
-                    $cache->set($key, $newCarts, $expire);
-                } else {
-                    $cache->delete($key);
-                }
+                $cache = Be::getCache();
+                $cacheKey = 'Shop:Cart:' . $my->id;
+                $configCart = Be::getConfig('App.Shop.Cart');
+                $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
             }
+
+            $db->commit();
+
         } catch (\Throwable $t) {
             $db->rollback();
             $logId = Be::getLog()->error($t);
