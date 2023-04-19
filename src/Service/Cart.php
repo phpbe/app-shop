@@ -41,7 +41,6 @@ class Cart
                 $cartProducts[] = $this->loadProductDetails($cart);
             } catch (\Throwable $t) {
                 $removeCarts[] = $cart;
-                continue;
             }
         }
 
@@ -258,7 +257,7 @@ class Cart
 
                 if ($quantity <= 0) {
                     $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
-                    break;
+                    continue;
                 }
 
                 $db->update('shop_cart', [
@@ -331,7 +330,7 @@ class Cart
             if ($dbCart->product_item_id === $productItemId) {
                 if ($quantity <= 0) {
                     $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
-                    break;
+                    continue;
                 }
 
                 $dbCart->quantity = $quantity;
@@ -384,7 +383,7 @@ class Cart
         foreach ($dbCarts as $dbCart) {
             if ($dbCart->product_item_id === $productItemId) {
                 $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
-                break;
+                continue;
             }
 
             $cacheCarts[] = (object)[
