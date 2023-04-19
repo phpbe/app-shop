@@ -116,7 +116,7 @@ class ApiCollect
             }
             $data['collect_product_id'] = $tupleCollectProduct->id;
 
-            $data['name'] = $request->post('name', '');
+            $data['name'] = $request->post('name', '', '');
             if ($collectProductApiConfig->nameRequired && $data['name'] === '') {
                 throw new ServiceException('名称（name）为必填项！');
             }
@@ -126,7 +126,7 @@ class ApiCollect
                 throw new ServiceException('摘要（summary）为必填项！');
             }
 
-            $data['description'] = $request->post('description', '', 'html');
+            $data['description'] = $request->post('description', '', '');
             if ($collectProductApiConfig->descriptionRequired && $data['description'] === '') {
                 throw new ServiceException('描述（description）为必填项！');
             }
