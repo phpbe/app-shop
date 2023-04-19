@@ -95,10 +95,17 @@ class Cart extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $order = Be::getService('App.Shop.Cart')->checkout($request->post());
+        try {
+            $order = Be::getService('App.Shop.Cart')->checkout($request->post());
+        } catch (\Throwable $t) {
+            $response->set('success', false);
+            $response->set('message', $t->getMessage());
+            $response->json();
+            return;
+        }
+
         $response->set('success', true);
         $response->set('message', 'Check out success!');
-
         $redirectUrl = beUrl('Shop.Payment.pay', ['order_id' => $order->id]);
         $response->set('redirectUrl', $redirectUrl);
         $response->json();
