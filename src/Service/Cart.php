@@ -237,41 +237,41 @@ class Cart
         $configCart = Be::getConfig('App.Shop.Cart');
 
         if ($my->isGuest()) {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->token]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
             $userId = '';
         } else {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->id]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
             $userId = $my->id;
         }
 
         $cacheCarts = [];
-        foreach ($carts as $cart) {
-            if ($cart->product_item_id === $productItemId) {
+        foreach ($dbCarts as $dbCart) {
+            if ($dbCart->product_item_id === $productItemId) {
 
-                $cart->quantity += $quantity;
+                $dbCart->quantity += $quantity;
 
-                $quantity = $cart->quantity;
+                $quantity = $dbCart->quantity;
 
                 $exist = true;
 
                 if ($quantity <= 0) {
-                    $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                    $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
                     break;
                 }
 
                 $db->update('shop_cart', [
-                    'id' => $cart->id,
-                    'quantity' => $cart->quantity,
+                    'id' => $dbCart->id,
+                    'quantity' => $dbCart->quantity,
                     'update_time' => date('Y-m-d H:i:s'),
                 ]);
             }
 
             $cacheCarts[] = (object)[
-                'product_id' => $cart->product_id,
-                'product_item_id' => $cart->product_item_id,
-                'quantity' => $cart->quantity,
+                'product_id' => $dbCart->product_id,
+                'product_item_id' => $dbCart->product_item_id,
+                'quantity' => $dbCart->quantity,
             ];
         }
 
@@ -319,36 +319,36 @@ class Cart
         $db = Be::getDb();
 
         if ($my->isGuest()) {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->token]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
         } else {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->id]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
         }
 
         $cacheCarts = [];
-        foreach ($carts as $cart) {
-            if ($cart->product_item_id === $productItemId) {
+        foreach ($dbCarts as $dbCart) {
+            if ($dbCart->product_item_id === $productItemId) {
                 if ($quantity <= 0) {
-                    $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                    $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
                     break;
                 }
 
-                $cart->quantity = $quantity;
+                $dbCart->quantity = $quantity;
 
                 $db->update('shop_cart', [
-                    'id' => $cart->id,
-                    'quantity' => $cart->quantity,
+                    'id' => $dbCart->id,
+                    'quantity' => $dbCart->quantity,
                     'update_time' => date('Y-m-d H:i:s'),
                 ]);
 
-                $quantity = $cart->quantity;
+                $quantity = $dbCart->quantity;
             }
 
             $cacheCarts[] = (object)[
-                'product_id' => $cart->product_id,
-                'product_item_id' => $cart->product_item_id,
-                'quantity' => $cart->quantity,
+                'product_id' => $dbCart->product_id,
+                'product_item_id' => $dbCart->product_item_id,
+                'quantity' => $dbCart->quantity,
             ];
         }
 
@@ -373,24 +373,24 @@ class Cart
         $db = Be::getDb();
 
         if ($my->isGuest()) {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->token]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
         } else {
-            $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $carts = Be::getDb()->getObjects($sql, [$my->id]);
+            $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
         }
 
         $cacheCarts = [];
-        foreach ($carts as $cart) {
-            if ($cart->product_item_id === $productItemId) {
-                $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+        foreach ($dbCarts as $dbCart) {
+            if ($dbCart->product_item_id === $productItemId) {
+                $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
                 break;
             }
 
             $cacheCarts[] = (object)[
-                'product_id' => $cart->product_id,
-                'product_item_id' => $cart->product_item_id,
-                'quantity' => $cart->quantity,
+                'product_id' => $dbCart->product_id,
+                'product_item_id' => $dbCart->product_item_id,
+                'quantity' => $dbCart->quantity,
             ];
         }
 
@@ -677,33 +677,33 @@ class Cart
             if ($cart['from'] === 'cart') {
 
                 if ($my->isGuest()) {
-                    $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-                    $carts = Be::getDb()->getObjects($sql, [$my->token]);
+                    $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+                    $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
                 } else {
-                    $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-                    $carts = Be::getDb()->getObjects($sql, [$my->id]);
+                    $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+                    $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
                 }
 
                 $cacheCarts = [];
-                foreach ($carts as $cart) {
+                foreach ($dbCarts as $dbCart) {
 
                     $exist = false;
                     foreach ($cart['products'] as $product) {
-                        if ($cart->product_item_id === $product->product_item_id) {
+                        if ($dbCart->product_item_id === $product->product_item_id) {
                             $exist = true;
                             break;
                         }
                     }
 
                     if ($exist) {
-                        $db->query('DELETE FROM shop_cart WHERE id=?', [$cart->id]);
+                        $db->query('DELETE FROM shop_cart WHERE id=?', [$dbCart->id]);
                         break;
                     }
 
                     $cacheCarts[] = (object)[
-                        'product_id' => $cart->product_id,
-                        'product_item_id' => $cart->product_item_id,
-                        'quantity' => $cart->quantity,
+                        'product_id' => $dbCart->product_id,
+                        'product_item_id' => $dbCart->product_item_id,
+                        'quantity' => $dbCart->quantity,
                     ];
                 }
 
