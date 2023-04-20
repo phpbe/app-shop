@@ -16,7 +16,7 @@
             </div>
             <div class="be-center">
                 <h4 class="be-h4">
-                    <a href="<?php echo beURL('Shop.Order.orders') ;?>"><i class="user-center-back"></i></a>
+                    <a href="<?php echo beURL('Shop.Order.orders') ;?>"><i class="bi-chevron-left"></i></a>
                     Order Details
                 </h4>
 

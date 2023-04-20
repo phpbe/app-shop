@@ -21,7 +21,7 @@
     ?>
 
     <h4 class="be-h4">
-        <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>"><i class="user-center-back"></i></a>
+        <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>"><i class="bi-chevron-left"></i></a>
         <?php echo $this->address ? 'Edit Billing Address' : 'Add a New Billing Address'; ?>
     </h4>
 

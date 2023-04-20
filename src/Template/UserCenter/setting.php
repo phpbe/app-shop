@@ -17,7 +17,7 @@
 <be-page-content>
     <div class="be-d-block be-d-lg-none">
         <h4 class="be-h4">
-            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="user-center-back"></i></a>
+            <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="bi-chevron-left"></i></a>
             Account Settings
         </h4>
     </div>

@@ -11,12 +11,16 @@
     <?php
     $my = \Be\Be::getUser();
     ?>
-    <div class="be-d-flex">
-        <div class="be-flex-0">
+    <div class="be-rowx">
+        <div class="be-col-24 be-md-col-auto">
             <img src="<?php echo $my->avatar; ?>" alt="<?php echo $my->first_name . ' ' . $my->last_name; ?>">
         </div>
 
-        <div class="be-flex-1 be-pl-100">
+        <div class="be-col-24 be-md-col-auto">
+            <div class="be-pl-100 be-mt-100"></div>
+        </div>
+
+        <div class="be-col-24 be-md-col">
             <div class="be-mt-50 be-fs-150 be-fw-bold">
                 <?php echo $my->first_name . ' ' . $my->last_name; ?>
             </div>
@@ -29,45 +33,34 @@
         </div>
     </div>
 
-    <div class="be-d-block be-d-lg-none">
+    <div class="be-d-block be-lg-d-none">
         <ul class="be-mt-200 user-center-dashboard-nav">
             <li>
                 <a href="<?php echo beUrl('Shop.Order.orders'); ?>">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zm-3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                    </svg>
+                    <i class="bi-list-ul"></i>
                     <span>My Orders</span>
-                    <i class="user-center-dashboard-nav-right"></i>
+                    <i class="bi-chevron-right"></i>
                 </a>
             </li>
             <li>
                 <a href="<?php echo beUrl('Shop.UserFavorite.favorites'); ?>">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M8 4.41c1.387-1.425 4.854 1.07 0 4.277C3.146 5.48 6.613 2.986 8 4.412z"/>
-                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"/>
-                    </svg>
+                    <i class="bi-bag-heart"></i>
                     <span>Wish List</span>
-                    <i class="user-center-dashboard-nav-right"></i>
+                    <i class="bi-chevron-right"></i>
                 </a>
             </li>
             <li>
                 <a href="<?php echo beUrl('Shop.UserAddress.addresses'); ?>">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
-                        <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-                    </svg>
+                    <i class="bi-geo"></i>
                     <span>Address Book</span>
-                    <i class="user-center-dashboard-nav-right"></i>
+                    <i class="bi-chevron-right"></i>
                 </a>
             </li>
             <li>
                 <a href="<?php echo beUrl('Shop.UserCenter.setting'); ?>">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-gear" viewBox="0 0 16 16">
-                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
-                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
-                    </svg>
+                    <i class="bi-gear"></i>
                     <span>Setting</span>
-                    <i class="user-center-dashboard-nav-right"></i>
+                    <i class="bi-chevron-right"></i>
                 </a>
             </li>
         </ul>
@@ -77,7 +70,7 @@
         </div>
     </div>
 
-    <div class="be-d-none be-d-lg-block">
+    <div class="be-d-none be-lg-d-block">
         <?php
         $option = [];
         $option['pageSize'] = 20;

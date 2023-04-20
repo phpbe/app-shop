@@ -20,7 +20,7 @@
     $countryKeyValues = \Be\Be::getService('App.Shop.Shipping')->getCountryIdNameKeyValues();
     ?>
     <h4 class="be-h4">
-        <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>"><i class="user-center-back"></i></a>
+        <a href="<?php echo beURL('Shop.UserAddress.addresses') ;?>"><i class="bi-chevron-left"></i></a>
         <?php echo $this->address ? 'Edit Shipping Address' : 'Add a New Shipping Address'; ?>
     </h4>
 
