@@ -7,7 +7,7 @@
 
 
 <be-page-content>
-    <div class="be-d-none be-d-lg-block">
+    <div class="be-d-none be-md-d-block">
         <h4 class="be-h4">My Reviews</h4>
 
         <table class="be-mt-200 be-table">

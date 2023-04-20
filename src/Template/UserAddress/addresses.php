@@ -17,7 +17,7 @@
 
 
 <be-page-content>
-    <div class="be-d-block be-d-lg-none">
+    <div class="be-d-block be-md-d-none">
         <h4 class="be-h4">
             <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="bi-chevron-left"></i></a>
             Address Book
@@ -123,7 +123,7 @@
 
     </div>
 
-    <div class="be-d-none be-d-lg-block">
+    <div class="be-d-none be-md-d-block">
         <h4 class="be-h4">Address Book</h4>
 
         <div class="be-tab">

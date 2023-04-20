@@ -15,13 +15,13 @@
 
 
 <be-page-content>
-    <div class="be-d-block be-d-lg-none">
+    <div class="be-d-block be-md-d-none">
         <h4 class="be-h4">
             <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>"><i class="bi-chevron-left"></i></a>
             Account Settings
         </h4>
     </div>
-    <div class="be-d-none be-d-lg-block">
+    <div class="be-d-none be-md-d-block">
         <h4 class="be-h4">Account Settings</h4>
     </div>
 
@@ -106,7 +106,7 @@
                     </div>
                 </div>
 
-                <div class="be-d-block be-d-lg-none">
+                <div class="be-d-block be-md-d-none">
                     <div class="be-mt-150 be-row">
                         <div class="be-col-24 be-md-col-12 be-lg-col-6">
                             <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>" class="be-btn be-btn-lg be-w-100">Back</a>

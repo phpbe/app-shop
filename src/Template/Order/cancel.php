@@ -43,7 +43,7 @@
                 </div>
             </form>
 
-            <div class="be-d-block be-d-lg-none">
+            <div class="be-d-block be-md-d-none">
                 <div class="be-mt-150 be-row">
                     <div class="be-col-24 be-md-col-12 be-lg-col-6">
                         <a href="<?php echo beURL('Shop.UserCenter.dashboard') ;?>" class="be-btn be-btn-outline be-btn-lg be-w-100">Back</a>

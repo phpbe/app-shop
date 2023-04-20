@@ -60,7 +60,7 @@ class Template extends Section
         foreach ($menuTree as $item) {
 
             echo '<li';
-            if ($item->route == $route) {
+            if ($item->route === $route) {
                 echo ' class="active"';
             }
             echo '>';

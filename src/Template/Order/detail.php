@@ -21,7 +21,7 @@
                 </h4>
 
                 <!-- 手机端 开始 -->
-                <div class="be-d-block be-d-lg-none">
+                <div class="be-d-block be-md-d-none">
                     <div class="be-row be-mt-150">
                         <div class="be-col-auto" style="min-width: 8rem;">
                             Shipped To:
@@ -192,7 +192,7 @@
 
 
                 <!-- PC端 开始 -->
-                <div class="be-d-none be-d-lg-block">
+                <div class="be-d-none be-md-d-block">
 
                     <div class="be-fc be-mt-200">
                         <div class="be-fl">
