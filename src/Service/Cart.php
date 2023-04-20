@@ -237,11 +237,11 @@ class Cart
 
         if ($my->isGuest()) {
             $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
+            $dbCarts = $db->getObjects($sql, [$my->token]);
             $userId = '';
         } else {
             $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
+            $dbCarts = $db->getObjects($sql, [$my->id]);
             $userId = $my->id;
         }
 
@@ -319,10 +319,10 @@ class Cart
 
         if ($my->isGuest()) {
             $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
+            $dbCarts = $db->getObjects($sql, [$my->token]);
         } else {
             $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
+            $dbCarts = $db>getObjects($sql, [$my->id]);
         }
 
         $cacheCarts = [];
@@ -373,10 +373,10 @@ class Cart
 
         if ($my->isGuest()) {
             $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
+            $dbCarts = $db->getObjects($sql, [$my->token]);
         } else {
             $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
+            $dbCarts = $db->getObjects($sql, [$my->id]);
         }
 
         $cacheCarts = [];
@@ -677,10 +677,10 @@ class Cart
 
                 if ($my->isGuest()) {
                     $sql = 'SELECT * FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
-                    $dbCarts = Be::getDb()->getObjects($sql, [$my->token]);
+                    $dbCarts = $db->getObjects($sql, [$my->token]);
                 } else {
                     $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-                    $dbCarts = Be::getDb()->getObjects($sql, [$my->id]);
+                    $dbCarts = $db->getObjects($sql, [$my->id]);
                 }
 
                 $cacheCarts = [];

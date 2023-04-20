@@ -104,7 +104,7 @@ class User
             $db->commit();
 
             if ($tokenUserId !== null) {
-                $this->importTmpCart($tokenUserId, $tupleUser->id);
+                $this->importTmpCart($tokenUserId, $token, $tupleUser->id);
             }
 
             return (object)[
@@ -126,26 +126,25 @@ class User
     }
 
 
-    private function importTmpCart(string $tmpUserId, string $userId): bool
+    private function importTmpCart(string $tokenUserId, string $userToken, string $userId): bool
     {
-        $redis = Be::getRedis();
-        $tmpData = $redis->hGetAll('Shop:Cart:' . $tmpUserId);
-        $data = $redis->hGetAll('Shop:Cart:' . $userId);
+        $db = Be::getDb();
 
-        if ($tmpData) {
-            foreach ($tmpData as $k => $v) {
-                if (isset($data[$k])) {
-                    $data[$k] = $data[$k] + $v;
-                } else {
-                    $data[$k] = $v;
-                }
-            }
+        $sql = 'UPDATE shop_cart SET user_id=? WHERE user_token=? AND user_id=\'\'';
+        $db->query($sql, [$userId, $userToken]);
 
-            foreach ($data as $k => $v) {
-                $redis->hset('Shop:Cart:' . $userId, $k, $v);
-            }
-        }
-        $redis->del('Shop:Cart:' . $tmpUserId);
+        $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+        $carts = $db->getObjects($sql, [$userId]);
+
+        $cache = Be::getCache();
+
+        $cacheKey = 'Shop:Cart:' . $tokenUserId;
+        $cache->delete($cacheKey);
+
+        $cacheKey = 'Shop:Cart:' . $userId;
+        $configCart = Be::getConfig('App.Shop.Cart');
+        $cache->set($cacheKey, $carts, $configCart->cacheExpireDays * 86400);
+
         return true;
     }
 
@@ -419,7 +418,7 @@ class User
             $db->commit();
 
             if ($tokenUserId !== null) {
-                $this->importTmpCart($tokenUserId, $tupleUser->id);
+                $this->importTmpCart($tokenUserId, $token, $tupleUser->id);
             }
 
             return (object)[
