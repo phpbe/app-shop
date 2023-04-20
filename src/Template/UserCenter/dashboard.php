@@ -11,7 +11,7 @@
     <?php
     $my = \Be\Be::getUser();
     ?>
-    <div class="be-rowx">
+    <div class="be-row">
         <div class="be-col-24 be-md-col-auto">
             <img src="<?php echo $my->avatar; ?>" alt="<?php echo $my->first_name . ' ' . $my->last_name; ?>">
         </div>
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="be-d-block be-lg-d-none">
+    <div class="be-d-block be-md-d-none">
         <ul class="be-mt-200 user-center-dashboard-nav">
             <li>
                 <a href="<?php echo beUrl('Shop.Order.orders'); ?>">
@@ -70,7 +70,7 @@
         </div>
     </div>
 
-    <div class="be-d-none be-lg-d-block">
+    <div class="be-d-none be-md-d-block">
         <?php
         $option = [];
         $option['pageSize'] = 20;
