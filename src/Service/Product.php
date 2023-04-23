@@ -478,22 +478,21 @@ class Product
 
         // 点击量 使用REDIS 存放
         $hits = $product->hits;
-        $n = 0;
         $hitsKey = 'App:Shop:Product:hits:' . $productId;
         $cacheHits = $cache->get($hitsKey);
         if ($cacheHits !== false) {
-            $cacheHitsArr = explode(',', $cacheHits);
-            if (count($cacheHitsArr) == 2) {
-                $hits = (int)$cacheHitsArr[0];
-                $n = (int)$cacheHitsArr[1];
+            if (is_numeric($cacheHits)) {
+                $cacheHits = (int)$cacheHits;
+                if ($cacheHits > $product->hits) {
+                    $hits = $cacheHits;
+                }
             }
         }
         $hits++;
-        $n++;
-        $cache->set($hitsKey, $hits . ',' . ($n >= 1000 ? 0 : $n));
+        $cache->set($hitsKey, $hits);
 
-        // 每 1000 次访问，更新到数据库
-        if ($n >= 1000) {
+        // 每 100 次访问，更新到数据库
+        if ($hits % 100 === 0) {
             $sql = 'UPDATE shop_product SET hits=?, update_time=? WHERE id=?';
             Be::getDb()->query($sql, [$hits, date('Y-m-d H:i:s'), $productId]);
         }
