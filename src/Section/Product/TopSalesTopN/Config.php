@@ -67,7 +67,7 @@ class Config
      *     driver = "FormItemInput"
      * )
      */
-    public string $more = 'Show more';
+    public string $more = 'Show More';
 
     /**
      * @BeConfigItem("更多链接",

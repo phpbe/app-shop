@@ -35,7 +35,7 @@ class Config
      *     driver = "FormItemInput"
      * )
      */
-    public string $title = 'Guess you like';
+    public string $title = 'Guess You Like';
 
     /**
      * @BeConfigItem("展示多少个商品?",
@@ -67,7 +67,7 @@ class Config
      *     driver = "FormItemInput"
      * )
      */
-    public string $more = 'Show more';
+    public string $more = 'Show More';
 
     /**
      * @BeConfigItem("更多链接",
