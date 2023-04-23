@@ -32,7 +32,7 @@ class TaskProductRelate
                 continue;
             }
 
-            $key = 'Shop:ProductRelate:' . $relate->id;
+            $key = 'App:Shop:Product:Relate:' . $relate->id;
 
             $relate->is_delete = (int)$relate->is_delete;
 

@@ -112,24 +112,18 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $keywords = $request->get('keywords');
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
+
+        $keywords = $request->get('keywords', '');
         $keywords = urldecode($keywords);
-        $response->set('keywords', $keywords);
+        $keywords = trim($keywords);
+        $title = 'Search result of:' . $keywords;
 
-        $orderBy = $request->get('orderBy', 'common');
-        $orderByDir = $request->get('orderByDir', 'desc');
-        $response->set('orderBy', $orderBy);
-        $response->set('orderByDir', $orderByDir);
-
-        $page = $request->get('page', 1);
-
-        $result = Be::getService('App.Shop.Product')->search($keywords, [
-            'orderByDir' => $orderByDir,
-            'page' => $page,
-            'orderBy' => $orderBy,
-        ]);
-        $response->set('result', $result); // 商品列表
-
+        $response->set('title', $title);
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $title);
         $response->display();
     }
 
@@ -144,23 +138,15 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.Shop.Page.Product.latest');
-        $response->set('title', $configPage->title);
-        $response->set('metaKeywords', $configPage->seoKeywords);
-        $response->set('metaDescription', $configPage->seoDescription);
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
 
-        $page = $request->get('page', 1);
-        $result = Be::getService('App.Shop.Product')->search('', [
-            'orderBy' => 'create_time',
-            'orderByDir' => 'desc',
-            'page' => $page,
-        ]);
-        $response->set('result', $result);
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
 
-        $paginationUrl = beUrl('Shop.Product.latest');
-        $response->set('paginationUrl', $paginationUrl);
-
-        $response->display('App.Shop.Product.products');
+        $response->display();
     }
 
     /**
@@ -174,23 +160,15 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.Shop.Page.Product.hottest');
-        $response->set('title', $configPage->title);
-        $response->set('metaKeywords', $configPage->seoKeywords);
-        $response->set('metaDescription', $configPage->seoDescription);
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
 
-        $page = $request->get('page', 1);
-        $result = Be::getService('App.Shop.Product')->search('', [
-            'orderBy' => 'hits',
-            'orderByDir' => 'desc',
-            'page' => $page,
-        ]);
-        $response->set('result', $result);
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
 
-        $paginationUrl = beUrl('Shop.Product.hottest');
-        $response->set('paginationUrl', $paginationUrl);
-
-        $response->display('App.Shop.Product.products');
+        $response->display();
     }
 
     /**
@@ -204,55 +182,37 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.Shop.Page.Product.topSales');
-        $response->set('title', $configPage->title);
-        $response->set('metaKeywords', $configPage->seoKeywords);
-        $response->set('metaDescription', $configPage->seoDescription);
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
 
-        $page = $request->get('page', 1);
-        $result = Be::getService('App.Shop.Product')->search('', [
-            'orderBy' => 'sales_volume',
-            'orderByDir' => 'desc',
-            'page' => $page,
-        ]);
-        $response->set('result', $result);
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
 
-        $paginationUrl = beUrl('Shop.Product.topSales');
-        $response->set('paginationUrl', $paginationUrl);
-
-        $response->display('App.Shop.Product.products');
+        $response->display();
     }
 
     /**
      * 热搜商品
      *
      * @BeMenu("热搜商品")
-     * @BeRoute("/product/top-search")
+     * @BeRoute("/product/hot-search")
      */
-    public function topSearch()
+    public function hotSearch()
     {
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.Shop.Page.Product.topSearch');
-        $response->set('title', $configPage->title);
-        $response->set('metaKeywords', $configPage->seoKeywords);
-        $response->set('metaDescription', $configPage->seoDescription);
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
 
-        $rows = Be::getService('App.Shop.Product')->getTopSearchProducts(120);
-        $result = [
-            'total' => count($rows),
-            'pageSize' => 100,
-            'page' => 1,
-            'rows' => $rows,
-        ];
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
 
-        $response->set('result', $result);
-
-        $paginationUrl = beUrl('Shop.Product.topSearch');
-        $response->set('paginationUrl', $paginationUrl);
-
-        $response->display('App.Shop.Product.products');
+        $response->display();
     }
 
     /**
@@ -265,25 +225,15 @@ class Product extends Base
         $request = Be::getRequest();
         $response = Be::getResponse();
 
-        $configPage = Be::getConfig('App.Shop.Page.Product.guessYouLike');
-        $response->set('title', $configPage->title);
-        $response->set('metaKeywords', $configPage->seoKeywords);
-        $response->set('metaDescription', $configPage->seoDescription);
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
 
-        $rows = Be::getService('App.Shop.Product')->getGuessYouLikeProducts(120);
-        $result = [
-            'total' => count($rows),
-            'pageSize' => 100,
-            'page' => 1,
-            'rows' => $rows,
-        ];
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
 
-        $response->set('result', $result);
-
-        $paginationUrl = beUrl('Shop.Product.guessYouLike');
-        $response->set('paginationUrl', $paginationUrl);
-
-        $response->display('App.Shop.Product.products');
+        $response->display();
     }
 
 

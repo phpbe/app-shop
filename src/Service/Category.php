@@ -18,7 +18,7 @@ class Category
     {
         $cache = Be::getCache();
 
-        $key = 'Shop:Categories';
+        $key = 'App:Shop:Categories';
         $categories = $cache->get($key);
 
         if (!$categories) {
@@ -50,7 +50,7 @@ class Category
     {
         $cache = Be::getCache();
 
-        $key = 'Shop:Category:' . $categoryId;
+        $key = 'App:Shop:Category:' . $categoryId;
         $category = $cache->get($key);
 
         if (!$category) {

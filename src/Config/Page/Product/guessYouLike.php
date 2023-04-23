@@ -12,70 +12,42 @@ class guessYouLike
     public array $centerSections = [
         [
             'name' => 'Theme.System.PageTitle',
-        ], [
-            'name' => 'Theme.System.PageContent',
+        ],
+        [
+            'name' => 'App.Shop.Product.GuessYouLike',
         ],
     ];
 
     /**
-     * @BeConfigItem("标题",
-     *     description = "为空时不显示",
+     * @BeConfigItem("HEAD头标题",
+     *     description="HEAD头标题，用于SEO",
      *     driver = "FormItemInput"
      * )
      */
-    public $title = 'Guess You like';
+    public string $title = 'Guess You like';
 
     /**
-     * @BeConfigItem("SEO描述",
+     * @BeConfigItem("Meta描述",
+     *     description="填写页面内容的简单描述，用于SEO",
      *     driver = "FormItemInput"
      * )
      */
-    public $seoDescription = '';
+    public string $metaDescription = 'Guess You like';
 
     /**
-     * @BeConfigItem("SEO描述关键词",
+     * @BeConfigItem("Meta关键词",
+     *     description="填写页面内容的关键词，用于SEO",
      *     driver = "FormItemInput"
      * )
      */
-    public $seoKeywords = '';
+    public string $metaKeywords = 'Guess You like';
 
     /**
-     * @BeConfigItem("展示多少列?",
-     *     description = "仅对电脑端有效",
-     *     driver = "FormItemSlider",
-     *     ui="return [':min' => 3, ':max' => 6];"
-     * )
-     */
-    public $cols = 4;
-
-    /**
-     * @BeConfigItem("鼠标悬停效果",
-     *     driver = "FormItemSelect",
-     *     keyValues = "return ['none' => '无', 'scale' => '放大', 'rotateScale' => '旋转放大', 'toggleImage' => '切换图片'];"
-     * )
-     */
-    public $hoverEffect = 'toggleImage';
-
-    /**
-     * @BeConfigItem("间距（手机端）",
+     * @BeConfigItem("页面标题",
+     *     description="展示在页面内容中的标题，一般与HEAD头标题一致，两者相同时可不填写此项",
      *     driver = "FormItemInput"
      * )
      */
-    public string $spacingMobile = '1.5rem';
-
-    /**
-     * @BeConfigItem("间距（平板端）",
-     *     driver = "FormItemInput"
-     * )
-     */
-    public string $spacingTablet = '1.75rem';
-
-    /**
-     * @BeConfigItem("间距（电脑端）",
-     *     driver = "FormItemInput"
-     * )
-     */
-    public string $spacingDesktop = '2rem';
-
+    public string $pageTitle = '';
 
 }

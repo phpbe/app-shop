@@ -24,7 +24,7 @@ class TaskCategory
 
             $category->is_delete = (int)$category->is_delete;
 
-            $key = 'Shop:Category:' . $category->id;
+            $key = 'App:Shop:Category:' . $category->id;
 
             if ($category->is_delete === 1) {
                 $cache->delete($key);

@@ -5,16 +5,26 @@ namespace Be\App\Shop\Config\Page\Category;
 class products
 {
 
-    public int $west = 0;
-    public int $center = 100;
+
+    public int $west = 25;
+    public int $center = 75;
     public int $east = 0;
+
+    public array $westSections = [
+        [
+            'name' => 'App.Shop.Category.MenuSide',
+        ],
+        [
+            'name' => 'App.Shop.Product.HottestopNSide',
+        ],
+    ];
 
     public array $centerSections = [
         [
             'name' => 'Theme.System.PageTitle',
         ],
         [
-            'name' => 'App.Shop.CategoryProducts',
+            'name' => 'App.Shop.Category.Products',
         ],
     ];
 

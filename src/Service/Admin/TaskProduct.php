@@ -184,7 +184,7 @@ class TaskProduct
                 continue;
             }
 
-            $key = 'Shop:Product:' . $product->id;
+            $key = 'App:Shop:Product:' . $product->id;
             if ($product->is_delete !== '0' || $product->is_enable !== '1') {
                 $cache->delete($key);
             } else {

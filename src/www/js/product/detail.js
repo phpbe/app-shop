@@ -1,4 +1,36 @@
 
+
+var swiperSmall = new Swiper("#" + APP_SHOP_PRODUCT_DETAIL_SECTION_ID + " .swiper-small .swiper", {
+    direction: "vertical",
+    navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev"
+    },
+
+    spaceBetween: 10,
+    slidesPerView: 'auto'
+});
+
+var swiperlarge = new Swiper("#" + APP_SHOP_PRODUCT_DETAIL_SECTION_ID + " .swiper-large .swiper", {
+    thumbs: {
+        swiper: swiperSmall
+    }
+});
+
+// 处理点击过于频繁时失效
+$(".swiper-small .swiper-slide").hover(function(){
+    swiperlarge.slideTo($(this).data("index"));
+});
+
+if (!APP_SHOP_PRODUCT_DETAIL_SECTION_IS_MOBILE) {
+    CloudZoom.quickStart();
+}
+
+let productItemId = "";
+if (APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.style === 1) {
+    productItemId = APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.items[0].id;
+}
+
 let filterStyle = [];
 let swiperImagesType = 'product';
 
@@ -30,17 +62,17 @@ function updateStyles() {
     // 更新多款式的UI样式
     for (let filterStyleId in filterStyle) {
         filterStyleValueIndex = filterStyle[filterStyleId];
-        $("#product-detail-style-" + filterStyleId + " .style-icon-link").removeClass("style-icon-link-current");
+        $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").removeClass("style-icon-link-current");
         if (filterStyleValueIndex !== -1) {
-            for (let style of product.styles) {
+            for (let style of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.styles) {
                 if (style.id === filterStyleId) {
-                    $("#product-detail-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
+                    $("#app-shop-product-detail-main-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
                     break;
                 }
             }
-            $("#product-detail-style-" + filterStyleId + " .style-icon-link").eq(filterStyleValueIndex).addClass("style-icon-link-current");
+            $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").eq(filterStyleValueIndex).addClass("style-icon-link-current");
         } else {
-            $("#product-detail-style-value-" + filterStyleId).html("");
+            $("#app-shop-product-detail-main-style-value-" + filterStyleId).html("");
         }
     }
 
@@ -50,14 +82,14 @@ function updateStyles() {
     let currentStyle;
     let currentStyleName;
     let currentStyleValue;
-    for (let item of product.items) {
+    for (let item of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.items) {
         match = true;
 
         for (let filterStyleId in filterStyle) {
             filterStyleValueIndex = filterStyle[filterStyleId];
             if (filterStyleValueIndex !== -1) {
                 currentStyle = false;
-                for (let style of product.styles) {
+                for (let style of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.styles) {
                     if (style.id === filterStyleId) {
                         currentStyle = style;
                         break;
@@ -94,7 +126,7 @@ function updateStyles() {
     } else {
         productItemId = "";
     }
-    $("#product-detail-item-id").val(productItemId);
+    $("#app-shop-product-detail-main-item-id").val(productItemId);
 
     let originalPriceRange = "";
     let priceRange = "";
@@ -160,35 +192,35 @@ function updateStyles() {
             priceRange = (priceFrom / 100).toFixed(2) + "~" + (priceTo / 100).toFixed(2);
         }
     }
-    let $originalPrice = $("#product-detail-original-price-range");
+    let $originalPrice = $("#app-shop-product-detail-main-original-price-range");
     if (originalPriceRange) {
-        $originalPrice.html("$" + originalPriceRange).show();
+        $originalPrice.html(APP_SHOP_PRODUCT_DETAIL_SECTION_CURRENCY_SYMBOL + originalPriceRange).show();
     } else {
         $originalPrice.html("").hide();
     }
-    $("#product-detail-price-range").html("$" + priceRange);
+    $("#app-shop-product-detail-main-price-range").html(APP_SHOP_PRODUCT_DETAIL_SECTION_CURRENCY_SYMBOL + priceRange);
     // ================================================================================================================= 价格范围
 
     // 购买，加入购物车按钮是否禁用
     if (matchedItems.length === 1) {
-        $("#product-detail-buy-now").prop("disabled", false);
-        $("#product-detail-add-to-cart").prop("disabled", false);
+        $("#app-shop-product-detail-main-buy-now").prop("disabled", false);
+        $("#app-shop-product-detail-main-add-to-cart").prop("disabled", false);
     } else {
-        $("#product-detail-buy-now").prop("disabled", true);
-        $("#product-detail-add-to-cart").prop("disabled", true);
+        $("#app-shop-product-detail-main-buy-now").prop("disabled", true);
+        $("#app-shop-product-detail-main-add-to-cart").prop("disabled", true);
     }
 
     // ----------------------------------------------------------------------------------------------------------------- 更新款式按钮是否可点击
     let available;
     let styleValue;
     let styleMatchedItems;
-    for (let style of product.styles) {
+    for (let style of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.styles) {
         for (let styleValueIndex in style.items) {
 
             // 获取排除当前款式时，匹配上的产品子项列表
             styleMatchedItems = [];
             match = true;
-            for (let item of product.items) {
+            for (let item of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.items) {
                 match = true;
 
                 for (let filterStyleId in filterStyle) {
@@ -201,7 +233,7 @@ function updateStyles() {
                     filterStyleValueIndex = filterStyle[filterStyleId];
                     if (filterStyleValueIndex !== -1) {
                         currentStyle = false;
-                        for (let style of product.styles) {
+                        for (let style of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.styles) {
                             if (style.id === filterStyleId) {
                                 currentStyle = style;
                                 break;
@@ -247,7 +279,7 @@ function updateStyles() {
                 }
             }
 
-            let $e = $("#product-detail-style-" + style.id + " .style-icon-link").eq(styleValueIndex);
+            let $e = $("#app-shop-product-detail-main-style-" + style.id + " .style-icon-link").eq(styleValueIndex);
             if (available) {
                 if ($e.hasClass("style-icon-link-disable")) {
                     $e.removeClass("style-icon-link-disable");
@@ -260,10 +292,9 @@ function updateStyles() {
     // ================================================================================================================= 更新款式按钮是否可点击
 
 
-
     // ----------------------------------------------------------------------------------------------------------------- 更新轮播图
     let newSwiperImagesType = 'product';
-    let swiperImages = product.images;
+    let swiperImages = APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.images;
     if (matchedItems.length === 1) {
         let matchedItem = matchedItems[0];
         if (matchedItem.images.length > 0) {
@@ -282,18 +313,19 @@ function updateStyles() {
         for (let i in swiperImages) {
             swiperImage = swiperImages[i];
             swiperSmall.appendSlide('<div class="swiper-slide" data-index="' + i + '"><img src="' + swiperImage.url + '" alt=""></div>');
-            if (isMobile) {
+
+            if (APP_SHOP_PRODUCT_DETAIL_SECTION_IS_MOBILE) {
                 swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt=""></div>');
             } else {
                 swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt="" class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' + swiperImage.url + '\'"></div>');
             }
         }
 
-        if (!isMobile) {
+        if (!APP_SHOP_PRODUCT_DETAIL_SECTION_IS_MOBILE) {
             CloudZoom.quickStart();
         }
 
-        $(".swiper-small .swiper-slide").hover(function(){
+        $(".swiper-small .swiper-slide").hover(function () {
             swiperlarge.slideTo($(this).data("index"));
         });
     }
@@ -302,14 +334,37 @@ function updateStyles() {
 
 $(document).ready(function () {
 
+    if (APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.style === 2) {
+        let defaultProductItem = APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.items[0];
+        let match = false;
+        for (let style of APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.styles) {
+            for (let styleValueIndex in style.items) {
+
+                match = false;
+                for (let x of defaultProductItem.style_json) {
+                    if (x.name === style.name && x.value === style.items[styleValueIndex].value) {
+                        match = true;
+                        break;
+                    }
+                }
+
+                // 选中该款式
+                if (match) {
+                    filterStyle[style.id] = styleValueIndex;
+                    break;
+                }
+            }
+        }
+    }
+
     updateStyles();
 
-    $("#product-detail-buy-now").click(function () {
+    $("#app-shop-product-detail-main-buy-now").click(function () {
         $(this).closest("form").submit();
     });
 
-    $("#product-detail-add-to-cart").click(function () {
-        let quantity = $("#product-detail-quantity").val();
+    $("#app-shop-product-detail-main-add-to-cart").click(function () {
+        let quantity = $("#app-shop-product-detail-main-quantity").val();
         if (isNaN(quantity)) {
             quantity = 1;
         }
@@ -317,9 +372,9 @@ $(document).ready(function () {
         if (quantity < 0) quantity = 1;
 
         $.ajax({
-            url: addToCartUrl,
+            url: APP_SHOP_PRODUCT_DETAIL_SECTION_CART_ADD_URL,
             data: {
-                "product_id": product.id,
+                "product_id": APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT.id,
                 "product_item_id": productItemId,
                 "quantity": quantity
             },
@@ -337,21 +392,3 @@ $(document).ready(function () {
 
     });
 });
-
-function changeQuantity(n) {
-    let $e = $("#product-detail-quantity");
-    let quantity = $e.val();
-    if (isNaN(quantity)) {
-        quantity = 1;
-    } else {
-        quantity = Number(quantity);
-    }
-    quantity += n;
-    quantity = parseInt(quantity);
-    if (quantity < 1) quantity = 1;
-    $e.val(quantity);
-}
-
-function addToCart() {
-
-}

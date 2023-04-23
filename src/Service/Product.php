@@ -19,7 +19,7 @@ class Product
      */
     public function getProduct(string $productId, array $with = [])
     {
-        $key = 'Shop:Product:' . $productId;
+        $key = 'App:Shop:Product:' . $productId;
         if (Be::hasContext($key)) {
             $product = Be::getContext($key);
         } else {
@@ -201,7 +201,7 @@ class Product
 
         $keys = [];
         foreach ($productIds as $productId) {
-            $keys[] = 'Shop:Product:' . $productId;
+            $keys[] = 'App:Shop:Product:' . $productId;
         }
 
         $products = $cache->getMany($keys);
@@ -218,7 +218,7 @@ class Product
             $newProducts = [];
             foreach ($productIds as $productId) {
 
-                $key = 'Shop:Product:' . $productId;
+                $key = 'App:Shop:Product:' . $productId;
                 try {
                     $product = $this->getProductFromDb($productId);
                 } catch (\Throwable $t) {
@@ -418,7 +418,7 @@ class Product
         if (isset($with['relate']) && $with['relate']) {
             $product->relate = [];
             if ($product->relate_id !== '') {
-                $key = 'Shop:ProductRelate:' . $product->relate_id;
+                $key = 'App:Shop:Product:Relate:' . $product->relate_id;
                 $cache = Be::getCache();
                 $productRelate = $cache->get($key);
                 if ($productRelate) {
@@ -460,7 +460,7 @@ class Product
             'style' => 1,
         ]);
 
-        $historyKey = 'Shop:ProductHistory:' . $my->id;
+        $historyKey = 'App:Shop:Product:history:' . $my->id;
         $history = $cache->get($historyKey);
 
         if (!$history || !is_array($history)) {
@@ -479,7 +479,7 @@ class Product
         // 点击量 使用REDIS 存放
         $hits = $product->hits;
         $n = 0;
-        $hitsKey = 'Shop:Product:hits:' . $productId;
+        $hitsKey = 'App:Shop:Product:hits:' . $productId;
         $cacheHits = $cache->get($hitsKey);
         if ($cacheHits !== false) {
             $cacheHitsArr = explode(',', $cacheHits);
@@ -525,7 +525,7 @@ class Product
         $keywords = trim($keywords);
         if ($keywords !== '') {
             // 将本用户搜索的关键词写入ES search_history
-            $counterKey = 'Shop:ProductSearchHistory';
+            $counterKey = 'App:Shop:Product:searchHistory';
             $counter = (int)$cache->get($counterKey);
             $query = [
                 'index' => $configEs->indexProductSearchHistory,
@@ -545,6 +545,17 @@ class Product
             $cache->set($counterKey, $counter);
         }
 
+        $cacheKey = 'App:Shop:Product:search';
+        if ($keywords !== '') {
+            $cacheKey .= ':' . $keywords;
+        }
+        $cacheKey .= ':' . md5(serialize($params));
+
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
         $query = [
             'index' => $configEs->indexProduct,
             'body' => []
@@ -556,7 +567,7 @@ class Product
             $query['body']['min_score'] = 0.01;
 
             if (!isset($query['body']['query'])) {
-                $query['body']['query']= [];
+                $query['body']['query'] = [];
             }
 
             if (!isset($query['body']['query']['bool'])) {
@@ -590,7 +601,7 @@ class Product
 
         if (isset($params['productIds']) && $params['productIds']) {
             if (!isset($query['body']['query'])) {
-                $query['body']['query']= [];
+                $query['body']['query'] = [];
             }
 
             if (!isset($query['body']['query']['bool'])) {
@@ -607,7 +618,7 @@ class Product
         if (isset($params['categoryId']) && $params['categoryId']) {
 
             if (!isset($query['body']['query'])) {
-                $query['body']['query']= [];
+                $query['body']['query'] = [];
             }
 
             if (!isset($query['body']['query']['bool'])) {
@@ -636,7 +647,7 @@ class Product
             ];
         } elseif (isset($params['categoryIds']) && is_array($params['categoryIds']) && count($params['categoryIds']) > 0) {
             if (!isset($query['body']['query'])) {
-                $query['body']['query']= [];
+                $query['body']['query'] = [];
             }
 
             if (!isset($query['body']['query']['bool'])) {
@@ -667,7 +678,7 @@ class Product
 
         if (isset($params['brand']) && $params['brand']) {
             if (!isset($query['body']['query'])) {
-                $query['body']['query']= [];
+                $query['body']['query'] = [];
             }
 
             if (!isset($query['body']['query']['bool'])) {
@@ -685,7 +696,7 @@ class Product
             $priceRange = explode('-', $params['priceRange']);
             if (count($priceRange) === 2) {
                 if (!isset($query['body']['query'])) {
-                    $query['body']['query']= [];
+                    $query['body']['query'] = [];
                 }
 
                 if (!isset($query['body']['query']['bool'])) {
@@ -791,7 +802,14 @@ class Product
 
         $rows = [];
         foreach ($results['hits']['hits'] as $x) {
-            $rows[] = $this->formatEsProduct($x['_source']);
+            $product = (object)$x['_source'];
+            try {
+                $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+            } catch (\Throwable $t) {
+                continue;
+            }
+
+            $rows[] = $this->formatEsProduct($product);
         }
 
         $return = [
@@ -829,6 +847,9 @@ class Product
             }
         }
 
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $return, $configCache->products);
+
         return $return;
     }
 
@@ -842,6 +863,18 @@ class Product
      */
     public function searchFromDb(string $keywords, array $params = [], array $with = []): array
     {
+        $cache = Be::getCache();
+        $cacheKey = 'App:Shop:Product:searchFromDb';
+        if ($keywords !== '') {
+            $cacheKey .= ':' . $keywords;
+        }
+        $cacheKey .= ':' . md5(serialize($params));
+
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
         $tableProduct = Be::getTable('shop_product');
         $tableProduct->where('is_enable', 1);
         $tableProduct->where('is_delete', 0);
@@ -991,8 +1024,13 @@ class Product
             }
         }
 
+
+        $configCache = Be::getConfig('App.Shop.Cache');
+        $cache->set($cacheKey, $return, $configCache->products);
+
         return $return;
     }
+
 
     /**
      * 跟据商品名称，获取相似商品
@@ -1011,8 +1049,9 @@ class Product
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:SimilarProducts:' . $productId . ':' . $n;
+        $cacheKey = 'App:Shop:Product:SimilarProducts:' . $productId . ':' . $n;
         $results = $cache->get($cacheKey);
+
         if ($results !== false) {
             return $results;
         }
@@ -1045,15 +1084,22 @@ class Product
             return [];
         }
 
-        $result = [];
+        $return = [];
         foreach ($results['hits']['hits'] as $x) {
-            $result[] = $this->formatEsProduct($x['_source']);
+            $product = (object)$x['_source'];
+            try {
+                $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+            } catch (\Throwable $t) {
+                continue;
+            }
+
+            $return[] = $this->formatEsProduct($product);
         }
 
         $configCache = Be::getConfig('App.Shop.Cache');
-        $cache->set($cacheKey, $result, $configCache->products);
+        $cache->set($cacheKey, $return, $configCache->products);
 
-        return $result;
+        return $return;
     }
 
     /**
@@ -1067,7 +1113,7 @@ class Product
     public function getSimilarProductsFromDb(string $productId, string $productName, int $n = 12): array
     {
         $cache = Be::getCache();
-        $cacheKey = 'Shop:SimilarProductsFromDb:' . $productId . ':' . $n;
+        $cacheKey = 'App:Shop:Product:SimilarProductsFromDb:' . $productId . ':' . $n;
         $results = $cache->get($cacheKey);
         if ($results !== false) {
             return $results;
@@ -1097,31 +1143,46 @@ class Product
     /**
      * 获取按指定排序的前N个商品
      *
-     * @param int $n
-     * @param string $orderBy
-     * @param string $orderByDir
+     * @param array $params 查询参数
      * @return array
-     * @throws \Be\Runtime\RuntimeException
      */
-    public function getTopProducts(int $n, string $orderBy, string $orderByDir = 'desc'): array
+    public function getTopNProducts(array $params = []): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
         $configEs = Be::getConfig('App.Shop.Es');
         if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
-            return $this->getTopProductsFromDb($n, $orderBy, $orderByDir);
+            return $this->getTopNProductsFromDb($params);
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:TopProducts:' . $n . ':' . $orderBy . ':' . $orderByDir;
+        $cacheKey = 'App:Shop:Product:TopNProducts:' . md5(serialize($params));
         $results = $cache->get($cacheKey);
         if ($results !== false) {
             return $results;
         }
 
+        $orderBy = $params['orderBy'];
+
+        $orderByDir = 'desc';
+        if (isset($params['orderByDir']) && in_array($params['orderByDir'], ['asc', 'desc'])) {
+            $orderByDir = $params['orderByDir'];
+        }
+
+        // 分页
+        if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
+            $pageSize = $params['pageSize'];
+        } else {
+            $pageSize = 12;
+        }
+
+        if ($pageSize > 200) {
+            $pageSize = 200;
+        }
+
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
-                'size' => $n,
+                'size' => $pageSize,
                 'sort' => [
                     $orderBy => [
                         'order' => $orderByDir
@@ -1130,13 +1191,21 @@ class Product
             ]
         ];
 
+
         $es = Be::getEs();
         $results = $es->search($query);
 
         $return = [];
         if (isset($results['hits']['hits'])) {
             foreach ($results['hits']['hits'] as $x) {
-                $return[] = $this->formatEsProduct($x['_source']);
+                $product = (object)$x['_source'];
+                try {
+                    $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+                } catch (\Throwable $t) {
+                    continue;
+                }
+
+                $return[] = $this->formatEsProduct($product);
             }
         }
 
@@ -1149,26 +1218,41 @@ class Product
     /**
      * 获取按指定排序的前N个商品
      *
-     * @param int $n
-     * @param string $orderBy
-     * @param string $orderByDir
+     * @param array $params 查询参数
      * @return array
-     * @throws \Be\Runtime\RuntimeException
      */
-    public function getTopProductsFromDb(int $n, string $orderBy, string $orderByDir = 'desc'): array
+    public function getTopNProductsFromDb(array $params = []): array
     {
         $cache = Be::getCache();
-        $cacheKey = 'Shop:TopProductsFromDb:' . $n . ':' . $orderBy . ':' . $orderByDir;
-        $result = $cache->get($cacheKey);
-        if ($result !== false) {
-            return $result;
+        $cacheKey = 'App:Shop:Product:TopNProductsFromDb:' . md5(serialize($params));
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
+        }
+
+        $orderBy = $params['orderBy'];
+
+        $orderByDir = 'desc';
+        if (isset($params['orderByDir']) && in_array($params['orderByDir'], ['asc', 'desc'])) {
+            $orderByDir = $params['orderByDir'];
+        }
+
+        // 分页
+        if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
+            $pageSize = $params['pageSize'];
+        } else {
+            $pageSize = 12;
+        }
+
+        if ($pageSize > 200) {
+            $pageSize = 200;
         }
 
         $productIds = Be::getTable('shop_product')
             ->where('is_enable', 1)
             ->where('is_delete', 0)
             ->orderBy($orderBy, $orderByDir)
-            ->limit($n)
+            ->limit($pageSize)
             ->getValues('id');
         $result = $this->getProducts($productIds);
 
@@ -1184,9 +1268,13 @@ class Product
      * @param int $n 结果数量
      * @return array
      */
-    public function getLatestProducts(int $n = 10): array
+    public function getLatestTopNProducts(int $n = 10): array
     {
-        return $this->getTopProducts($n, 'publish_time', 'desc');
+        return $this->getTopNProducts([
+            'orderBy' => 'publish_time',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
     }
 
     /**
@@ -1195,9 +1283,13 @@ class Product
      * @param int $n 结果数量
      * @return array
      */
-    public function getHottestProducts(int $n = 10): array
+    public function getHottestTopNProducts(int $n = 10): array
     {
-        return $this->getTopProducts($n, 'hits', 'desc');
+        return $this->getTopNProducts([
+            'orderBy' => 'hits',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
     }
 
     /**
@@ -1206,41 +1298,74 @@ class Product
      * @param int $n 结果数量
      * @return array
      */
-    public function getTopSalesProducts(int $n = 10): array
+    public function getTopSalesTopNProducts(int $n = 10): array
     {
-        return $this->getTopProducts($n, 'sales_volume', 'desc');
+        return $this->getTopNProducts([
+            'orderBy' => 'sales_volume',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
     }
 
     /**
      * 热搜商品
      *
-     * @param int $n 结果数量
+     * @param array $params 查询参数
      * @return array
      */
-    public function getTopSearchProducts(int $n = 10): array
+    public function getHotSearchProducts(array $params = []): array
     {
+        // 分页
+        if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
+            $pageSize = $params['pageSize'];
+        } else {
+            $pageSize = 12;
+        }
+
+        if ($pageSize > 200) {
+            $pageSize = 200;
+        }
+
+        if (isset($params['page']) && is_numeric($params['page']) && $params['page'] > 0) {
+            $page = $params['page'];
+        } else {
+            $page = 1;
+        }
+
         $configSystemEs = Be::getConfig('App.System.Es');
         $configEs = Be::getConfig('App.Shop.Es');
         if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
-            return [];
+            return [
+                'total' => 0,
+                'pageSize' => $pageSize,
+                'page' => $page,
+                'rows' => [],
+            ];
         }
 
-        $keywords = $this->getTopSearchKeywords(5);
+        $keywords = $this->getHotSearchKeywords(5);
         if (!$keywords) {
-            return [];
+            return [
+                'total' => 0,
+                'pageSize' => $pageSize,
+                'page' => $page,
+                'rows' => [],
+            ];
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:TopSearchProducts:' . $n;
+        $cacheKey = 'App:Shop:Product:HotSearchProducts:' . md5(serialize($params));
         $results = $cache->get($cacheKey);
         if ($results !== false) {
             return $results;
         }
 
+
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
-                'size' => $n,
+                'size' => $pageSize,
+                'from' => ($page - 1) * $pageSize,
                 'query' => [
                     'bool' => [
                         'must' => [
@@ -1253,15 +1378,53 @@ class Product
             ]
         ];
 
+        if (isset($params['categoryId']) && $params['categoryId'] !== '') {
+            $query['body']['query']['bool']['filter'] = [
+                [
+                    'nested' => [
+                        'path' => 'categories',
+                        'query' => [
+                            'bool' => [
+                                'filter' => [
+                                    [
+                                        'term' => [
+                                            'categories.id' => $params['categoryId'],
+                                        ],
+                                    ],
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
+
         $es = Be::getEs();
         $results = $es->search($query);
 
-        $return = [];
-        if (isset($results['hits']['hits'])) {
-            foreach ($results['hits']['hits'] as $x) {
-                $return[] = $this->formatEsProduct($x['_source']);
-            }
+        $total = 0;
+        if (isset($results['hits']['total']['value'])) {
+            $total = $results['hits']['total']['value'];
         }
+
+        $rows = [];
+        foreach ($results['hits']['hits'] as $x) {
+            $product = (object)$x['_source'];
+            try {
+                $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+            } catch (\Throwable $t) {
+                continue;
+            }
+
+            $rows[] = $this->formatEsProduct($product);
+        }
+
+        $return = [
+            'total' => $total,
+            'pageSize' => $pageSize,
+            'page' => $page,
+            'rows' => $rows,
+        ];
 
         $configCache = Be::getConfig('App.Shop.Cache');
         $cache->set($cacheKey, $return, $configCache->products);
@@ -1270,26 +1433,80 @@ class Product
     }
 
     /**
-     * 猜你喜欢
+     * 热搜商品
      *
-     * @param string $userId 用户ID
-     * @param int $n 结果数量
-     * @param string $excludeProductId 排除拽定的商品
+     * @param array $params 查询参数
      * @return array
      */
-    public function getGuessYouLikeProducts(int $n = 40, string $excludeProductId = null): array
+    public function getHotSearchTopNProducts(int $n = 10): array
     {
+        $results = $this->getHotSearchProducts([
+            'pageSize' => $n,
+        ]);
+
+        return $results['rows'];
+    }
+
+    /**
+     * 指定分类下的热搜商品
+     *
+     * @param string $categoryId 分类ID
+     * @param array $params 查询参数
+     * @return array
+     */
+    public function getCategoryHotSearchTopNProducts(string $categoryId, int $n = 10): array
+    {
+        $results = $this->getHotSearchProducts([
+            'categoryId' => $categoryId,
+            'pageSize' => $n,
+        ]);
+
+        return $results['rows'];
+    }
+
+
+    /**
+     * 猜你喜欢
+     *
+     * @param array $params 查询参数
+     * @return array
+     */
+    public function getGuessYouLikeProducts(array $params = []): array
+    {
+        // 分页
+        if (isset($params['pageSize']) && is_numeric($params['pageSize']) && $params['pageSize'] > 0) {
+            $pageSize = $params['pageSize'];
+        } else {
+            $pageSize = 12;
+        }
+
+        if ($pageSize > 200) {
+            $pageSize = 200;
+        }
+
+        if (isset($params['page']) && is_numeric($params['page']) && $params['page'] > 0) {
+            $page = $params['page'];
+        } else {
+            $page = 1;
+        }
+
         $configSystemEs = Be::getConfig('App.System.Es');
         $configEs = Be::getConfig('App.Shop.Es');
         if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
-            return [];
+            return [
+                'total' => 0,
+                'pageSize' => $pageSize,
+                'page' => $page,
+                'rows' => [],
+            ];
         }
+
 
         $my = Be::getUser();
         $es = Be::getEs();
         $cache = Be::getCache();
 
-        $historyKey = 'Shop:ProductHistory:' . $my->id;
+        $historyKey = 'App:Shop:Product:history:' . $my->id;
         $history = $cache->get($historyKey);
 
         $keywords = [];
@@ -1298,17 +1515,32 @@ class Product
         }
 
         if (!$keywords) {
-            $keywords = $this->getTopSearchKeywords(10);
+            $keywords = $this->getHotSearchKeywords(10);
         }
 
         if (!$keywords) {
-            return [];
+            return [
+                'total' => 0,
+                'pageSize' => $pageSize,
+                'page' => $page,
+                'rows' => [],
+            ];
+        }
+
+        $params['keywords'] = $keywords;
+
+        $cache = Be::getCache();
+        $cacheKey = 'App:Shop:Product:HotSearchProducts:' . md5(serialize($params));
+        $results = $cache->get($cacheKey);
+        if ($results !== false) {
+            return $results;
         }
 
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
-                'size' => $n,
+                'size' => $pageSize,
+                'from' => ($page - 1) * $pageSize,
                 'query' => [
                     'bool' => [
                         'must' => [
@@ -1321,103 +1553,60 @@ class Product
             ]
         ];
 
-        if ($excludeProductId !== null) {
+        if (isset($params['excludeProductId']) && $params['excludeProductId'] !== '') {
             $query['body']['query']['bool']['must_not'] = [
                 'term' => [
-                    '_id' => $excludeProductId
+                    '_id' => $params['excludeProductId']
                 ]
+            ];
+        }
+
+        if (isset($params['categoryId']) && $params['categoryId'] !== '') {
+            $query['body']['query']['bool']['filter'] = [
+                [
+                    'nested' => [
+                        'path' => 'categories',
+                        'query' => [
+                            'bool' => [
+                                'filter' => [
+                                    [
+                                        'term' => [
+                                            'categories.id' => $params['categoryId'],
+                                        ],
+                                    ],
+                                ]
+                            ],
+                        ],
+                    ],
+                ],
             ];
         }
 
         $results = $es->search($query);
 
-        if (!isset($results['hits']['hits'])) {
-            return [];
+        $total = 0;
+        if (isset($results['hits']['total']['value'])) {
+            $total = $results['hits']['total']['value'];
         }
 
-        $return = [];
+        $rows = [];
         foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
-        }
-
-        return $return;
-    }
-
-    /**
-     * 指定分类下的热门商品
-     *
-     * @param string $categoryId 分类ID
-     * @param int $n 结果数量
-     * @return array
-     */
-    public function getCategoryTopSearchProducts(string $categoryId, int $n = 10): array
-    {
-        $configSystemEs = Be::getConfig('App.System.Es');
-        $configEs = Be::getConfig('App.Shop.Es');
-        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
-            return [];
-        }
-
-        /*
-        $subCategoryIds = Be::getService('App.Shop.Category')->getSubCategoryIds($categoryId);
-        if (!$subCategoryIds) return [];
-        */
-
-        $keywords = $this->getTopSearchKeywords(10);
-        if (!$keywords) {
-            return [];
-        }
-
-        $cache = Be::getCache();
-        $cacheKey = 'Shop:CategoryTopSearchProducts:' . $categoryId . ':' . $n;
-        $results = $cache->get($cacheKey);
-        if ($results !== false) {
-            return $results;
-        }
-
-        $query = [
-            'index' => $configEs->indexProduct,
-            'body' => [
-                'size' => $n,
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            'match' => [
-                                'name' => implode(',', $keywords)
-                            ],
-                        ],
-                        'filter' => [
-                            [
-                                'nested' => [
-                                    'path' => 'categories',
-                                    'query' => [
-                                        'bool' => [
-                                            'filter' => [
-                                                [
-                                                    'term' => [
-                                                        'categories.id' => $categoryId,
-                                                    ],
-                                                ],
-                                            ]
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ]
-                ]
-            ]
-        ];
-
-        $es = Be::getEs();
-        $results = $es->search($query);
-
-        $return = [];
-        if (isset($results['hits']['hits'])) {
-            foreach ($results['hits']['hits'] as $x) {
-                $return[] = $this->formatEsProduct($x['_source']);
+            $product = (object)$x['_source'];
+            try {
+                $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+            } catch (\Throwable $t) {
+                continue;
             }
+
+            $rows[] = $this->formatEsProduct($product);
         }
+
+        $return = [
+            'total' => $total,
+            'pageSize' => $pageSize,
+            'page' => $page,
+            'rows' => $rows,
+        ];
 
         $configCache = Be::getConfig('App.Shop.Cache');
         $cache->set($cacheKey, $return, $configCache->products);
@@ -1425,109 +1614,49 @@ class Product
         return $return;
     }
 
+
     /**
-     * 指定分类下的猜你喜欢
+     * 猜你喜欢
      *
-     * @param string $categoryId 分类ID
-     * @param string $userId 用户ID
-     * @param int $n 结果数量
-     * @param string $excludeProductId 排除拽定的商品
+     * @param array $params 查询参数
      * @return array
      */
-    public function getCategoryGuessYouLikeProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
+    public function getGuessYouLikeTopNProducts(int $n = 40, string $excludeProductId = null): array
     {
-        $configSystemEs = Be::getConfig('App.System.Es');
-        $configEs = Be::getConfig('App.Shop.Es');
-        if ($configSystemEs->enable === 0 || $configEs->enable === 0) {
-            return [];
-        }
+        $results = $this->getGuessYouLikeProducts([
+            'pageSize' => $n,
+            'excludeProductId' => $excludeProductId,
+        ]);
 
-        $my = Be::getUser();
-        $es = Be::getEs();
-        $cache = Be::getCache();
-
-        $historyKey = 'Shop:ProductHistory:' . $my->id;
-        $history = $cache->get($historyKey);
-
-        $keywords = [];
-        if ($history && is_array($history) && count($history) > 0) {
-            $keywords = $history;
-        }
-
-        if (!$keywords) {
-            $keywords = $this->getTopSearchKeywords(10);
-        }
-
-        if (!$keywords) {
-            return [];
-        }
-
-        $query = [
-            'index' => $configEs->indexProduct,
-            'body' => [
-                'size' => $n,
-                'query' => [
-                    'bool' => [
-                        'must' => [
-                            'match' => [
-                                'name' => implode(' ', $keywords)
-                            ],
-                        ],
-                        'filter' => [
-                            [
-                                'nested' => [
-                                    'path' => 'categories',
-                                    'query' => [
-                                        'bool' => [
-                                            'filter' => [
-                                                [
-                                                    'term' => [
-                                                        'categories.id' => $categoryId,
-                                                    ],
-                                                ],
-                                            ]
-                                        ],
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ]
-                ]
-            ]
-        ];
-
-        if ($excludeProductId !== null) {
-            $query['body']['query']['bool']['must_not'] = [
-                'term' => [
-                    '_id' => $excludeProductId
-                ]
-            ];
-        }
-
-        $results = $es->search($query);
-
-        if (!isset($results['hits']['hits'])) {
-            return [];
-        }
-
-        $return = [];
-        foreach ($results['hits']['hits'] as $x) {
-            $return[] = $this->formatEsProduct($x['_source']);
-        }
-
-        return $return;
+        return $results['rows'];
     }
+
+    /**
+     * 指定分类下猜你喜欢
+     *
+     * @param array $params 查询参数
+     * @return array
+     */
+    public function getCategoryGuessYouLikeTopNProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
+    {
+        $results = $this->getGuessYouLikeProducts([
+            'categoryId' => $categoryId,
+            'pageSize' => $n,
+            'excludeProductId' => $excludeProductId,
+        ]);
+
+        return $results['rows'];
+    }
+
 
     /**
      * 格式化ES查询出来的商品
      *
-     * @param array $rows
+     * @param object $product
      * @return object
      */
-    private function formatEsProduct(array $row): object
+    private function formatEsProduct(object $product): object
     {
-        $product = (object)$row;
-
         $categories = [];
         if (is_array($product->categories) && count($product->categories) > 0) {
             foreach ($product->categories as $category) {
@@ -1584,7 +1713,7 @@ class Product
      * @param int $n
      * @return array
      */
-    public function getTopSearchKeywords(int $n = 6): array
+    public function getHotSearchKeywords(int $n = 6): array
     {
         $configSystemEs = Be::getConfig('App.System.Es');
         $configEs = Be::getConfig('App.Shop.Es');
@@ -1593,12 +1722,12 @@ class Product
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:TopSearchKeywords';
-        $topSearchKeywords = $cache->get($cacheKey);
-        if ($topSearchKeywords) {
-            return $topSearchKeywords;
+        $cacheKey = 'App:Shop:Product:HotSearchKeywords';
+        $hotSearchKeywords = $cache->get($cacheKey);
+        if ($hotSearchKeywords) {
+            return $hotSearchKeywords;
         }
-        
+
         $es = Be::getEs();
         $query = [
             'index' => $configEs->indexProductSearchHistory,
@@ -1673,7 +1802,7 @@ class Product
     {
         $cache = Be::getCache();
 
-        $key = 'Shop:TopTags:' . $n;
+        $key = 'App:Shop:Product:TopTags:' . $n;
         $tags = $cache->get($key);
         if ($tags === false) {
             try {
