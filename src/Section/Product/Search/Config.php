@@ -13,6 +13,22 @@ class Config
     public int $enable = 1;
 
     /**
+     * @BeConfigItem("宽度",
+     *     description="位于middle时有效",
+     *     driver="FormItemSelect",
+     *     keyValues = "return ['default' => '默认', 'fullWidth' => '全屏'];"
+     * )
+     */
+    public string $width = 'default';
+
+    /**
+     * @BeConfigItem("背景颜色",
+     *     driver="FormItemColorPicker"
+     * )
+     */
+    public string $backgroundColor = '';
+
+    /**
      * @BeConfigItem("分页太小",,
      *     description = "分页为0时取系统配置",
      *     driver = "FormItemSlider",

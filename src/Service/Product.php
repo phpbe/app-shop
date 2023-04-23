@@ -1527,15 +1527,6 @@ class Product
             ];
         }
 
-        $params['keywords'] = $keywords;
-
-        $cache = Be::getCache();
-        $cacheKey = 'App:Shop:Product:HotSearchProducts:' . md5(serialize($params));
-        $results = $cache->get($cacheKey);
-        if ($results !== false) {
-            return $results;
-        }
-
         $query = [
             'index' => $configEs->indexProduct,
             'body' => [
@@ -1607,9 +1598,6 @@ class Product
             'page' => $page,
             'rows' => $rows,
         ];
-
-        $configCache = Be::getConfig('App.Shop.Cache');
-        $cache->set($cacheKey, $return, $configCache->products);
 
         return $return;
     }
