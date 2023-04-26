@@ -188,13 +188,13 @@ class Product
     }
 
     /**
-     * 从REDIS 获取多个商品数据
+     * 从缓存获取多个商品数据
      *
      * @param array $productIds 多个商品ID
+     * @param bool $throwException 不存在的文章是否抛出异常
      * @return array
-     * @throws ServiceException|\Be\Runtime\RuntimeException
      */
-    public function getProducts(array $productIds = [], array $with = []): array
+    public function getProducts(array $productIds = [], bool $throwException = true): array
     {
         $configCache = Be::getConfig('App.Shop.Cache');
         $cache = Be::getCache();
@@ -213,6 +213,7 @@ class Product
             }
         }
 
+        // 缓存中没有任何商品，全部从数据库中读取并缓存
         if ($noProducts) {
 
             $newProducts = [];
@@ -228,10 +229,12 @@ class Product
                 $cache->set($key, $product, $configCache->product);
 
                 if ($product === '-1') {
-                    throw new ServiceException('Product #' . $productId . ' does not exists！');
+                    if ($throwException) {
+                        throw new ServiceException('Product #' . $productId . ' does not exists！');
+                    } else {
+                        continue;
+                    }
                 }
-
-                $product = $this->formatProduct($product, $with);
 
                 $newProducts[] = $product;
             }
@@ -242,10 +245,12 @@ class Product
             $i = 0;
             foreach ($products as $product) {
                 if ($product === false || $product === '-1') {
-                    throw new ServiceException('Product #' . $productIds[$i] . ' does not exists！');
+                    if ($throwException) {
+                        throw new ServiceException('Product #' . $productId . ' does not exists！');
+                    } else {
+                        continue;
+                    }
                 }
-
-                $product = $this->formatProduct($product, $with);
 
                 $newProducts[] = $product;
 
@@ -988,7 +993,8 @@ class Product
         $tableProduct->offset(($page - 1) * $pageSize);
 
         $productIds = $tableProduct->getValues('id');
-        $rows = $this->getProducts($productIds);
+
+        $rows = $this->getProducts($productIds, false);
 
         $return = [
             'total' => $total,
@@ -1131,7 +1137,7 @@ class Product
 
         $productIds = $tableProduct->getValues('id');
 
-        $result = $this->getProducts($productIds);
+        $result = $this->getProducts($productIds, false);
 
         $configCache = Be::getConfig('App.Shop.Cache');
         $cache->set($cacheKey, $result, $configCache->products);
@@ -1253,7 +1259,8 @@ class Product
             ->orderBy($orderBy, $orderByDir)
             ->limit($pageSize)
             ->getValues('id');
-        $result = $this->getProducts($productIds);
+
+        $result = $this->getProducts($productIds, false);
 
         $configCache = Be::getConfig('App.Shop.Cache');
         $cache->set($cacheKey, $result, $configCache->products);
@@ -1434,7 +1441,7 @@ class Product
     /**
      * 热搜商品
      *
-     * @param array $params 查询参数
+     * @param int $n Top N 数量
      * @return array
      */
     public function getHotSearchTopNProducts(int $n = 10): array
@@ -1450,7 +1457,7 @@ class Product
      * 指定分类下的热搜商品
      *
      * @param string $categoryId 分类ID
-     * @param array $params 查询参数
+     * @param int $n Top N 数量
      * @return array
      */
     public function getCategoryHotSearchTopNProducts(string $categoryId, int $n = 10): array
@@ -1462,7 +1469,6 @@ class Product
 
         return $results['rows'];
     }
-
 
     /**
      * 猜你喜欢
@@ -1603,9 +1609,10 @@ class Product
 
 
     /**
-     * 猜你喜欢
+     * 猜你喜欢TopN
      *
-     * @param array $params 查询参数
+     * @param int $n Top N 数量
+     * @param string $excludeProductId 要排除的商品ID
      * @return array
      */
     public function getGuessYouLikeTopNProducts(int $n = 40, string $excludeProductId = null): array
@@ -1619,9 +1626,11 @@ class Product
     }
 
     /**
-     * 指定分类下猜你喜欢
+     * 指定分类下猜你喜欢TopN
      *
-     * @param array $params 查询参数
+     * @param string $categoryId 分类ID
+     * @param int $n Top N 数量
+     * @param string $excludeProductId 要排除的商品ID
      * @return array
      */
     public function getCategoryGuessYouLikeTopNProducts(string $categoryId, int $n = 40, string $excludeProductId = null): array
@@ -1751,7 +1760,7 @@ class Product
         }
 
         $configCache = Be::getConfig('App.Shop.Cache');
-        $cache->set($cacheKey, $hotKeywords, $configCache->topKeywords);
+        $cache->set($cacheKey, $hotKeywords, $configCache->hotKeywords);
 
         return $hotKeywords;
     }

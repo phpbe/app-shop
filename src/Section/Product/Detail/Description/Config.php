@@ -2,7 +2,7 @@
 namespace Be\App\Shop\Section\Product\Detail\Description;
 
 /**
- * @BeConfig("商品详情-描述",  icon="bi-bag", ordering="1018")
+ * @BeConfig("商品详情-描述",  icon="bi-bag", ordering="1101")
  */
 class Config
 {

@@ -18,13 +18,6 @@ class Template extends Section
         echo $this->getCssPadding('app-shop-category-top-n-side');
         echo $this->getCssMargin('app-shop-category-top-n-side');
 
-        echo '#' . $this->id . ' .app-shop-category-top-n-side-title {';
-        echo 'background-color: var(--font-color-9);';
-        echo 'padding: 1rem;';
-        echo 'font-size: 1.25rem;';
-        echo 'font-weight: bold;';
-        echo '}';
-
         echo '#' . $this->id . ' .app-shop-category-top-n-side ul {';
         echo 'border: 1px solid var(--font-color-9);';
         echo 'margin: 0;';
@@ -65,11 +58,12 @@ class Template extends Section
         echo '<div class="app-shop-category-top-n-side">';
 
         if ($this->config->title !== '') {
-            echo '<div class="app-shop-category-top-n-side-title">';
+            echo $this->page->tag0('be-section-title');
             echo $this->config->title;
-            echo '</div>';
+            echo $this->page->tag1('be-section-title');
         }
 
+        echo $this->page->tag0('be-section-content');
         echo '<ul>';
         foreach ($categories as $category) {
             echo '<li>';
@@ -77,6 +71,7 @@ class Template extends Section
             echo '</li>';
         }
         echo '</ul>';
+        echo $this->page->tag1('be-section-content');
 
         echo '</div>';
     }

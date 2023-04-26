@@ -3,7 +3,7 @@
 namespace Be\App\Shop\Section\Product\Detail\Reviews;
 
 /**
- * @BeConfig("商品详情-评论  icon="bi-chat-left-text", ordering="1019")
+ * @BeConfig("商品详情-评论  icon="bi-chat-left-text", ordering="1102")
  */
 class Config
 {

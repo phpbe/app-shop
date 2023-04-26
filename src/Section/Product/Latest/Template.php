@@ -20,6 +20,9 @@ class Template extends Section
         $response = Be::getResponse();
 
         $page = $request->get('page', 1);
+        if ($page > $this->config->maxPages) {
+            $page = $this->config->maxPages;
+        }
         $params = [
             'orderBy' => 'publish_time',
             'orderByDir' => 'desc',

@@ -3,7 +3,7 @@
 namespace Be\App\Shop\Section\Product\Detail\SimilarTopNSide;
 
 /**
- * @BeConfig("商品详情-类似商品TopN边栏  icon="bi-bag", ordering="1021")
+ * @BeConfig("商品详情-类似商品TopN边栏  icon="bi-bag", ordering="1104")
  */
 class Config
 {

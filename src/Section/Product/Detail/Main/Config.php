@@ -3,7 +3,7 @@
 namespace Be\App\Shop\Section\Product\Detail\Main;
 
 /**
- * @BeConfig("商品详情-主体",  icon="bi-bag-fill", ordering="1017")
+ * @BeConfig("商品详情-主体",  icon="bi-bag-fill", ordering="1100")
  */
 class Config
 {

@@ -58,9 +58,15 @@ class Section
         }
 
         if ($section->config->title !== '') {
-            $html .= '<div class="' . $class . '-title">';
-            $html .= '<h3 class="be-h3">' . $section->config->title . '</h3>';
+            $html .= $section->page->tag0('be-section-title');
+            $html .= $section->config->title;
+            $html .= $section->page->tag1('be-section-title');
+        }
 
+        $html .= $section->page->tag0('be-section-content');
+        $html .= $this->makeProductsSectionPublicHtml($section, $class, $products);
+
+        if ($section->config->more !== '') {
             $moreLink = null;
             if (isset($section->config->moreLink) && $section->config->moreLink !== '') {
                 $moreLink = $section->config->moreLink;
@@ -71,18 +77,17 @@ class Section
             }
 
             if ($moreLink !== null) {
+                $html .= '<div class="be-mt-100 be-ta-right">';
                 $html .= '<a href="' . $moreLink . '"';
                 if (!$isMobile) {
                     $html .= ' target="_blank"';
                 }
                 $html .= '>' . $section->config->more . '</a>';
+                $html .= '</div>';
             }
-
-            $html .= '</div>';
         }
 
-        $html .= $this->makeProductsSectionPublicHtml($section, $class, $products);
-
+        $html .= $section->page->tag1('be-section-content');
         if ($section->position === 'middle' && $section->config->width === 'default') {
             $html .= '</div>';
         }
@@ -228,18 +233,6 @@ class Section
         $html .= $section->getCssPadding($class);
         $html .= $section->getCssMargin($class);
 
-        $html .= '#' . $section->id . ' .' . $class . '-title {';
-        $html .= 'background-color: var(--font-color-9);';
-        $html .= 'padding: 1rem;';
-        $html .= 'font-size: 1.25rem;';
-        $html .= 'font-weight: bold;';
-        $html .= '}';
-
-        $html .= '#' . $section->id . ' .' . $class . '-body {';
-        $html .= 'border: 1px solid var(--font-color-9);';
-        $html .= 'padding: 1rem;';
-        $html .= '}';
-
         $html .= '#' . $section->id . ' .' . $class . '-product-image {';
         $html .= 'width: 60px;';
         $html .= 'position: relative;';
@@ -286,12 +279,12 @@ class Section
         }
 
         if ($section->config->title !== '') {
-            $html .= '<div class="' . $class . '-title">';
+            $html .= $section->page->tag0('be-section-title');
             $html .= $section->config->title;
-            $html .= '</div>';
+            $html .= $section->page->tag1('be-section-title');
         }
 
-        $html .= '<div class="' . $class . '-body">';
+        $html .= $section->page->tag0('be-section-content');
 
         $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
         $isMobile = \Be\Be::getRequest()->isMobile();
@@ -387,7 +380,7 @@ class Section
             }
         }
 
-        $html .= '</div>';
+        $html .= $section->page->tag1('be-section-content');
 
         if ($section->position === 'middle' && $section->config->width === 'default') {
             $html .= '</div>';
