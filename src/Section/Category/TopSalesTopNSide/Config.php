@@ -1,25 +1,32 @@
 <?php
 
-namespace Be\App\Shop\Section\Category\TopNSide;
+namespace Be\App\Shop\Section\Category\TopSalesTopNSide;
 
 /**
- * @BeConfig("分类列表TopN边栏", icon="bi-folder2", ordering="2003")
+ * @BeConfig("热销商品TopN边栏", icon="bi-bag-check", ordering="2006")
  */
 class Config
 {
 
     /**
-     * @BeConfigItem("是否启用",
+     * @BeConfigItem("最新",
      *     driver = "FormItemSwitch")
      */
     public int $enable = 1;
+
+    /**
+     * @BeConfigItem("背景颜色",
+     *     driver = "FormItemColorPicker"
+     * )
+     */
+    public string $backgroundColor = '';
 
     /**
      * @BeConfigItem("标题",
      *     driver = "FormItemInput"
      * )
      */
-    public string $title = 'Categories';
+    public string $title = 'Top Sales';
 
     /**
      * @BeConfigItem("展示多少个商品?",
@@ -27,7 +34,21 @@ class Config
      *     ui="return [':min' => 1, ':max' => 100];"
      * )
      */
-    public int $quantity = 10;
+    public int $quantity = 6;
+
+    /**
+     * @BeConfigItem("查看更多链接",
+     *     driver = "FormItemInput"
+     * )
+     */
+    public string $more = 'Show More';
+
+    /**
+     * @BeConfigItem("更多链接",
+     *     driver = "FormItemInput"
+     * )
+     */
+    public string $moreLink = '';
 
     /**
      * @BeConfigItem("内边距（手机端）",
@@ -59,7 +80,7 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginMobile = '0';
+    public string $marginMobile = '1rem 0 0 0';
 
     /**
      * @BeConfigItem("外边距（平板端）",
@@ -67,7 +88,7 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginTablet = '0';
+    public string $marginTablet = '2rem 0 0 0';
 
     /**
      * @BeConfigItem("外边距（电脑端）",
@@ -75,7 +96,6 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginDesktop = '0';
-
+    public string $marginDesktop = '3rem 0 0 0';
 
 }

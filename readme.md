@@ -55,4 +55,9 @@
 * 2001 - 分类商品列表 - Category.Products
 * 2002 - 分类列表TopN - Category.TopN
 * 2003 - 分类列表TopN边栏 - Category.TopNSide
+* 2004 - 分类最新商品TopN边栏 - Category.LatterTopNSide
+* 2005 - 分类热门商品TopN边栏 - Category.HottestTopNSide
+* 2006 - 分类热销商品TopN边栏 - Category.TopSalesTopNSide
+* 2007 - 分类热搜商品TopN边栏 - Category.HotSearchTopNSide
+* 2008 - 分类猜你喜欢商品TopN边栏 - Category.GuessYouLikeTopNSide
 

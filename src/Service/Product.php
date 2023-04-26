@@ -1196,6 +1196,30 @@ class Product
             ]
         ];
 
+        if (isset($params['categoryId']) && $params['categoryId'] !== '') {
+            $query['body']['query'] = [
+                'bool' => [
+                    'filter' => [
+                        [
+                            'nested' => [
+                                'path' => 'categories',
+                                'query' => [
+                                    'bool' => [
+                                        'filter' => [
+                                            [
+                                                'term' => [
+                                                    'categories.id' => $params['categoryId'],
+                                                ],
+                                            ],
+                                        ]
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ];
+        }
 
         $es = Be::getEs();
         $results = $es->search($query);
@@ -1253,12 +1277,20 @@ class Product
             $pageSize = 200;
         }
 
-        $productIds = Be::getTable('shop_product')
-            ->where('is_enable', 1)
-            ->where('is_delete', 0)
-            ->orderBy($orderBy, $orderByDir)
-            ->limit($pageSize)
-            ->getValues('id');
+        $tableProduct = Be::getTable('shop_product')->where('is_enable', 1)->where('is_delete', 0);
+
+        if (isset($params['categoryId']) && $params['categoryId']) {
+            $db = Be::getDb();
+            $sql = 'SELECT product_id FROM shop_product_category WHERE category_id = ?';
+            $articleIds = $db->getValues($sql, [$params['categoryId']]);
+            if (count($articleIds) > 0) {
+                $tableProduct->where('id', 'IN', $articleIds);
+            } else {
+                $tableProduct->where('id', '');
+            }
+        }
+
+        $productIds = $tableProduct->orderBy($orderBy, $orderByDir)->limit($pageSize)->getValues('id');
 
         $result = $this->getProducts($productIds, false);
 
@@ -1307,6 +1339,57 @@ class Product
     public function getTopSalesTopNProducts(int $n = 10): array
     {
         return $this->getTopNProducts([
+            'orderBy' => 'sales_volume',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
+    }
+
+    /**
+     * 指下究类的最新产品
+     *
+     * @param string $categoryId 分类ID
+     * @param int $n 结果数量
+     * @return array
+     */
+    public function getCategoryLatestTopNProducts(string $categoryId, int $n = 10): array
+    {
+        return $this->getTopNProducts([
+            'categoryId' => $categoryId,
+            'orderBy' => 'publish_time',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
+    }
+
+    /**
+     * 指下究类的热门产品
+     *
+     * @param string $categoryId 分类ID
+     * @param int $n 结果数量
+     * @return array
+     */
+    public function getCategoryHottestTopNProducts(string $categoryId, int $n = 10): array
+    {
+        return $this->getTopNProducts([
+            'categoryId' => $categoryId,
+            'orderBy' => 'hits',
+            'orderByDir' => 'desc',
+            'pageSize' => $n,
+        ]);
+    }
+
+    /**
+     * 指下究类的热销产品
+     *
+     * @param string $categoryId 分类ID
+     * @param int $n 结果数量
+     * @return array
+     */
+    public function getCategoryTopSalesTopNProducts(string $categoryId, int $n = 10): array
+    {
+        return $this->getTopNProducts([
+            'categoryId' => $categoryId,
             'orderBy' => 'sales_volume',
             'orderByDir' => 'desc',
             'pageSize' => $n,
