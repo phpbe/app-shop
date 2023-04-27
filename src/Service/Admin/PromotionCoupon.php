@@ -52,7 +52,7 @@ class PromotionCoupon
                         if ($image) {
                             $product->image = $image;
                         } else {
-                            $product->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/product/no-image.jpg';
+                            $product->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/product/no-image.webp';
                         }
                     }
                     unset($product);
@@ -70,7 +70,7 @@ class PromotionCoupon
                     ->getObjects();
                 foreach ($categories as &$category) {
                     if (!$category->image) {
-                        $category->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image.jpg';
+                        $category->image = Be::getProperty('App.Shop')->getWwwUrl() . '/image/category/no-image.webp';
                     }
                 }
                 unset($category);

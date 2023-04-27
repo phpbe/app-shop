@@ -19,23 +19,18 @@ class Template extends Section
         echo $this->getCssMargin('app-shop-category-top-n-side');
 
         echo '#' . $this->id . ' .app-shop-category-top-n-side ul {';
-        echo 'border: 1px solid var(--font-color-9);';
         echo 'margin: 0;';
         echo 'padding: 0;';
         echo '}';
 
         echo '#' . $this->id . ' .app-shop-category-top-n-side li {';
         echo 'list-style: none;';
-        echo 'border-bottom: 1px solid var(--font-color-9);';
-        echo '}';
-
-        echo '#' . $this->id . ' .app-shop-category-top-n-side li:last-child {';
-        echo 'border-bottom: none;';
         echo '}';
 
         echo '#' . $this->id . ' .app-shop-category-top-n-side a {';
         echo 'display: block;';
-        echo 'padding: 1rem;';
+        echo 'border-top: var(--font-color-9) 1px solid;';
+        echo 'padding: .5rem 0;';
         echo '}';
 
         echo '</style>';

@@ -139,7 +139,7 @@ class Category extends Auth
                             ],
                             'value' => function($row) {
                                 if ($row['image'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.webp';
                                 }
                                 return $row['image'];
                             },
@@ -240,7 +240,7 @@ class Category extends Auth
                             'driver' => DetailItemImage::class,
                             'value' => function($row) {
                                 if ($row['image'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image-s.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.webp';
                                 }
                                 return $row['image'];
                             },
@@ -547,7 +547,7 @@ class Category extends Auth
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
                                 }
                             },
                             'ui' => [
@@ -671,7 +671,7 @@ class Category extends Auth
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
                                 }
                             },
                             'ui' => [

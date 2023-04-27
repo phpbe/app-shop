@@ -146,7 +146,7 @@ class Section
             $params = $request->get();
 
             $html .= '<nav class="be-mt-300">';
-            $html .= '<ul class="be-pagination be-pagination-lg" style="justify-content: center;">';
+            $html .= '<ul class="be-pagination" style="justify-content: center;">';
             $html .= '<li>';
             if ($page > 1) {
                 $params['page'] = $page - 1;
@@ -286,7 +286,7 @@ class Section
 
         $html .= $section->page->tag0('be-section-content');
 
-        $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+        $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
         $isMobile = \Be\Be::getRequest()->isMobile();
         foreach ($products as $product) {
             $html .= '<div class="be-row be-my-100">';
@@ -501,7 +501,7 @@ class Section
     {
         $configStore = Be::getConfig('App.Shop.Store');
         $isMobile = \Be\Be::getRequest()->isMobile();
-        $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+        $nnImage = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
 
         $html = '<div class="' . $class . '-products">';
         foreach ($products as $product) {

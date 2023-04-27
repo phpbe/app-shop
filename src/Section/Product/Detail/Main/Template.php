@@ -23,7 +23,7 @@ class Template extends Section
         $isMobile = Be::getRequest()->isMobile();
 
         echo '<div class="app-shop-product-detail-main">';
-        if ($this->position === 'middle') {
+        if ($this->position === 'middle' && $this->config->width === 'default') {
             echo '<div class="be-container">';
         }
 
@@ -92,7 +92,9 @@ class Template extends Section
         echo '</div>'; // be-col-24 be-md-col-16
         echo '</div>'; // be-row
 
-        if ($this->position === 'middle') echo '</div>';
+        if ($this->position === 'middle' && $this->config->width === 'default') {
+            echo '</div>';
+        }
         echo '</div>';
 
         $this->js();

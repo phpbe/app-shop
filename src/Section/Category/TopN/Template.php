@@ -29,19 +29,19 @@ class Template extends Section
         }
 
         if ($this->config->title !== '') {
-            echo '<div class="app-shop-category-top-n-title">';
-            echo '<h3 class="be-h3">' . $this->config->title . '</h3>';
-            echo '</div>';
+            echo $this->page->tag0('be-section-title');
+            echo $this->config->title;
+            echo $this->page->tag1('be-section-title');
         }
-
 
         $isMobile = \Be\Be::getRequest()->isMobile();
 
+        echo $this->page->tag0('be-section-content');
         echo '<div class="app-shop-category-top-n-items">';
         foreach ($categories as $category) {
 
             if ($category->image === '') {
-                $category->image = Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
+                $category->image = Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.webp';
             }
 
             echo '<div class="app-shop-category-top-n-item">';
@@ -73,6 +73,7 @@ class Template extends Section
             echo '</div>';
         }
         echo '</div>';
+        echo $this->page->tag1('be-section-content');
 
         if ($this->position === 'middle' && $this->config->width === 'default') {
             echo '</div>';

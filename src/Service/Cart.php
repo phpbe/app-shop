@@ -197,6 +197,10 @@ class Cart
             }
         }
 
+        if (!$imageUrl) {
+            $imageUrl = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
+        }
+
         return (object)[
             'product_id' => $cartProduct->product_id,
             'product_item_id' => $cartProduct->product_item_id,

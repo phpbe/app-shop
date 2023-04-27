@@ -286,7 +286,7 @@ class Product
         $originalPriceFrom = 0;
         $originalPriceTo = 0;
 
-        $image = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+        $image = Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
 
         $items = [];
         if ($style === 1) {

@@ -216,7 +216,7 @@ class Product extends Auth
                                 if ($image) {
                                     return $image;
                                 } else {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/product/no-image.webp';
                                 }
                             },
                             'ui' => [

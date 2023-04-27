@@ -30,7 +30,7 @@ class Template extends Section
         ], ['images' => true]);
 
         echo '<div class="app-shop-product-detail-reviews">';
-        if ($this->position === 'middle') {
+        if ($this->position === 'middle' && $this->config->width === 'default') {
             echo '<div class="be-container">';
         }
 
@@ -181,7 +181,7 @@ class Template extends Section
             }
         }
 
-        if ($this->position === 'middle') {
+        if ($this->position === 'middle' && $this->config->width === 'default') {
             echo '</div>';
         }
         echo '</div>';

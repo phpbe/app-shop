@@ -425,7 +425,7 @@ class Category
                             ],
                             'value' => function($row) {
                                 if ($row['image'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.webp';
                                 }
                                 return $row['image'];
                             },
@@ -495,7 +495,7 @@ class Category
                             ],
                             'value' => function($row) {
                                 if ($row['image'] === '') {
-                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.jpg';
+                                    return Be::getProperty('App.Shop')->getWwwUrl() . '/images/category/no-image.webp';
                                 }
                                 return $row['image'];
                             },
