@@ -17,7 +17,7 @@ class index
             'name' => 'Theme.System.PageTitle',
         ],
         [
-            'name' => 'Theme.System.PageContent',
+            'name' => 'App.Shop.Cart.Index',
         ],
     ];
 

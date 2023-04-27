@@ -462,22 +462,409 @@ class Template extends Section
         $configStore = \Be\Be::getConfig('App.Shop.Store');
         $isMobile = Be::getRequest()->isMobile();
 
-        echo '<script>';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_ID = "' . $this->id . '";';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_PRODUCT = ' . json_encode($this->page->product) . ';';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_IS_MOBILE = ' . ($isMobile ? 'true' : 'false') . ';';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_CART_ADD_URL = "'.beUrl('Shop.Cart.add').'";';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_CURRENCY = "' . $configStore->currency . '";';
-        echo 'const APP_SHOP_PRODUCT_DETAIL_SECTION_CURRENCY_SYMBOL = "' . $configStore->currencySymbol . '";';
-        echo '</script>';
-
         if (!$isMobile) {
             echo '<script type="text/javascript" src="' . $wwwUrl . '/lib/cloudzoom/cloudzoom.js"></script>';
         }
 
         echo '<script src="' . $wwwUrl . '/lib/swiper/8.3.2/swiper-bundle.min.js"></script>';
+        ?>
+        <script>
 
-        echo '<script type="text/javascript" src="' . $wwwUrl . '/js/product/detail.js"></script>';
+            let product = <?php echo json_encode($this->page->product); ?>;
+
+            let swiperSmall = new Swiper("#<?php echo $this->id; ?> .swiper-small .swiper", {
+                direction: "vertical",
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
+                },
+
+                spaceBetween: 10,
+                slidesPerView: 'auto'
+            });
+
+            let swiperlarge = new Swiper("#<?php echo $this->id; ?> .swiper-large .swiper", {
+                thumbs: {
+                    swiper: swiperSmall
+                }
+            });
+
+            $(".swiper-small .swiper-slide").hover(function(){
+                swiperlarge.slideTo($(this).data("index"));
+            });
+
+            <?php if (!$isMobile) { ?>
+                CloudZoom.quickStart();
+            <?php } ?>
+
+            let productItemId = "";
+            if (product.style === 1) {
+                productItemId = product.items[0].id;
+            }
+
+            let filterStyle = [];
+            let swiperImagesType = 'product';
+
+            function toggleStyle(e, styleId, styleValueIndex) {
+                let $e = $(e);
+                if ($e.hasClass("style-icon-link-disable")) {
+                    if ($e.hasClass("style-icon-link-current")) {
+                        $e.removeClass("style-icon-link-current")
+                        filterStyle[styleId] = -1;
+                    }
+                } else {
+                    if (!filterStyle.hasOwnProperty(styleId)) {
+                        filterStyle[styleId] = -1;
+                    }
+
+                    if (filterStyle[styleId] === styleValueIndex) {
+                        filterStyle[styleId] = -1;
+                    } else {
+                        filterStyle[styleId] = styleValueIndex
+                    }
+                }
+
+                updateStyles();
+            }
+
+            function updateStyles() {
+                let filterStyleValueIndex;
+
+                // update multiple style classes
+                for (let filterStyleId in filterStyle) {
+                    filterStyleValueIndex = filterStyle[filterStyleId];
+                    $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").removeClass("style-icon-link-current");
+                    if (filterStyleValueIndex !== -1) {
+                        for (let style of product.styles) {
+                            if (style.id === filterStyleId) {
+                                $("#app-shop-product-detail-main-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
+                                break;
+                            }
+                        }
+                        $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").eq(filterStyleValueIndex).addClass("style-icon-link-current");
+                    } else {
+                        $("#app-shop-product-detail-main-style-value-" + filterStyleId).html("");
+                    }
+                }
+
+                // calc matched product items
+                let matchedItems = [];
+                let match = true;
+                let currentStyle;
+                let currentStyleName;
+                let currentStyleValue;
+                for (let item of product.items) {
+                    match = true;
+
+                    for (let filterStyleId in filterStyle) {
+                        filterStyleValueIndex = filterStyle[filterStyleId];
+                        if (filterStyleValueIndex !== -1) {
+                            currentStyle = false;
+                            for (let style of product.styles) {
+                                if (style.id === filterStyleId) {
+                                    currentStyle = style;
+                                    break;
+                                }
+                            }
+
+                            if (currentStyle) {
+                                currentStyleName = currentStyle.name;
+                                currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
+                                for (let x of item.style_json) {
+                                    if (x.name === currentStyleName) {
+                                        if (x.value !== currentStyleValue) {
+                                            match = false;
+                                            break;
+                                        }
+                                    }
+                                }
+                            } else {
+                                match = false;
+                            }
+                        }
+                    }
+
+                    if (match) {
+                        matchedItems.push(item);
+                    }
+                }
+
+                //console.log(matchedItems);
+
+                // according to the matched product items, update style icons
+                if (matchedItems.length === 1) {
+                    productItemId = matchedItems[0].id;
+                } else {
+                    productItemId = "";
+                }
+                $("#app-shop-product-detail-main-item-id").val(productItemId);
+
+                let originalPriceRange = "";
+                let priceRange = "";
+                let originalPrice;
+                let price;
+
+                // ----------------------------------------------------------------------------------------------------- update price range
+                if (matchedItems.length === 1) {
+                    originalPrice = matchedItems[0].original_price;
+                    price = matchedItems[0].price;
+                    if (originalPrice !== "0.00" && originalPrice !== price) {
+                        originalPriceRange = originalPrice;
+                    }
+                    priceRange = price;
+                } else if (matchedItems.length > 0) {
+                    let originalPriceFrom = -1;
+                    let originalPriceTo = -1;
+                    let priceFrom = -1;
+                    let priceTo = -1;
+                    for (let item of matchedItems) {
+                        originalPrice = Math.round(Number(item.original_price) * 100);
+                        if (originalPriceFrom === -1) {
+                            originalPriceFrom = originalPrice;
+                        }
+                        if (originalPriceTo === -1) {
+                            originalPriceTo = originalPrice;
+                        }
+                        if (originalPrice < originalPriceFrom) {
+                            originalPriceFrom = originalPrice;
+                        }
+                        if (originalPrice > originalPriceTo) {
+                            originalPriceTo = originalPrice;
+                        }
+
+                        price = Math.round(Number(item.price) * 100);
+                        if (priceFrom === -1) {
+                            priceFrom = price;
+                        }
+                        if (priceTo === -1) {
+                            priceTo = price;
+                        }
+                        if (price < priceFrom) {
+                            priceFrom = price;
+                        }
+                        if (price > priceTo) {
+                            priceTo = price;
+                        }
+                    }
+
+                    if (originalPriceTo > 0) {
+                        if (originalPriceFrom !== priceFrom || originalPriceTo !== priceTo) {
+                            if (originalPriceFrom === originalPriceTo) {
+                                originalPriceRange = (originalPriceFrom / 100).toFixed(2);
+                            } else {
+                                originalPriceRange = (originalPriceFrom / 100).toFixed(2) + "~" + (originalPriceTo / 100).toFixed(2);
+                            }
+                        }
+                    }
+
+                    if (priceFrom === priceTo) {
+                        priceRange = (priceFrom / 100).toFixed(2);
+                    } else {
+                        priceRange = (priceFrom / 100).toFixed(2) + "~" + (priceTo / 100).toFixed(2);
+                    }
+                }
+                let $originalPrice = $("#app-shop-product-detail-main-original-price-range");
+                if (originalPriceRange) {
+                    $originalPrice.html("<?php echo $configStore->currencySymbol; ?>" + originalPriceRange).show();
+                } else {
+                    $originalPrice.html("").hide();
+                }
+                $("#app-shop-product-detail-main-price-range").html("<?php echo $configStore->currencySymbol; ?>" + priceRange);
+                // ===================================================================================================== update price range
+
+                // update the "disabled" status of the "buy now" & "add to cart" buttons
+                if (matchedItems.length === 1) {
+                    $("#app-shop-product-detail-main-buy-now").prop("disabled", false);
+                    $("#app-shop-product-detail-main-add-to-cart").prop("disabled", false);
+                } else {
+                    $("#app-shop-product-detail-main-buy-now").prop("disabled", true);
+                    $("#app-shop-product-detail-main-add-to-cart").prop("disabled", true);
+                }
+
+                // ----------------------------------------------------------------------------------------------------- update style icons
+                let available;
+                let styleValue;
+                let styleMatchedItems;
+                for (let style of product.styles) {
+                    for (let styleValueIndex in style.items) {
+
+                        // calc the matched product items when exclude current style
+                        styleMatchedItems = [];
+                        match = true;
+                        for (let item of product.items) {
+                            match = true;
+
+                            for (let filterStyleId in filterStyle) {
+
+                                // exclude current style
+                                if (filterStyleId === style.id) {
+                                    continue;
+                                }
+
+                                filterStyleValueIndex = filterStyle[filterStyleId];
+                                if (filterStyleValueIndex !== -1) {
+                                    currentStyle = false;
+                                    for (let style of product.styles) {
+                                        if (style.id === filterStyleId) {
+                                            currentStyle = style;
+                                            break;
+                                        }
+                                    }
+
+                                    if (currentStyle) {
+                                        currentStyleName = currentStyle.name;
+                                        currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
+                                        for (let x of item.style_json) {
+                                            if (x.name === currentStyleName) {
+                                                if (x.value !== currentStyleValue) {
+                                                    match = false;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        match = false;
+                                    }
+                                }
+                            }
+
+                            if (match) {
+                                styleMatchedItems.push(item);
+                            }
+                        }
+
+                        styleValue = style.items[styleValueIndex].value;
+                        available = false;
+                        if (styleMatchedItems.length > 0) {
+                            for (let item of styleMatchedItems) {
+                                for (let x of item.style_json) {
+                                    if (x.name === style.name && x.value === styleValue) {
+                                        available = true;
+                                        break;
+                                    }
+                                }
+
+                                if (available) {
+                                    break;
+                                }
+                            }
+                        }
+
+                        let $e = $("#app-shop-product-detail-main-style-" + style.id + " .style-icon-link").eq(styleValueIndex);
+                        if (available) {
+                            if ($e.hasClass("style-icon-link-disable")) {
+                                $e.removeClass("style-icon-link-disable");
+                            }
+                        } else {
+                            $e.addClass("style-icon-link-disable");
+                        }
+                    }
+                }
+                // ===================================================================================================== update style icons
+
+
+                // ----------------------------------------------------------------------------------------------------- update image sliders
+                let newSwiperImagesType = 'product';
+                let swiperImages = product.images;
+                if (matchedItems.length === 1) {
+                    let matchedItem = matchedItems[0];
+                    if (matchedItem.images.length > 0) {
+                        newSwiperImagesType = 'product-item:' + matchedItem.id;
+                        swiperImages = matchedItem.images;
+                    }
+                }
+
+                if (newSwiperImagesType !== swiperImagesType) {
+                    swiperImagesType = newSwiperImagesType;
+
+                    swiperSmall.removeAllSlides();
+                    swiperlarge.removeAllSlides();
+
+                    let swiperImage;
+                    for (let i in swiperImages) {
+                        swiperImage = swiperImages[i];
+                        swiperSmall.appendSlide('<div class="swiper-slide" data-index="' + i + '"><img src="' + swiperImage.url + '" alt=""></div>');
+
+                        <?php if ($isMobile) { ?>
+                        swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt=""></div>');
+                        <?php } else { ?>
+                        swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt="" class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' + swiperImage.url + '\'"></div>');
+                        <?php } ?>
+                    }
+
+                    <?php if (!$isMobile) { ?>
+                    CloudZoom.quickStart();
+                    <?php } ?>
+
+                    $(".swiper-small .swiper-slide").hover(function () {
+                        swiperlarge.slideTo($(this).data("index"));
+                    });
+                }
+                // ===================================================================================================== update image sliders
+            }
+
+            $(document).ready(function () {
+
+                if (product.style === 2) {
+                    let defaultProductItem = product.items[0];
+                    let match = false;
+                    for (let style of product.styles) {
+                        for (let styleValueIndex in style.items) {
+
+                            match = false;
+                            for (let x of defaultProductItem.style_json) {
+                                if (x.name === style.name && x.value === style.items[styleValueIndex].value) {
+                                    match = true;
+                                    break;
+                                }
+                            }
+
+                            // 选中该款式
+                            if (match) {
+                                filterStyle[style.id] = styleValueIndex;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                updateStyles();
+
+                $("#app-shop-product-detail-main-buy-now").click(function () {
+                    $(this).closest("form").submit();
+                });
+
+                $("#app-shop-product-detail-main-add-to-cart").click(function () {
+                    let quantity = $("#app-shop-product-detail-main-quantity").val();
+                    if (isNaN(quantity)) {
+                        quantity = 1;
+                    }
+                    quantity = parseInt(quantity);
+                    if (quantity < 0) quantity = 1;
+
+                    $.ajax({
+                        url: "<?php echo beUrl('Shop.Cart.add'); ?>",
+                        data: {
+                            "product_id": product.id,
+                            "product_item_id": productItemId,
+                            "quantity": quantity
+                        },
+                        type: "POST",
+                        success: function (json) {
+                            if (json.success) {
+                                DrawerCart.load();
+                                DrawerCart.show();
+                            }
+                        },
+                        error: function () {
+                            alert("System Error!");
+                        }
+                    });
+
+                });
+            });
+        </script>
+        <?php
     }
 
 }

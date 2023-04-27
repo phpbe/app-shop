@@ -52,7 +52,7 @@ class Config
      *     ui="return [':min' => 3, ':max' => 6];"
      * )
      */
-    public int $cols = 4;
+    public int $cols = 6;
 
     /**
      * @BeConfigItem("鼠标悬停效果",

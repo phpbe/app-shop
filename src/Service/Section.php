@@ -400,9 +400,9 @@ class Section
         $css .= $section->getCssMargin($class);
 
 
-        $itemWidthMobile = '100%';
-        $itemWidthTablet = '50%';
-        $itemWidthDesktop = '33.333333333333%';
+        $itemWidthMobile = '50%';
+        $itemWidthTablet = '33.333333333333%';
+        $itemWidthDesktop = '25%';
         $itemWidthDesktopXl = '';
         $itemWidthDesktopXxl = '';
         $itemWidthDesktopX3l = '';
