@@ -167,7 +167,7 @@ class Template extends Section
 
             echo '<div class="be-row be-mt-100">';
             foreach ($product->relate->items as $relateItem) {
-                echo '<div class="be-col-auto be-pr-100">';
+                echo '<div class="be-col-auto be-pr-100 be-pb-50">';
 
                 echo '<a class="style-icon-link style-icon-link-' . $product->relate->icon_type;
                 if ($relateItem->self) {
@@ -217,8 +217,7 @@ class Template extends Section
                     }
                     */
                     foreach ($style->items as $styleItemIndex => $styleItem) {
-                        echo '<div class="be-col-auto be-pr-100">';
-
+                        echo '<div class="be-col-auto be-pr-100 be-pb-50">';
 
                         echo '<a class="style-icon-link style-icon-link-' . $style->icon_type . '" href="javascript:void(0);" onclick="toggleStyle(this, \'' . $style->id . '\',' . $styleItemIndex . ')" title="' . $styleItem->value . '">';
 
@@ -240,8 +239,6 @@ class Template extends Section
                 }
             }
         }
-
-
 
         // ------------------------------------------------------------------------------------------------------------- 右侧摘要
         echo '<form action="' . beUrl('Shop.Cart.checkout', ['from' => 'buy_now']) . '" method="post">';
