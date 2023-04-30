@@ -21,7 +21,7 @@ class Payment
 
         if (!$payment) {
             $payment = $this->getPaymentFromDb($paymentId);
-            $cacht->set($key, $payment);
+            $cacht->set($key, $payment, 600);
         }
 
         return $payment;
@@ -40,7 +40,12 @@ class Payment
         } catch (\Throwable $t) {
             throw new ServiceException('Payment (#' . $paymentId . ') does not exist!');
         }
-        return $tuple->toObject();
+
+        $payment = $tuple->toObject();
+
+        $payment->logo = Be::getProperty('App.Shop')->getWwwUrl() . '/images/payment/' . $payment->logo;
+
+        return $payment;
     }
 
     /**

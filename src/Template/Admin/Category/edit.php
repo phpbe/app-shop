@@ -240,7 +240,7 @@
                             </div>
                         </div>
 
-                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl; ?>/<?php echo $this->configCategory->urlPrefix; ?>/{{formData.url}}<?php echo $this->configCategory->urlSuffix; ?></div>
+                        <div class="be-mt-100 be-t-break be-c-999 be-fs-80"><?php echo $rootUrl . $this->configCategory->urlPrefix; ?>{{formData.url}}<?php echo $this->configCategory->urlSuffix; ?></div>
                         <div class="be-mt-100">{{formData.seo_title}}</div>
                         <div class="be-mt-100 be-t-ellipsis-2">{{formData.seo_description}}</div>
                     </div>
@@ -337,7 +337,7 @@
                         maxlength="200"
                         show-word-limit
                         :disabled="formData.url_custom === 0">
-                    <template slot="prepend"><?php echo $rootUrl; ?>/<?php echo $this->configCategory->urlPrefix; ?>/</template>
+                    <template slot="prepend"><?php echo $rootUrl . $this->configCategory->urlPrefix; ?></template>
                     <?php if ($this->configCategory->urlSuffix) { ?>
                         <template slot="append"><?php echo $this->configCategory->urlSuffix; ?>/</template>
                     <?php } ?>

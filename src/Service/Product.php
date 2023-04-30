@@ -236,6 +236,12 @@ class Product
                     }
                 }
 
+                try {
+                    $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+                } catch (\Throwable $t) {
+                    continue;
+                }
+
                 $newProducts[] = $product;
             }
 
@@ -250,6 +256,12 @@ class Product
                     } else {
                         continue;
                     }
+                }
+
+                try {
+                    $product->absolute_url = beUrl('Shop.Product.detail', ['id' => $product->id]);
+                } catch (\Throwable $t) {
+                    continue;
                 }
 
                 $newProducts[] = $product;

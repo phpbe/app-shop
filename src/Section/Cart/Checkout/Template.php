@@ -136,7 +136,7 @@ class Template extends Section
 
                             <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                                 <div class="be-floating">
-                                    <select name="state_id" id="app-cart-checkout-state-id" class="be-select" onchange="updateShippingPlans();">
+                                    <select name="state_id" id="app-cart-checkout-state-id" class="be-select" onchange="CartCheckout.updateShippingPlans();">
                                         <option value="">Select</option>
                                     </select>
                                     <label class="be-floating-label" for="app-cart-checkout-state-id">State <span class="be-c-red">*</span></label>
@@ -199,11 +199,13 @@ class Template extends Section
                                     </td>
 
                                     <td>
-                                        <a class="be-d-block be-t-ellipsis-2" href="<?php echo $product->url; ?>">
-                                            <?php echo $product->name; ?>
-                                        </a>
-                                        <div class="be-mt-50 be-c-999">
-                                            <?php echo $product->style; ?>
+                                        <div class="be-px-50">
+                                            <a class="be-d-block be-t-ellipsis-2" href="<?php echo $product->url; ?>">
+                                                <?php echo $product->name; ?>
+                                            </a>
+                                            <div class="be-mt-50 be-c-font-4">
+                                                <?php echo $product->style; ?>
+                                            </div>
                                         </div>
                                     </td>
 
@@ -402,7 +404,6 @@ class Template extends Section
 
                 products: <?php echo json_encode($this->page->products); ?>,
                 productTotalAmount: "<?php echo $this->page->productTotalAmount; ?>",
-                defaultStateId: "<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>",
 
                 shippingPlans: [],
                 shippingPlanId: "",
@@ -474,7 +475,7 @@ class Template extends Section
                                         $stateId.val(selectStateId);
                                     }
                                 }
-                                updateShippingPlans();
+                                CartCheckout.updateShippingPlans();
                             } else {
                                 alert(json.message);
                             }
@@ -531,12 +532,12 @@ class Template extends Section
                                     html += '<div class="be-col"><div class="be-px-100">';
                                     html += '<label class="be-fw-bold be-fs-125 be-lh-150" for="shipping_plan_id-' + shippingPlan.id + '">' + shippingPlan.name + '</label>';
                                     if (shippingPlan.description) {
-                                        html += '<div class="be-c-999 be-mt-50">' + shippingPlan.description + '</div>';
+                                        html += '<div class="be-c-font-4 be-mt-50">' + shippingPlan.description + '</div>';
                                     }
                                     html += '</div></div>';
 
                                     html += '<div class="be-col-auto"><div class="be-pr-200">';
-                                    html += '<div class="be-c-999">$' + shippingPlan.shipping_fee + '</div>';
+                                    html += '<div class="be-c-font-4"><?php echo $configStore->currencySymbol; ?>' + shippingPlan.shipping_fee + '</div>';
                                     html += '</div></div>';
 
                                     html += '</div>';
@@ -663,7 +664,7 @@ class Template extends Section
 
 
             $(function () {
-                updateState(defaultStateId);
+                CartCheckout.updateState("<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>");
 
                 $("#app-cart-checkout-form").validate({
                     //debug:true,
