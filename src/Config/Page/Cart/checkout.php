@@ -17,7 +17,7 @@ class checkout
             'name' => 'Theme.System.PageTitle',
         ],
         [
-            'name' => 'Theme.System.PageContent',
+            'name' => 'App.Shop.Cart.Checkout',
         ],
     ];
 

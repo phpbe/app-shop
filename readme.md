@@ -61,3 +61,7 @@
 * 2007 - 分类热搜商品TopN边栏 - Category.HotSearchTopNSide
 * 2008 - 分类猜你喜欢商品TopN边栏 - Category.GuessYouLikeTopNSide
 
+
+### 3xxx 购物车
+* 3001 - 购物车 - Cart.Index
+* 3002 - 购物车-结算 - Cart.Checkout

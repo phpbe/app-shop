@@ -40,7 +40,7 @@ class StaticsCart extends Task
 
         $batch = [];
         while (true) {
-            $cart = $redis->rPop('Shop:Statistic:cart');
+            $cart = $redis->rPop('App:Shop:Statistic:cart');
             if ($cart === false) {
                 break;
             }

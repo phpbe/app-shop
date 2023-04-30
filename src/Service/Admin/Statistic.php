@@ -26,7 +26,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'Shop:Statistic:DateHistogram:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'App:Shop:Statistic:DateHistogram:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -163,7 +163,7 @@ class Statistic
             throw new ServiceException('group 缺失！');
         }
 
-        $cacheKey = 'Shop:Statistic:Group:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'App:Shop:Statistic:Group:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -273,7 +273,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'Shop:Statistic:Count:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'App:Shop:Statistic:Count:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -332,7 +332,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'Shop:Statistic:Sum:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'App:Shop:Statistic:Sum:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {
@@ -383,7 +383,7 @@ class Statistic
             throw new ServiceException('cacheKey 缺失！');
         }
 
-        $cacheKey = 'Shop:Statistic:Avg:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
+        $cacheKey = 'App:Shop:Statistic:Avg:' . ($options['cacheKey'] ?? '') . ':' . $startTime . '-' . $endTime;
 
         $cache = Be::getCache();
         if ($cache->has($cacheKey)) {

@@ -3,7 +3,7 @@
 namespace Be\App\Shop\Section\Cart\Index;
 
 /**
- * @BeConfig("商品详情-描述",  icon="bi-bag", ordering="1101")
+ * @BeConfig("购物车",  icon="bi-bag", ordering="1101")
  */
 class Config
 {

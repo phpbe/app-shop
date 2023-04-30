@@ -52,7 +52,7 @@ class Statistic
         ];
 
         $redis = Be::getRedis();
-        $redis->lPush('Shop:Statistic:Visit', json_encode($data));
+        $redis->lPush('App:Shop:Statistic:Visit', json_encode($data));
     }
 
     /**
@@ -79,7 +79,7 @@ class Statistic
         ];
 
         $redis = Be::getRedis();
-        $redis->lPush('Shop:Statistic:cart', json_encode($data));
+        $redis->lPush('App:Shop:Statistic:cart', json_encode($data));
     }
 
     public function detectUserAgentBrowser($userAgent, $withVersion = false)

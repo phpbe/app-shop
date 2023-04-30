@@ -22,14 +22,14 @@ class UserFavorite
         $productIds = null;
         $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
-            $productIds = $redis->sMembers('Shop:User:Favorite:' . $my->id);
+            $productIds = $redis->sMembers('App:Shop:User:Favorite:' . $my->id);
         } else {
             $sql = 'SELECT product_id FROM shop_user_favorite WHERE user_id = ? AND is_enable = 1 AND is_delete = 0';
             $productIds = Be::getDb()->getValues($sql, [$my->id]);
         }
 
         foreach ($productIds as $productId) {
-            $product = $redis->get('Shop:Product:' . $productId);
+            $product = $redis->get('App:Shop:Product:' . $productId);
             if (!$product) {
                 continue;
             }
@@ -70,7 +70,7 @@ class UserFavorite
         $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            $redis->sAdd('Shop:User:Favorite:' . $my->id, $productId);
+            $redis->sAdd('App:Shop:User:Favorite:' . $my->id, $productId);
         } else {
             $tupleUserFavorite = Be::getTuple('shop_user_favorite');
             try {
@@ -102,7 +102,7 @@ class UserFavorite
         $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            return $redis->sIsMember('Shop:User:Favorite:' . $my->id, $productId);
+            return $redis->sIsMember('App:Shop:User:Favorite:' . $my->id, $productId);
         } else {
             $sql = 'SELECT COUNT(*) FROM shop_user_favorite WHERE user_id = ? AND product_id = ? AND is_enable = 1 AND is_delete = 0';
             return Be::getDb()->getValue($sql, [$my->id, $productId]) > 0;
@@ -120,7 +120,7 @@ class UserFavorite
         $config = Be::getConfig('App.Shop.User');
         if ($config->favoriteDrive === 'redis') {
             $redis = Be::getRedis();
-            $redis->sRem('Shop:User:Favorite:' . $my->id, $productId);
+            $redis->sRem('App:Shop:User:Favorite:' . $my->id, $productId);
         } else {
             $tupleUserFavorite = Be::getTuple('shop_user_favorite');
             try {

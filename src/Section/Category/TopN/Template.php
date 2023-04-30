@@ -124,8 +124,8 @@ class Template extends Section
         $itemWidthDesktopXxl = '';
         $itemWidthDesktopX3l = '';
         $cols = 4;
-        if (isset($section->config->cols)) {
-            $cols = $section->config->cols;
+        if (isset($this->config->cols)) {
+            $cols = $this->config->cols;
         }
         if ($cols >= 4) {
             $itemWidthDesktopXl = '25%';
@@ -136,7 +136,7 @@ class Template extends Section
         if ($cols >= 6) {
             $itemWidthDesktopX3l = '16.666666666666%';
         }
-        echo $section->getCssSpacing('app-shop-category-top-n-items', 'app-shop-category-top-n-item', $itemWidthMobile, $itemWidthTablet, $itemWidthDesktop, $itemWidthDesktopXl, $itemWidthDesktopXxl, $itemWidthDesktopX3l);
+        echo $this->getCssSpacing('app-shop-category-top-n-items', 'app-shop-category-top-n-item', $itemWidthMobile, $itemWidthTablet, $itemWidthDesktop, $itemWidthDesktopXl, $itemWidthDesktopXxl, $itemWidthDesktopX3l);
 
         echo '</style>';
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Be\App\Shop\Section\Product\Detail\Reviews;
+namespace Be\App\Shop\Section\Cart\Checkout;
 
 /**
- * @BeConfig("商品详情-评论  icon="bi-chat-left-text", ordering="1102")
+ * @BeConfig("购物车-结算",  icon="bi-bag", ordering="1101")
  */
 class Config
 {
@@ -28,24 +28,6 @@ class Config
      * )
      */
     public string $backgroundColor = '#fff';
-
-    /**
-     * @BeConfigItem("评论标题", driver = "FormItemInput")
-     */
-    public string $title = 'Customer reviews';
-
-    /**
-     * @BeConfigItem("评论分页大小", driver = "FormItemInputNumberInt")
-     */
-    public int $pageSize = 10;
-
-    /**
-     * @BeConfigItem("最大分页",
-     *     description = "为节约服务器资源，限制分页展示时的最大页码数",
-     *     driver = "FormItemInputNumberInt",
-     * )
-     */
-    public int $maxPages = 100;
 
     /**
      * @BeConfigItem("内边距（手机端）",
@@ -77,7 +59,7 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginMobile = '1rem 0 0 0';
+    public string $marginMobile = '0';
 
     /**
      * @BeConfigItem("外边距 （平板端）",
@@ -85,7 +67,7 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginTablet = '1.5rem 0 0 0';
+    public string $marginTablet = '0';
 
     /**
      * @BeConfigItem("外边距 （电脑端）",
@@ -93,6 +75,6 @@ class Config
      *     description = "上右下左（CSS margin 语法）"
      * )
      */
-    public string $marginDesktop = '2rem 0 0 0';
+    public string $marginDesktop = '0';
 
 }

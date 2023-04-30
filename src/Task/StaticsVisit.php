@@ -48,7 +48,7 @@ class StaticsVisit extends Task
 
         $batch = [];
         while (true) {
-            $visit = $redis->rPop('Shop:Statistic:Visit');
+            $visit = $redis->rPop('App:Shop:Statistic:Visit');
             if ($visit === false) {
                 break;
             }

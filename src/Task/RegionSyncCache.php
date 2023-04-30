@@ -24,10 +24,10 @@ class RegionSyncCache extends Task
         $continentIdCnNameKeyValues = [];
         $continentCodeCnNameKeyValues = [];
         foreach ($continents as $continent) {
-            $key = 'Shop:Region:Continent:' . $continent->id;
+            $key = 'App:Shop:Region:Continent:' . $continent->id;
             $cache->set($key, $continent);
 
-            $key = 'Shop:Region:Continent:' . $continent->code;
+            $key = 'App:Shop:Region:Continent:' . $continent->code;
             $cache->set($key, $continent);
 
             $continentIdNameKeyValues[$continent->id] = $continent->name;
@@ -35,10 +35,10 @@ class RegionSyncCache extends Task
             $continentIdCnNameKeyValues[$continent->id] = $continent->name_cn;
             $continentCodeCnNameKeyValues[$continent->code] = $continent->name_cn;
         }
-        $cache->set('Shop:Region:Continent:idNameKeyValues', $continentIdNameKeyValues);
-        $cache->set('Shop:Region:Continent:codeNameKeyValues', $continentCodeNameKeyValues);
-        $cache->set('Shop:Region:Continent:idCnNameKeyValues', $continentIdCnNameKeyValues);
-        $cache->set('Shop:Region:Continent:codeCnNameKeyValues', $continentCodeCnNameKeyValues);
+        $cache->set('App:Shop:Region:Continent:idNameKeyValues', $continentIdNameKeyValues);
+        $cache->set('App:Shop:Region:Continent:codeNameKeyValues', $continentCodeNameKeyValues);
+        $cache->set('App:Shop:Region:Continent:idCnNameKeyValues', $continentIdCnNameKeyValues);
+        $cache->set('App:Shop:Region:Continent:codeCnNameKeyValues', $continentCodeCnNameKeyValues);
 
 
         $sql = 'SELECT * FROM shop_region_country';
@@ -49,10 +49,10 @@ class RegionSyncCache extends Task
         $countryIdCnNameKeyValues = [];
         $countryCodeCnNameKeyValues = [];
         foreach ($countries as $country) {
-            $key = 'Shop:Region:Country:' . $country->id;
+            $key = 'App:Shop:Region:Country:' . $country->id;
             $cache->set($key, $country);
 
-            $key = 'Shop:Region:Country:' . $country->code;
+            $key = 'App:Shop:Region:Country:' . $country->code;
             $cache->set($key, $country);
 
             $countryIdNameKeyValues[$country->id] = $country->name;
@@ -60,10 +60,10 @@ class RegionSyncCache extends Task
             $countryIdCnNameKeyValues[$country->id] = $country->name_cn;
             $countryCodeCnNameKeyValues[$country->code] = $country->name_cn;
         }
-        $cache->set('Shop:Region:Country:idNameKeyValues', $countryIdNameKeyValues);
-        $cache->set('Shop:Region:Country:codeNameKeyValues', $countryCodeNameKeyValues);
-        $cache->set('Shop:Region:Country:idCnNameKeyValues', $countryIdCnNameKeyValues);
-        $cache->set('Shop:Region:Country:codeCnNameKeyValues', $countryCodeCnNameKeyValues);
+        $cache->set('App:Shop:Region:Country:idNameKeyValues', $countryIdNameKeyValues);
+        $cache->set('App:Shop:Region:Country:codeNameKeyValues', $countryCodeNameKeyValues);
+        $cache->set('App:Shop:Region:Country:idCnNameKeyValues', $countryIdCnNameKeyValues);
+        $cache->set('App:Shop:Region:Country:codeCnNameKeyValues', $countryCodeCnNameKeyValues);
 
 
         foreach ($continents as $continent) {
@@ -80,22 +80,22 @@ class RegionSyncCache extends Task
                     $countryIdCnNameKeyValues[$country->id] = $country->name_cn;
                     $countryCodeCnNameKeyValues[$country->code] = $country->name_cn;
                 }
-                $cache->set('Shop:Region:Country:idNameKeyValues:' . $continent->id, $countryIdNameKeyValues);
-                $cache->set('Shop:Region:Country:codeNameKeyValues:' . $continent->id, $countryCodeNameKeyValues);
-                $cache->set('Shop:Region:Country:idCnNameKeyValues:' . $continent->id, $countryIdCnNameKeyValues);
-                $cache->set('Shop:Region:Country:codeCnNameKeyValues:' . $continent->id, $countryCodeCnNameKeyValues);
+                $cache->set('App:Shop:Region:Country:idNameKeyValues:' . $continent->id, $countryIdNameKeyValues);
+                $cache->set('App:Shop:Region:Country:codeNameKeyValues:' . $continent->id, $countryCodeNameKeyValues);
+                $cache->set('App:Shop:Region:Country:idCnNameKeyValues:' . $continent->id, $countryIdCnNameKeyValues);
+                $cache->set('App:Shop:Region:Country:codeCnNameKeyValues:' . $continent->id, $countryCodeCnNameKeyValues);
 
-                $cache->set('Shop:Region:Country:idNameKeyValues:' . $continent->code, $countryIdNameKeyValues);
-                $cache->set('Shop:Region:Country:codeNameKeyValues:' . $continent->code, $countryCodeNameKeyValues);
-                $cache->set('Shop:Region:Country:idCnNameKeyValues:' . $continent->code, $countryIdCnNameKeyValues);
-                $cache->set('Shop:Region:Country:codeCnNameKeyValues:' . $continent->code, $countryCodeCnNameKeyValues);
+                $cache->set('App:Shop:Region:Country:idNameKeyValues:' . $continent->code, $countryIdNameKeyValues);
+                $cache->set('App:Shop:Region:Country:codeNameKeyValues:' . $continent->code, $countryCodeNameKeyValues);
+                $cache->set('App:Shop:Region:Country:idCnNameKeyValues:' . $continent->code, $countryIdCnNameKeyValues);
+                $cache->set('App:Shop:Region:Country:codeCnNameKeyValues:' . $continent->code, $countryCodeCnNameKeyValues);
             }
         }
 
         $sql = 'SELECT * FROM shop_region_state';
         $states = $db->getObjects($sql);
         foreach ($states as $state) {
-            $key = 'Shop:Region:State:' . $state->id;
+            $key = 'App:Shop:Region:State:' . $state->id;
             $cache->set($key, $state);
         }
 
@@ -109,11 +109,11 @@ class RegionSyncCache extends Task
                     $stateIdNameKeyValues[$state->id] = $state->name;
                     $stateIdCnNameKeyValues[$state->id] = $state->name_cn;
                 }
-                $cache->set('Shop:Region:State:idNameKeyValues:' . $country->id, $stateIdNameKeyValues);
-                $cache->set('Shop:Region:State:idCnNameKeyValues:' . $country->id, $stateIdCnNameKeyValues);
+                $cache->set('App:Shop:Region:State:idNameKeyValues:' . $country->id, $stateIdNameKeyValues);
+                $cache->set('App:Shop:Region:State:idCnNameKeyValues:' . $country->id, $stateIdCnNameKeyValues);
 
-                $cache->set('Shop:Region:State:idNameKeyValues:' . $country->code, $stateIdNameKeyValues);
-                $cache->set('Shop:Region:State:idCnNameKeyValues:' . $country->code, $stateIdCnNameKeyValues);
+                $cache->set('App:Shop:Region:State:idNameKeyValues:' . $country->code, $stateIdNameKeyValues);
+                $cache->set('App:Shop:Region:State:idCnNameKeyValues:' . $country->code, $stateIdCnNameKeyValues);
             }
         }
 

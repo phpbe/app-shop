@@ -24,6 +24,9 @@ class Template extends Section
         $ratingCount = $this->page->product->rating_count;
         $pageSize = $this->config->pageSize;
         $reviewPage = \Be\Be::getRequest()->get('reviewPage', 1);
+        if ($reviewPage > $this->config->maxPages) {
+            $reviewPage = $this->config->maxPages;
+        }
         $reviews = \Be\Be::getService('App.Shop.ProductReview')->getReviews($this->page->product->id, [
             'page' => $reviewPage,
             'pageSize' => $pageSize,

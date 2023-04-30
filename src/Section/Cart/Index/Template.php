@@ -150,9 +150,9 @@ class Template extends Section
                         </div>
                     </div>
                     <div class="be-col-12 be-lg-col-0"><div class="be-mt-200"></div></div>
-                    <div class="be-col-24 be-lg-col-7">
+                    <div class="be-col-24 be-lg-col-8">
 
-                        <div class="be-row">
+                        <div class="be-row" style="position: sticky; top: 2rem;">
                             <div class="be-col-0 be-lg-col-auto"><div class="be-pl-200"></div></div>
                             <div class="be-col-24 be-lg-col">
 
@@ -213,170 +213,171 @@ class Template extends Section
     {
         $isMobile = Be::getRequest()->isMobile();
 
-        echo '<style>';
-        echo $this->getCssBackgroundColor('app-shop-cart-index');
-        echo $this->getCssPadding('app-shop-cart-index');
-        echo $this->getCssMargin('app-shop-cart-index');
+        ?>
+        <style>
+            <?php
+            echo $this->getCssBackgroundColor('app-shop-cart-index');
+            echo $this->getCssPadding('app-shop-cart-index');
+            echo $this->getCssMargin('app-shop-cart-index');
+            ?>
 
-        echo '.app-shop-cart-index-products {';
-        echo '}';
+            .app-shop-cart-index-products {
+            }
 
-        echo '.app-shop-cart-index-product-image {';
-        echo 'position: relative;';
-        $configProduct = Be::getConfig('App.Shop.Product');
-        echo 'aspect-ratio: ' . $configProduct->imageAspectRatio . ';';
-        echo '}';
+            .app-shop-cart-index-product-image {
+                position: relative;
+                <?php
+                $configProduct = Be::getConfig('App.Shop.Product');
+                echo 'aspect-ratio: ' . $configProduct->imageAspectRatio . ';';
+                ?>
+            }
 
-        echo '.app-shop-cart-index-product-image:after {';
-        echo 'position: absolute;';
-        echo 'content: \'\';';
-        echo 'left: 0;';
-        echo 'top: 0;';
-        echo 'width: 100%;';
-        echo 'height: 100%;';
-        echo 'background: #000;';
-        echo 'opacity: .03;';
-        echo 'pointer-events: none;';
-        echo '}';
+            .app-shop-cart-index-product-image:after {
+                position: absolute;
+                content: '';
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: #000;
+                opacity: .03;
+                pointer-events: none;
+            }
 
-        echo '.app-shop-cart-index-product-image img {';
-        echo 'display: block;';
-        echo 'position: absolute;';
-        echo 'left: 0;';
-        echo 'right: 0;';
-        echo 'top: 0;';
-        echo 'bottom: 0;';
-        echo 'margin: auto;';
-        echo 'max-width: 100%;';
-        echo 'max-height: 100%;';
-        echo 'transition: all .3s;';
-        echo '}';
-        
-        echo '.app-shop-cart-index-product-quantity-input {';
-        echo 'position: relative;';
-        echo 'min-width: 6rem;';
-        echo 'max-width: 8rem;';
-        echo '}';
+            .app-shop-cart-index-product-image img {
+                display: block;
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                bottom: 0;
+                margin: auto;
+                max-width: 100%;
+                max-height: 100%;
+                transition: all .3s;
+            }
 
-        echo '.app-shop-cart-index-product-quantity-minus,';
-        echo '.app-shop-cart-index-product-quantity-plus {';
-        echo 'position: absolute;';
-        echo 'top: 1px;';
-        echo 'bottom: 1px;';
-        echo 'width: 2rem;';
-        echo 'border: none;';
-        echo 'outline: 0;';
-        echo 'color: #aaa;';
-        echo 'background-color: #f6f6f6;';
-        echo 'border-radius: .25rem;';
-        echo 'cursor: pointer;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-input {
+                position: relative;
+                min-width: 6rem;
+                max-width: 8rem;
+            }
 
-        echo '.app-shop-cart-index-product-quantity-minus:hover,';
-        echo '.app-shop-cart-index-product-quantity-plus:hover {';
-        echo 'color: #666;';
-        echo 'background-color: #eee;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-minus,
+            .app-shop-cart-index-product-quantity-plus {
+                position: absolute;
+                top: 1px;
+                bottom: 1px;
+                width: 2rem;
+                border: none;
+                outline: 0;
+                color: #aaa;
+                background-color: #f6f6f6;
+                border-radius: .25rem;
+                cursor: pointer;
+            }
 
-        echo '.app-shop-cart-index-product-quantity-minus.disabled,';
-        echo '.app-shop-cart-index-product-quantity-plus.disabled,';
-        echo '.app-shop-cart-index-product-quantity-minus:disabled,';
-        echo '.app-shop-cart-index-product-quantity-plus:disabled {';
-        echo 'color: #ccc !important;';
-        echo 'background-color: #fafafa !important;';
-        echo 'pointer-events: none;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-minus:hover,
+            .app-shop-cart-index-product-quantity-plus:hover {
+                color: #666;
+                background-color: #eee;
+            }
 
-        echo '.app-shop-cart-index-product-quantity-minus {';
-        echo 'left: 1px;';
-        echo 'border-top-right-radius: 0;';
-        echo 'border-bottom-right-radius: 0;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-minus.disabled,
+            .app-shop-cart-index-product-quantity-plus.disabled,
+            .app-shop-cart-index-product-quantity-minus:disabled,
+            .app-shop-cart-index-product-quantity-plus:disabled {
+                color: #ccc !important;
+                background-color: #fafafa !important;
+                pointer-events: none;
+            }
 
-        echo '.app-shop-cart-index-product-quantity-plus {';
-        echo 'right: 1px;';
-        echo 'border-top-left-radius: 0;';
-        echo 'border-bottom-left-radius: 0;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-minus {
+                left: 1px;
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
 
-        echo '.app-shop-cart-index-product-quantity {';
-        echo 'text-align: center;';
-        echo 'padding-left: 2rem;';
-        echo 'padding-right: 2rem;';
-        echo '}';
+            .app-shop-cart-index-product-quantity-plus {
+                right: 1px;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
 
+            .app-shop-cart-index-product-quantity {
+                text-align: center;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
 
-        if ($isMobile) {
+            <?php if ($isMobile) { ?>
+            .app-shop-cart-index-product {
+                border: #eee 1px solid;
+                padding: 1rem .25rem;
+            }
 
-            echo '.app-shop-cart-index-product {';
-            echo 'border: #eee 1px solid;';
-            echo 'padding: 1rem .25rem;';
-            echo '}';
+            .app-shop-cart-index-product-image {
+                width: 60px;
+            }
+            <?php } else { ?>
+            
+            .app-shop-cart-index-product-image {
+                width: 80px;
+            }
+            
+            .app-shop-cart-index-products table {
+                width: 100%;
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+            
+            .app-shop-cart-index-product {
+                border: #eee 1px solid;
+            }
+            
+            .app-shop-cart-index-products th {
+                background-color: #fafafa;
+                text-align: center;
+                font-weight: 500;
+                padding: 1rem .5rem;
+            }
+            
+            .app-shop-cart-index-product td {
+                padding: 1rem .5rem;
+            }
+            
+            .app-shop-cart-index-products th:first-child,
+            .app-shop-cart-index-product td:first-child {
+                padding-left: 1rem;
+            }
+            
+            .app-shop-cart-index-products th:last-child,
+            .app-shop-cart-index-product td:last-child {
+                padding-right: 1rem;
+            }
+            
+            @media (max-width: 1200px) {
+                .app-shop-cart-index-products th {
+                    padding: .5rem .25rem;
+                }
 
-            echo '.app-shop-cart-index-product-image {';
-            echo 'width: 60px;';
-            echo '}';
+                .app-shop-cart-index-product td {
+                    padding: .5rem .25rem;
+                }
 
-        } else {
+                .app-shop-cart-index-products th:first-child,
+                .app-shop-cart-index-product td:first-child {
+                    padding-left: .5rem;
+                }
 
-            echo '.app-shop-cart-index-product-image {';
-            echo 'width: 80px;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products table {';
-            echo 'width: 100%;';
-            echo 'border-collapse: collapse;';
-            echo 'border-spacing: 0;';
-            echo '}';
-
-            echo '.app-shop-cart-index-product {';
-            echo 'border: #eee 1px solid;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products th {';
-            echo 'background-color: #fafafa;';
-            echo 'text-align: center;';
-            echo 'font-weight: 500;';
-            echo 'padding: 1rem .5rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-product td {';
-            echo 'padding: 1rem .5rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products th:first-child,';
-            echo '.app-shop-cart-index-product td:first-child {';
-            echo 'padding-left: 1rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products th:last-child,';
-            echo '.app-shop-cart-index-product td:last-child {';
-            echo 'padding-right: 1rem;';
-            echo '}';
-
-            echo '@media (max-width: 1200px) {';
-
-            echo '.app-shop-cart-index-products th {';
-            echo 'padding: .5rem .25rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-product td {';
-            echo 'padding: .5rem .25rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products th:first-child,';
-            echo '.app-shop-cart-index-product td:first-child {';
-            echo 'padding-left: .5rem;';
-            echo '}';
-
-            echo '.app-shop-cart-index-products th:last-child,';
-            echo '.app-shop-cart-index-product td:last-child {';
-            echo 'padding-right: .5rem;';
-            echo '}';
-            echo '}';
-        }
-
-        echo '</style>';
+                .app-shop-cart-index-products th:last-child,
+                .app-shop-cart-index-product td:last-child {
+                    padding-right: .5rem;
+                }
+            }
+            <?php } ?>
+        </style>
+        <?php
     }
 
     private function js()

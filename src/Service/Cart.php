@@ -23,7 +23,7 @@ class Cart
         $cartProducts = [];
 
         $cache = Be::getCache();
-        $key = 'Shop:Cart:' . $my->id;
+        $key = 'App:Shop:Cart:' . $my->id;
         $carts = $cache->get($key);
         if (!is_array($carts)) {
             if ($my->isGuest()) {
@@ -302,7 +302,7 @@ class Cart
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:Cart:' . $my->id;
+        $cacheKey = 'App:Shop:Cart:' . $my->id;
         $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
         return $quantity;
@@ -356,7 +356,7 @@ class Cart
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:Cart:' . $my->id;
+        $cacheKey = 'App:Shop:Cart:' . $my->id;
         $configCart = Be::getConfig('App.Shop.Cart');
         $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
@@ -398,7 +398,7 @@ class Cart
         }
 
         $cache = Be::getCache();
-        $cacheKey = 'Shop:Cart:' . $my->id;
+        $cacheKey = 'App:Shop:Cart:' . $my->id;
         $configCart = Be::getConfig('App.Shop.Cart');
         $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
 
@@ -711,7 +711,7 @@ class Cart
                 }
 
                 $cache = Be::getCache();
-                $cacheKey = 'Shop:Cart:' . $my->id;
+                $cacheKey = 'App:Shop:Cart:' . $my->id;
                 $configCart = Be::getConfig('App.Shop.Cart');
                 $cache->set($cacheKey, $cacheCarts, $configCart->cacheExpireDays * 86400);
             }

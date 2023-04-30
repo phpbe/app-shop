@@ -138,10 +138,10 @@ class User
 
         $cache = Be::getCache();
 
-        $cacheKey = 'Shop:Cart:' . $tokenUserId;
+        $cacheKey = 'App:Shop:Cart:' . $tokenUserId;
         $cache->delete($cacheKey);
 
-        $cacheKey = 'Shop:Cart:' . $userId;
+        $cacheKey = 'App:Shop:Cart:' . $userId;
         $configCart = Be::getConfig('App.Shop.Cart');
         $cache->set($cacheKey, $carts, $configCart->cacheExpireDays * 86400);
 

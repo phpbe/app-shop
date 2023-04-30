@@ -10,7 +10,7 @@ class Template extends Section
 
     public array $positions = ['middle', 'center'];
 
-    public array $routes = ['Shop.Category.product'];
+    public array $routes = ['Shop.Category.products'];
 
     public function display()
     {
@@ -34,7 +34,7 @@ class Template extends Section
         ]);
 
         $paginationUrl = beUrl('Shop.Category.products', ['id' => $this->page->category->id]);
-        echo Be::getService('App.Shop.Section')->makePaginationProductsSection($this, 'category-products', $result, $paginationUrl);
+        echo Be::getService('App.Shop.Section')->makePagedProductsSection($this, 'category-products', $result, $paginationUrl);
     }
 
 }

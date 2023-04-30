@@ -16,7 +16,7 @@ class Payment
     public function getPayment(string $paymentId): object
     {
         $cacht = Be::getCache();
-        $key = 'Shop:Payment:' . $paymentId;
+        $key = 'App:Shop:Payment:' . $paymentId;
         $payment = $cacht->get($key);
 
         if (!$payment) {
