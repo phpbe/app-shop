@@ -424,6 +424,7 @@ class Section
 
         $css .= '#' . $section->id . ' .' . $class . '-product-image {';
         $css .= 'position: relative;';
+        $css .= 'overflow: hidden;';
         $css .= '}';
 
         $css .= '#' . $section->id . ' .' . $class . '-product-image:after {';
