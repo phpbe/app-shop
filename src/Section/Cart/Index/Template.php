@@ -68,14 +68,14 @@ class Template extends Section
                                             </div>
 
                                             <div class="be-mt-50 app-shop-cart-index-product-quantity-input">
-                                                <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="AppShopCartIndex.changeQuantity(this, -1);">-</button>
-                                                <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="AppShopCartIndex.changeQuantity(this, 0);">
-                                                <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="AppShopCartIndex.changeQuantity(this, 1);">+</button>
+                                                <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="CartIndex.changeQuantity(this, -1);">-</button>
+                                                <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="CartIndex.changeQuantity(this, 0);">
+                                                <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="CartIndex.changeQuantity(this, 1);">+</button>
                                             </div>
                                         </div>
                                         <div class="be-col-auto">
                                             <div class="be-pl-50 be-fs-125">
-                                                <a href="javascript:void(0);" onclick="AppShopCartIndex.remove(this);"><i class="bi-x-lg"></i></a>
+                                                <a href="javascript:void(0);" onclick="CartIndex.remove(this);"><i class="bi-x-lg"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -125,9 +125,9 @@ class Template extends Section
 
                                             <td>
                                                 <div class="app-shop-cart-index-product-quantity-input">
-                                                    <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="AppShopCartIndex.changeQuantity(this, -1);">-</button>
-                                                    <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="AppShopCartIndex.changeQuantity(this, 0);">
-                                                    <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="AppShopCartIndex.changeQuantity(this, 1);">+</button>
+                                                    <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="CartIndex.changeQuantity(this, -1);">-</button>
+                                                    <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="CartIndex.changeQuantity(this, 0);">
+                                                    <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="CartIndex.changeQuantity(this, 1);">+</button>
                                                 </div>
                                             </td>
 
@@ -136,7 +136,7 @@ class Template extends Section
                                             </td>
 
                                             <td>
-                                                <a href="javascript:void(0);" onclick="AppShopCartIndex.remove(this);"><i class="bi-x-lg"></i></a>
+                                                <a href="javascript:void(0);" onclick="CartIndex.remove(this);"><i class="bi-x-lg"></i></a>
                                             </td>
                                         </tr>
                                         <?php
@@ -385,7 +385,7 @@ class Template extends Section
         ?>
         <script>
 
-            var AppShopCartIndex = {
+            var CartIndex = {
 
                 products: <?php echo json_encode($this->page->products); ?>,
                 productTotalQuantity: <?php echo $this->page->productTotalQuantity; ?>,
@@ -411,7 +411,7 @@ class Template extends Section
                                 if ($(".app-shop-cart-index-product").length === 0) {
                                     window.location.reload();
                                 } else {
-                                    AppShopCartIndex.reload();
+                                    CartIndex.reload();
                                 }
                             } else {
                                 alert(json.message);
@@ -456,7 +456,7 @@ class Template extends Section
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
-                                AppShopCartIndex.reload();
+                                CartIndex.reload();
                             } else {
                                 alert(json.message);
                             }
@@ -473,13 +473,13 @@ class Template extends Section
                         method: "GET",
                         success: function (json) {
                             if (json.success) {
-                                AppShopCartIndex.products = json.products;
-                                AppShopCartIndex.productTotalQuantity = json.productTotalQuantity;
-                                AppShopCartIndex.productTotalAmount = json.productTotalAmount;
-                                AppShopCartIndex.discountAmount = json.discountAmount;
-                                AppShopCartIndex.totalAmount = json.totalAmount;
+                                CartIndex.products = json.products;
+                                CartIndex.productTotalQuantity = json.productTotalQuantity;
+                                CartIndex.productTotalAmount = json.productTotalAmount;
+                                CartIndex.discountAmount = json.discountAmount;
+                                CartIndex.totalAmount = json.totalAmount;
 
-                                AppShopCartIndex.update();
+                                CartIndex.update();
                             }
                         },
                         error: function () {
@@ -489,7 +489,7 @@ class Template extends Section
                 },
 
                 update: function() {
-                    for(let product of AppShopCartIndex.products) {
+                    for(let product of CartIndex.products) {
                         let $parent = $("#app-shop-cart-index-product-item-" + product.item_id);
                         if ($parent) {
                             $(".app-shop-cart-index-product-amount", $parent).html(product.amount);
@@ -502,9 +502,9 @@ class Template extends Section
                         }
                     }
 
-                    $("#app-shop-cart-index-product-total-amount").html(AppShopCartIndex.productTotalAmount);
-                    $("#app-shop-cart-index-discount-amount").html(AppShopCartIndex.discountAmount);
-                    $("#app-shop-cart-index-total-amount").html(AppShopCartIndex.totalAmount);
+                    $("#app-shop-cart-index-product-total-amount").html(CartIndex.productTotalAmount);
+                    $("#app-shop-cart-index-discount-amount").html(CartIndex.discountAmount);
+                    $("#app-shop-cart-index-total-amount").html(CartIndex.totalAmount);
                 }
             }
         </script>

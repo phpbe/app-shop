@@ -143,7 +143,7 @@ class Template extends Section
             }
         }
 
-        echo '<span class="be-fw-bold be-ml-50" id=" app-shop-product-detail-main-price-range">' . $configStore->currencySymbol;
+        echo '<span class="be-fw-bold be-ml-50" id="app-shop-product-detail-main-price-range">' . $configStore->currencySymbol;
         if ($product->price_from === $product->price_to) {
             echo $product->price_from;
         } else {
@@ -208,7 +208,7 @@ class Template extends Section
                     /*
                     foreach ($style->values as $styleValueIndex => $styleValue) {
                         echo '<div class="be-col-auto be-pr-100">';
-                        echo '<a class="style-icon-link style-icon-link-text" href="javascript:void(0);" onclick="toggleStyle(this, \'' . $style->id . '\',' . $styleValueIndex . ')" title="' . $styleValue . '">';
+                        echo '<a class="style-icon-link style-icon-link-text" href="javascript:void(0);" onclick="ProductDetail.toggleStyle(this, \'' . $style->id . '\',' . $styleValueIndex . ')" title="' . $styleValue . '">';
                         echo '<span class="style-icon style-icon-text">';
                         echo $styleValue;
                         echo '</span>';
@@ -219,7 +219,7 @@ class Template extends Section
                     foreach ($style->items as $styleItemIndex => $styleItem) {
                         echo '<div class="be-col-auto be-pr-100 be-pb-50">';
 
-                        echo '<a class="style-icon-link style-icon-link-' . $style->icon_type . '" href="javascript:void(0);" onclick="toggleStyle(this, \'' . $style->id . '\',' . $styleItemIndex . ')" title="' . $styleItem->value . '">';
+                        echo '<a class="style-icon-link style-icon-link-' . $style->icon_type . '" href="javascript:void(0);" onclick="ProductDetail.toggleStyle(this, \'' . $style->id . '\',' . $styleItemIndex . ')" title="' . $styleItem->value . '">';
 
                         if ($style->icon_type === 'text') {
                             echo '<span class="style-icon style-icon-text">';
@@ -466,346 +466,353 @@ class Template extends Section
         echo '<script src="' . $wwwUrl . '/lib/swiper/8.3.2/swiper-bundle.min.js"></script>';
         ?>
         <script>
+            var ProductDetail = {
 
-            let product = <?php echo json_encode($this->page->product); ?>;
+                product: <?php echo json_encode($this->page->product); ?>,
 
-            let swiperSmall = new Swiper("#<?php echo $this->id; ?> .swiper-small .swiper", {
-                direction: "vertical",
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev"
+                productItemId: "",
+
+                filterStyle: [],
+
+                swiperSmall: null,
+                swiperLarge: null,
+                swiperImagesType: 'product',
+
+                toggleStyle: function (e, styleId, styleValueIndex) {
+                    let $e = $(e);
+                    if ($e.hasClass("style-icon-link-disable")) {
+                        if ($e.hasClass("style-icon-link-current")) {
+                            $e.removeClass("style-icon-link-current")
+                            ProductDetail.filterStyle[styleId] = -1;
+                        }
+                    } else {
+                        if (!ProductDetail.filterStyle.hasOwnProperty(styleId)) {
+                            ProductDetail.filterStyle[styleId] = -1;
+                        }
+
+                        if (ProductDetail.filterStyle[styleId] === styleValueIndex) {
+                            ProductDetail.filterStyle[styleId] = -1;
+                        } else {
+                            ProductDetail.filterStyle[styleId] = styleValueIndex
+                        }
+                    }
+
+                    ProductDetail.updateStyles();
                 },
 
-                spaceBetween: 10,
-                slidesPerView: 'auto'
-            });
+                updateStyles: function() {
+                    let filterStyleValueIndex;
 
-            let swiperlarge = new Swiper("#<?php echo $this->id; ?> .swiper-large .swiper", {
-                thumbs: {
-                    swiper: swiperSmall
-                }
-            });
-
-            $(".swiper-small .swiper-slide").hover(function(){
-                swiperlarge.slideTo($(this).data("index"));
-            });
-
-            <?php if (!$isMobile) { ?>
-                CloudZoom.quickStart();
-            <?php } ?>
-
-            let productItemId = "";
-            if (product.style === 1) {
-                productItemId = product.items[0].id;
-            }
-
-            let filterStyle = [];
-            let swiperImagesType = 'product';
-
-            function toggleStyle(e, styleId, styleValueIndex) {
-                let $e = $(e);
-                if ($e.hasClass("style-icon-link-disable")) {
-                    if ($e.hasClass("style-icon-link-current")) {
-                        $e.removeClass("style-icon-link-current")
-                        filterStyle[styleId] = -1;
-                    }
-                } else {
-                    if (!filterStyle.hasOwnProperty(styleId)) {
-                        filterStyle[styleId] = -1;
-                    }
-
-                    if (filterStyle[styleId] === styleValueIndex) {
-                        filterStyle[styleId] = -1;
-                    } else {
-                        filterStyle[styleId] = styleValueIndex
-                    }
-                }
-
-                updateStyles();
-            }
-
-            function updateStyles() {
-                let filterStyleValueIndex;
-
-                // update multiple style classes
-                for (let filterStyleId in filterStyle) {
-                    filterStyleValueIndex = filterStyle[filterStyleId];
-                    $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").removeClass("style-icon-link-current");
-                    if (filterStyleValueIndex !== -1) {
-                        for (let style of product.styles) {
-                            if (style.id === filterStyleId) {
-                                $("#app-shop-product-detail-main-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
-                                break;
-                            }
-                        }
-                        $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").eq(filterStyleValueIndex).addClass("style-icon-link-current");
-                    } else {
-                        $("#app-shop-product-detail-main-style-value-" + filterStyleId).html("");
-                    }
-                }
-
-                // calc matched product items
-                let matchedItems = [];
-                let match = true;
-                let currentStyle;
-                let currentStyleName;
-                let currentStyleValue;
-                for (let item of product.items) {
-                    match = true;
-
-                    for (let filterStyleId in filterStyle) {
-                        filterStyleValueIndex = filterStyle[filterStyleId];
+                    // update multiple style classes
+                    for (let filterStyleId in ProductDetail.filterStyle) {
+                        filterStyleValueIndex = ProductDetail.filterStyle[filterStyleId];
+                        $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").removeClass("style-icon-link-current");
                         if (filterStyleValueIndex !== -1) {
-                            currentStyle = false;
-                            for (let style of product.styles) {
+                            for (let style of ProductDetail.product.styles) {
                                 if (style.id === filterStyleId) {
-                                    currentStyle = style;
+                                    $("#app-shop-product-detail-main-style-value-" + filterStyleId).html(style.items[filterStyleValueIndex].value);
                                     break;
                                 }
                             }
-
-                            if (currentStyle) {
-                                currentStyleName = currentStyle.name;
-                                currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
-                                for (let x of item.style_json) {
-                                    if (x.name === currentStyleName) {
-                                        if (x.value !== currentStyleValue) {
-                                            match = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                            } else {
-                                match = false;
-                            }
+                            $("#app-shop-product-detail-main-style-" + filterStyleId + " .style-icon-link").eq(filterStyleValueIndex).addClass("style-icon-link-current");
+                        } else {
+                            $("#app-shop-product-detail-main-style-value-" + filterStyleId).html("");
                         }
                     }
 
-                    if (match) {
-                        matchedItems.push(item);
-                    }
-                }
-
-                //console.log(matchedItems);
-
-                // according to the matched product items, update style icons
-                if (matchedItems.length === 1) {
-                    productItemId = matchedItems[0].id;
-                } else {
-                    productItemId = "";
-                }
-                $("#app-shop-product-detail-main-item-id").val(productItemId);
-
-                let originalPriceRange = "";
-                let priceRange = "";
-                let originalPrice;
-                let price;
-
-                // ----------------------------------------------------------------------------------------------------- update price range
-                if (matchedItems.length === 1) {
-                    originalPrice = matchedItems[0].original_price;
-                    price = matchedItems[0].price;
-                    if (originalPrice !== "0.00" && originalPrice !== price) {
-                        originalPriceRange = originalPrice;
-                    }
-                    priceRange = price;
-                } else if (matchedItems.length > 0) {
-                    let originalPriceFrom = -1;
-                    let originalPriceTo = -1;
-                    let priceFrom = -1;
-                    let priceTo = -1;
-                    for (let item of matchedItems) {
-                        originalPrice = Math.round(Number(item.original_price) * 100);
-                        if (originalPriceFrom === -1) {
-                            originalPriceFrom = originalPrice;
-                        }
-                        if (originalPriceTo === -1) {
-                            originalPriceTo = originalPrice;
-                        }
-                        if (originalPrice < originalPriceFrom) {
-                            originalPriceFrom = originalPrice;
-                        }
-                        if (originalPrice > originalPriceTo) {
-                            originalPriceTo = originalPrice;
-                        }
-
-                        price = Math.round(Number(item.price) * 100);
-                        if (priceFrom === -1) {
-                            priceFrom = price;
-                        }
-                        if (priceTo === -1) {
-                            priceTo = price;
-                        }
-                        if (price < priceFrom) {
-                            priceFrom = price;
-                        }
-                        if (price > priceTo) {
-                            priceTo = price;
-                        }
-                    }
-
-                    if (originalPriceTo > 0) {
-                        if (originalPriceFrom !== priceFrom || originalPriceTo !== priceTo) {
-                            if (originalPriceFrom === originalPriceTo) {
-                                originalPriceRange = (originalPriceFrom / 100).toFixed(2);
-                            } else {
-                                originalPriceRange = (originalPriceFrom / 100).toFixed(2) + "~" + (originalPriceTo / 100).toFixed(2);
-                            }
-                        }
-                    }
-
-                    if (priceFrom === priceTo) {
-                        priceRange = (priceFrom / 100).toFixed(2);
-                    } else {
-                        priceRange = (priceFrom / 100).toFixed(2) + "~" + (priceTo / 100).toFixed(2);
-                    }
-                }
-                let $originalPrice = $("#app-shop-product-detail-main-original-price-range");
-                if (originalPriceRange) {
-                    $originalPrice.html("<?php echo $configStore->currencySymbol; ?>" + originalPriceRange).show();
-                } else {
-                    $originalPrice.html("").hide();
-                }
-                $("#app-shop-product-detail-main-price-range").html("<?php echo $configStore->currencySymbol; ?>" + priceRange);
-                // ===================================================================================================== update price range
-
-                // update the "disabled" status of the "buy now" & "add to cart" buttons
-                if (matchedItems.length === 1) {
-                    $("#app-shop-product-detail-main-buy-now").prop("disabled", false);
-                    $("#app-shop-product-detail-main-add-to-cart").prop("disabled", false);
-                } else {
-                    $("#app-shop-product-detail-main-buy-now").prop("disabled", true);
-                    $("#app-shop-product-detail-main-add-to-cart").prop("disabled", true);
-                }
-
-                // ----------------------------------------------------------------------------------------------------- update style icons
-                let available;
-                let styleValue;
-                let styleMatchedItems;
-                for (let style of product.styles) {
-                    for (let styleValueIndex in style.items) {
-
-                        // calc the matched product items when exclude current style
-                        styleMatchedItems = [];
+                    // calc matched product items
+                    let matchedItems = [];
+                    let match = true;
+                    let currentStyle;
+                    let currentStyleName;
+                    let currentStyleValue;
+                    for (let item of ProductDetail.product.items) {
                         match = true;
-                        for (let item of product.items) {
-                            match = true;
 
-                            for (let filterStyleId in filterStyle) {
-
-                                // exclude current style
-                                if (filterStyleId === style.id) {
-                                    continue;
-                                }
-
-                                filterStyleValueIndex = filterStyle[filterStyleId];
-                                if (filterStyleValueIndex !== -1) {
-                                    currentStyle = false;
-                                    for (let style of product.styles) {
-                                        if (style.id === filterStyleId) {
-                                            currentStyle = style;
-                                            break;
-                                        }
-                                    }
-
-                                    if (currentStyle) {
-                                        currentStyleName = currentStyle.name;
-                                        currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
-                                        for (let x of item.style_json) {
-                                            if (x.name === currentStyleName) {
-                                                if (x.value !== currentStyleValue) {
-                                                    match = false;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        match = false;
-                                    }
-                                }
-                            }
-
-                            if (match) {
-                                styleMatchedItems.push(item);
-                            }
-                        }
-
-                        styleValue = style.items[styleValueIndex].value;
-                        available = false;
-                        if (styleMatchedItems.length > 0) {
-                            for (let item of styleMatchedItems) {
-                                for (let x of item.style_json) {
-                                    if (x.name === style.name && x.value === styleValue) {
-                                        available = true;
+                        for (let filterStyleId in ProductDetail.filterStyle) {
+                            filterStyleValueIndex = ProductDetail.filterStyle[filterStyleId];
+                            if (filterStyleValueIndex !== -1) {
+                                currentStyle = false;
+                                for (let style of ProductDetail.product.styles) {
+                                    if (style.id === filterStyleId) {
+                                        currentStyle = style;
                                         break;
                                     }
                                 }
 
-                                if (available) {
-                                    break;
+                                if (currentStyle) {
+                                    currentStyleName = currentStyle.name;
+                                    currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
+                                    for (let x of item.style_json) {
+                                        if (x.name === currentStyleName) {
+                                            if (x.value !== currentStyleValue) {
+                                                match = false;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    match = false;
                                 }
                             }
                         }
 
-                        let $e = $("#app-shop-product-detail-main-style-" + style.id + " .style-icon-link").eq(styleValueIndex);
-                        if (available) {
-                            if ($e.hasClass("style-icon-link-disable")) {
-                                $e.removeClass("style-icon-link-disable");
-                            }
-                        } else {
-                            $e.addClass("style-icon-link-disable");
+                        if (match) {
+                            matchedItems.push(item);
                         }
                     }
-                }
-                // ===================================================================================================== update style icons
 
+                    //console.log(matchedItems);
 
-                // ----------------------------------------------------------------------------------------------------- update image sliders
-                let newSwiperImagesType = 'product';
-                let swiperImages = product.images;
-                if (matchedItems.length === 1) {
-                    let matchedItem = matchedItems[0];
-                    if (matchedItem.images.length > 0) {
-                        newSwiperImagesType = 'product-item:' + matchedItem.id;
-                        swiperImages = matchedItem.images;
+                    // according to the matched product items, update style icons
+                    if (matchedItems.length === 1) {
+                        ProductDetail.productItemId = matchedItems[0].id;
+                    } else {
+                        ProductDetail.productItemId = "";
                     }
-                }
+                    $("#app-shop-product-detail-main-item-id").val(ProductDetail.productItemId);
 
-                if (newSwiperImagesType !== swiperImagesType) {
-                    swiperImagesType = newSwiperImagesType;
+                    let originalPriceRange = "";
+                    let priceRange = "";
+                    let originalPrice;
+                    let price;
 
-                    swiperSmall.removeAllSlides();
-                    swiperlarge.removeAllSlides();
+                    // ----------------------------------------------------------------------------------------------------- update price range
+                    if (matchedItems.length === 1) {
+                        originalPrice = matchedItems[0].original_price;
+                        price = matchedItems[0].price;
+                        if (originalPrice !== "0.00" && originalPrice !== price) {
+                            originalPriceRange = originalPrice;
+                        }
+                        priceRange = price;
+                    } else if (matchedItems.length > 0) {
+                        let originalPriceFrom = -1;
+                        let originalPriceTo = -1;
+                        let priceFrom = -1;
+                        let priceTo = -1;
+                        for (let item of matchedItems) {
+                            originalPrice = Math.round(Number(item.original_price) * 100);
+                            if (originalPriceFrom === -1) {
+                                originalPriceFrom = originalPrice;
+                            }
+                            if (originalPriceTo === -1) {
+                                originalPriceTo = originalPrice;
+                            }
+                            if (originalPrice < originalPriceFrom) {
+                                originalPriceFrom = originalPrice;
+                            }
+                            if (originalPrice > originalPriceTo) {
+                                originalPriceTo = originalPrice;
+                            }
 
-                    let swiperImage;
-                    for (let i in swiperImages) {
-                        swiperImage = swiperImages[i];
-                        swiperSmall.appendSlide('<div class="swiper-slide" data-index="' + i + '"><img src="' + swiperImage.url + '" alt=""></div>');
+                            price = Math.round(Number(item.price) * 100);
+                            if (priceFrom === -1) {
+                                priceFrom = price;
+                            }
+                            if (priceTo === -1) {
+                                priceTo = price;
+                            }
+                            if (price < priceFrom) {
+                                priceFrom = price;
+                            }
+                            if (price > priceTo) {
+                                priceTo = price;
+                            }
+                        }
 
-                        <?php if ($isMobile) { ?>
-                        swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt=""></div>');
-                        <?php } else { ?>
-                        swiperlarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt="" class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' + swiperImage.url + '\'"></div>');
+                        if (originalPriceTo > 0) {
+                            if (originalPriceFrom !== priceFrom || originalPriceTo !== priceTo) {
+                                if (originalPriceFrom === originalPriceTo) {
+                                    originalPriceRange = (originalPriceFrom / 100).toFixed(2);
+                                } else {
+                                    originalPriceRange = (originalPriceFrom / 100).toFixed(2) + "~" + (originalPriceTo / 100).toFixed(2);
+                                }
+                            }
+                        }
+
+                        if (priceFrom === priceTo) {
+                            priceRange = (priceFrom / 100).toFixed(2);
+                        } else {
+                            priceRange = (priceFrom / 100).toFixed(2) + "~" + (priceTo / 100).toFixed(2);
+                        }
+                    }
+                    let $originalPrice = $("#app-shop-product-detail-main-original-price-range");
+                    if (originalPriceRange) {
+                        $originalPrice.html("<?php echo $configStore->currencySymbol; ?>" + originalPriceRange).show();
+                    } else {
+                        $originalPrice.html("").hide();
+                    }
+                    $("#app-shop-product-detail-main-price-range").html("<?php echo $configStore->currencySymbol; ?>" + priceRange);
+                    // ===================================================================================================== update price range
+
+                    // update the "disabled" status of the "buy now" & "add to cart" buttons
+                    if (matchedItems.length === 1) {
+                        $("#app-shop-product-detail-main-buy-now").prop("disabled", false);
+                        $("#app-shop-product-detail-main-add-to-cart").prop("disabled", false);
+                    } else {
+                        $("#app-shop-product-detail-main-buy-now").prop("disabled", true);
+                        $("#app-shop-product-detail-main-add-to-cart").prop("disabled", true);
+                    }
+
+                    // ----------------------------------------------------------------------------------------------------- update style icons
+                    let available;
+                    let styleValue;
+                    let styleMatchedItems;
+                    for (let style of ProductDetail.product.styles) {
+                        for (let styleValueIndex in style.items) {
+
+                            // calc the matched product items when exclude current style
+                            styleMatchedItems = [];
+                            match = true;
+                            for (let item of ProductDetail.product.items) {
+                                match = true;
+
+                                for (let filterStyleId in ProductDetail.filterStyle) {
+
+                                    // exclude current style
+                                    if (filterStyleId === style.id) {
+                                        continue;
+                                    }
+
+                                    filterStyleValueIndex = ProductDetail.filterStyle[filterStyleId];
+                                    if (filterStyleValueIndex !== -1) {
+                                        currentStyle = false;
+                                        for (let style of ProductDetail.product.styles) {
+                                            if (style.id === filterStyleId) {
+                                                currentStyle = style;
+                                                break;
+                                            }
+                                        }
+
+                                        if (currentStyle) {
+                                            currentStyleName = currentStyle.name;
+                                            currentStyleValue = currentStyle.items[filterStyleValueIndex].value;
+                                            for (let x of item.style_json) {
+                                                if (x.name === currentStyleName) {
+                                                    if (x.value !== currentStyleValue) {
+                                                        match = false;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            match = false;
+                                        }
+                                    }
+                                }
+
+                                if (match) {
+                                    styleMatchedItems.push(item);
+                                }
+                            }
+
+                            styleValue = style.items[styleValueIndex].value;
+                            available = false;
+                            if (styleMatchedItems.length > 0) {
+                                for (let item of styleMatchedItems) {
+                                    for (let x of item.style_json) {
+                                        if (x.name === style.name && x.value === styleValue) {
+                                            available = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (available) {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            let $e = $("#app-shop-product-detail-main-style-" + style.id + " .style-icon-link").eq(styleValueIndex);
+                            if (available) {
+                                if ($e.hasClass("style-icon-link-disable")) {
+                                    $e.removeClass("style-icon-link-disable");
+                                }
+                            } else {
+                                $e.addClass("style-icon-link-disable");
+                            }
+                        }
+                    }
+                    // ===================================================================================================== update style icons
+
+
+                    // ----------------------------------------------------------------------------------------------------- update image sliders
+                    let newSwiperImagesType = 'product';
+                    let swiperImages = ProductDetail.product.images;
+                    if (matchedItems.length === 1) {
+                        let matchedItem = matchedItems[0];
+                        if (matchedItem.images.length > 0) {
+                            newSwiperImagesType = 'product-item:' + matchedItem.id;
+                            swiperImages = matchedItem.images;
+                        }
+                    }
+
+                    if (newSwiperImagesType !== ProductDetail.swiperImagesType) {
+                        ProductDetail.swiperImagesType = newSwiperImagesType;
+
+                        ProductDetail.swiperSmall.removeAllSlides();
+                        ProductDetail.swiperLarge.removeAllSlides();
+
+                        let swiperImage;
+                        for (let i in swiperImages) {
+                            swiperImage = swiperImages[i];
+                            ProductDetail.swiperSmall.appendSlide('<div class="swiper-slide" data-index="' + i + '"><img src="' + swiperImage.url + '" alt=""></div>');
+
+                            <?php if ($isMobile) { ?>
+                            ProductDetail.swiperLarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt=""></div>');
+                            <?php } else { ?>
+                            ProductDetail.swiperLarge.appendSlide('<div class="swiper-slide"><img src="' + swiperImage.url + '" alt="" class="cloudzoom" data-cloudzoom="tintColor:\'#999\', zoomSizeMode:\'image\', zoomImage:\'' + swiperImage.url + '\'"></div>');
+                            <?php } ?>
+                        }
+
+                        <?php if (!$isMobile) { ?>
+                        CloudZoom.quickStart();
                         <?php } ?>
+
+                        $(".swiper-small .swiper-slide").hover(function () {
+                            ProductDetail.swiperLarge.slideTo($(this).data("index"));
+                        });
                     }
-
-                    <?php if (!$isMobile) { ?>
-                    CloudZoom.quickStart();
-                    <?php } ?>
-
-                    $(".swiper-small .swiper-slide").hover(function () {
-                        swiperlarge.slideTo($(this).data("index"));
-                    });
+                    // ===================================================================================================== update image sliders
                 }
-                // ===================================================================================================== update image sliders
             }
+
 
             $(document).ready(function () {
 
-                if (product.style === 2) {
-                    let defaultProductItem = product.items[0];
+                if (ProductDetail.product.style === 1) {
+                    ProductDetail.productItemId = ProductDetail.product.items[0].id;
+                }
+
+                ProductDetail.swiperSmall = new Swiper("#<?php echo $this->id; ?> .swiper-small .swiper", {
+                    direction: "vertical",
+                    navigation: {
+                        nextEl: ".swiper-button-next",
+                        prevEl: ".swiper-button-prev"
+                    },
+
+                    spaceBetween: 10,
+                    slidesPerView: 'auto'
+                });
+
+                ProductDetail.swiperLarge = new Swiper("#<?php echo $this->id; ?> .swiper-large .swiper", {
+                    thumbs: {
+                        swiper: ProductDetail.swiperSmall
+                    }
+                });
+
+                $(".swiper-small .swiper-slide").hover(function(){
+                    ProductDetail.swiperLarge.slideTo($(this).data("index"));
+                });
+
+                <?php if (!$isMobile) { ?>
+                CloudZoom.quickStart();
+                <?php } ?>
+
+                if (ProductDetail.product.style === 2) {
+                    let defaultProductItem = ProductDetail.product.items[0];
                     let match = false;
-                    for (let style of product.styles) {
+                    for (let style of ProductDetail.product.styles) {
                         for (let styleValueIndex in style.items) {
 
                             match = false;
@@ -818,14 +825,14 @@ class Template extends Section
 
                             // 选中该款式
                             if (match) {
-                                filterStyle[style.id] = styleValueIndex;
+                                ProductDetail.filterStyle[style.id] = styleValueIndex;
                                 break;
                             }
                         }
                     }
                 }
 
-                updateStyles();
+                ProductDetail.updateStyles();
 
                 $("#app-shop-product-detail-main-buy-now").click(function () {
                     $(this).closest("form").submit();
@@ -842,15 +849,17 @@ class Template extends Section
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Cart.add'); ?>",
                         data: {
-                            "product_id": product.id,
-                            "product_item_id": productItemId,
+                            "product_id": ProductDetail.product.id,
+                            "product_item_id": ProductDetail.productItemId,
                             "quantity": quantity
                         },
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
-                                DrawerCart.load();
-                                DrawerCart.show();
+                                if (DrawerCart !== undefined) {
+                                    DrawerCart.load();
+                                    DrawerCart.show();
+                                }
                             }
                         },
                         error: function () {

@@ -136,7 +136,7 @@ class Template extends Section
 
                             <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                                 <div class="be-floating">
-                                    <select name="state_id" id="app-shop-cart-checkout-state-id" class="be-select" onchange="AppShopCartCheckout.updateShippingPlans();">
+                                    <select name="state_id" id="app-shop-cart-checkout-state-id" class="be-select" onchange="CartCheckout.updateShippingPlans();">
                                         <option value="">Select</option>
                                     </select>
                                     <label class="be-floating-label" for="app-shop-cart-checkout-state-id">State <span class="be-c-red">*</span></label>
@@ -400,7 +400,7 @@ class Template extends Section
         }
         ?>
         <script>
-            var AppShopCartCheckout = {
+            var CartCheckout = {
 
                 products: <?php echo json_encode($this->page->products); ?>,
                 productTotalAmount: "<?php echo $this->page->productTotalAmount; ?>",
@@ -420,8 +420,8 @@ class Template extends Section
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
-                                AppShopCartCheckout.discountAmount = json.discountAmount;
-                                AppShopCartCheckout.update();
+                                CartCheckout.discountAmount = json.discountAmount;
+                                CartCheckout.update();
                             } else {
                                 alert(json.message);
                             }
@@ -444,12 +444,12 @@ class Template extends Section
                     let optionItem = new Option("Select", "");
                     eState.options.add(optionItem);
 
-                    AppShopCartCheckout.shippingPlans = [];
-                    AppShopCartCheckout.shippingPlanId = "";
-                    AppShopCartCheckout.shippingFee = "0.00";
+                    CartCheckout.shippingPlans = [];
+                    CartCheckout.shippingPlanId = "";
+                    CartCheckout.shippingFee = "0.00";
 
-                    AppShopCartCheckout.paymentId = "";
-                    AppShopCartCheckout.paymentItemId = "";
+                    CartCheckout.paymentId = "";
+                    CartCheckout.paymentItemId = "";
 
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Shipping.getStateKeyValues'); ?>",
@@ -475,7 +475,7 @@ class Template extends Section
                                         $stateId.val(selectStateId);
                                     }
                                 }
-                                AppShopCartCheckout.updateShippingPlans();
+                                CartCheckout.updateShippingPlans();
                             } else {
                                 alert(json.message);
                             }
@@ -488,8 +488,8 @@ class Template extends Section
 
                 updateShippingPlans: function() {
 
-                    AppShopCartCheckout.paymentId = "";
-                    AppShopCartCheckout.paymentItemId = "";
+                    CartCheckout.paymentId = "";
+                    CartCheckout.paymentItemId = "";
 
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Shipping.getShippingPlans'); ?>",
@@ -498,7 +498,7 @@ class Template extends Section
                         success: function (json) {
                             if (json.success) {
 
-                                AppShopCartCheckout.shippingPlans = json.shippingPlans;
+                                CartCheckout.shippingPlans = json.shippingPlans;
 
                                 let $shipping = $("#app-shop-cart-checkout-shipping");
                                 if (json.shippingPlans.length > 0) {
@@ -510,17 +510,17 @@ class Template extends Section
                                 let newShippingPlanId = "";
                                 let newShippingFee = "0.00";
 
-                                if (AppShopCartCheckout.shippingPlans.length === 1) {
-                                    AppShopCartCheckout.shippingPlanId = AppShopCartCheckout.shippingPlans[0].id;
+                                if (CartCheckout.shippingPlans.length === 1) {
+                                    CartCheckout.shippingPlanId = CartCheckout.shippingPlans[0].id;
                                 }
 
                                 let html = "";
-                                for (let shippingPlan of AppShopCartCheckout.shippingPlans) {
+                                for (let shippingPlan of CartCheckout.shippingPlans) {
                                     html += '<div class="be-row be-mt-100">';
 
                                     html += '<div class="be-col-auto">';
                                     html += '<input type="radio" class="be-radio" name="shipping_plan_id" id="shipping_plan_id-' + shippingPlan.id + '" value="' + shippingPlan.id + '" onchange="selectShippingPlan(this, \'' + shippingPlan.id + '\');"';
-                                    if (shippingPlan.id === AppShopCartCheckout.shippingPlanId) {
+                                    if (shippingPlan.id === CartCheckout.shippingPlanId) {
                                         html += 'checked';
                                         newShippingPlanId = shippingPlan.id;
                                         newShippingFee = shippingPlan.shipping_fee;
@@ -545,10 +545,10 @@ class Template extends Section
 
                                 $("#app-shop-cart-checkout-shipping-plans").html(html);
 
-                                AppShopCartCheckout.shippingPlanId = newShippingPlanId;
-                                AppShopCartCheckout.shippingFee = newShippingFee;
+                                CartCheckout.shippingPlanId = newShippingPlanId;
+                                CartCheckout.shippingFee = newShippingFee;
 
-                                AppShopCartCheckout.updatePayments();
+                                CartCheckout.updatePayments();
                             } else {
                                 alert(json.message);
                             }
@@ -560,21 +560,21 @@ class Template extends Section
                 },
 
                 selectShippingPlan: function (e, newShippingPlanId) {
-                    AppShopCartCheckout.shippingPlanId = newShippingPlanId;
+                    CartCheckout.shippingPlanId = newShippingPlanId;
                     for(let shippingPlan of shippingPlans) {
                         if (shippingPlan.id === newShippingPlanId) {
-                            AppShopCartCheckout.shippingFee = shippingPlan.shipping_fee;
+                            CartCheckout.shippingFee = shippingPlan.shipping_fee;
                             break;
                         }
                     }
 
-                    AppShopCartCheckout.updatePayments();
+                    CartCheckout.updatePayments();
                 },
 
 
                 updatePayments: function() {
-                    if (AppShopCartCheckout.shippingPlanId === "") {
-                        AppShopCartCheckout.update();
+                    if (CartCheckout.shippingPlanId === "") {
+                        CartCheckout.update();
 
                         return;
                     }
@@ -582,7 +582,7 @@ class Template extends Section
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Payment.getStorePaymentsByShippingPlanId'); ?>",
                         data: {
-                            shipping_plan_id: AppShopCartCheckout.shippingPlanId
+                            shipping_plan_id: CartCheckout.shippingPlanId
                         },
                         type: "POST",
                         success: function (json) {
@@ -621,12 +621,12 @@ class Template extends Section
 
                                 $("#app-shop-cart-checkout-payments").html(html);
 
-                                AppShopCartCheckout.paymentId = newPaymentId;
-                                AppShopCartCheckout.paymentItemId = newPaymentItemId;
+                                CartCheckout.paymentId = newPaymentId;
+                                CartCheckout.paymentItemId = newPaymentItemId;
 
                                 $("#app-shop-cart-checkout-payment_item_id").val(newPaymentItemId);
 
-                                AppShopCartCheckout.update();
+                                CartCheckout.update();
 
                             } else {
                                 alert(json.message);
@@ -640,31 +640,31 @@ class Template extends Section
 
 
                 selectPayment: function(e, paymentId, paymentItemId) {
-                    AppShopCartCheckout.paymentId = newPaymentId;
-                    AppShopCartCheckout.paymentItemId = newPaymentItemId;
+                    CartCheckout.paymentId = newPaymentId;
+                    CartCheckout.paymentItemId = newPaymentItemId;
                     $("#app-shop-cart-checkout-payment_item_id").val(newPaymentItemId);
-                    AppShopCartCheckout.update();
+                    CartCheckout.update();
                 },
 
                 update: function() {
                     $submit = $("#app-shop-cart-checkout-submit");
-                    if (AppShopCartCheckout.shippingPlanId === "" || AppShopCartCheckout.paymentId === "") {
+                    if (CartCheckout.shippingPlanId === "" || CartCheckout.paymentId === "") {
                         $submit.addClass("disabled");
                     } else {
                         $submit.removeClass("disabled");
                     }
 
-                    AppShopCartCheckout.totalAmount = ((Number(AppShopCartCheckout.productTotalAmount) * 100 + Number(AppShopCartCheckout.shippingFee) * 100 + Number(AppShopCartCheckout.discountAmount) * 100) / 100).toFixed(2);
+                    CartCheckout.totalAmount = ((Number(CartCheckout.productTotalAmount) * 100 + Number(CartCheckout.shippingFee) * 100 + Number(CartCheckout.discountAmount) * 100) / 100).toFixed(2);
 
-                    $("#app-shop-cart-checkout-shipping-fee").html(AppShopCartCheckout.shippingFee);
-                    $("#app-shop-cart-checkout-discount-amount").html(AppShopCartCheckout.discountAmount);
-                    $("#app-shop-cart-checkout-total-amount").html(AppShopCartCheckout.totalAmount);
+                    $("#app-shop-cart-checkout-shipping-fee").html(CartCheckout.shippingFee);
+                    $("#app-shop-cart-checkout-discount-amount").html(CartCheckout.discountAmount);
+                    $("#app-shop-cart-checkout-total-amount").html(CartCheckout.totalAmount);
                 }
             }
 
 
             $(function () {
-                AppShopCartCheckout.updateState("<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>");
+                CartCheckout.updateState("<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>");
 
                 $("#app-shop-cart-checkout-form").validate({
                     //debug:true,
@@ -745,7 +745,7 @@ class Template extends Section
                             type: "POST",
                             success: function (json) {
                                 if (json.success) {
-                                    AppShopCartCheckout.updateDiscountAmount()
+                                    CartCheckout.updateDiscountAmount()
                                 } else {
                                     alert(json.message);
                                 }
@@ -755,7 +755,7 @@ class Template extends Section
                             }
                         });
                     } else {
-                        AppShopCartCheckout.updateDiscountAmount();
+                        CartCheckout.updateDiscountAmount();
                     }
                 });
             });
