@@ -3,7 +3,7 @@
 namespace Be\App\Shop\Section\Cart\Checkout;
 
 /**
- * @BeConfig("购物车-结算",  icon="bi-bag", ordering="1101")
+ * @BeConfig("购物车-结算",  icon="bi-cart-check", ordering="3002")
  */
 class Config
 {

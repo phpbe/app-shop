@@ -35,7 +35,7 @@ class Template extends Section
         }
         ?>
 
-        <form id="app-cart-checkout-form">
+        <form id="app-shop-cart-checkout-form">
             <div class="be-row">
                 <div class="be-col-24 be-md-col-14">
 
@@ -95,29 +95,29 @@ class Template extends Section
 
                         <div class="be-mt-100 be-pr-200">
                             <div class="be-floating">
-                                <input type="text" name="address" id="app-cart-checkout-address" class="be-input" placeholder="Address" value="<?php echo $defaultAddress && isset($defaultAddress->address) ? $defaultAddress->address : ''; ?>">
-                                <label class="be-floating-label" for="app-cart-checkout-address">Address <span class="be-c-red">*</span></label>
+                                <input type="text" name="address" id="app-shop-cart-checkout-address" class="be-input" placeholder="Address" value="<?php echo $defaultAddress && isset($defaultAddress->address) ? $defaultAddress->address : ''; ?>">
+                                <label class="be-floating-label" for="app-shop-cart-checkout-address">Address <span class="be-c-red">*</span></label>
                             </div>
                         </div>
 
                         <div class="be-mt-100 be-pr-200">
                             <div class="be-floating">
-                                <input type="text" name="address2" id="app-cart-checkout-address2" class="be-input" placeholder="Apartment, suite, etc. (optional)" value="<?php echo $defaultAddress && isset($defaultAddress->address2) ? $defaultAddress->address2 : ''; ?>">
-                                <label class="be-floating-label" for="app-cart-checkout-address2">Apartment, suite, etc. (optional)</label>
+                                <input type="text" name="address2" id="app-shop-cart-checkout-address2" class="be-input" placeholder="Apartment, suite, etc. (optional)" value="<?php echo $defaultAddress && isset($defaultAddress->address2) ? $defaultAddress->address2 : ''; ?>">
+                                <label class="be-floating-label" for="app-shop-cart-checkout-address2">Apartment, suite, etc. (optional)</label>
                             </div>
                         </div>
 
                         <div class="be-mt-100 be-pr-200">
                             <div class="be-floating">
-                                <input type="text" name="city" id="app-cart-checkout-city" class="be-input" placeholder="City" value="<?php echo $defaultAddress && isset($defaultAddress->city) ? $defaultAddress->city : ''; ?>">
-                                <label class="be-floating-label" for="app-cart-checkout-city">City <span class="be-c-red">*</span></label>
+                                <input type="text" name="city" id="app-shop-cart-checkout-city" class="be-input" placeholder="City" value="<?php echo $defaultAddress && isset($defaultAddress->city) ? $defaultAddress->city : ''; ?>">
+                                <label class="be-floating-label" for="app-shop-cart-checkout-city">City <span class="be-c-red">*</span></label>
                             </div>
                         </div>
 
                         <div class="be-row">
                             <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                                 <div class="be-floating">
-                                    <select name="country_id" id="app-cart-checkout-country-id" class="be-select" onchange="updateState();">
+                                    <select name="country_id" id="app-shop-cart-checkout-country-id" class="be-select" onchange="updateState();">
                                         <?php
                                         foreach ($countryKeyValues as $key => $val) {
                                             echo '<option value="' . $key . '"';
@@ -130,47 +130,47 @@ class Template extends Section
                                         }
                                         ?>
                                     </select>
-                                    <label class="be-floating-label" for="app-cart-checkout-country-id">Country/Region <span class="be-c-red">*</span></label>
+                                    <label class="be-floating-label" for="app-shop-cart-checkout-country-id">Country/Region <span class="be-c-red">*</span></label>
                                 </div>
                             </div>
 
                             <div class="be-col-24 be-md-col-12 be-mt-100 be-pr-200">
                                 <div class="be-floating">
-                                    <select name="state_id" id="app-cart-checkout-state-id" class="be-select" onchange="CartCheckout.updateShippingPlans();">
+                                    <select name="state_id" id="app-shop-cart-checkout-state-id" class="be-select" onchange="AppShopCartCheckout.updateShippingPlans();">
                                         <option value="">Select</option>
                                     </select>
-                                    <label class="be-floating-label" for="app-cart-checkout-state-id">State <span class="be-c-red">*</span></label>
+                                    <label class="be-floating-label" for="app-shop-cart-checkout-state-id">State <span class="be-c-red">*</span></label>
                                 </div>
                             </div>
                         </div>
 
                         <div class="be-mt-100 be-pr-200">
                             <div class="be-floating">
-                                <input type="text" name="zip_code" id="app-cart-checkout-zip-code" class="be-input" placeholder="Zip code" value="<?php echo $defaultAddress && isset($defaultAddress->zip_code) ? $defaultAddress->zip_code : ''; ?>">
-                                <label class="be-floating-label" for="app-cart-checkout-zip-code">Zip code <span class="be-c-red">*</span></label>
+                                <input type="text" name="zip_code" id="app-shop-cart-checkout-zip-code" class="be-input" placeholder="Zip code" value="<?php echo $defaultAddress && isset($defaultAddress->zip_code) ? $defaultAddress->zip_code : ''; ?>">
+                                <label class="be-floating-label" for="app-shop-cart-checkout-zip-code">Zip code <span class="be-c-red">*</span></label>
                             </div>
                         </div>
 
                         <div class="be-mt-100 be-pr-200">
                             <div class="be-floating">
-                                <input type="text" name="mobile" id="app-cart-checkout-mobile" class="be-input" placeholder="Mobile phone number" value="<?php echo $defaultAddress && isset($defaultAddress->mobile) ? $defaultAddress->mobile : ''; ?>">
-                                <label class="be-floating-label" for="app-cart-checkout-mobile">Mobile phone number <span class="be-c-red">*</span></label>
+                                <input type="text" name="mobile" id="app-shop-cart-checkout-mobile" class="be-input" placeholder="Mobile phone number" value="<?php echo $defaultAddress && isset($defaultAddress->mobile) ? $defaultAddress->mobile : ''; ?>">
+                                <label class="be-floating-label" for="app-shop-cart-checkout-mobile">Mobile phone number <span class="be-c-red">*</span></label>
                             </div>
                         </div>
 
-                        <div class="be-mt-200 be-pt-200" id="app-cart-checkout-shipping">
+                        <div class="be-mt-200 be-pt-200" id="app-shop-cart-checkout-shipping">
                             <div class="be-fs-125 be-lh-150">Shipping Method</div>
-                            <div id="app-cart-checkout-shipping-plans"></div>
+                            <div id="app-shop-cart-checkout-shipping-plans"></div>
                         </div>
 
-                        <div class="be-mt-200 be-pt-200" id="app-cart-checkout-payment">
+                        <div class="be-mt-200 be-pt-200" id="app-shop-cart-checkout-payment">
                             <div class="be-fs-125 be-lh-150">Payment Method</div>
-                            <div id="app-cart-checkout-payments"></div>
-                            <input type="hidden" name="payment_item_id" id="app-cart-checkout-payment_item_id" value="">
+                            <div id="app-shop-cart-checkout-payments"></div>
+                            <input type="hidden" name="payment_item_id" id="app-shop-cart-checkout-payment_item_id" value="">
                         </div>
 
                         <div class="be-mt-150 be-pr-200">
-                            <input type="submit" class="be-btn be-btn-major be-btn-lg be-lh-200 be-mt-50" id="app-cart-checkout-submit" value="Place Your Order">
+                            <input type="submit" class="be-btn be-btn-major be-btn-lg be-lh-200 be-mt-50" id="app-shop-cart-checkout-submit" value="Place Your Order">
                             <a href="<?php echo beUrl('Shop.Cart.index'); ?>" class="be-d-inline-block be-lh-300 be-va-middle be-ml-100 be-mt-50">Return to cart</a>
                         </div>
 
@@ -181,7 +181,7 @@ class Template extends Section
 
                 <div class="be-col-0 be-md-col-10 be-pl-200">
 
-                    <div class="app-cart-checkout-products">
+                    <div class="app-shop-cart-checkout-products">
                         <table>
                             <tbody>
                             <?php
@@ -192,7 +192,7 @@ class Template extends Section
                                         <input type="hidden" name="product_id[]" value="<?php echo $product->product_id; ?>" />
                                         <input type="hidden" name="product_item_id[]" value="<?php echo $product->product_item_id; ?>" />
                                         <input type="hidden" name="quantity[]" value="<?php echo $product->quantity; ?>" />
-                                        <div class="app-cart-checkout-product-image">
+                                        <div class="app-shop-cart-checkout-product-image">
                                             <img src="<?php echo $product->image; ?>" alt="<?php echo $product->name; ?>">
                                             <span><?php echo $product->quantity; ?></span>
                                         </div>
@@ -248,7 +248,7 @@ class Template extends Section
                                 Discount
                             </div>
                             <div class="be-col be-ta-right">
-                                <?php echo $configStore->currencySymbol; ?><span id="app-cart-checkout-discount-amount"><?php echo $this->page->discountAmount; ?></span>
+                                <?php echo $configStore->currencySymbol; ?><span id="app-shop-cart-checkout-discount-amount"><?php echo $this->page->discountAmount; ?></span>
                             </div>
                         </div>
                         <div class="be-row be-mt-100">
@@ -256,7 +256,7 @@ class Template extends Section
                                 Shipping
                             </div>
                             <div class="be-col be-ta-right">
-                                <?php echo $configStore->currencySymbol; ?><span id="app-cart-checkout-shipping-fee"><?php echo '0.00'; ?></span>
+                                <?php echo $configStore->currencySymbol; ?><span id="app-shop-cart-checkout-shipping-fee"><?php echo '0.00'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -267,7 +267,7 @@ class Template extends Section
                                 Total
                             </div>
                             <div class="be-col be-ta-right be-fs-150">
-                                <?php echo $configStore->currencySymbol; ?><span id="app-cart-checkout-total-amount"><?php echo $this->page->totalAmount; ?></span>
+                                <?php echo $configStore->currencySymbol; ?><span id="app-shop-cart-checkout-total-amount"><?php echo $this->page->totalAmount; ?></span>
                             </div>
                         </div>
                     </div>
@@ -295,40 +295,40 @@ class Template extends Section
             echo $this->getCssPadding('app-shop-cart-checkout');
             echo $this->getCssMargin('app-shop-cart-checkout');
             ?>
-            #app-cart-checkout-shipping {
+            #app-shop-cart-checkout-shipping {
                 border-top: #eee 1px solid;
                 display: none;
             }
 
-            #app-cart-checkout-payment {
+            #app-shop-cart-checkout-payment {
                 border-top: #eee 1px solid;
                 display: none;
             }
 
-            .app-cart-checkout-payment-item {
+            .app-shop-cart-checkout-payment-item {
                 cursor: pointer;
             }
 
-            .app-cart-checkout-payment-item img {
+            .app-shop-cart-checkout-payment-item img {
                 max-width: 120px;
                 max-height: 3rem;
                 vertical-align: middle;
             }
 
-            .app-cart-checkout-products {
+            .app-shop-cart-checkout-products {
                 max-height: 20rem;
                 overflow-y: auto;
                 padding: 1rem 1rem 1rem 0;
             }
 
-            .app-cart-checkout-products table {
+            .app-shop-cart-checkout-products table {
                 margin-top: 1rem;
                 width: 100%;
                 border-collapse: collapse;
                 border-spacing: 0;
             }
 
-            .app-cart-checkout-product-image {
+            .app-shop-cart-checkout-product-image {
                 position: relative;
                 width: 4rem;
                 <?php
@@ -337,7 +337,7 @@ class Template extends Section
                 ?>
             }
 
-            .app-cart-checkout-product-image:after {
+            .app-shop-cart-checkout-product-image:after {
                 position: absolute;
                 content: '';
                 left: 0;
@@ -349,7 +349,7 @@ class Template extends Section
                 pointer-events: none;
             }
 
-            .app-cart-checkout-product-image img {
+            .app-shop-cart-checkout-product-image img {
                 display: block;
                 position: absolute;
                 left: 0;
@@ -362,7 +362,7 @@ class Template extends Section
                 transition: all .3s;
             }
 
-            .app-cart-checkout-product-image span {
+            .app-shop-cart-checkout-product-image span {
                 display: inline-block;
                 position: absolute;
                 right: -0.75rem;
@@ -380,7 +380,7 @@ class Template extends Section
                 z-index: 3;
             }
 
-            .app-cart-checkout-discount-code {
+            .app-shop-cart-checkout-discount-code {
                 border-top: #eee 1px solid;
                 border-bottom: #eee 1px solid;
             }
@@ -400,7 +400,7 @@ class Template extends Section
         }
         ?>
         <script>
-            var CartCheckout = {
+            var AppShopCartCheckout = {
 
                 products: <?php echo json_encode($this->page->products); ?>,
                 productTotalAmount: "<?php echo $this->page->productTotalAmount; ?>",
@@ -416,12 +416,12 @@ class Template extends Section
                 updateDiscountAmount: function() {
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Promotion.getDiscountAmount'); ?>",
-                        data: $("#app-cart-checkout-form").serialize(),
+                        data: $("#app-shop-cart-checkout-form").serialize(),
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
-                                CartCheckout.discountAmount = json.discountAmount;
-                                update();
+                                AppShopCartCheckout.discountAmount = json.discountAmount;
+                                AppShopCartCheckout.update();
                             } else {
                                 alert(json.message);
                             }
@@ -433,23 +433,23 @@ class Template extends Section
                 },
 
                 updateState: function (selectStateId = '') {
-                        let $countryId = $("#app-cart-checkout-country-id");
+                        let $countryId = $("#app-shop-cart-checkout-country-id");
                     let countryId = $countryId.val();
                     if (!countryId) {
                         return;
                     }
 
-                    let eState = document.getElementById("app-cart-checkout-state-id");
+                    let eState = document.getElementById("app-shop-cart-checkout-state-id");
                     eState.options.length = 0;
                     let optionItem = new Option("Select", "");
                     eState.options.add(optionItem);
 
-                    CartCheckout.shippingPlans = [];
-                    CartCheckout.shippingPlanId = "";
-                    CartCheckout.shippingFee = "0.00";
+                    AppShopCartCheckout.shippingPlans = [];
+                    AppShopCartCheckout.shippingPlanId = "";
+                    AppShopCartCheckout.shippingFee = "0.00";
 
-                    CartCheckout.paymentId = "";
-                    CartCheckout.paymentItemId = "";
+                    AppShopCartCheckout.paymentId = "";
+                    AppShopCartCheckout.paymentItemId = "";
 
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Shipping.getStateKeyValues'); ?>",
@@ -459,7 +459,7 @@ class Template extends Section
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
-                                let $stateId = $("#app-cart-checkout-state-id");
+                                let $stateId = $("#app-shop-cart-checkout-state-id");
                                 if (json.stateKeyValues.length === 0) {
                                     $stateId.closest(".be-col-24").hide();
                                     $countryId.closest(".be-col-24").removeClass("be-md-col-12");
@@ -475,7 +475,7 @@ class Template extends Section
                                         $stateId.val(selectStateId);
                                     }
                                 }
-                                CartCheckout.updateShippingPlans();
+                                AppShopCartCheckout.updateShippingPlans();
                             } else {
                                 alert(json.message);
                             }
@@ -488,19 +488,19 @@ class Template extends Section
 
                 updateShippingPlans: function() {
 
-                    CartCheckout.paymentId = "";
-                    CartCheckout.paymentItemId = "";
+                    AppShopCartCheckout.paymentId = "";
+                    AppShopCartCheckout.paymentItemId = "";
 
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Shipping.getShippingPlans'); ?>",
-                        data: $("#app-cart-checkout-form").serialize(),
+                        data: $("#app-shop-cart-checkout-form").serialize(),
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
 
-                                CartCheckout.shippingPlans = json.shippingPlans;
+                                AppShopCartCheckout.shippingPlans = json.shippingPlans;
 
-                                let $shipping = $("#app-cart-checkout-shipping");
+                                let $shipping = $("#app-shop-cart-checkout-shipping");
                                 if (json.shippingPlans.length > 0) {
                                     $shipping.show();
                                 } else {
@@ -510,17 +510,17 @@ class Template extends Section
                                 let newShippingPlanId = "";
                                 let newShippingFee = "0.00";
 
-                                if (CartCheckout.shippingPlans.length === 1) {
-                                    CartCheckout.shippingPlanId = CartCheckout.shippingPlans[0].id;
+                                if (AppShopCartCheckout.shippingPlans.length === 1) {
+                                    AppShopCartCheckout.shippingPlanId = AppShopCartCheckout.shippingPlans[0].id;
                                 }
 
                                 let html = "";
-                                for (let shippingPlan of CartCheckout.shippingPlans) {
+                                for (let shippingPlan of AppShopCartCheckout.shippingPlans) {
                                     html += '<div class="be-row be-mt-100">';
 
                                     html += '<div class="be-col-auto">';
                                     html += '<input type="radio" class="be-radio" name="shipping_plan_id" id="shipping_plan_id-' + shippingPlan.id + '" value="' + shippingPlan.id + '" onchange="selectShippingPlan(this, \'' + shippingPlan.id + '\');"';
-                                    if (shippingPlan.id === CartCheckout.shippingPlanId) {
+                                    if (shippingPlan.id === AppShopCartCheckout.shippingPlanId) {
                                         html += 'checked';
                                         newShippingPlanId = shippingPlan.id;
                                         newShippingFee = shippingPlan.shipping_fee;
@@ -543,12 +543,12 @@ class Template extends Section
                                     html += '</div>';
                                 }
 
-                                $("#app-cart-checkout-shipping-plans").html(html);
+                                $("#app-shop-cart-checkout-shipping-plans").html(html);
 
-                                CartCheckout.shippingPlanId = newShippingPlanId;
-                                CartCheckout.shippingFee = newShippingFee;
+                                AppShopCartCheckout.shippingPlanId = newShippingPlanId;
+                                AppShopCartCheckout.shippingFee = newShippingFee;
 
-                                CartCheckout.updatePayments();
+                                AppShopCartCheckout.updatePayments();
                             } else {
                                 alert(json.message);
                             }
@@ -560,21 +560,21 @@ class Template extends Section
                 },
 
                 selectShippingPlan: function (e, newShippingPlanId) {
-                    CartCheckout.shippingPlanId = newShippingPlanId;
+                    AppShopCartCheckout.shippingPlanId = newShippingPlanId;
                     for(let shippingPlan of shippingPlans) {
                         if (shippingPlan.id === newShippingPlanId) {
-                            CartCheckout.shippingFee = shippingPlan.shipping_fee;
+                            AppShopCartCheckout.shippingFee = shippingPlan.shipping_fee;
                             break;
                         }
                     }
 
-                    CartCheckout.updatePayments();
+                    AppShopCartCheckout.updatePayments();
                 },
 
 
                 updatePayments: function() {
-                    if (CartCheckout.shippingPlanId === "") {
-                        CartCheckout.update();
+                    if (AppShopCartCheckout.shippingPlanId === "") {
+                        AppShopCartCheckout.update();
 
                         return;
                     }
@@ -582,13 +582,13 @@ class Template extends Section
                     $.ajax({
                         url: "<?php echo beUrl('Shop.Payment.getStorePaymentsByShippingPlanId'); ?>",
                         data: {
-                            shipping_plan_id: CartCheckout.shippingPlanId
+                            shipping_plan_id: AppShopCartCheckout.shippingPlanId
                         },
                         type: "POST",
                         success: function (json) {
                             if (json.success) {
 
-                                let $payment = $("#app-cart-checkout-payment");
+                                let $payment = $("#app-shop-cart-checkout-payment");
                                 if (json.storePayments.length > 0) {
                                     $payment.show();
                                 } else {
@@ -599,7 +599,7 @@ class Template extends Section
                                 let newPaymentItemId = "";
                                 let html = "";
                                 for (let storePayment of json.storePayments) {
-                                    html += '<div class="be-row be-mt-100 app-cart-checkout-payment-item">';
+                                    html += '<div class="be-row be-mt-100 app-shop-cart-checkout-payment-item">';
 
                                     html += '<div class="be-col-auto">';
                                     html += '<input type="radio" class="be-radio be-mt-150" name="payment_id" id="payment_id-' + storePayment.id + '" value="' + storePayment.id + '" onchange="selectPayment(this, \'' + storePayment.id + '\', \'' + storePayment.item.id + '\');"';
@@ -619,14 +619,14 @@ class Template extends Section
                                     html += '</div>';
                                 }
 
-                                $("#app-cart-checkout-payments").html(html);
+                                $("#app-shop-cart-checkout-payments").html(html);
 
-                                CartCheckout.paymentId = newPaymentId;
-                                CartCheckout.paymentItemId = newPaymentItemId;
+                                AppShopCartCheckout.paymentId = newPaymentId;
+                                AppShopCartCheckout.paymentItemId = newPaymentItemId;
 
-                                $("#app-cart-checkout-payment_item_id").val(newPaymentItemId);
+                                $("#app-shop-cart-checkout-payment_item_id").val(newPaymentItemId);
 
-                                CartCheckout.update();
+                                AppShopCartCheckout.update();
 
                             } else {
                                 alert(json.message);
@@ -640,33 +640,33 @@ class Template extends Section
 
 
                 selectPayment: function(e, paymentId, paymentItemId) {
-                    CartCheckout.paymentId = newPaymentId;
-                    CartCheckout.paymentItemId = newPaymentItemId;
-                    $("#app-cart-checkout-payment_item_id").val(newPaymentItemId);
-                    CartCheckout.update();
+                    AppShopCartCheckout.paymentId = newPaymentId;
+                    AppShopCartCheckout.paymentItemId = newPaymentItemId;
+                    $("#app-shop-cart-checkout-payment_item_id").val(newPaymentItemId);
+                    AppShopCartCheckout.update();
                 },
 
                 update: function() {
-                    $submit = $("#app-cart-checkout-submit");
-                    if (CartCheckout.shippingPlanId === "" || CartCheckout.paymentId === "") {
+                    $submit = $("#app-shop-cart-checkout-submit");
+                    if (AppShopCartCheckout.shippingPlanId === "" || AppShopCartCheckout.paymentId === "") {
                         $submit.addClass("disabled");
                     } else {
                         $submit.removeClass("disabled");
                     }
 
-                    CartCheckout.totalAmount = ((Number(CartCheckout.productTotalAmount) * 100 + Number(CartCheckout.shippingFee) * 100 + Number(CartCheckout.discountAmount) * 100) / 100).toFixed(2);
+                    AppShopCartCheckout.totalAmount = ((Number(AppShopCartCheckout.productTotalAmount) * 100 + Number(AppShopCartCheckout.shippingFee) * 100 + Number(AppShopCartCheckout.discountAmount) * 100) / 100).toFixed(2);
 
-                    $("#app-cart-checkout-shipping-fee").html(CartCheckout.shippingFee);
-                    $("#app-cart-checkout-discount-amount").html(CartCheckout.discountAmount);
-                    $("#app-cart-checkout-total-amount").html(CartCheckout.totalAmount);
+                    $("#app-shop-cart-checkout-shipping-fee").html(AppShopCartCheckout.shippingFee);
+                    $("#app-shop-cart-checkout-discount-amount").html(AppShopCartCheckout.discountAmount);
+                    $("#app-shop-cart-checkout-total-amount").html(AppShopCartCheckout.totalAmount);
                 }
             }
 
 
             $(function () {
-                CartCheckout.updateState("<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>");
+                AppShopCartCheckout.updateState("<?php echo $defaultAddress && isset($defaultAddress->state_id) ? $defaultAddress->state_id : ''; ?>");
 
-                $("#app-cart-checkout-form").validate({
+                $("#app-shop-cart-checkout-form").validate({
                     //debug:true,
                     rules: {
                         email: {
@@ -741,11 +741,11 @@ class Template extends Section
                     if (coupon) {
                         $.ajax({
                             url: "<?php echo beUrl('Shop.PromotionCoupon.check'); ?>",
-                            data: $("#app-cart-checkout-form").serialize(),
+                            data: $("#app-shop-cart-checkout-form").serialize(),
                             type: "POST",
                             success: function (json) {
                                 if (json.success) {
-                                    CartCheckout.updateDiscountAmount()
+                                    AppShopCartCheckout.updateDiscountAmount()
                                 } else {
                                     alert(json.message);
                                 }
@@ -755,7 +755,7 @@ class Template extends Section
                             }
                         });
                     } else {
-                        CartCheckout.updateDiscountAmount();
+                        AppShopCartCheckout.updateDiscountAmount();
                     }
                 });
             });

@@ -65,3 +65,8 @@
 ### 3xxx 购物车
 * 3001 - 购物车 - Cart.Index
 * 3002 - 购物车-结算 - Cart.Checkout
+
+
+### 4xxx 支付
+* 3001 - 购物车 - Payment.Index
+* 3002 - 购物车-结算 - Payment.Checkout

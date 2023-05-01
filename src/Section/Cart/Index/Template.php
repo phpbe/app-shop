@@ -68,14 +68,14 @@ class Template extends Section
                                             </div>
 
                                             <div class="be-mt-50 app-shop-cart-index-product-quantity-input">
-                                                <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="changeQuantity(this, -1);">-</button>
-                                                <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="changeQuantity(this, 0);">
-                                                <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="changeQuantity(this, 1);">+</button>
+                                                <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="AppShopCartIndex.changeQuantity(this, -1);">-</button>
+                                                <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="AppShopCartIndex.changeQuantity(this, 0);">
+                                                <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="AppShopCartIndex.changeQuantity(this, 1);">+</button>
                                             </div>
                                         </div>
                                         <div class="be-col-auto">
                                             <div class="be-pl-50 be-fs-125">
-                                                <a href="javascript:void(0);" onclick="remove(this);"><i class="bi-x-lg"></i></a>
+                                                <a href="javascript:void(0);" onclick="AppShopCartIndex.remove(this);"><i class="bi-x-lg"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -125,9 +125,9 @@ class Template extends Section
 
                                             <td>
                                                 <div class="app-shop-cart-index-product-quantity-input">
-                                                    <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="changeQuantity(this, -1);">-</button>
-                                                    <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="changeQuantity(this, 0);">
-                                                    <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="changeQuantity(this, 1);">+</button>
+                                                    <button class="app-shop-cart-index-product-quantity-minus" type="button" onclick="AppShopCartIndex.changeQuantity(this, -1);">-</button>
+                                                    <input class="be-input app-shop-cart-index-product-quantity" name="quantity[]" type="text" value="<?php echo $product->quantity; ?>" maxlength="3" onkeyup="AppShopCartIndex.changeQuantity(this, 0);">
+                                                    <button class="app-shop-cart-index-product-quantity-plus" type="button" onclick="AppShopCartIndex.changeQuantity(this, 1);">+</button>
                                                 </div>
                                             </td>
 
@@ -136,7 +136,7 @@ class Template extends Section
                                             </td>
 
                                             <td>
-                                                <a href="javascript:void(0);" onclick="remove(this);"><i class="bi-x-lg"></i></a>
+                                                <a href="javascript:void(0);" onclick="AppShopCartIndex.remove(this);"><i class="bi-x-lg"></i></a>
                                             </td>
                                         </tr>
                                         <?php
@@ -384,123 +384,128 @@ class Template extends Section
     {
         ?>
         <script>
-            let products = <?php echo json_encode($this->page->products); ?>;
-            let productTotalQuantity = <?php echo $this->page->productTotalQuantity; ?>;
-            let productTotalAmount = "<?php echo $this->page->productTotalAmount; ?>";
-            let discountAmount = "<?php echo $this->page->discountAmount; ?>";
-            let totalAmount = "<?php echo $this->page->totalAmount; ?>";
 
-            function remove(e) {
-                let $e = $(e);
-                let $product = $e.closest(".app-shop-cart-index-product");
-                let productId = $product.data("productid");
-                let productItemId = $product.data("productitemid");
-                $.ajax({
-                    url: "<?php echo beUrl('Shop.Cart.remove'); ?>",
-                    data: {
-                        "product_id": productId,
-                        "product_item_id": productItemId
-                    },
-                    type: "POST",
-                    success: function (json) {
-                        if (json.success) {
-                            $e.closest(".app-shop-cart-index-product").remove();
-                            if ($(".app-shop-cart-index-product").length === 0) {
-                                window.location.reload();
+            var AppShopCartIndex = {
+
+                products: <?php echo json_encode($this->page->products); ?>,
+                productTotalQuantity: <?php echo $this->page->productTotalQuantity; ?>,
+                productTotalAmount: "<?php echo $this->page->productTotalAmount; ?>",
+                discountAmount: "<?php echo $this->page->discountAmount; ?>",
+                totalAmount: "<?php echo $this->page->totalAmount; ?>",
+
+                remove: function(e) {
+                    let $e = $(e);
+                    let $product = $e.closest(".app-shop-cart-index-product");
+                    let productId = $product.data("productid");
+                    let productItemId = $product.data("productitemid");
+                    $.ajax({
+                        url: "<?php echo beUrl('Shop.Cart.remove'); ?>",
+                        data: {
+                            "product_id": productId,
+                            "product_item_id": productItemId
+                        },
+                        type: "POST",
+                        success: function (json) {
+                            if (json.success) {
+                                $e.closest(".app-shop-cart-index-product").remove();
+                                if ($(".app-shop-cart-index-product").length === 0) {
+                                    window.location.reload();
+                                } else {
+                                    AppShopCartIndex.reload();
+                                }
                             } else {
-                                update();
+                                alert(json.message);
                             }
-                        } else {
-                            alert(json.message);
+                        },
+                        error: function () {
+                            alert("Server Error!");
                         }
-                    },
-                    error: function () {
-                        alert("Sysem Error!");
+                    });
+                },
+
+
+                changeQuantity: function(e, n) {
+                    var $e = $(e);
+                    if ($e.hasClass("disabled")) {
+                        return;
                     }
-                });
-            }
 
+                    let $product = $e.closest(".app-shop-cart-index-product");
+                    let productId = $product.data("productid");
+                    let productItemId = $product.data("productitemid");
 
-            function changeQuantity (e, n) {
-                var $e = $(e);
-                if ($e.hasClass("disabled")) {
-                    return;
+                    var $quantity = $(".app-shop-cart-index-product-quantity", $product);
+                    var quantity = $quantity.val();
+                    if (isNaN(quantity)) {
+                        quantity = 1;
+                    } else {
+                        quantity = Number(quantity);
+                    }
+                    quantity += n;
+                    quantity = parseInt(quantity);
+                    if (quantity < 1) quantity = 1;
+                    $quantity.val(quantity);
+
+                    $.ajax({
+                        url: "<?php echo beUrl('Shop.Cart.change'); ?>",
+                        data: {
+                            "product_id": productId,
+                            "product_item_id": productItemId,
+                            "quantity": quantity
+                        },
+                        type: "POST",
+                        success: function (json) {
+                            if (json.success) {
+                                AppShopCartIndex.reload();
+                            } else {
+                                alert(json.message);
+                            }
+                        },
+                        error: function () {
+                            alert("Server Error!");
+                        }
+                    });
+                },
+
+                reload: function() {
+                    $.ajax({
+                        url: "<?php echo beUrl('Shop.Cart.getProducts'); ?>",
+                        method: "GET",
+                        success: function (json) {
+                            if (json.success) {
+                                AppShopCartIndex.products = json.products;
+                                AppShopCartIndex.productTotalQuantity = json.productTotalQuantity;
+                                AppShopCartIndex.productTotalAmount = json.productTotalAmount;
+                                AppShopCartIndex.discountAmount = json.discountAmount;
+                                AppShopCartIndex.totalAmount = json.totalAmount;
+
+                                AppShopCartIndex.update();
+                            }
+                        },
+                        error: function () {
+                            alert("Server Error!");
+                        }
+                    });
+                },
+
+                update: function() {
+                    for(let product of AppShopCartIndex.products) {
+                        let $parent = $("#app-shop-cart-index-product-item-" + product.item_id);
+                        if ($parent) {
+                            $(".app-shop-cart-index-product-amount", $parent).html(product.amount);
+                            let $quantityMinus = $(".app-shop-cart-index-product-quantity-minus", $parent);
+                            if (product.quantity === 1) {
+                                $quantityMinus.addClass("disabled");
+                            } else {
+                                $quantityMinus.removeClass("disabled");
+                            }
+                        }
+                    }
+
+                    $("#app-shop-cart-index-product-total-amount").html(AppShopCartIndex.productTotalAmount);
+                    $("#app-shop-cart-index-discount-amount").html(AppShopCartIndex.discountAmount);
+                    $("#app-shop-cart-index-total-amount").html(AppShopCartIndex.totalAmount);
                 }
-
-                let $product = $e.closest(".app-shop-cart-index-product");
-                let productId = $product.data("productid");
-                let productItemId = $product.data("productitemid");
-
-                var $quantity = $(".app-shop-cart-index-product-quantity", $product);
-                var quantity = $quantity.val();
-                if (isNaN(quantity)) {
-                    quantity = 1;
-                } else {
-                    quantity = Number(quantity);
-                }
-                quantity += n;
-                quantity = parseInt(quantity);
-                if (quantity < 1) quantity = 1;
-                $quantity.val(quantity);
-
-                $.ajax({
-                    url: "<?php echo beUrl('Shop.Cart.change'); ?>",
-                    data: {
-                        "product_id": productId,
-                        "product_item_id": productItemId,
-                        "quantity": quantity
-                    },
-                    type: "POST",
-                    success: function (json) {
-                        if (json.success) {
-                            reloadCart();
-                        } else {
-                            alert(json.message);
-                        }
-                    },
-                    error: function () {
-                        alert("Sysem Error!");
-                    }
-                });
-            }
-
-            function reloadCart() {
-                $.ajax({
-                    url: "<?php echo beUrl('Shop.Cart.getProducts'); ?>",
-                    method: "GET",
-                    success: function (json) {
-                        if (json.success) {
-                            products = json.products;
-                            productTotalQuantity = json.productTotalQuantity;
-                            productTotalAmount = json.productTotalAmount;
-                            discountAmount = json.discountAmount;
-                            totalAmount = json.totalAmount;
-                            update();
-                        }
-                    },
-                    error: function () {
-                        alert("Sysem Error!");
-                    }
-                });
-            }
-
-            function update() {
-                for(let product of products) {
-                    let $parent = $("#app-shop-cart-index-product-item-" + product.item_id);
-                    if ($parent) {
-                        $(".app-shop-cart-index-product-amount", $parent).html(product.amount);
-                        let $quantityMinus = $(".app-shop-cart-index-product-quantity-minus", $parent);
-                        if (product.quantity === 1) {
-                            $quantityMinus.addClass("disabled");
-                        } else {
-                            $quantityMinus.removeClass("disabled");
-                        }
-                    }
-                }
-
-                $("#app-shop-cart-index-product-total-amount").html(productTotalAmount);
-                $("#app-shop-cart-index-discount-amount").html(discountAmount);
-                $("#app-shop-cart-index-total-amount").html(totalAmount);
             }
         </script>
         <?php
