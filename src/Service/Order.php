@@ -210,8 +210,14 @@ class Order
             throw new ServiceException('Order (#' . $orderId . ') does not exist!');
         }
 
-        if ($tupleOrder->user_id !== $my->id) {
-            throw new ServiceException('Order (#' . $orderId . ') does not exist!');
+        if ($my->isGuest()) {
+            if ($tupleOrder->user_token !== $my->token) {
+                throw new ServiceException('Order (#' . $orderId . ') does not exist!');
+            }
+        } else {
+            if ($tupleOrder->user_id !== $my->id) {
+                throw new ServiceException('Order (#' . $orderId . ') does not exist!');
+            }
         }
 
         $order = $tupleOrder->toObject();

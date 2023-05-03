@@ -104,6 +104,11 @@
                         "description" : "主图网址，多个主图用 \"|\" 分隔开"
                     },
                     {
+                        "name" : "videos",
+                        "required" : <?php echo $this->config->videosRequired; ?>,
+                        "description" : "视频网址，多个视频用 \"|\" 分隔开"
+                    },
+                    {
                         "name" : "categories",
                         "required" : 0,
                         "description" : "分类，多个分类用 \"|\" 分隔开，单个分类名称120个字符以内，分类不存在时将自动创建"

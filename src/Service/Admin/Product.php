@@ -241,6 +241,22 @@ class Product
             unset($relateItem);
         }
 
+        if (!isset($data['category_ids']) || !is_array($data['category_ids'])) {
+            $data['category_ids'] = [];
+        }
+
+        if (!isset($data['tags']) || !is_array($data['tags'])) {
+            $data['tags'] = [];
+        }
+
+        if (!isset($data['images']) || !is_array($data['images'])) {
+            $data['images'] = [];
+        }
+
+        if (!isset($data['videos']) || !is_array($data['videos'])) {
+            $data['videos'] = [];
+        }
+
         $style = isset($data['style']) ? ((int)$data['style']) : 1;
         if ($style !== 1 && $style !== 2) {
             $style = 1;
@@ -303,7 +319,16 @@ class Product
         $priceTo = null;
         $originalPriceFrom = null;
         $originalPriceTo = null;
-        foreach ($items as $item) {
+        foreach ($items as &$item) {
+
+            if (!isset($item['images']) || !is_array($item['images'])) {
+                $item['images'] = [];
+            }
+
+            if (!isset($item['videos']) || !is_array($item['videos'])) {
+                $item['videos'] = [];
+            }
+
             $price = $item['price'] ?? '0';
             $originalPrice = $item['original_price'] ?? '0';
 
@@ -339,6 +364,7 @@ class Product
                 }
             }
         }
+        unset($item);
 
         if (!isset($data['collect_product_id']) || !is_string($data['collect_product_id'])) {
             $data['collect_product_id'] = '';
@@ -411,198 +437,268 @@ class Product
                 $tupleProduct->update();
             }
 
-            if (isset($data['category_ids']) && is_array($data['category_ids']) && count($data['category_ids']) > 0) {
-                if ($isNew) {
+            if ($isNew) {
+                $ordering = 1;
+                foreach ($data['category_ids'] as $category_id) {
+                    $tupleProductCategory = Be::getTuple('shop_product_category');
+                    $tupleProductCategory->product_id = $tupleProduct->id;
+                    $tupleProductCategory->category_id = $category_id;
+                    $tupleProductCategory->ordering = $ordering;
+                    $tupleProductCategory->insert();
+                    $ordering++;
+                }
+            } else {
+                $existCategoryIds = Be::getTable('shop_product_category')
+                    ->where('product_id', $productId)
+                    ->getValues('category_id');
+
+                // 需要删除的分类
+                if (count($existCategoryIds) > 0) {
+                    $removeCategoryIds = array_diff($existCategoryIds, $data['category_ids']);
+                    if (count($removeCategoryIds) > 0) {
+                        Be::getTable('shop_product_category')
+                            ->where('product_id', $productId)
+                            ->where('category_id', 'IN', $removeCategoryIds)
+                            ->delete();
+                    }
+                }
+
+                // 新增的分类
+                $newCategoryIds = null;
+                if (count($existCategoryIds) > 0) {
+                    $newCategoryIds = array_diff($data['category_ids'], $existCategoryIds);
+                } else {
+                    $newCategoryIds = $data['category_ids'];
+                }
+
+                if (count($newCategoryIds) > 0) {
                     $ordering = 1;
                     foreach ($data['category_ids'] as $category_id) {
                         $tupleProductCategory = Be::getTuple('shop_product_category');
-                        $tupleProductCategory->product_id = $tupleProduct->id;
-                        $tupleProductCategory->category_id = $category_id;
-                        $tupleProductCategory->ordering = $ordering;
-                        $tupleProductCategory->insert();
-                        $ordering++;
-                    }
-                } else {
-                    $existCategoryIds = Be::getTable('shop_product_category')
-                        ->where('product_id', $productId)
-                        ->getValues('category_id');
-
-                    // 需要删除的分类
-                    if (count($existCategoryIds) > 0) {
-                        $removeCategoryIds = array_diff($existCategoryIds, $data['category_ids']);
-                        if (count($removeCategoryIds) > 0) {
-                            Be::getTable('shop_product_category')
-                                ->where('product_id', $productId)
-                                ->where('category_id', 'IN', $removeCategoryIds)
-                                ->delete();
-                        }
-                    }
-
-                    // 新增的分类
-                    $newCategoryIds = null;
-                    if (count($existCategoryIds) > 0) {
-                        $newCategoryIds = array_diff($data['category_ids'], $existCategoryIds);
-                    } else {
-                        $newCategoryIds = $data['category_ids'];
-                    }
-
-                    if (count($newCategoryIds) > 0) {
-                        $ordering = 1;
-                        foreach ($data['category_ids'] as $category_id) {
+                        if (in_array($category_id, $existCategoryIds)) {
+                            $tupleProductCategory->loadBy([
+                                'product_id' => $tupleProduct->id,
+                                'category_id' => $category_id,
+                            ]);
+                            $tupleProductCategory->ordering = $ordering;
+                            $tupleProductCategory->update();
+                        } else {
                             $tupleProductCategory = Be::getTuple('shop_product_category');
-                            if (in_array($category_id, $existCategoryIds)) {
-                                $tupleProductCategory->loadBy([
-                                    'product_id' => $tupleProduct->id,
-                                    'category_id' => $category_id,
-                                ]);
-                                $tupleProductCategory->ordering = $ordering;
-                                $tupleProductCategory->update();
-                            } else {
-                                $tupleProductCategory = Be::getTuple('shop_product_category');
-                                $tupleProductCategory->product_id = $tupleProduct->id;
-                                $tupleProductCategory->category_id = $category_id;
-                                $tupleProductCategory->ordering = $ordering;
-                                $tupleProductCategory->insert();
-                            }
-                            $ordering++;
+                            $tupleProductCategory->product_id = $tupleProduct->id;
+                            $tupleProductCategory->category_id = $category_id;
+                            $tupleProductCategory->ordering = $ordering;
+                            $tupleProductCategory->insert();
                         }
+                        $ordering++;
                     }
                 }
             }
 
             // 标签
-            if (isset($data['tags']) && is_array($data['tags']) && count($data['tags']) > 0) {
-                if ($isNew) {
+            if ($isNew) {
+                $ordering = 1;
+                foreach ($data['tags'] as $tag) {
+                    $tupleProductTag = Be::getTuple('shop_product_tag');
+                    $tupleProductTag->product_id = $tupleProduct->id;
+                    $tupleProductTag->tag = $tag;
+                    $tupleProductTag->ordering = $ordering;
+                    $tupleProductTag->insert();
+                    $ordering++;
+                }
+            } else {
+                $existTags = Be::getTable('shop_product_tag')
+                    ->where('product_id', $productId)
+                    ->getValues('tag');
+
+                // 需要删除的标签
+                if (count($existTags) > 0) {
+                    $removeTags = array_diff($existTags, $data['tags']);
+                    if (count($removeTags) > 0) {
+                        Be::getTable('shop_product_tag')
+                            ->where('product_id', $productId)
+                            ->where('tag', 'IN', $removeTags)
+                            ->delete();
+                    }
+                }
+
+                // 新增的标签
+                $newTags = null;
+                if (count($existTags) > 0) {
+                    $newTags = array_diff($data['tags'], $existTags);
+                } else {
+                    $newTags = $data['tags'];
+                }
+
+                if (count($newTags) > 0) {
                     $ordering = 1;
                     foreach ($data['tags'] as $tag) {
                         $tupleProductTag = Be::getTuple('shop_product_tag');
-                        $tupleProductTag->product_id = $tupleProduct->id;
-                        $tupleProductTag->tag = $tag;
-                        $tupleProductTag->ordering = $ordering;
-                        $tupleProductTag->insert();
-                        $ordering++;
-                    }
-                } else {
-                    $existTags = Be::getTable('shop_product_tag')
-                        ->where('product_id', $productId)
-                        ->getValues('tag');
-
-                    // 需要删除的标签
-                    if (count($existTags) > 0) {
-                        $removeTags = array_diff($existTags, $data['tags']);
-                        if (count($removeTags) > 0) {
-                            Be::getTable('shop_product_tag')
-                                ->where('product_id', $productId)
-                                ->where('tag', 'IN', $removeTags)
-                                ->delete();
-                        }
-                    }
-
-                    // 新增的标签
-                    $newTags = null;
-                    if (count($existTags) > 0) {
-                        $newTags = array_diff($data['tags'], $existTags);
-                    } else {
-                        $newTags = $data['tags'];
-                    }
-
-                    if (count($newTags) > 0) {
-                        $ordering = 1;
-                        foreach ($data['tags'] as $tag) {
+                        if (in_array($tag, $existTags)) {
+                            $tupleProductTag->loadBy([
+                                'product_id' => $tupleProduct->id,
+                                'tag' => $tag,
+                            ]);
+                            $tupleProductTag->ordering = $ordering;
+                            $tupleProductTag->update();
+                        } else {
                             $tupleProductTag = Be::getTuple('shop_product_tag');
-                            if (in_array($tag, $existTags)) {
-                                $tupleProductTag->loadBy([
-                                    'product_id' => $tupleProduct->id,
-                                    'tag' => $tag,
-                                ]);
-                                $tupleProductTag->ordering = $ordering;
-                                $tupleProductTag->update();
-                            } else {
-                                $tupleProductTag = Be::getTuple('shop_product_tag');
-                                $tupleProductTag->product_id = $tupleProduct->id;
-                                $tupleProductTag->tag = $tag;
-                                $tupleProductTag->ordering = $ordering;
-                                $tupleProductTag->insert();
-                            }
-                            $ordering++;
+                            $tupleProductTag->product_id = $tupleProduct->id;
+                            $tupleProductTag->tag = $tag;
+                            $tupleProductTag->ordering = $ordering;
+                            $tupleProductTag->insert();
                         }
+                        $ordering++;
                     }
                 }
             }
 
-            if (isset($data['images']) && is_array($data['images']) && count($data['images']) > 0) {
-                if ($isNew) {
-                    $ordering = 1;
-                    foreach ($data['images'] as $image) {
-                        $tupleProductImage = Be::getTuple('shop_product_image');
-                        $tupleProductImage->product_id = $tupleProduct->id;
-                        $tupleProductImage->product_item_id = '';
-                        $tupleProductImage->url = $image['url'];
-                        if ($ordering === 1) {
-                            $tupleProductImage->is_main = 1;
-                        } else {
-                            $tupleProductImage->is_main = 0;
-                        }
-                        $tupleProductImage->ordering = $ordering;
-                        $tupleProductImage->create_time = $now;
-                        $tupleProductImage->update_time = $now;
-                        $tupleProductImage->insert();
-                        $ordering++;
-                    }
-                } else {
-                    $keepIds = [];
-                    foreach ($data['images'] as $image) {
-                        if (isset($image['id']) && $image['id'] !== '') {
-                            $keepIds[] = $image['id'];
-                        }
-                    }
-
-                    if (count($keepIds) > 0) {
-                        Be::getTable('shop_product_image')
-                            ->where('product_id', $productId)
-                            ->where('product_item_id', '')
-                            ->where('id', 'NOT IN', $keepIds)
-                            ->delete();
+            if ($isNew) {
+                $ordering = 1;
+                foreach ($data['images'] as $image) {
+                    $tupleProductImage = Be::getTuple('shop_product_image');
+                    $tupleProductImage->product_id = $tupleProduct->id;
+                    $tupleProductImage->product_item_id = '';
+                    $tupleProductImage->url = $image['url'];
+                    if ($ordering === 1) {
+                        $tupleProductImage->is_main = 1;
                     } else {
-                        Be::getTable('shop_product_image')
-                            ->where('product_id', $productId)
-                            ->where('product_item_id', '')
-                            ->delete();
+                        $tupleProductImage->is_main = 0;
+                    }
+                    $tupleProductImage->ordering = $ordering;
+                    $tupleProductImage->create_time = $now;
+                    $tupleProductImage->update_time = $now;
+                    $tupleProductImage->insert();
+                    $ordering++;
+                }
+            } else {
+                $keepIds = [];
+                foreach ($data['images'] as $image) {
+                    if (isset($image['id']) && $image['id'] !== '') {
+                        $keepIds[] = $image['id'];
+                    }
+                }
+
+                if (count($keepIds) > 0) {
+                    Be::getTable('shop_product_image')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', '')
+                        ->where('id', 'NOT IN', $keepIds)
+                        ->delete();
+                } else {
+                    Be::getTable('shop_product_image')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', '')
+                        ->delete();
+                }
+
+                $ordering = 1;
+                foreach ($data['images'] as $image) {
+                    $tupleProductImage = Be::getTuple('shop_product_image');
+                    if (isset($image['id']) && $image['id'] !== '') {
+                        try {
+                            $tupleProductImage->loadBy([
+                                'id' => $image['id'],
+                                'product_id' => $tupleProduct->id,
+                                'product_item_id' => '',
+                            ]);
+                        } catch (\Throwable $t) {
+                            throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的图像（# ' . $image['id'] . '）不存在！');
+                        }
                     }
 
-                    $ordering = 1;
-                    foreach ($data['images'] as $image) {
-                        $tupleProductImage = Be::getTuple('shop_product_image');
-                        if (isset($image['id']) && $image['id'] !== '') {
-                            try {
-                                $tupleProductImage->loadBy([
-                                    'id' => $image['id'],
-                                    'product_id' => $tupleProduct->id,
-                                    'product_item_id' => '',
-                                ]);
-                            } catch (\Throwable $t) {
-                                throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的图像（# ' . $image['id'] . '）不存在！');
-                            }
-                        }
-
-                        $tupleProductImage->product_id = $tupleProduct->id;
-                        $tupleProductImage->product_item_id = '';
-                        $tupleProductImage->url = $image['url'];
-                        if ($ordering === 1) {
-                            $tupleProductImage->is_main = 1;
-                        } else {
-                            $tupleProductImage->is_main = 0;
-                        }
-                        $tupleProductImage->ordering = $ordering;
-
-                        if (!isset($image['id']) || $image['id'] === '') {
-                            $tupleProductImage->create_time = $now;
-                        }
-
-                        $tupleProductImage->update_time = $now;
-                        $tupleProductImage->save();
-                        $ordering++;
+                    $tupleProductImage->product_id = $tupleProduct->id;
+                    $tupleProductImage->product_item_id = '';
+                    $tupleProductImage->url = $image['url'];
+                    if ($ordering === 1) {
+                        $tupleProductImage->is_main = 1;
+                    } else {
+                        $tupleProductImage->is_main = 0;
                     }
+                    $tupleProductImage->ordering = $ordering;
+
+                    if (!isset($image['id']) || $image['id'] === '') {
+                        $tupleProductImage->create_time = $now;
+                    }
+
+                    $tupleProductImage->update_time = $now;
+                    $tupleProductImage->save();
+                    $ordering++;
+                }
+            }
+
+            if ($isNew) {
+                $ordering = 1;
+                foreach ($data['videos'] as $video) {
+                    $tupleProductVideo = Be::getTuple('shop_product_video');
+                    $tupleProductVideo->product_id = $tupleProduct->id;
+                    $tupleProductVideo->product_item_id = '';
+                    $tupleProductVideo->url = $video['url'];
+                    $tupleProductVideo->preview_url = $video['preview_url'];
+                    if ($ordering === 1) {
+                        $tupleProductVideo->is_main = 1;
+                    } else {
+                        $tupleProductVideo->is_main = 0;
+                    }
+                    $tupleProductVideo->ordering = $ordering;
+                    $tupleProductVideo->create_time = $now;
+                    $tupleProductVideo->update_time = $now;
+                    $tupleProductVideo->insert();
+                    $ordering++;
+                }
+            } else {
+                $keepIds = [];
+                foreach ($data['videos'] as $video) {
+                    if (isset($video['id']) && $video['id'] !== '') {
+                        $keepIds[] = $video['id'];
+                    }
+                }
+
+                if (count($keepIds) > 0) {
+                    Be::getTable('shop_product_video')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', '')
+                        ->where('id', 'NOT IN', $keepIds)
+                        ->delete();
+                } else {
+                    Be::getTable('shop_product_video')
+                        ->where('product_id', $productId)
+                        ->where('product_item_id', '')
+                        ->delete();
+                }
+
+                $ordering = 1;
+                foreach ($data['videos'] as $video) {
+                    $tupleProductVideo = Be::getTuple('shop_product_video');
+                    if (isset($video['id']) && $video['id'] !== '') {
+                        try {
+                            $tupleProductVideo->loadBy([
+                                'id' => $video['id'],
+                                'product_id' => $tupleProduct->id,
+                                'product_item_id' => '',
+                            ]);
+                        } catch (\Throwable $t) {
+                            throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的视频（# ' . $video['id'] . '）不存在！');
+                        }
+                    }
+
+                    $tupleProductVideo->product_id = $tupleProduct->id;
+                    $tupleProductVideo->product_item_id = '';
+                    $tupleProductVideo->url = $video['url'];
+                    $tupleProductVideo->preview_url = $video['preview_url'];
+                    if ($ordering === 1) {
+                        $tupleProductVideo->is_main = 1;
+                    } else {
+                        $tupleProductVideo->is_main = 0;
+                    }
+                    $tupleProductVideo->ordering = $ordering;
+
+                    if (!isset($video['id']) || $video['id'] === '') {
+                        $tupleProductVideo->create_time = $now;
+                    }
+
+                    $tupleProductVideo->update_time = $now;
+                    $tupleProductVideo->save();
+                    $ordering++;
                 }
             }
 
@@ -955,7 +1051,7 @@ class Product
 
                     // ------------------------------------------------------------------------------------------------- 款式图像处理
                     if ($style === 2) {
-                        if (isset($item['images']) && is_array($item['images']) && count($item['images']) > 0) {
+                        if (count($item['images']) > 0) {
                             $ordering = 1;
                             foreach ($item['images'] as $image) {
                                 $tupleProductImage = Be::getTuple('shop_product_image');
@@ -971,6 +1067,27 @@ class Product
                                 $tupleProductImage->create_time = $now;
                                 $tupleProductImage->update_time = $now;
                                 $tupleProductImage->insert();
+                                $ordering++;
+                            }
+                        }
+
+                        if (count($item['videos']) > 0) {
+                            $ordering = 1;
+                            foreach ($item['videos'] as $video) {
+                                $tupleProductVideo = Be::getTuple('shop_product_video');
+                                $tupleProductVideo->product_id = $tupleProduct->id;
+                                $tupleProductVideo->product_item_id = $tupleProductItem->id;
+                                $tupleProductVideo->url = $video['url'];
+                                $tupleProductVideo->preview_url = $video['preview_url'];
+                                if ($ordering === 1) {
+                                    $tupleProductVideo->is_main = 1;
+                                } else {
+                                    $tupleProductVideo->is_main = 0;
+                                }
+                                $tupleProductVideo->ordering = $ordering;
+                                $tupleProductVideo->create_time = $now;
+                                $tupleProductVideo->update_time = $now;
+                                $tupleProductVideo->insert();
                                 $ordering++;
                             }
                         }
@@ -1042,60 +1159,113 @@ class Product
 
                     // ------------------------------------------------------------------------------------------------- 款式图像处理
                     if ($style === 2) {
-                        if (isset($item['images']) && is_array($item['images']) && count($item['images']) > 0) {
-                            $keepIds = [];
-                            foreach ($item['images'] as $image) {
-                                if (isset($image['id']) && $image['id'] !== '') {
-                                    $keepIds[] = $image['id'];
+                        $keepIds = [];
+                        foreach ($item['images'] as $image) {
+                            if (isset($image['id']) && $image['id'] !== '') {
+                                $keepIds[] = $image['id'];
+                            }
+                        }
+
+                        if (count($keepIds) > 0) {
+                            Be::getTable('shop_product_image')
+                                ->where('product_id', $productId)
+                                ->where('product_item_id', $tupleProductItem->id)
+                                ->where('id', 'NOT IN', $keepIds)
+                                ->delete();
+                        } else {
+                            Be::getTable('shop_product_image')
+                                ->where('product_id', $productId)
+                                ->where('product_item_id', $tupleProductItem->id)
+                                ->delete();
+                        }
+
+                        $ordering = 1;
+                        foreach ($item['images'] as $image) {
+                            $tupleProductImage = Be::getTuple('shop_product_image');
+                            if (isset($image['id']) && $image['id'] !== '') {
+                                try {
+                                    $tupleProductImage->loadBy([
+                                        'id' => $image['id'],
+                                        'product_id' => $tupleProduct->id,
+                                        'product_item_id' => $tupleProductItem->id,
+                                    ]);
+                                } catch (\Throwable $t) {
+                                    throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的款式图像（# ' . $image['id'] . '）不存在！');
                                 }
                             }
 
-                            if (count($keepIds) > 0) {
-                                Be::getTable('shop_product_image')
-                                    ->where('product_id', $productId)
-                                    ->where('product_item_id', $tupleProductItem->id)
-                                    ->where('id', 'NOT IN', $keepIds)
-                                    ->delete();
+                            $tupleProductImage->product_id = $tupleProduct->id;
+                            $tupleProductImage->product_item_id = $tupleProductItem->id;
+                            $tupleProductImage->url = $image['url'];
+                            if ($ordering === 1) {
+                                $tupleProductImage->is_main = 1;
                             } else {
-                                Be::getTable('shop_product_image')
-                                    ->where('product_id', $productId)
-                                    ->where('product_item_id', $tupleProductItem->id)
-                                    ->delete();
+                                $tupleProductImage->is_main = 0;
+                            }
+                            $tupleProductImage->ordering = $ordering;
+
+                            if (!isset($image['id']) || $image['id'] === '') {
+                                $tupleProductImage->create_time = $now;
                             }
 
-                            $ordering = 1;
-                            foreach ($item['images'] as $image) {
-                                $tupleProductImage = Be::getTuple('shop_product_image');
-                                if (isset($image['id']) && $image['id'] !== '') {
-                                    try {
-                                        $tupleProductImage->loadBy([
-                                            'id' => $image['id'],
-                                            'product_id' => $tupleProduct->id,
-                                            'product_item_id' => $tupleProductItem->id,
-                                        ]);
-                                    } catch (\Throwable $t) {
-                                        throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的款式图像（# ' . $image['id'] . '）不存在！');
-                                    }
-                                }
+                            $tupleProductImage->update_time = $now;
+                            $tupleProductImage->save();
+                            $ordering++;
+                        }
 
-                                $tupleProductImage->product_id = $tupleProduct->id;
-                                $tupleProductImage->product_item_id = $tupleProductItem->id;
-                                $tupleProductImage->url = $image['url'];
-                                if ($ordering === 1) {
-                                    $tupleProductImage->is_main = 1;
-                                } else {
-                                    $tupleProductImage->is_main = 0;
-                                }
-                                $tupleProductImage->ordering = $ordering;
-
-                                if (!isset($image['id']) || $image['id'] === '') {
-                                    $tupleProductImage->create_time = $now;
-                                }
-
-                                $tupleProductImage->update_time = $now;
-                                $tupleProductImage->save();
-                                $ordering++;
+                        $keepIds = [];
+                        foreach ($item['videos'] as $video) {
+                            if (isset($video['id']) && $video['id'] !== '') {
+                                $keepIds[] = $video['id'];
                             }
+                        }
+
+                        if (count($keepIds) > 0) {
+                            Be::getTable('shop_product_video')
+                                ->where('product_id', $productId)
+                                ->where('product_item_id', $tupleProductItem->id)
+                                ->where('id', 'NOT IN', $keepIds)
+                                ->delete();
+                        } else {
+                            Be::getTable('shop_product_video')
+                                ->where('product_id', $productId)
+                                ->where('product_item_id', $tupleProductItem->id)
+                                ->delete();
+                        }
+
+                        $ordering = 1;
+                        foreach ($item['videos'] as $video) {
+                            $tupleProductVideo = Be::getTuple('shop_product_video');
+                            if (isset($video['id']) && $video['id'] !== '') {
+                                try {
+                                    $tupleProductVideo->loadBy([
+                                        'id' => $video['id'],
+                                        'product_id' => $tupleProduct->id,
+                                        'product_item_id' => $tupleProductItem->id,
+                                    ]);
+                                } catch (\Throwable $t) {
+                                    throw new ServiceException('商品（# ' . $productId . ' ' . $tupleProduct->name . '）下的款式图像（# ' . $image['id'] . '）不存在！');
+                                }
+                            }
+
+                            $tupleProductVideo->product_id = $tupleProduct->id;
+                            $tupleProductVideo->product_item_id = $tupleProductItem->id;
+                            $tupleProductVideo->url = $video['url'];
+                            $tupleProductVideo->preview_url = $video['preview_url'];
+                            if ($ordering === 1) {
+                                $tupleProductVideo->is_main = 1;
+                            } else {
+                                $tupleProductVideo->is_main = 0;
+                            }
+                            $tupleProductVideo->ordering = $ordering;
+
+                            if (!isset($video['id']) || $video['id'] === '') {
+                                $tupleProductVideo->create_time = $now;
+                            }
+
+                            $tupleProductVideo->update_time = $now;
+                            $tupleProductVideo->save();
+                            $ordering++;
                         }
                     }
                     // ================================================================================================= 款式图像处理

@@ -333,6 +333,56 @@
             $formData['images'] = ($this->product ? $this->product->images : []);
             ?>
 
+            <?php
+            /*
+            ?>
+            <div class="be-p-150 be-bc-fff be-mt-150">
+                <div class="be-fs-110">
+                    视频 <span class="be-c-999 be-fs-90">请使用尺寸一样的视频</span>
+                </div>
+
+                <div class="be-mt-150">
+                    <draggable v-model="formData.videos" force-fallback="true" animation="100" filter=".video-uploader" handle=".video-move">
+                        <transition-group>
+                            <div v-for="video in formData.videos" :key="video.ordering" class="video">
+                                <img :src="video.preview_url">
+                                <div class="video-move"></div>
+                                <div class="video-actions">
+                                    <span class="video-action" @click="videoPreview(video)"><i class="el-icon-zoom-in"></i></span>
+                                    <span class="video-action" @click="videoRemove(video)"><i class="el-icon-delete"></i></span>
+                                </div>
+                            </div>
+
+                            <div class="video-selector" @click="videoSelect" key="99999">
+                                <i class="el-icon-plus"></i>
+                            </div>
+                        </transition-group>
+                    </draggable>
+                </div>
+
+                <el-dialog :visible.sync="videoSelectorVisible" class="dialog-video-selector" title="选择视频" :width="600" :close-on-click-modal="false">
+                    <iframe :src="videoSelectorUrl" style="width:100%;height:400px;border:0;}"></iframe>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="videoSelectedCancel">取 消</el-button>
+                        <el-button type="primary" @click="videoSelectedConfirm">确 定</el-button>
+                    </div>
+                </el-dialog>
+
+
+                <el-dialog :visible.sync="videoPreviewVisible" center="true">
+                    <div class="be-ta-center">
+                        <img style="max-width: 100%;max-height: 400px;" :src="videoPreviewUrl" alt="">
+                    </div>
+                </el-dialog>
+
+                <el-dialog :visible.sync="videoAltVisible" center="true">
+                </el-dialog>
+
+            </div>
+            <?php
+            $formData['videos'] = ($this->product ? $this->product->videos : []);
+            */
+            ?>
 
             <div class="be-p-150 be-bc-fff be-mt-150">
                 <div class="be-fs-110">

@@ -272,6 +272,27 @@ class ApiCollect
                 $data['images'] = [];
             }
 
+
+            $videos = $request->post('videos', '');
+            if ($collectProductApiConfig->videosRequired && $videos === '') {
+                throw new ServiceException('视频（videos）为必填项！');
+            }
+
+            if ($videos) {
+                $videos = explode('|', $videos);
+                $videosData = [];
+                foreach ($videos as $video) {
+                    $videosData[] = [
+                        'id' => '',
+                        'url' => $video,
+                        'preview_url' => '',
+                    ];
+                }
+                $data['videos'] = $videosData;
+            } else {
+                $data['videos'] = [];
+            }
+
             $relateIconImage = $request->post('relate_icon_image', '');
             $relateIconColor = $request->post('relate_icon_color', '');
             if ($relateName && $relateValue) {

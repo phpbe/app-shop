@@ -50,6 +50,11 @@ class CollectProductApi
     public int $imagesRequired = 0;
 
     /**
+     * @BeConfigItem("视频必填", driver="FormItemSwitch")
+     */
+    public int $videosRequired = 0;
+
+    /**
      * @BeConfigItem("SPU必填", driver="FormItemSwitch")
      */
     public int $spuRequired = 0;

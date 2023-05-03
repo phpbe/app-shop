@@ -573,7 +573,7 @@ class Cart
         $totalAmount = bcadd($totalAmount, $shippingFee, 2);
 
         $serviceOrder = Be::getService('App.Shop.Order');
-        $orderConfig = $serviceOrder->getConfig();
+        $orderConfig = Be::getConfig('App.Shop.Order');
 
         $tupleOrder = Be::getTuple('shop_order');
         $db->startTransaction();
@@ -581,7 +581,7 @@ class Cart
             $orderSn = null;
             $orderSnExist = null;
             do {
-                $orderSn = $orderConfig->sn_prefix . date('ymdHis') . rand(1000, 9999);
+                $orderSn = $orderConfig->snPrefix . date('ymdHis') . rand(1000, 9999);
                 $sql = 'SELECT COUNT(*) FROM shop_order WHERE order_sn = ?';
                 $orderSnExist = $db->getValue($sql, [$orderSn]);
             } while ($orderSnExist);
@@ -646,7 +646,7 @@ class Cart
             foreach ($cart['products'] as $product) {
                 $tupleOrderProduct = Be::getTuple('shop_order_product');
                 $tupleOrderProduct->order_id = $tupleOrder->id;
-                $tupleOrderProduct->user_id = $my->id;
+                $tupleOrderProduct->user_id = $user_id;
                 $tupleOrderProduct->product_id = $product->product_id;
                 $tupleOrderProduct->product_item_id = $product->product_item_id;
                 $tupleOrderProduct->quantity = $product->quantity;
