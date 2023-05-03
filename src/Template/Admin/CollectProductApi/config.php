@@ -18,53 +18,107 @@
                 </div>
             </div>
 
-
-            <div class="be-row be-lh-250  be-mt-50 be-bb be-pb-50">
-                <div class="be-col-auto">接口网址：</div>
-                <div class="be-col-auto be-px-100">
-                    <el-tag>
-                        <?php echo beUrl('Shop.ApiCollect.Product', ['token' => $this->config->token]); ?>
-                    </el-tag>
-                </div>
-
-                <div class="be-col-auto">
-                    <el-link type="primary" icon="el-icon-document-copy" :underline="false" @click="copyUrl">复制</el-link>
-                </div>
-            </div>
-
-            <div class="be-lh-250 be-mt-50">接口POST数据字段说明：</div>
-            <div class="be-mt-50">
-
-                <el-table
-                        :data="tableData"
-                        border
-                        style="width: 100%">
-                    <el-table-column
-                            prop="name"
-                            label="字段名"
-                            width="180">
-                    </el-table-column>
-                    <el-table-column
-                            prop="required"
-                            label="是否必传"
-                            align="center"
-                            width="180">
-                        <template slot-scope="scope">
-                            <el-link v-if="scope.row.required === 1" type="success" icon="el-icon-success" style="cursor:auto;font-size:24px;"></el-link>
-                            <el-link v-else type="info" icon="el-icon-error" style="cursor:auto;font-size:24px;color:#bbb;"></el-link>
-                        </template>
-                    </el-table-column>
-                    <el-table-column
-                            prop="description"
-                            label="说明">
-                    </el-table-column>
-                </el-table>
-
-
-            </div>
-
         </div>
+
+        <div class="be-p-150 be-bc-fff be-mt-150">
+            <el-tabs v-model="activePane">
+                <el-tab-pane label="商品" name="product">
+
+                    <div class="be-row be-lh-250  be-mt-50 be-bb be-pb-50">
+                        <div class="be-col-auto">接口网址：</div>
+                        <div class="be-col-auto be-px-100">
+                            <el-tag>
+                                <?php echo beUrl('Shop.ApiCollect.Product', ['token' => $this->config->token]); ?>
+                            </el-tag>
+                        </div>
+
+                        <div class="be-col-auto">
+                            <el-link type="primary" icon="el-icon-document-copy" :underline="false" @click="copyProductUrl">复制</el-link>
+                        </div>
+                    </div>
+
+                    <div class="be-lh-250 be-mt-50">接口POST数据字段说明：</div>
+                    <div class="be-mt-50">
+
+                        <el-table
+                                :data="tableProductData"
+                                border
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="name"
+                                    label="字段名"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="required"
+                                    label="是否必传"
+                                    align="center"
+                                    width="180">
+                                <template slot-scope="scope">
+                                    <el-link v-if="scope.row.required === 1" type="success" icon="el-icon-success" style="cursor:auto;font-size:24px;"></el-link>
+                                    <el-link v-else type="info" icon="el-icon-error" style="cursor:auto;font-size:24px;color:#bbb;"></el-link>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="description"
+                                    label="说明">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                </el-tab-pane>
+                <el-tab-pane label="商品评论" name="product-review">
+
+                    <div class="be-row be-lh-250  be-mt-50 be-bb be-pb-50">
+                        <div class="be-col-auto">接口网址：</div>
+                        <div class="be-col-auto be-px-100">
+                            <el-tag>
+                                <?php echo beUrl('Shop.ApiCollect.ProductReview', ['token' => $this->config->token]); ?>
+                            </el-tag>
+                        </div>
+
+                        <div class="be-col-auto">
+                            <el-link type="primary" icon="el-icon-document-copy" :underline="false" @click="copyProductReviewUrl">复制</el-link>
+                        </div>
+                    </div>
+
+                    <div class="be-lh-250 be-mt-50">接口POST数据字段说明：</div>
+                    <div class="be-mt-50">
+
+                        <el-table
+                                :data="tableProductReviewData"
+                                border
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="name"
+                                    label="字段名"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="required"
+                                    label="是否必传"
+                                    align="center"
+                                    width="180">
+                                <template slot-scope="scope">
+                                    <el-link v-if="scope.row.required === 1" type="success" icon="el-icon-success" style="cursor:auto;font-size:24px;"></el-link>
+                                    <el-link v-else type="info" icon="el-icon-error" style="cursor:auto;font-size:24px;color:#bbb;"></el-link>
+                                </template>
+                            </el-table-column>
+                            <el-table-column
+                                    prop="description"
+                                    label="说明">
+                            </el-table-column>
+                        </el-table>
+                    </div>
+
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+
     </div>
+
+
+
     <script>
         let vueCenter = new Vue({
             el: '#app',
@@ -72,7 +126,8 @@
                 formData : {
                     enable: <?php echo $this->config->enable; ?>
                 },
-                tableData: [
+                activePane: "product",
+                tableProductData: [
                     {
                         "name" : "unique_key",
                         "required" : <?php echo $this->config->uniqueKeyRequired; ?>,
@@ -96,7 +151,7 @@
                     {
                         "name" : "spu",
                         "required" : <?php echo $this->config->spuRequired; ?>,
-                        "description" : "SPU"
+                        "description" : "SPU，60个字符以内"
                     },
                     {
                         "name" : "images",
@@ -188,6 +243,33 @@
                         "required" : 0,
                         "description" : "库存，大于0时该商品启用跟踪库存，默认值：0"
                     },
+                ],
+                tableProductReviewData: [
+                    {
+                        "name" : "spu",
+                        "required" : 1,
+                        "description" : "商品SPU，评论将保存在该商品下，60个字符以内"
+                    },
+                    {
+                        "name" : "style",
+                        "required" : 0,
+                        "description" : "款式，120个字符以内"
+                    },
+                    {
+                        "name" : "name",
+                        "required" : 1,
+                        "description" : "名称，60个字符以内"
+                    },
+                    {
+                        "name" : "content",
+                        "required" : 1,
+                        "description" : "评论内容"
+                    },
+                    {
+                        "name" : "rating",
+                        "required" : 0,
+                        "description" : "评分，1~5"
+                    },
                 ]
             },
             methods: {
@@ -212,10 +294,23 @@
                         _this.$message.error(error);
                     });
                 },
-                copyUrl: function () {
+                copyProductUrl: function () {
                     let _this = this;
                     let input = document.createElement('input');
                     input.value = "<?php echo beUrl('Shop.ApiCollect.product', ['token' => $this->config->token]); ?>";
+                    document.body.appendChild(input);
+                    input.select();
+                    try {
+                        document.execCommand('Copy');
+                        _this.$message.success("接口网址已复制！");
+                    } catch {
+                    }
+                    document.body.removeChild(input);
+                },
+                copyProductReviewUrl: function () {
+                    let _this = this;
+                    let input = document.createElement('input');
+                    input.value = "<?php echo beUrl('Shop.ApiCollect.productReview', ['token' => $this->config->token]); ?>";
                     document.body.appendChild(input);
                     input.select();
                     try {

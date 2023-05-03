@@ -447,4 +447,70 @@ class ApiCollect
     }
 
 
+    /**
+     * 商品评论接口
+     *
+     * @BeRoute("/api/collect/product/review")
+     */
+    public function productReview()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        try {
+            $serviceCollectProductApi = Be::getService('App.Shop.Admin.CollectProductApi');
+            $collectProductApiConfig = $serviceCollectProductApi->getConfig();
+
+            if ($collectProductApiConfig->enable === 0) {
+                throw new ControllerException('商品采集接口未启用！');
+            }
+
+            $token = $request->get('token', '');
+            if ($collectProductApiConfig->token !== $token) {
+                throw new ControllerException('Token 无效！');
+            }
+
+            $data['spu'] = $request->post('spu', '');
+            if ($data['spu'] === '') {
+                throw new ServiceException('SPU（spu）为必填项！');
+            }
+
+            $tupleProduct = Be::getTuple('shop_product');
+            try {
+                $tupleProduct->loadBy('spu', $data['spu']);
+            } catch (\Throwable $t) {
+                throw new ServiceException('SPU（' . $data['spu'] . '）对应的商品不存在！');
+            }
+
+            $data['name'] = $request->post('name', '');
+            if ($data['name'] === '') {
+                throw new ServiceException('名称（name）为必填项！');
+            }
+
+            $data['content'] = $request->post('content', '', '');
+            if ($data['content'] === '') {
+                throw new ServiceException('评论内容（content）为必填项！');
+            }
+
+            $tupleProductReview = Be::getTuple('shop_product_review');
+            $tupleProductReview->product_id = $tupleProduct->id;
+            $tupleProductReview->style = $request->post('style', '');
+            $tupleProductReview->user_id = '';
+            $tupleProductReview->name = $data['name'];
+            $tupleProductReview->content = $data['content'];
+            $tupleProductReview->rating = $request->post('rating', '');
+            $tupleProductReview->publish_time = date('Y-m-d H:i:s');
+            $tupleProductReview->is_enable = 1;
+            $tupleProductReview->is_delete = 0;
+            $tupleProductReview->create_time = date('Y-m-d H:i:s');
+            $tupleProductReview->update_time = date('Y-m-d H:i:s');
+            $tupleProductReview->insert();
+
+            $response->end('[OK] 导入成功！');
+        } catch (\Throwable $t) {
+
+            $response->end('[ERROR] ' . $t->getMessage());
+        }
+    }
+
 }

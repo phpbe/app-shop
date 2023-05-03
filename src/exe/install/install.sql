@@ -458,10 +458,12 @@ ADD UNIQUE KEY `product_id` (`product_id`);
 CREATE TABLE `shop_product_review` (
 `id` varchar(36) NOT NULL DEFAULT 'uuid()' COMMENT 'UUID',
 `product_id` varchar(36) NOT NULL DEFAULT '' COMMENT '商品ID',
+`style` varchar(120) NOT NULL COMMENT '款式',
 `user_id` varchar(36) NOT NULL DEFAULT '' COMMENT '用户ID',
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `rating` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分',
 `content` text NOT NULL COMMENT '内容',
+`publish_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间';
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用	',
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除	',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -472,7 +474,6 @@ ALTER TABLE `shop_product_review`
 ADD PRIMARY KEY (`id`),
 ADD KEY `user_id` (`user_id`),
 ADD KEY `product_id` (`product_id`) USING BTREE;
-
 
 
 CREATE TABLE `shop_product_review_image` (

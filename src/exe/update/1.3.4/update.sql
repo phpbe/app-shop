@@ -13,3 +13,8 @@ CREATE TABLE `shop_product_video` (
 ALTER TABLE `shop_product_video`
 ADD PRIMARY KEY (`id`),
 ADD KEY `product_id` (`product_id`,`product_item_id`,`is_main`) USING BTREE;
+
+
+ALTER TABLE `shop_product_review`
+ADD `style` VARCHAR(120) NOT NULL COMMENT '款式' AFTER `product_id`,
+ADD `publish_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间' AFTER `content`;
