@@ -171,7 +171,7 @@ class Es
                         ],
                         'publish_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'ordering' => [
                             'type' => 'integer'
@@ -334,34 +334,34 @@ class Es
                         ],
                         'pay_expire_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'pay_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'cancel_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'ship_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'receive_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'is_delete' => [
                             'type' => 'integer'
                         ],
                         'create_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'update_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ],
                         'products' => [
                             'type' => 'nested',
@@ -451,7 +451,7 @@ class Es
                         ],
                         'create_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ]
                     ]
                 ];
@@ -473,7 +473,7 @@ class Es
                         ],
                         'create_time' => [
                             'type' => 'date',
-                            'format' => "yyyy-MM-dd HH:mm:ss"
+                            'format' => 'yyyy-MM-dd HH:mm:ss'
                         ]
                     ]
                 ];

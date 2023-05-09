@@ -32,6 +32,7 @@ class TaskProduct
         }
 
         $db = Be::getDb();
+        $es = Be::getEs();
 
         $batch = [];
         foreach ($products as $product) {
@@ -41,18 +42,16 @@ class TaskProduct
                 continue;
             }
 
-            $batch[] = [
-                'index' => [
-                    '_index' => $configEs->indexProduct,
-                    '_id' => $product->id,
-                ]
-            ];
 
             if ($product->is_delete !== '0' || $product->is_enable !== '1') {
-                $batch[] = [
+                $params = [
+                    'index' => $configEs->indexProduct,
                     'id' => $product->id,
-                    'is_delete' => true
                 ];
+
+                if ($es->exists($params)) {
+                    $es->delete($params);
+                }
             } else {
                 $categories = [];
                 $sql = 'SELECT category_id FROM shop_product_category WHERE product_id = ? ORDER BY ordering ASC';
@@ -112,6 +111,14 @@ class TaskProduct
                 }
                 unset($item);
 
+
+                $batch[] = [
+                    'index' => [
+                        '_index' => $configEs->indexProduct,
+                        '_id' => $product->id,
+                    ]
+                ];
+
                 $batch[] = [
                     'id' => $product->id,
                     'spu' => $product->spu,
@@ -147,7 +154,6 @@ class TaskProduct
         }
 
         if (count($batch) > 0) {
-            $es = Be::getEs();
             $response = $es->bulk(['body' => $batch]);
             if ($response['errors'] > 0) {
                 $reason = '';
