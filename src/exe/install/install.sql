@@ -463,7 +463,7 @@ CREATE TABLE `shop_product_review` (
 `name` varchar(60) NOT NULL DEFAULT '' COMMENT '名称',
 `rating` tinyint(4) NOT NULL DEFAULT '0' COMMENT '评分',
 `content` text NOT NULL COMMENT '内容',
-`publish_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间';
+`publish_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
 `is_enable` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否启用	',
 `is_delete` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否已删除	',
 `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
