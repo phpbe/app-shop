@@ -150,6 +150,17 @@ class ApiCollect
                 throw new ServiceException('单价（price）为必填项！');
             }
 
+            $data['stock_tracking'] = $request->post('stock_tracking', 0, 'int');
+            $stock = $request->post('stock', false);
+            if ($stock !== false && is_numeric($stock)) {
+                // 有传库存参数，开启库存跟踪
+                $data['stock_tracking'] = 1;
+            }
+            if (!in_array($data['stock_tracking'], [0, 1])) {
+                $data['stock_tracking'] = 0;
+            }
+
+
             $styles = [];
             if ($style && is_array($style) && count($style) > 0) {
                 foreach ($style as $styleName => $styleValue) {
