@@ -1273,12 +1273,17 @@ class Product
                 }
             }
 
-            Be::getService('App.Shop.Admin.Store')->setUp(1);
+
+            if ($tupleProduct->is_enable !== -1) {
+                Be::getService('App.Shop.Admin.Store')->setUp(1);
+            }
 
             $db->commit();
 
-            Be::getService('App.System.Task')->trigger('Shop.ProductSyncEsAndCache');
-            Be::getService('App.System.Task')->trigger('Shop.ProductRelateSyncCache');
+            if ($tupleProduct->is_enable !== -1) {
+                Be::getService('App.System.Task')->trigger('Shop.ProductSyncEsAndCache');
+                Be::getService('App.System.Task')->trigger('Shop.ProductRelateSyncCache');
+            }
 
         } catch (\Throwable $t) {
             $db->rollback();
