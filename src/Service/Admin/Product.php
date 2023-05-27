@@ -1526,6 +1526,7 @@ class Product
         $product->sales_volume = (int)$product->sales_volume_base + (int)$product->sales_volume;
         $product->rating_sum = (int)$product->rating_sum;
         $product->rating_count = (int)$product->rating_count;
+        $product->download_remote_image = (int)$product->download_remote_image;
         $product->is_enable = (int)$product->is_enable;
         $product->is_delete = (int)$product->is_delete;
 
