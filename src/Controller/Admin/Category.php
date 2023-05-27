@@ -192,6 +192,9 @@ class Category extends Auth
                             },
                         ],
                     ],
+
+                    'exclude' => ['description'],
+
                     'operation' => [
                         'label' => '操作',
                         'width' => '120',

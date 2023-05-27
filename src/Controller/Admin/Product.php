@@ -315,6 +315,8 @@ class Product extends Auth
                         ],
                     ],
 
+                    'exclude' => ['summary', 'description'],
+
                     'operation' => [
                         'label' => '操作',
                         'width' => '150',
