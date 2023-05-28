@@ -333,7 +333,7 @@ class Cart
             $dbCarts = $db->getObjects($sql, [$my->token]);
         } else {
             $sql = 'SELECT * FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
-            $dbCarts = $db>getObjects($sql, [$my->id]);
+            $dbCarts = $db->getObjects($sql, [$my->id]);
         }
 
         $cacheCarts = [];
