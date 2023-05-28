@@ -35,17 +35,24 @@ class Cart
             }
         }
 
-        $removeCarts = [];
-        foreach ($carts as $cart) {
+        $removeCart = false;
+        foreach ($carts as $index => $cart) {
             try {
                 $cartProducts[] = $this->loadProductDetails($cart);
             } catch (\Throwable $t) {
-                $removeCarts[] = $cart;
+                $carts[$index] = false;
+                $removeCart = true;
             }
         }
 
-        if (count($removeCarts) > 0) {
-            $carts = array_diff($carts, $removeCarts);
+        if ($removeCart) {
+            $newCarts = [];
+            foreach ($carts as $cart) {
+                if ($cart !== false) {
+                    $newCarts[] = $cart;
+                }
+            }
+            $carts = $newCarts;
         }
 
         $configCart = Be::getConfig('App.Shop.Cart');
