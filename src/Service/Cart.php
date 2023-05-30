@@ -27,32 +27,36 @@ class Cart
         $carts = $cache->get($key);
         if (!is_array($carts)) {
             if ($my->isGuest()) {
-                $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
+                $sql = 'SELECT id, product_id, product_item_id, quantity FROM shop_cart WHERE user_token = ? ORDER BY create_time ASC';
                 $carts = Be::getDb()->getObjects($sql, [$my->token]);
             } else {
-                $sql = 'SELECT product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
+                $sql = 'SELECT id, product_id, product_item_id, quantity FROM shop_cart WHERE user_id = ? ORDER BY create_time ASC';
                 $carts = Be::getDb()->getObjects($sql, [$my->id]);
             }
         }
 
-        $removeCart = false;
-        foreach ($carts as $index => $cart) {
+        $newCarts = [];
+        $removeCartIds = [];
+        foreach ($carts as $cart) {
             try {
                 $cartProducts[] = $this->loadProductDetails($cart);
-            } catch (\Throwable $t) {
-                $carts[$index] = false;
-                $removeCart = true;
-            }
-        }
 
-        if ($removeCart) {
-            $newCarts = [];
-            foreach ($carts as $cart) {
-                if ($cart !== false) {
-                    $newCarts[] = $cart;
+                $newCarts[] =  (object)[
+                    'product_id' => $cart->product_id,
+                    'product_item_id' => $cart->product_item_id,
+                    'quantity' => $cart->quantity,
+                ];
+            } catch (\Throwable $t) {
+                if (isset($cart->id)) {
+                    $removeCartIds[] = $cart->id;
                 }
             }
-            $carts = $newCarts;
+        }
+        $carts = $newCarts;
+
+        if (count($removeCartIds) > 0) {
+            $sql = 'DELETE FROM shop_cart WHERE id IN (' . implode(',', array_fill(0, count($removeCartIds), '?')) . ')';
+            Be::getDb()->query($sql,$removeCartIds);
         }
 
         $configCart = Be::getConfig('App.Shop.Cart');
