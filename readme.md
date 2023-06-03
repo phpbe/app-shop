@@ -23,6 +23,8 @@
 ## 部件
 
 ### 1xxx 商品相关部件
+* 1000 - 商品列表 - Product.Products
+* 
 * 1001 - 最新商品列表 - Product.Latest
 * 1002 - 最新商品TopN - Product.LatestTopN
 * 1003 - 最新商品TopN边栏 - Product.LatestTopNSide

@@ -7,6 +7,28 @@ use Be\Be;
 class Product extends Base
 {
 
+
+    /**
+     * @BeMenu("商品列表")
+     * @BeRoute("/products")
+     */
+    public function products()
+    {
+        $request = Be::getRequest();
+        $response = Be::getResponse();
+
+        $pageConfig = $response->getPageConfig();
+        $response->set('pageConfig', $pageConfig);
+
+        $response->set('title', $pageConfig->title ?: '');
+        $response->set('metaDescription', $pageConfig->metaDescription ?: '');
+        $response->set('metaKeywords', $pageConfig->metaKeywords ?: '');
+        $response->set('pageTitle', $pageConfig->pageTitle ?: ($pageConfig->title ?: ''));
+
+        $response->display();
+    }
+
+
     /**
      *
      * @BeMenu("商品详情", picker="return \Be\Be::getService('App.Shop.Admin.Product')->getProductMenuPicker()")

@@ -1,9 +1,9 @@
 <?php
 
-namespace Be\App\Shop\Section\Category\Products;
+namespace Be\App\Shop\Section\Product\Products;
 
 /**
- * @BeConfig("分类商品列表", icon="bi-grid", ordering="2001")
+ * @BeConfig("商品列表", icon="bi-grid", ordering="2000")
  */
 class Config
 {
