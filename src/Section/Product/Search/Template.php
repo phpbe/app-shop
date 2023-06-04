@@ -31,12 +31,9 @@ class Template extends Section
         $params = [
             'orderBy' => $orderBy,
             'orderByDir' => $orderByDir,
+            'pageSize' => $this->config->pageSize,
             'page' => $page,
         ];
-
-        if ($this->config->pageSize > 0) {
-            $params['pageSize'] = $this->config->pageSize;
-        }
 
         $categoryId = $request->get('category_id', '');
         if ($categoryId) {

@@ -22,18 +22,20 @@ class Template extends Section
 
         $orderBy = $request->get('order_by', 'common');
         $orderByDir = $request->get('order_by_dir', 'desc');
-        $pageSize = $this->config->pageSize;
         $page = $request->get('page', 1);
+        if ($page > $this->config->maxPages) {
+            $page = $this->config->maxPages;
+        }
 
         $result = Be::getService('App.Shop.Product')->search('', [
             'orderBy' => $orderBy,
             'orderByDir' => $orderByDir,
-            'pageSize' => $pageSize,
+            'pageSize' => $this->config->pageSize,
             'page' => $page,
         ]);
 
         $paginationUrl = beUrl('Shop.Product.products');
-        echo Be::getService('App.Shop.Section')->makePagedProductsSection($this, 'products', $result, $paginationUrl);
+        echo Be::getService('App.Shop.Section')->makePagedProductsSection($this, 'app-shop-products', $result, $paginationUrl);
     }
 
 }

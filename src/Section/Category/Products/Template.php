@@ -22,14 +22,16 @@ class Template extends Section
 
         $orderBy = $request->get('order_by', 'common');
         $orderByDir = $request->get('order_by_dir', 'desc');
-        $pageSize = $this->config->pageSize;
         $page = $request->get('page', 1);
-
+        if ($page > $this->config->maxPages) {
+            $page = $this->config->maxPages;
+        }
+        
         $result = Be::getService('App.Shop.Product')->search('', [
             'categoryId' => $this->page->categoryId,
             'orderBy' => $orderBy,
             'orderByDir' => $orderByDir,
-            'pageSize' => $pageSize,
+            'pageSize' => $this->config->pageSize,
             'page' => $page,
         ]);
 
