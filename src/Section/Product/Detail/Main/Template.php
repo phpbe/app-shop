@@ -248,9 +248,17 @@ class Template extends Section
 
         echo '<div class="be-row be-mt-200">';
         echo '<div class="be-col-auto be-lh-250"><span class="be-fw-bold">Quantity:</span></div>';
-        echo '<div class="be-col-auto"><div class="be-pl-100">';
-        echo '<input type="number" class="be-input" name="quantity" value="1" id="app-shop-product-detail-main-quantity" />';
-        echo '</div></div>';
+        echo '<div class="be-col-auto">';
+        echo '<div class="be-pl-100">';
+        echo '<div class="app-shop-product-detail-main-quantity-container">';
+
+        echo '<button class="be-btn app-shop-product-detail-main-quantity-minus" onclick="return ProductDetail.changeQuantity(-1);"><i class="bi-dash"></i></button>';
+        echo '<input type="number" class="be-input" name="quantity" value="1" min="1" max="99999" step="1" id="app-shop-product-detail-main-quantity" />';
+        echo '<button class="be-btn app-shop-product-detail-main-quantity-add" onclick="return ProductDetail.changeQuantity(1);"><i class="bi-plus"></i></button>';
+
+        echo '</div>';
+        echo '</div>';
+        echo '</div>';
         echo '</div>';
 
 
@@ -448,6 +456,56 @@ class Template extends Section
         echo 'color: var(--font-color-4) !important;';
         echo '}';
         // ============================================================================================================= 多款式
+
+
+        echo '.app-shop-product-detail-main-quantity-container {';
+        echo 'position: relative;';
+        echo 'border: var(--font-color-6) 1px solid;';
+        echo 'border-radius: 2rem;';
+        echo 'overflow: hidden;';
+        echo '}';
+
+        echo '.app-shop-product-detail-main-quantity-minus,';
+        echo '#app-shop-product-detail-main-quantity,';
+        echo '.app-shop-product-detail-main-quantity-add {';
+        echo 'border: 0;';
+        echo '}';
+
+        echo '.app-shop-product-detail-main-quantity-minus,';
+        echo '.app-shop-product-detail-main-quantity-add {';
+        echo 'position: absolute;';
+        echo 'border: 0;';
+        echo 'font-size: 1.25rem;';
+        echo '}';
+
+        echo '.app-shop-product-detail-main-quantity-minus {';
+        echo 'left: 0;';
+        echo 'top: 0;';
+        echo 'bottom: 0;';
+        echo 'border-top-right-radius: 0;';
+        echo 'border-bottom-right-radius: 0;';
+        echo '}';
+
+        echo '.app-shop-product-detail-main-quantity-add {';
+        echo 'right: 0;';
+        echo 'top: 0;';
+        echo 'bottom: 0;';
+        echo 'border-top-left-radius: 0;';
+        echo 'border-bottom-left-radius: 0;';
+        echo '}';
+
+        echo '#app-shop-product-detail-main-quantity {';
+        echo 'width: 12rem;';
+        echo 'text-align: center;';
+        echo 'padding-left: 2rem;';
+        echo 'padding-right: 2rem;';
+        echo '-moz-appearance:textfield;';
+        echo '}';
+
+        echo '#app-shop-product-detail-main-quantity::-webkit-outer-spin-button,';
+        echo '#app-shop-product-detail-main-quantity::-webkit-inner-spin-button {';
+        echo '-webkit-appearance: none;';
+        echo '}';
 
         echo '</style>';
     }
@@ -774,6 +832,17 @@ class Template extends Section
                         });
                     }
                     // ===================================================================================================== update image sliders
+                },
+
+                changeQuantity(n) {
+                    let $e = $("#app-shop-product-detail-main-quantity");
+                    let quantity = $e.val();
+                    if (isNaN(quantity)) quantity = 1;
+                    quantity = parseInt(quantity);
+                    quantity += n;
+                    if (quantity < 1) quantity = 1;
+                    $e.val(quantity);
+                    return false;
                 }
             }
 

@@ -543,13 +543,10 @@ class Section
                 $html .= ' target="_blank"';
             }
             $html .= '>';
-            if ($defaultImage) {
-                $html .= '<img src="' . $defaultImage . '" class="' . $class . '-product-image-1" alt="' . htmlspecialchars($product->name) . '" />';
-                if ($section->config->hoverEffect == 'toggleImage' && $hoverImage) {
-                    $html .= '<img src="' . $hoverImage . '" class="' . $class . '-product-image-2" alt="' . htmlspecialchars($product->name) . '" />';
-                }
+            $html .= '<img src="' . $defaultImage . '" class="' . $class . '-product-image-1" alt="' . htmlspecialchars($product->name) . '" />';
+            if ($section->config->hoverEffect == 'toggleImage' && $hoverImage) {
+                $html .= '<img src="' . $hoverImage . '" class="' . $class . '-product-image-2" alt="' . htmlspecialchars($product->name) . '" />';
             }
-
             $html .= '</a>';
             $html .= '</div>';
 
