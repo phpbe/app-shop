@@ -24,7 +24,7 @@ class PaymentPaypal extends Base
         }
 
         $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
-        $configPaymentPaypal = $servicePaymentPaypal->getConfig();
+        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
         if ($configPaymentPaypal->pop) {
             $response->set('order', $order);
 
