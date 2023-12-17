@@ -373,6 +373,7 @@ class PaymentPaypal extends PaymentBase
 
         $accessToken = json_decode($response);
         if (!$accessToken || !isset($accessToken->access_token)) {
+            Be::getLog()->error($response);
             throw new ServiceException('Generate paypal token fail!');
         }
 
