@@ -371,7 +371,12 @@ class PaymentPaypal extends PaymentBase
 
         $response = Curl::patch($url, $data, $headers, $options);
 
-        return json_decode($response);
+        $accessToken = json_decode($response);
+        if (!$accessToken || !isset($accessToken->access_token)) {
+            throw new ServiceException('Generate paypal token fail!');
+        }
+
+        return $accessToken;
     }
 
 
