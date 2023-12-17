@@ -369,14 +369,14 @@ class PaymentPaypal extends PaymentBase
             CURLOPT_USERPWD => $account->client_id . ':' . $account->secret
         ];
 
-        $response = Curl::patch($url, $data, $headers, $options);
-
-        $accessToken = json_decode($response);
-        if (!$accessToken || !isset($accessToken->access_token)) {
-            Be::getLog()->error($response);
+        try {
+            $response = Curl::patch($url, $data, $headers, $options);
+        } catch (\Throwable $t) {
+            Be::getLog()->error($t);
             throw new ServiceException('Generate paypal token fail!');
         }
 
+        $accessToken = json_decode($response);
         return $accessToken;
     }
 
