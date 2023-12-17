@@ -51,7 +51,7 @@ class PaymentPaypal extends Base
         $order = Be::getService('App.Shop.Order')->getOrder($orderId, ['shipping_address' => 1, 'billing_address' => 1, 'products' => 1]);
 
         $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
-        $configPaymentPaypal = $servicePaymentPaypal->getConfig();
+        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
         if ($configPaymentPaypal->pop) {
             // JS ajax 请求 createOrder
             if ($order->status != 'pending') {
@@ -97,7 +97,7 @@ class PaymentPaypal extends Base
         $order = Be::getService('App.Shop.Order')->getOrder($orderId);
 
         $servicePaymentPaypal = Be::getService('App.Shop.PaymentPaypal');
-        $configPaymentPaypal = $servicePaymentPaypal->getConfig();
+        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
         if ($configPaymentPaypal->pop) {
 
             try {

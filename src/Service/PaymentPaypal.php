@@ -3,7 +3,6 @@
 namespace Be\App\Shop\Service;
 
 use Be\App\ServiceException;
-use Be\App\Shop\Shop;
 use Be\Be;
 use Be\Util\Net\Curl;
 

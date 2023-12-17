@@ -52,7 +52,7 @@ class FormItemCategoryPicker extends FormItem
      *
      * @return string
      */
-    public function getHtml()
+    public function getHtml(): string
     {
         $html = '<el-form-item';
         foreach ($this->ui['form-item'] as $k => $v) {
@@ -81,7 +81,7 @@ class FormItemCategoryPicker extends FormItem
                 $html .= ' ' . $k . '="' . $v . '"';
             }
         }
-        $html .= '>选择文件</el-button></div>';
+        $html .= '>选择分类</el-button></div>';
 
         if ($this->description) {
             $html .= '<div class="be-c-999 be-mt-50 be-lh-150">' . $this->description . '</div>';
