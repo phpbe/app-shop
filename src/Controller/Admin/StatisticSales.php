@@ -27,13 +27,13 @@ class StatisticSales extends Auth
 
         $configSystemRedis = Be::getConfig('App.System.Redis');
         if ($configSystemRedis->enable === 0) {
-            $response->error('Redis尚未启用，此功能不哥用！');
+            $response->error('Redis尚未启用，此功能不可用！');
             return;
         }
 
         $configSystemEs = Be::getConfig('App.System.Es');
         if ($configSystemEs->enable === 0) {
-            $response->error('ES尚未启用，此功能不哥用！');
+            $response->error('ES尚未启用，此功能不可用！');
             return;
         }
 

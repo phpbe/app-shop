@@ -23,7 +23,7 @@ class Es extends Auth
 
         $configSystemEs = Be::getConfig('App.System.Es');
         if ($configSystemEs->enable === 0) {
-            $response->error('ES尚未启用，此功能不哥用！');
+            $response->error('ES尚未启用，此功能不可用！');
             return;
         }
 
