@@ -2,6 +2,9 @@
 
 namespace Be\App\Shop\Config\Page\Product;
 
+/**
+ * @BeConfig("热搜商品")
+ */
 class hotSearch
 {
 

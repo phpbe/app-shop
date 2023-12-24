@@ -2,6 +2,9 @@
 
 namespace Be\App\Shop\Config\Page\Product;
 
+/**
+ * @BeConfig("热门商品")
+ */
 class hottest
 {
 
