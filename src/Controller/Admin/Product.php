@@ -52,7 +52,7 @@ class Product extends Auth
                     'keyValues' => [
                         '-1' => '全部',
                         '1' => '已上架',
-                        '0' => '已下架',
+                        '0' => '未上架',
                     ],
                 ],
 
