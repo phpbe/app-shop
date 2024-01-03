@@ -326,26 +326,30 @@ class PaymentPaypal extends PaymentBase
                 // Access Token 不存在，生成
                 $accessToken = $this->newAccessToken();
 
-                $tuple->payment_paypal_id = $account->id;
-                $tuple->access_token = $accessToken->access_token;
-                $tuple->expire_time = date('Y-m-d H:i:s', (time() + $accessToken->expires_in));
-                $tuple->create_time = date('Y-m-d H:i:s');
-                $tuple->update_time = date('Y-m-d H:i:s');
-                $tuple->insert();
+                if ($accessToken) {
+                    $tuple->payment_paypal_id = $account->id;
+                    $tuple->access_token = $accessToken->access_token;
+                    $tuple->expire_time = date('Y-m-d H:i:s', (time() + $accessToken->expires_in));
+                    $tuple->create_time = date('Y-m-d H:i:s');
+                    $tuple->update_time = date('Y-m-d H:i:s');
+                    $tuple->insert();
 
-                $this->accessToken = $accessToken->access_token;
+                    $this->accessToken = $accessToken->access_token;
+                }
             }
 
-            // Access Token 超时，更新
-            if (strtotime($tuple->expire_time) <= time()) {
-                $accessToken = $this->newAccessToken();
-                $tuple->access_token = $accessToken->access_token;
-                $tuple->expire_time = date('Y-m-d H:i:s', (time() + $accessToken->expires_in));
-                $tuple->update_time = date('Y-m-d H:i:s');
-                $tuple->update();
-            }
+            if ($tuple->isLoaded()) {
+                // Access Token 超时，更新
+                if (strtotime($tuple->expire_time) <= time()) {
+                    $accessToken = $this->newAccessToken();
+                    $tuple->access_token = $accessToken->access_token;
+                    $tuple->expire_time = date('Y-m-d H:i:s', (time() + $accessToken->expires_in));
+                    $tuple->update_time = date('Y-m-d H:i:s');
+                    $tuple->update();
+                }
 
-            $this->accessToken = $tuple->access_token;
+                $this->accessToken = $tuple->access_token;
+            }
         }
 
         return $this->accessToken;
