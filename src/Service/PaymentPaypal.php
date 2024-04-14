@@ -13,8 +13,8 @@ class PaymentPaypal extends PaymentBase
 
     private $accessToken = null;
 
-    private $baseUrl = 'https://api.paypal.com';
-    //private $baseUrl = 'https://api.sandbox.paypal.com';
+    private $baseUrl = 'https://api-m.paypal.com';
+    //private $baseUrl = 'https://api-m.sandbox.paypal.com';
 
 
     /**
@@ -370,7 +370,7 @@ class PaymentPaypal extends PaymentBase
 
         $account = $this->getAccount();
         $options = [
-            CURLOPT_USERPWD => $account->client_id . ':' . $account->secret
+            CURLOPT_USERPWD => base64_encode($account->client_id . ':' . $account->secret)
         ];
 
         try {
