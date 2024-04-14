@@ -370,17 +370,27 @@ class PaymentPaypal extends PaymentBase
 
         $account = $this->getAccount();
         $options = [
-            CURLOPT_USERPWD => base64_encode($account->client_id . ':' . $account->secret)
+            CURLOPT_USERPWD => $account->client_id . ':' . $account->secret
         ];
 
         try {
-            $response = Curl::patch($url, $data, $headers, $options);
+            $response = Curl::post($url, $data, $headers, $options);
         } catch (\Throwable $t) {
             Be::getLog()->error($t);
             throw new ServiceException('Generate paypal token fail!');
         }
 
         $accessToken = json_decode($response);
+        if (!$accessToken) {
+            Be::getLog()->error(new ServiceException($response));
+            throw new ServiceException('Generate paypal token error!');
+        }
+
+        if (isset($accessToken->error)) {
+            Be::getLog()->error(new ServiceException($response));
+            throw new ServiceException('Generate paypal token error: ' . $accessToken->error);
+        }
+
         return $accessToken;
     }
 
