@@ -66,26 +66,14 @@ class PaymentPaypal extends PaymentBase
         $postData = [];
         $postData['intent'] = 'CAPTURE';
 
-        $postData['application_context'] = [
-            //'brand_name' => 'EXAMPLE INC',
-            //'locale' => 'en-US',
-            //'landing_page' => 'BILLING',
-            'shipping_preference' => 'SET_PROVIDED_ADDRESS',
-            'user_action' => 'PAY_NOW',
-        ];
-
-        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
-        if (!$configPaymentPaypal->pop) {
-            $postData['application_context']['return_url'] = beUrl('Shop.PaymentPaypal.approve', ['order_id' => $order->id]);
-            $postData['application_context']['cancel_url'] = beUrl('Shop.PaymentPaypal.cancel', ['order_id' => $order->id]);
-        }
 
         $items = [];
         foreach ($order->products as $product) {
             $items[] = [
-                'name' => $product->product_name,
-                'description' => $product->product_name,
-                'sku' => $product->sku ?: ($product->spu ?: $product->product_id),
+                'reference_id' =>  $product->product_id,
+                'name' => $product->name,
+                'description' => $product->name,
+                'sku' => $product->sku ?: $product->product_item_id,
                 'unit_amount' => [
                     'currency_code' => 'USD',
                     'value' => $product->price,
@@ -149,12 +137,32 @@ class PaymentPaypal extends PaymentBase
             ]
         ];
 
-        $url = $this->baseUrl . '/v2/checkout/orders';
-        $headers = ['Authorization:Bearer ' . $this->getAccessToken()];
-        $response = Curl::postJson($url, $headers, $postData);
-        $response = json_decode($response);
 
-        $this->paymentLog($order, $url, $postData, $response);
+        $postData['payment_source'] = [
+            'paypal' => [
+                'experience_context' => [
+                    //'brand_name' => 'EXAMPLE INC',
+                    //'locale' => 'en-US',
+                    //'landing_page' => 'BILLING',
+                    'shipping_preference' => 'SET_PROVIDED_ADDRESS',
+                    'user_action' => 'PAY_NOW',
+                ],
+            ],
+        ];
+
+        $configPaymentPaypal = Be::getConfig('App.Shop.PaymentPaypal');
+        if (!$configPaymentPaypal->pop) {
+            $postData['payment_source']['paypal']['experience_context']['return_url'] = beUrl('Shop.PaymentPaypal.approve', ['order_id' => $order->id]);
+            $postData['payment_source']['paypal']['experience_context']['cancel_url'] = beUrl('Shop.PaymentPaypal.cancel', ['order_id' => $order->id]);
+        }
+
+
+        $url = $this->baseUrl . '/v2/checkout/orders';
+        $headers = ['Authorization: Bearer ' . $this->getAccessToken()];
+        $responseStr = Curl::postJson($url, $postData, $headers);
+        $response = json_decode($responseStr);
+
+        $this->paymentLog($order, $url, $postData, $response ?? $responseStr);
 
         if (!isset($response->status)) {
             if (isset($response->error_description) && is_string($response->error_description)) {
@@ -168,7 +176,7 @@ class PaymentPaypal extends PaymentBase
             throw new ServiceException($message);
         }
 
-        if ($response->status !== 'pending') {
+        if ($response->status !== 'PAYER_ACTION_REQUIRED') {
             throw new ServiceException('Paypal create order status exception!');
         }
 

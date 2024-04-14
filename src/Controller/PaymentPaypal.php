@@ -79,7 +79,7 @@ class PaymentPaypal extends Base
             }
 
             $paypalResponse = $servicePaymentPaypal->create($order);
-            $response->redirect($paypalResponse['links'][1]['href']);
+            $response->redirect($paypalResponse->links[1]->href);
         }
     }
 
